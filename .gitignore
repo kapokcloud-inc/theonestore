@@ -109,3 +109,6 @@ logs/
 
 # run
 run/
+
+# vscode
+.vscode/
