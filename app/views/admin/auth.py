@@ -31,7 +31,7 @@ def login():
         mobile   = args.get('mobile', '')
         password = args.get('password', '')
 
-        return render_template('admin/default/auth/login.html', f={}, errormsg={})
+        return render_template('admin/default/auth/login.html.j2', f={}, errormsg={})
 
     form     = request.form
     mobile   = form.get('mobile', '')
@@ -40,4 +40,4 @@ def login():
     if mobile and password:
         return False
 
-    return render_template('admin/default/auth/login.html', f={}, errormsg={})
+    return render_template('admin/default/auth/login.html.j2', f={}, errormsg={})
