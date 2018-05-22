@@ -9,10 +9,15 @@
 """
 
 import os
+import gettext
 import logging
 import logging.config
 
-from flask import Flask
+from flask import (
+    Flask,
+    current_app,
+    request
+)
 
 
 def create_app(config='app/config/config.cfg', default_app_name='theonestore'):
@@ -47,6 +52,25 @@ def enable_logging(app, log_config="app/config/logging.ini"):
     log_config = os.path.join(app.root_path, log_config)
     if os.path.isfile(log_config):
         logging.config.fileConfig(log_config)
+
+
+def log_info(logtext):
+    extra_log = {'clientip':request.remote_addr}
+    logger = logging.getLogger('web.info')
+    logger.info(logtext, extra=extra_log)
+
+
+def log_error(logtext):
+    extra_log = {'clientip':request.remote_addr}
+    logger = logging.getLogger('web.error')
+    logger.error(logtext, extra=extra_log)
+
+
+def log_debug(logtext):
+    if current_app.config.get('DEBUG', False):
+        extra_log = {'clientip':request.remote_addr}
+        logger = logging.getLogger('web.debug')
+        logger.debug(logtext, extra=extra_log)
     
 
 def register_blueprint(app, modules):
@@ -54,4 +78,14 @@ def register_blueprint(app, modules):
     if modules:
         for module, url_prefix in modules:
             app.register_blueprint(module, url_prefix=url_prefix)
+
+
+def set_lang(lang):
+    """设置语言"""
+    locale_dir = 'locale'
+
+    gettext.install('lang', locale_dir, unicode=True)
+    tr = gettext.translation('lang', locale_dir, languages=[lang])
+    tr.install(True)
+    current_app.jinja_env.install_gettext_translations(tr)
 
