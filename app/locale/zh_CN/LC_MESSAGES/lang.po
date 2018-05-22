@@ -2,10 +2,10 @@
 # Copyright (C) YEAR ORGANIZATION
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-msgid "Hello World!"
-msgstr "世界，你好！"
+msgid ""
+msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2018-05-22 16:49+CST\n"
+"POT-Creation-Date: 2018-05-22 21:32+CST\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,5 +13,12 @@ msgstr "世界，你好！"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: UTF-8\n"
 "Generated-By: pygettext.py 1.5\n"
+
+
+msgid "Hello World!"
+msgstr "你好，世界！"
+
+
+
 
 
