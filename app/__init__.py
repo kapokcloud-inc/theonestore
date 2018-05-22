@@ -19,4 +19,4 @@ def configure_before_handlers(app):
 
         # 设置语言
         lang = request.args.get('lang', 'zh_CN')
-        #set_lang(lang)
+        set_lang(lang)

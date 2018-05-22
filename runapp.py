@@ -18,6 +18,10 @@ from app.routes.admin import ADMIN_ROUTES
 
 app = create_app()
 enable_logging(app)
+
+app.jinja_env.add_extension('jinja2.ext.i18n')
+app.jinja_env.add_extension('jinja2.ext.do')
+
 configure_before_handlers(app)
 
 register_blueprint(app, ROOT_ROUTES)
