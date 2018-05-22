@@ -16,11 +16,12 @@ import logging.config
 from flask import (
     Flask,
     current_app,
-    request
+    request,
+    render_template as flask_render_template,
 )
 
 
-def create_app(config='app/config/config.cfg', default_app_name='theonestore'):
+def create_app(config='config/config.cfg', default_app_name='app'):
     """创建app
     @param config 配置文件路径
     @param default_app_name 默认App名称
@@ -29,25 +30,18 @@ def create_app(config='app/config/config.cfg', default_app_name='theonestore'):
     
     # config
     if config:
-        osname = os.name.upper()
-        if osname == 'NT':
-            config = config.replace('/', '\\')
         app.config.from_pyfile(config)
 
     return app
 
 
-def enable_logging(app, log_config="app/config/logging.ini"):
+def enable_logging(app, log_config="config/logging.ini"):
     """打开日志记录
     @param app Flask app对象
     @param log_config 日志配置文件，相对于当前app的相对路径，默认是config/logging.ini文件
     """
     if not log_config:
         return
-
-    osname = os.name.upper()
-    if osname == 'NT':
-        log_config = log_config.replace('/', '\\')
     
     log_config = os.path.join(app.root_path, log_config)
     if os.path.isfile(log_config):
@@ -89,3 +83,11 @@ def set_lang(lang):
     tr.install(True)
     current_app.jinja_env.install_gettext_translations(tr)
 
+
+def render_template(template_name, **context):
+    """渲染模板
+    """
+    default_theme_name = current_app.config.get('DEFAULT_THEME_NAME', 'default')
+    new_tpl_file = default_theme_name if template_name[0] == '/' else default_theme_name+'/'
+    new_tpl_file += template_name
+    return flask_render_template(new_tpl_file, **context)

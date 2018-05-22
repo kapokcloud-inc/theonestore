@@ -24,6 +24,6 @@ register_blueprint(app, ROOT_ROUTES)
 register_blueprint(app, ADMIN_ROUTES)
 
 if __name__ == '__main__':
-    app.config.from_pyfile('app/config/config.dev.cfg')
+    app.config.from_pyfile('config/config.dev.cfg')
     app.run(host='127.0.0.1', debug=True, port=1105)
 
