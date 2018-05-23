@@ -76,7 +76,7 @@ def register_blueprint(app, modules):
 
 def set_lang(lang):
     """设置语言"""
-    locale_dir = 'app/locale'
+    locale_dir = 'locale'
 
     gettext.install('lang', locale_dir, unicode=True)
     tr = gettext.translation('lang', locale_dir, languages=[lang])
