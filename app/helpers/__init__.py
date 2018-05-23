@@ -76,12 +76,12 @@ def register_blueprint(app, modules):
 
 def set_lang(lang):
     """设置语言"""
-    locale_dir = 'app/locale'
+    locale_dir = 'locale'
 
     gettext.install('lang', locale_dir, unicode=True)
     tr = gettext.translation('lang', locale_dir, languages=[lang])
     tr.install(True)
-    current_app.jinja_env.install_gettext_translations(tr)
+    current_app.jinja_env.install_gettext_translations(tr, newstyle=True)
 
 
 def render_template(template_name, **context):

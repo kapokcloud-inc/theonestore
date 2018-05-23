@@ -1,0 +1,32 @@
+# Chinese translations for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-05-23 11:05+0800\n"
+"PO-Revision-Date: 2018-05-23 11:06+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh\n"
+"Language-Team: zh <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.3\n"
+
+#: templates/default/admin/auth/login.html.j2:1
+msgid "Hello World!"
+msgstr "你好世界"
+
+#: templates/default/admin/auth/login.html.j2:2
+msgid "admin.auth.login.username"
+msgstr "用户名"
+
+#: templates/default/admin/auth/login.html.j2:3
+msgid "中文"
+msgstr "中文"
+

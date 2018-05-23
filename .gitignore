@@ -48,7 +48,7 @@ coverage.xml
 .pytest_cache/
 
 # Translations
-#*.mo
+*.mo
 #*.pot
 
 # Django stuff:
@@ -112,3 +112,6 @@ run/
 
 # vscode
 .vscode/
+
+# .DS_Store
+.DS_Store
