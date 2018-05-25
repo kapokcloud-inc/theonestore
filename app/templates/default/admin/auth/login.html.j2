@@ -1,1 +1,101 @@
-<h1>{{ _('Hello World!') }}</h1>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/default/admin/plugins/images/favicon.png">
+  <title>{{ _('一店-登录') }}</title>
+  <!-- Bootstrap Core CSS -->
+  <link href="/static/default/admin/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- animation CSS -->
+  <link href="/static/default/admin/css/animate.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="/static/default/admin/css/style.css" rel="stylesheet">
+  <!-- color CSS -->
+  <link href="/static/default/admin/css/colors/default.css" id="theme" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <div class="cssload-speeding-wheel"></div>
+  </div>
+  <section id="wrapper" class="new-login-register">
+    <div class="new-login-box">
+      <div class="white-box">
+        <h3 class="box-title m-b-0">{{ _('登录一店管理后台') }}</h3>
+        <small>{{ _('请输入下面的详细信息') }}</small>
+        <form class="form-horizontal new-lg-form" id="loginform" action="index.html">
+
+          <div class="form-group  m-t-20">
+            <div class="col-xs-12">
+              <label>{{ _('手机号码') }}</label>
+              <input class="form-control" type="text" required="" placeholder="{{ _('请输入手机号码') }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12">
+              <label>{{ _('密码') }}</label>
+              <input class="form-control" type="password" required="" placeholder="{{ _('请输入密码') }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-12">
+              <div class="checkbox checkbox-info pull-left p-t-0">
+                <input id="checkbox-signup" type="checkbox">
+                <label for="checkbox-signup"> {{ _('记住我') }} </label>
+              </div>
+              <a href="javascript:void(0)" id="to-recover" class="text-dark pull-right">
+                <i class="fa fa-lock m-r-5"></i> {{ _('忘记密码？') }}</a>
+            </div>
+          </div>
+          <div class="form-group text-center m-t-20">
+            <div class="col-xs-12">
+              <button class="btn btn-info btn-lg btn-block btn-rounded text-uppercase waves-effect waves-light" type="submit">{{ _('登录') }}</button>
+            </div>
+          </div>
+        </form>
+        <form class="form-horizontal" id="recoverform" action="index.html">
+          <div class="form-group ">
+            <div class="col-xs-12">
+              <h3>{{ _('找回密码') }}</h3>
+              <p class="text-muted">{{ _('操作方法将会发送到你所输入的邮箱上') }}</p>
+            </div>
+          </div>
+          <div class="form-group ">
+            <div class="col-xs-12">
+              <input class="form-control" type="text" required="" placeholder="{{ _('请输入你的邮箱') }}">
+            </div>
+          </div>
+          <div class="form-group text-center m-t-20">
+            <div class="col-xs-12">
+              <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">{{ _('重置') }}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- jQuery -->
+  <script src="/static/default/admin/plugins/bower_components/jquery/dist/jquery.min.js"></script>
+  <!-- Bootstrap Core JavaScript -->
+  <script src="/static/default/admin/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- Menu Plugin JavaScript -->
+  <script src="/static/default/admin/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+
+  <!--slimscroll JavaScript -->
+  <script src="/static/default/admin/js/jquery.slimscroll.js"></script>
+  <!--Wave Effects -->
+  <script src="/static/default/admin/js/waves.js"></script>
+  <!-- Custom Theme JavaScript -->
+  <script src="/static/default/admin/js/custom.min.js"></script>
+  <!--Style Switcher -->
+  <script src="/static/default/admin//plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+</body>
+
+</html>
