@@ -15,11 +15,10 @@ from flask import (
     Blueprint,
     g,
     redirect,
-    url_for
 )
 
-from app.helpers import render_template
-
+from app.helpers import render_template, log_info
+from app.models.auth import AdminUsers
 
 auth = Blueprint('admin.auth', __name__)
 
@@ -42,3 +41,27 @@ def login():
         return False
 
     return render_template('admin/auth/login.html.j2', f={}, errormsg={})
+
+
+@auth.route('/create')
+def create():
+    """创建管理员"""
+    return render_template('admin/auth/admin_user_detail.html.j2')
+
+
+@auth.route('/edit/<int:admin_uid>')
+def edit(admin_uid):
+    """编辑管理员"""
+    return render_template('admin/auth/admin_user_detail.html.j2')
+
+
+@auth.route('/delete/<int:admin_uid>')
+def delete(admin_uid):
+    """删除管理员"""
+    return 'delete admin'
+
+
+@auth.route('/save', methods=['POST'])
+def save():
+    """保存管理员"""
+    return 'save'

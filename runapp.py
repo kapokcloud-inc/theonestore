@@ -16,6 +16,7 @@ from app.helpers import (
 )
 from app.routes import ROOT_ROUTES
 from app.routes.admin import ADMIN_ROUTES
+from app.database import db
 
 # 创建App
 app = create_app()
@@ -30,6 +31,8 @@ babel.init_app(app)
 # 注册路由
 register_blueprint(app, ROOT_ROUTES)
 register_blueprint(app, ADMIN_ROUTES)
+
+db.init_app(app)
 
 if __name__ == '__main__':
     app.config.from_pyfile('config/config.dev.cfg')
