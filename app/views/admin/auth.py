@@ -43,6 +43,12 @@ def login():
     return render_template('admin/auth/login.html.j2', f={}, errormsg={})
 
 
+@auth.route('/')
+def index():
+    """管理员列表"""
+    admin_users = AdminUsers.query.all()
+    return render_template('admin/auth/admin_user_index.html.j2', admin_users=admin_users)
+
 @auth.route('/create')
 def create():
     """创建管理员"""
