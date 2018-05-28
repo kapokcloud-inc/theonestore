@@ -1,0 +1,103 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    <div class="row bg-title">
+      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+        <li role="presentation" class="active">
+          <a href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-home"></i>
+            </span>
+            <span class="hidden-xs">{{_('短信')}}</span>
+          </a>
+        </li>
+        <li role="presentation" class="">
+          <a href="#profile1" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('存储')}}</span>
+          </a>
+        </li>
+        <li role="presentation" class="">
+          <a href="#messages1" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-email"></i>
+            </span>
+            <span class="hidden-xs">{{_('系统')}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- .row -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <div class="white-box">
+          <h3 class="box-title">Custom Design Tab</h3>
+          <p class="text-muted m-b-30">Use default tab with class
+            <code>customtab</code>
+          </p>
+          <div class="m-b-40">
+            <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+              <li role="presentation" class="active">
+                <a href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true" style="background:none !important">
+                  <span class="visible-xs">
+                    <i class="ti-home"></i>
+                  </span>
+                  <span class="hidden-xs">{{_('七牛')}}</span>
+                </a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#profile1" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false" style="background:none !important">
+                  <span class="visible-xs">
+                    <i class="ti-user"></i>
+                  </span>
+                  <span class="hidden-xs">{{_('OSS')}}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <form class="no-bg-addon">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control" id="Mobile" placeholder="{{_('手机号码')}}">
+                <div class="input-group-addon">
+                  <i class="ti-mobile"></i>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control" id="Name" placeholder="{{_('用&nbsp;&nbsp;户&nbsp;&nbsp;名')}}">
+                <div class="input-group-addon">
+                  <i class="ti-user"></i>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <input type="password" class="form-control" id="Password" placeholder="{{_('密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码')}}">
+                <div class="input-group-addon">
+                  <i class="ti-lock"></i>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <input type="password" class="form-control" id="Repeatpassword" placeholder="{{_('重复密码')}}">
+                <div class="input-group-addon">
+                  <i class="ti-lock"></i>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-block btn-danger btn-lg btn-rounded">{{_('提交')}}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+</div>
+{% endblock %}
