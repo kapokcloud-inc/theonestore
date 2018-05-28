@@ -1,19 +1,12 @@
 {% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
 
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    <div class="row bg-title">
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-        <h4 class="page-title">{{_('管理员')}}</h4>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-        <a href="{{ url_for('admin.auth.create') }}" target="_blank" 
-        class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" 
-        style="display:block!important">{{_('添加管理员')}}</a>
-      </div>
-      <!-- /.col-lg-12 -->
-    </div>
+    {% set breadcrumbs = [{'title':_('管理员'), 'href':""}] %}
+    {% set button = {'title':_('添加管理员'), 'href':url_for('admin.auth.create')} %}
+    {{ libs.breadcrumbs(breadcrumbs, button) }}
     <!-- .row -->
     <div class="row el-element-overlay m-b-40">
       <!-- /.usercard -->

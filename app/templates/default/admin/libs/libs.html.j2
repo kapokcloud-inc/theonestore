@@ -1,0 +1,18 @@
+{# 分页html #}
+{% macro breadcrumbs(breadcrumbs=[], button={}) -%}
+  <div class="row bg-title">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+      <h4 class="page-title">
+        {% for _breadcrumbs in breadcrumbs %}
+          {% set delimiter = '>>' if loop.index % 2 == 0 else '' %}
+          {{ _breadcrumbs['title'] }}{{ delimiter }}
+        {% endfor %}
+      </h4>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+      <a href="{{ button['href'] }}" target="_blank" 
+      class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" 
+      style="display:block!important">{{ button['title'] }}</a>
+    </div>
+  </div>
+{%- endmacro %}

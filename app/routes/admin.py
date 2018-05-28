@@ -11,6 +11,7 @@
 from app.views import admin
 
 ADMIN_ROUTES = (
-    (admin.auth, '/admin/auth'),
-    (admin.dashboard, '/admin/dashboard'),
+    (admin.auth,        '/admin/auth'),
+    (admin.dashboard,   '/admin/dashboard'),
+    (admin.sys,         '/admin/sys'),
 )
