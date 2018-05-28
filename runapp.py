@@ -8,7 +8,6 @@
 """
 from flask_babel import Babel
 
-from app import configure_before_handlers
 from app.helpers import (
     create_app, 
     enable_logging,

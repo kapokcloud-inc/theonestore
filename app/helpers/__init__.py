@@ -12,6 +12,7 @@ import os
 import gettext
 import logging
 import logging.config
+import string
 
 from flask import (
     Flask,
@@ -74,20 +75,56 @@ def register_blueprint(app, modules):
             app.register_blueprint(module, url_prefix=url_prefix)
 
 
-def set_lang(lang):
-    """设置语言"""
-    locale_dir = 'locale'
-
-    gettext.install('lang', locale_dir, unicode=True)
-    tr = gettext.translation('lang', locale_dir, languages=[lang])
-    tr.install(True)
-    current_app.jinja_env.install_gettext_translations(tr, newstyle=True)
-
-
 def render_template(template_name, **context):
-    """渲染模板
-    """
+    """渲染模板"""
     default_theme_name = current_app.config.get('DEFAULT_THEME_NAME', 'default')
     new_tpl_file = default_theme_name if template_name[0] == '/' else default_theme_name+'/'
     new_tpl_file += template_name
     return flask_render_template(new_tpl_file, **context)
+
+
+def toint(s, base=10):
+    """
+    字符串转换成整型，对于不能转换的返回0
+    :param s: 需要转换的字符串
+    :param base: 多少进制，默认是10进制。如果是16进制，可以写0x或者0X
+    :return: int
+    """
+    ns = u'%s' % s
+    if ns.find('.') != -1:
+        try:
+            return int(string.atof(ns))
+        except ValueError:
+            #忽略错误
+            pass
+    else:
+        try:
+            return string.atoi(ns, base)
+        except ValueError:
+            #忽略错误
+            pass
+
+    return 0
+
+
+def tofloat(s):
+    """
+    字符串转换成浮点型, 对于不能转换的返回float(0)
+    :param s: 需要转换的字符串
+    :return: float
+    """
+    try:
+        return string.atof(s)
+    except ValueError:
+        pass
+
+    return float(0)
+
+
+def tolong(s):
+    try:
+        return string.atol(s)
+    except ValueError:
+        pass
+
+    return long(0)

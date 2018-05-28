@@ -20,6 +20,3 @@ class BaseModel(object):
 
     __repr__ = __str__
 
-
-    
-

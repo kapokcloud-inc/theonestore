@@ -28,13 +28,13 @@
     <div class="new-login-box">
       <div class="white-box">
         <h3 class="box-title m-b-0">{{ _('登录一店管理后台') }}</h3>
-        <small>{{ _('请输入下面的详细信息') }}</small>
+        <small>{{ _('请输入帐号/手机和密码') }}</small>
         <form class="form-horizontal new-lg-form" id="loginform" action="index.html">
 
           <div class="form-group  m-t-20">
             <div class="col-xs-12">
-              <label>{{ _('手机号码') }}</label>
-              <input class="form-control" type="text" required="" placeholder="{{ _('请输入手机号码') }}">
+              <label>{{ _('手机号码/帐号') }}</label>
+              <input class="form-control" type="text" required="" placeholder="{{ _('请输入手机号码/帐号') }}">
             </div>
           </div>
           <div class="form-group">
@@ -46,7 +46,7 @@
           <div class="form-group">
             <div class="col-md-12">
               <div class="checkbox checkbox-info pull-left p-t-0">
-                <input id="checkbox-signup" type="checkbox">
+                <input id="checkbox-signup" type="checkbox" name="remember_me">
                 <label for="checkbox-signup"> {{ _('记住我') }} </label>
               </div>
               <a href="javascript:void(0)" id="to-recover" class="text-dark pull-right">
