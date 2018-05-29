@@ -1,4 +1,5 @@
 {% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
 
 {% block body %}
 <div id="page-wrapper">
@@ -14,7 +15,7 @@
           </a>
         </li>
         <li role="presentation" class="">
-          <a href="#profile1" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+          <a href="{{ url_for('admin.config.storage_qiniu') }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
             <span class="visible-xs">
               <i class="ti-user"></i>
             </span>
@@ -59,14 +60,12 @@
               </li>
             </ul>
           </div>
-          <form class="no-bg-addon" action="" method="POST">
-            <div class="form-group">
-              <div class="input-group">
-                <input type="text" class="form-control" id="apikey" placeholder="{{_('apikey')}}">
-                <div class="input-group-addon"></div>
-              </div>
-            </div>
-            <button class="btn btn-block btn-danger btn-lg btn-rounded">{{_('提交')}}</button>
+          <form class="form-horizontal" action="{{ url_for('admin.config.sms_alisms') }}" method="POST">
+            {{ form.csrf_token }}
+            {{ libs.wtf_input(form.access_key_id, _('Access Key ID'), data.access_key_id, _class="form-control") }}
+            {{ libs.wtf_input(form.access_key_secret, _('Access Key Secret'), data.access_key_secret, _class="form-control") }}
+            {{ libs.wtf_input(form.app_name, _('前缀'), data.app_name, _class="form-control") }}
+            {{ libs.wtf_submit() }}
           </form>
         </div>
       </div>

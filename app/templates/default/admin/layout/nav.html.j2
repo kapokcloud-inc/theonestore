@@ -11,18 +11,22 @@
     </div>
     <div class="user-profile"></div>
     <ul class="nav" id="side-menu">
-      <li>
-        <a href="{{ url_for('admin.auth.index') }}" class="waves-effect">
-          <i class="mdi mdi-account-card-details fa-fw"></i>
-          <span class="hide-menu">{{_('管理员')}}</span>
-        </a>
-      </li>
-      <li>
-        <a href="{{ url_for('admin.config.sms_yunpian') }}" class="waves-effect">
-          <i class="mdi mdi-account-card-details fa-fw"></i>
-          <span class="hide-menu">{{_('配置项')}}</span>
-        </a>
-      </li>
+      {% set _view = request.path.split('/')[2] %}
+      {%
+        set menu_list = [
+                          {'title':_('管理员'), 'href':url_for('admin.auth.index'), 'view':'auth'},
+                          {'title':_('配置项'), 'href':url_for('admin.config.sms_yunpian'), 'view':'config'},
+                        ]
+      %}
+      {% for menu in menu_list %}
+        <li>
+          {% set is_active = 'active' if menu['view'] == _view else '' %}
+          <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
+            <i class="mdi mdi-account-card-details fa-fw"></i>
+            <span class="hide-menu">{{ menu['title'] }}</span>
+          </a>
+        </li>
+      {% endfor %}
     </ul>
   </div>
 </div>

@@ -18,3 +18,21 @@
     </div>
   </div>
 {%- endmacro %}
+
+
+{# WTF #}
+{% macro wtf_input(_field, _label_text="", _value="", _class="", _placeholder="") -%}
+  <div class="form-group">
+    <label class="col-md-3 control-label">{{ _label_text }}</label>
+    <div class="col-md-9">
+      {{ _field(class=_class, value=_value, placeholder=_placeholder) }}
+      {% for error in _field.errors %}
+        <span class="help-block with-errors" style="color: red;">* {{ error }}</span>
+      {% endfor %}
+    </div>
+  </div>
+{%- endmacro %}
+
+{% macro wtf_submit() -%}
+  <button class="btn btn-block btn-danger btn-lg btn-rounded">{{_('提交')}}</button>
+{%- endmacro %}
