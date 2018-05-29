@@ -6,7 +6,7 @@
     <div class="row bg-title">
       <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
         <li role="presentation" class="active">
-          <a href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true" style="background:none !important">
+          <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true" style="background:none !important">
             <span class="visible-xs">
               <i class="ti-home"></i>
             </span>
@@ -42,54 +42,28 @@
           <div class="m-b-40">
             <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
               <li role="presentation" class="active">
-                <a href="#home1" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true" style="background:none !important">
+                <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true" style="background:none !important">
                   <span class="visible-xs">
                     <i class="ti-home"></i>
                   </span>
-                  <span class="hidden-xs">{{_('七牛')}}</span>
+                  <span class="hidden-xs">{{_('云片')}}</span>
                 </a>
               </li>
               <li role="presentation" class="">
-                <a href="#profile1" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false" style="background:none !important">
+                <a href="{{ url_for('admin.config.sms_alisms') }}" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false" style="background:none !important">
                   <span class="visible-xs">
                     <i class="ti-user"></i>
                   </span>
-                  <span class="hidden-xs">{{_('OSS')}}</span>
+                  <span class="hidden-xs">{{_('阿里')}}</span>
                 </a>
               </li>
             </ul>
           </div>
-          <form class="no-bg-addon">
+          <form class="no-bg-addon" action="" method="POST">
             <div class="form-group">
               <div class="input-group">
-                <input type="text" class="form-control" id="Mobile" placeholder="{{_('手机号码')}}">
-                <div class="input-group-addon">
-                  <i class="ti-mobile"></i>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="input-group">
-                <input type="text" class="form-control" id="Name" placeholder="{{_('用&nbsp;&nbsp;户&nbsp;&nbsp;名')}}">
-                <div class="input-group-addon">
-                  <i class="ti-user"></i>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="input-group">
-                <input type="password" class="form-control" id="Password" placeholder="{{_('密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码')}}">
-                <div class="input-group-addon">
-                  <i class="ti-lock"></i>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="input-group">
-                <input type="password" class="form-control" id="Repeatpassword" placeholder="{{_('重复密码')}}">
-                <div class="input-group-addon">
-                  <i class="ti-lock"></i>
-                </div>
+                <input type="text" class="form-control" id="apikey" placeholder="{{_('apikey')}}">
+                <div class="input-group-addon"></div>
               </div>
             </div>
             <button class="btn btn-block btn-danger btn-lg btn-rounded">{{_('提交')}}</button>

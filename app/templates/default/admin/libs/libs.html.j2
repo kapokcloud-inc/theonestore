@@ -10,9 +10,11 @@
       </h4>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-      <a href="{{ button['href'] }}" target="_blank" 
-      class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" 
-      style="display:block!important">{{ button['title'] }}</a>
+      {% if button %}
+        <a href="{{ button['href'] }}" target="_blank" 
+        class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" 
+        style="display:block!important">{{ button['title'] }}</a>
+      {% endif %}
     </div>
   </div>
 {%- endmacro %}

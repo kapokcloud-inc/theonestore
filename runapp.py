@@ -36,5 +36,5 @@ db.init_app(app)
 if __name__ == '__main__':
     app.config.from_pyfile('config/config.dev.cfg')
     babel.init_app(app)
-    app.run(host='127.0.0.1', debug=True, port=1105)
+    app.run(host='127.0.0.1', debug=True, port=5000)
 
