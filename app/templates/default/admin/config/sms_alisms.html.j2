@@ -6,7 +6,7 @@
     <div class="row bg-title">
       <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
         <li role="presentation" class="active">
-          <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true" style="background:none !important">
+          <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="messages" role="tab" aria-expanded="true" style="background:none !important">
             <span class="visible-xs">
               <i class="ti-home"></i>
             </span>
@@ -14,7 +14,7 @@
           </a>
         </li>
         <li role="presentation" class="">
-          <a href="#profile1" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false" style="background:none !important">
+          <a href="#profile1" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
             <span class="visible-xs">
               <i class="ti-user"></i>
             </span>
@@ -22,7 +22,7 @@
           </a>
         </li>
         <li role="presentation" class="">
-          <a href="#messages1" aria-controls="messages" role="tab" data-toggle="tab" aria-expanded="false" style="background:none !important">
+          <a href="#messages1" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
             <span class="visible-xs">
               <i class="ti-email"></i>
             </span>
@@ -42,7 +42,7 @@
           <div class="m-b-40">
             <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
               <li role="presentation" class="">
-                <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true" style="background:none !important">
+                <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="yunpian" role="tab" aria-expanded="true" style="background:none !important">
                   <span class="visible-xs">
                     <i class="ti-home"></i>
                   </span>
@@ -50,7 +50,7 @@
                 </a>
               </li>
               <li role="presentation" class="active">
-                <a href="{{ url_for('admin.config.sms_alisms') }}">
+                <a href="{{ url_for('admin.config.sms_alisms') }}" aria-controls="alisms" role="tab" aria-expanded="false" style="background:none !important">
                   <span class="visible-xs">
                     <i class="ti-user"></i>
                   </span>
