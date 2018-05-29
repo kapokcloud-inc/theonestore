@@ -23,27 +23,27 @@ from app.helpers import (
 )
 from app.database import db
 
-sys = Blueprint('admin.sys', __name__)
+config = Blueprint('admin.config', __name__)
 
-@sys.route('/sms/yunpian')
+@config.route('/sms/yunpian')
 def sms_yunpian():
     """配置云片短信"""
     return render_template('admin/sys/sms_yunpian.html.j2')
 
 
-@sys.route('/sms/alisms')
+@config.route('/sms/alisms')
 def sms_alisms():
     """配置阿里短信"""
     return render_template('admin/sys/sms_alisms.html.j2')
 
 
-@sys.route('/storage/qiniu')
+@config.route('/storage/qiniu')
 def storage_qiniu():
     """配置七牛存储"""
     return render_template('admin/sys/storage_qiniu.html.j2')
 
 
-@sys.route('/storage/alioss')
+@config.route('/storage/alioss')
 def storage_alioss():
     """配置七牛存储"""
     return render_template('admin/sys/storage_alioss.html.j2')
