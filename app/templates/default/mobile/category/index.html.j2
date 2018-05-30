@@ -1,0 +1,126 @@
+{% extends '/default/mobile/layout/base.html.j2' %} {% block head %}
+<title>一店 - 分类</title>
+<link rel="stylesheet" href="/static/default/mobile/css/category.css"> {% endblock%} 
+{% block body %}
+<div class="category_wrap mar-top">
+  <ul class="category">
+    <li class="flex">
+      <a href="">
+        <div class="category_phone">
+          <img src="/static/default/mobile/img/buy.png" alt="">
+        </div>
+        <p class="category_name">手机</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="">
+        <div class="category_phone">
+          <img src="/static/default/mobile/img/install.png" alt="">
+        </div>
+        <p class="category_name">化妆品</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="">
+        <div class="category_phone">
+          <img src="/static/default/mobile/img/maintain.png" alt="">
+        </div>
+        <p class="category_name">衣服</p>
+      </a>
+    </li>
+  </ul>
+  <ul class="category">
+    <li class="flex">
+      <a href="">
+        <div class="category_phone">
+          <img src="/static/default/mobile/img/buy.png" alt="">
+        </div>
+        <p class="category_name">手机</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="">
+        <div class="category_phone">
+          <img src="/static/default/mobile/img/install.png" alt="">
+        </div>
+        <p class="category_name">化妆品</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="">
+        <div class="category_phone">
+          <img src="/static/default/mobile/img/maintain.png" alt="">
+        </div>
+        <p class="category_name">衣服</p>
+      </a>
+    </li>
+  </ul>
+  <ul class="category">
+    <li class="flex">
+      <a href="">
+        <div class="category_phone">
+          <img src="/static/default/mobile/img/buy.png" alt="">
+        </div>
+        <p class="category_name">手机</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="">
+        <div class="category_phone">
+          <img src="/static/default/mobile/img/install.png" alt="">
+        </div>
+        <p class="category_name">化妆品</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="">
+        <div class="category_phone">
+          <img src="/static/default/mobile/img/maintain.png" alt="">
+        </div>
+        <p class="category_name">衣服</p>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock%} 
+{% block navtabs %}
+<div style="height:60px"></div>
+<div class="foot_wrap">
+  <ul class="footer">
+    <li class="flex">
+      <a href="{{ url_for('mobile.index.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/home.png" alt="">
+        </div>
+        <p class="foot_text">首页</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="{{ url_for('mobile.category.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/categoryOn.png" alt="">
+        </div>
+        <p class="foot_text on">分类</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="{{ url_for('mobile.cart.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/cart.png" alt="">
+        </div>
+        <p class="foot_text">购物车</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="{{ url_for('mobile.user.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/user.png" alt="">
+        </div>
+        <p class="foot_text">我的</p>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock %} 
+
+{% block script %}{% endblock%}

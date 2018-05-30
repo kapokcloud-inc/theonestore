@@ -1,0 +1,244 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+
+{% block head %}
+<title>一店 - 首页</title>
+<link rel="stylesheet" href="/static/default/mobile/css/index.css?v=20180529">
+{% endblock%}
+
+{% block body %} 
+<div class="index_wrap">
+  <div class="weui-search-bar" id="searchBar">
+    <form class="weui-search-bar__form">
+      <div class="weui-search-bar__box">
+        <i class="weui-icon-search"></i>
+        <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" required="">
+        <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+      </div>
+      <label class="weui-search-bar__label" id="searchText">
+        <i class="weui-icon-search"></i>
+        <span>搜索</span>
+      </label>
+    </form>
+    <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+  </div>
+  <div class="category_wrap">
+    <div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <a href="">
+            <img class="swiper-img" src="/static/default/mobile/img/buy.png" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="">
+            <img class="swiper-img" src="/static/default/mobile/img/install.png" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="">
+            <img class="swiper-img" src="/static/default/mobile/img/maintain.png" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="swiper-pagination"></div>
+  <div class="weui-cells" style="background:none !important">
+    <a class="weui-cell weui-cell_access bg-white" href="">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">热卖单品</div>
+      <div class="weui-cell__ft">更多</div>
+    </a>
+    <div class="flex_wrap mar-bottom">
+      <div class="flex bg-white" style="margin-right:10px">
+        <a href="">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/maintain.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">小米Note 3 4GB+64GB</div>
+            <p class="desc">1600万美颜自拍，2倍变焦双摄</p>
+            <div class="price">
+              <span>￥999元</span>
+              <span class="price_del">￥1299元</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="flex bg-white">
+        <a href="">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/buy.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">红米S2 3GB+32GB</div>
+            <p class="desc">前置1600万超大像素智能美拍</p>
+            <div class="price">
+              <span>￥1099元</span>
+              <span class="price_del"></span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="flex_wrap mar-bottom">
+      <div class="flex bg-white" style="margin-right:10px">
+        <a href="">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/install.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">小米5X 4GB+64GB</div>
+            <p class="desc">光学变焦双摄，拍人更美</p>
+            <div class="price">
+              <span>￥1499元</span>
+              <span class="price_del"></span>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="flex bg-white">
+        <a href="">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/maintain.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">小米MIX 2 全陶瓷尊享版</div>
+            <p class="desc">全面屏2.0，Unibody 全陶瓷</p>
+            <div class="price">
+              <span>￥3699元</span>
+              <span class="price_del">￥4699元</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="weui-cells" style="background:none !important">
+    <a class="weui-cell weui-cell_access bg-white" href="">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">必购爆款</div>
+      <div class="weui-cell__ft">更多</div>
+    </a>
+    <div class="flex_wrap mar-bottom">
+      <div class="flex bg-white" style="margin-right:10px">
+        <a href="">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/maintain.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">小米Note 3 4GB+64GB</div>
+            <p class="desc">1600万美颜自拍，2倍变焦双摄</p>
+            <div class="price">
+              <span>￥999元</span>
+              <span class="price_del">￥1299元</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="flex bg-white">
+        <a href="">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/buy.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">红米S2 3GB+32GB</div>
+            <p class="desc">前置1600万超大像素智能美拍</p>
+            <div class="price">
+              <span>￥1099元</span>
+              <span class="price_del"></span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="flex_wrap mar-bottom">
+      <div class="flex bg-white" style="margin-right:10px">
+        <a href="">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/install.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">小米5X 4GB+64GB</div>
+            <p class="desc">光学变焦双摄，拍人更美</p>
+            <div class="price">
+              <span>￥1499元</span>
+              <span class="price_del"></span>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="flex bg-white">
+        <a href="">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/maintain.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">小米MIX 2 全陶瓷尊享版</div>
+            <p class="desc">全面屏2.0，Unibody 全陶瓷</p>
+            <div class="price">
+              <span>￥3699元</span>
+              <span class="price_del">￥4699元</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock%}
+
+{% block navtabs %}
+  <div style="height:60px"></div>
+  <div class="foot_wrap">
+    <ul class="footer">
+      <li class="flex">
+        <a href="{{ url_for('mobile.index.root') }}">
+          <div class="icom_photo">
+            <img src="/static/default/mobile/img/homeOn.png" alt="">
+          </div>
+          <p class="foot_text on">首页</p>
+        </a>
+      </li>
+      <li class="flex">
+        <a href="{{ url_for('mobile.category.root') }}">
+          <div class="icom_photo">
+            <img src="/static/default/mobile/img/category.png" alt="">
+          </div>
+          <p class="foot_text">分类</p>
+        </a>
+      </li>
+      <li class="flex">
+        <a href="{{ url_for('mobile.cart.root') }}">
+          <div class="icom_photo">
+            <img src="/static/default/mobile/img/cart.png" alt="">
+          </div>
+          <p class="foot_text">购物车</p>
+        </a>
+      </li>
+      <li class="flex">
+        <a href="{{ url_for('mobile.user.root') }}">
+          <div class="icom_photo">
+            <img src="/static/default/mobile/img/user.png" alt="">
+          </div>
+          <p class="foot_text">我的</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+{% endblock %}
+
+{% block script %} 
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+  $(".swiper-container").swiper({
+    loop: true,
+    autoplay: 5000,
+  });
+</script>
+{% endblock%}
