@@ -46,7 +46,7 @@ def sms_yunpian():
     if request.method == "GET":
         try:
             data = json.loads(ss.value)
-        except Exception, e:
+        except Exception as e:
             data = {}
     else:
         data = {'ak':form.ak.data, 'app_name':form.app_name.data}
@@ -69,7 +69,7 @@ def sms_alisms():
     if request.method == "GET":
         try:
             data = json.loads(ss.value)
-        except Exception, e:
+        except Exception as e:
             data = {}
     else:
         data = {'access_key_id':form.access_key_id.data,
@@ -94,7 +94,7 @@ def storage_qiniu():
     if request.method == "GET":
         try:
             data = json.loads(ss.value)
-        except Exception, e:
+        except Exception as e:
             data = {}
     else:
         data = {'access_key':form.access_key.data,
@@ -120,7 +120,7 @@ def storage_alioss():
     if request.method == "GET":
         try:
             data = json.loads(ss.value)
-        except Exception, e:
+        except Exception as e:
             data = {}
     else:
         data = {'access_key_id':form.access_key_id.data,
