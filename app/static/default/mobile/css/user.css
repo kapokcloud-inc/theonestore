@@ -1,0 +1,27 @@
+@charset "UTF-8";
+.order_status {
+  display: flex;
+  border-top: 1px solid #ddd;
+  font-size: 12px;
+  text-align: center;
+  padding: 5px 0px;
+}
+.order_status .foot_text {
+  padding-top: 5px;
+}
+.weui-badge {
+  position: absolute;
+  top: 0px;
+  right: 25px;
+  background-color: #fff;
+  color: #f33155;
+  border: 1px solid #f33155;
+  padding: 0px 3px;
+}
+.weui-cell__bd {
+  font-size: 16px;
+  font-weight: 400;
+}
+.user_all_order_wrap .icom_photo img {
+  width: 22px;
+}

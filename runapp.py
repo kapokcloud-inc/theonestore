@@ -18,6 +18,7 @@ from app.helpers import (
 )
 from app.routes import ROOT_ROUTES
 from app.routes.admin import ADMIN_ROUTES
+from app.routes.mobile import MOBILE_ROUTES
 from app.database import db
 
 # 创建App
@@ -33,6 +34,7 @@ babel.init_app(app)
 # 注册路由
 register_blueprint(app, ROOT_ROUTES)
 register_blueprint(app, ADMIN_ROUTES)
+register_blueprint(app, MOBILE_ROUTES)
 
 # 数据库初始化
 db.init_app(app)
