@@ -1,27 +1,31 @@
-{% extends '/default/mobile/layout/base.html.j2' %} {% block head %}
-<title>一店 - 分类</title>
-<link rel="stylesheet" href="/static/default/mobile/css/category.css"> {% endblock%} 
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>一店 - 分类页</title>
+<link rel="stylesheet" href="/static/default/mobile/css/category.css"> 
+{% endblock%}
+
 {% block body %}
 <div class="category_wrap mar-top">
   <ul class="category">
-    <li class="flex">
-      <a href="">
+    <li class="flex34">
+      <a href="{{ url_for('mobile.category.page') }}">
         <div class="category_phone">
           <img src="/static/default/mobile/img/buy.png" alt="">
         </div>
         <p class="category_name">手机</p>
       </a>
     </li>
-    <li class="flex">
-      <a href="">
+    <li class="flex34">
+      <a href="{{ url_for('mobile.category.page') }}">
         <div class="category_phone">
           <img src="/static/default/mobile/img/install.png" alt="">
         </div>
         <p class="category_name">化妆品</p>
       </a>
     </li>
-    <li class="flex">
-      <a href="">
+    <li class="flex34">
+      <a href="{{ url_for('mobile.category.page') }}">
         <div class="category_phone">
           <img src="/static/default/mobile/img/maintain.png" alt="">
         </div>
@@ -30,24 +34,24 @@
     </li>
   </ul>
   <ul class="category">
-    <li class="flex">
-      <a href="">
+    <li class="flex34">
+      <a href="{{ url_for('mobile.category.page') }}">
         <div class="category_phone">
           <img src="/static/default/mobile/img/buy.png" alt="">
         </div>
         <p class="category_name">手机</p>
       </a>
     </li>
-    <li class="flex">
-      <a href="">
+    <li class="flex34">
+      <a href="{{ url_for('mobile.category.page') }}">
         <div class="category_phone">
           <img src="/static/default/mobile/img/install.png" alt="">
         </div>
         <p class="category_name">化妆品</p>
       </a>
     </li>
-    <li class="flex">
-      <a href="">
+    <li class="flex34">
+      <a href="{{ url_for('mobile.category.page') }}">
         <div class="category_phone">
           <img src="/static/default/mobile/img/maintain.png" alt="">
         </div>
@@ -56,33 +60,26 @@
     </li>
   </ul>
   <ul class="category">
-    <li class="flex">
-      <a href="">
+    <li class="flex34">
+      <a href="{{ url_for('mobile.category.page') }}">
         <div class="category_phone">
           <img src="/static/default/mobile/img/buy.png" alt="">
         </div>
         <p class="category_name">手机</p>
       </a>
     </li>
-    <li class="flex">
-      <a href="">
+    <li class="flex34">
+      <a href="{{ url_for('mobile.category.page') }}">
         <div class="category_phone">
           <img src="/static/default/mobile/img/install.png" alt="">
         </div>
         <p class="category_name">化妆品</p>
-      </a>
-    </li>
-    <li class="flex">
-      <a href="">
-        <div class="category_phone">
-          <img src="/static/default/mobile/img/maintain.png" alt="">
-        </div>
-        <p class="category_name">衣服</p>
       </a>
     </li>
   </ul>
 </div>
 {% endblock%} 
+
 {% block navtabs %}
 <div style="height:60px"></div>
 <div class="foot_wrap">

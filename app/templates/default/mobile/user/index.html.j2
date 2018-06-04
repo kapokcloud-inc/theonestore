@@ -1,0 +1,150 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>一店 - 个人中心</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+{% endblock%} 
+
+{% block body %}
+<div class="user_wrap">
+  <div class="weui-cells weui-cells_form">
+    <a class="weui-cell weui-cell_access" href="">
+      <div class="weui-cell__hd avatar mar-right">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">用户名</div>
+      <div class="weui-cell__ft"></div>
+    </a>
+  </div>
+  <div class="user_all_order_wrap">
+    <div class="weui-cells weui-cells_form">
+      <a class="weui-cell weui-cell_access" href="">
+        <div class="weui-cell__bd">我的订单</div>
+        <div class="weui-cell__ft">我的所有订单</div>
+      </a>
+      <ul class="order_status">
+        <li class="flex" style="position:relative">
+          <a href="">
+            <span class="weui-badge">2</span>
+            <div class="icom_photo">
+              <img src="/static/default/mobile/img/pay.png" alt="">
+            </div>
+            <p class="foot_text">待付款</p>
+          </a>
+        </li>
+        <li class="flex"  style="position:relative">
+          <a href="">
+            <span class="weui-badge">1</span>
+            <div class="icom_photo">
+              <img src="/static/default/mobile/img/deliver.png" alt="">
+            </div>
+            <p class="foot_text">待收货</p>
+          </a>
+        </li>
+        <li class="flex" style="position:relative">
+          <a href="">
+            <span class="weui-badge">3</span>
+            <div class="icom_photo">
+              <img src="/static/default/mobile/img/comment.png" alt="">
+            </div>
+            <p class="foot_text">待评价</p>
+          </a>
+        </li>
+        <li class="flex" style="position:relative">
+          <a href="">
+            <span class="weui-badge">1</span>
+            <div class="icom_photo">
+              <img src="/static/default/mobile/img/aftersale.png" alt="">
+            </div>
+            <p class="foot_text">申请售后</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="weui-cells weui-cells_form">
+    <a href="" class="weui-cell weui-cell_access">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">我的钱包</div>
+      <div class="weui-cell__ft">199元</div>
+    </a>
+    <a href="" class="weui-cell weui-cell_access">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">我的优惠券</div>
+      <div class="weui-cell__ft">0张</div>
+    </a>
+    <a href="" class="weui-cell weui-cell_access">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">我的收藏</div>
+      <div class="weui-cell__ft"></div>
+    </a>
+    <a href="" class="weui-cell weui-cell_access">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">我的邀请</div>
+      <div class="weui-cell__ft">邀请新用户送50元</div>
+    </a>
+    <a href="" class="weui-cell weui-cell_access">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">设置</div>
+      <div class="weui-cell__ft"></div>
+    </a>
+  </div>
+  <div class="reg_btn">
+    <a href="">
+      <button type="button" class="weui-btn weui-btn_red">退出登录</button>
+    </a>
+  </div>
+</div>
+{% endblock%} 
+
+{% block navtabs %}
+<div style="height:60px"></div>
+<div class="foot_wrap">
+  <ul class="footer">
+    <li class="flex">
+      <a href="{{ url_for('mobile.index.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/home.png" alt="">
+        </div>
+        <p class="foot_text">首页</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="{{ url_for('mobile.category.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/category.png" alt="">
+        </div>
+        <p class="foot_text">分类</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="{{ url_for('mobile.cart.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/cart.png" alt="">
+        </div>
+        <p class="foot_text">购物车</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="{{ url_for('mobile.user.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/userOn.png" alt="">
+        </div>
+        <p class="foot_text on">我的</p>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock %} 
+
+{% block script %}{% endblock%}
