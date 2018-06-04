@@ -12,7 +12,7 @@
       </td>
     </tr>
   </tfoot>
-{%- endmacro %}
+{% endmacro %}
 
 {# 分页 - 生成分页html #}
 {% macro build_pagination_html(pagination) %}
@@ -128,31 +128,69 @@
       {% endfor %}
     </div>
   </div>
-{%- endmacro %}
+{% endmacro %}
 
 {# WTF - 提交按钮 #}
 {% macro wtf_submit() -%}
   <button class="btn btn-block btn-danger btn-lg btn-rounded">{{_('提交')}}</button>
-{%- endmacro %}
+{% endmacro %}
+
+
+{# 构造form表单 #}
+{% macro render_form(form, action='', method='POST', enctype='') %}
+<form class="form-horizontal" action="{{ action }}" method="{{ method }}"{% if enctype %} enctype="{{ enctype }}"{% endif %}>
+{%- for name, field  in form._fields|iteritems -%}
+{% if name != 'csrf_token' %}
+  <div class="form-group">
+    <label for="{{ name }}" class="control-label col-xs-12 col-sm-3 col-md-2 col-lg-1">{{ field.label }}</label>
+    <div class="col-xs-12 col-sm-7 col-md-5 col-lg-3">
+    {% for validator in field.validators %}
+    {% endfor %}
+      {{ field(class_='form-control', **kwargs) }}
+    {%- if field.description -%}
+      <span class="help-block m-b-none">{{ field.description }}</span>
+    {%- endif -%}
+    {%- for error in field.errors -%}
+      <span class="help-block m-b-none">{{ error }}</span>
+    {%- endfor -%}
+    </div>
+  </div>
+{% endif %}
+{% endfor %}
+  {{ form.csrf_token }}
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-md-offset-2 col-lg-offset-1 col-xs-12 col-sm-7 col-md-5 col-lg-3">
+      <button type="submit" class="btn btn-danger btn-md " id="submit">保存</button>
+    </div>
+  </div>
+</form>
+{%- endmacro -%}
 
 
 {# 其它 - 面包屑html #}
 {% macro breadcrumbs(breadcrumbs=[], button={}) -%}
   <div class="row bg-title">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-      <h4 class="page-title">
+      <ol class="breadcrumb pull-left">
         {% for _breadcrumbs in breadcrumbs %}
-          {% set delimiter = '>>' if loop.index % 2 == 0 else '' %}
-          {{ _breadcrumbs['title'] }}{{ delimiter }}
+          {% set is_active = '' if _breadcrumbs['href'] else 'active' %}
+          <li class="{{ is_active }}">
+            {% if _breadcrumbs['href'] %}
+              <a href="{{ _breadcrumbs['href'] }}">{{ _breadcrumbs['title'] }}</a>
+            {% else %}
+              {{ _breadcrumbs['title'] }}
+            {% endif %}
+          </li>
         {% endfor %}
-      </h4>
+      </ol>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
       {% if button %}
-        <a href="{{ button['href'] }}" target="_blank" 
-        class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" 
-        style="display:block !important">{{ button['title'] }}</a>
+        <a href="{{ button['href'] }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display:block !important">
+          {{ button['title'] }}
+        </a>
       {% endif %}
     </div>
   </div>
-{%- endmacro %}
+{% endmacro %}
+

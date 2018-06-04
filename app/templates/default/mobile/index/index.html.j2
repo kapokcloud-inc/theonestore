@@ -2,7 +2,7 @@
 
 {% block head %}
 <title>一店 - 首页</title>
-<link rel="stylesheet" href="/static/default/mobile/css/index.css?v=20180529">
+<link rel="stylesheet" href="/static/default/mobile/css/index.css">
 {% endblock%}
 
 {% block body %} 
@@ -44,7 +44,7 @@
   </div>
   <div class="swiper-pagination"></div>
   <div class="weui-cells" style="background:none !important">
-    <a class="weui-cell weui-cell_access bg-white" href="">
+    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.category.page') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
@@ -52,7 +52,7 @@
       <div class="weui-cell__ft">更多</div>
     </a>
     <div class="flex_wrap mar-bottom">
-      <div class="flex bg-white" style="margin-right:10px">
+      <div class="flex50 bg-white" style="margin-right:10px">
         <a href="">
           <div class="product_phone">
             <img src="/static/default/mobile/img/maintain.png" alt="">
@@ -67,7 +67,7 @@
           </div>
         </a>
       </div>
-      <div class="flex bg-white">
+      <div class="flex50 bg-white">
         <a href="">
           <div class="product_phone">
             <img src="/static/default/mobile/img/buy.png" alt="">
@@ -84,7 +84,7 @@
       </div>
     </div>
     <div class="flex_wrap mar-bottom">
-      <div class="flex bg-white" style="margin-right:10px">
+      <div class="flex50 bg-white" style="margin-right:10px">
         <a href="">
           <div class="product_phone">
             <img src="/static/default/mobile/img/install.png" alt="">
@@ -95,21 +95,6 @@
             <div class="price">
               <span>￥1499元</span>
               <span class="price_del"></span>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="flex bg-white">
-        <a href="">
-          <div class="product_phone">
-            <img src="/static/default/mobile/img/maintain.png" alt="">
-          </div>
-          <div class="product_detail">
-            <div class="title">小米MIX 2 全陶瓷尊享版</div>
-            <p class="desc">全面屏2.0，Unibody 全陶瓷</p>
-            <div class="price">
-              <span>￥3699元</span>
-              <span class="price_del">￥4699元</span>
             </div>
           </div>
         </a>
@@ -117,7 +102,7 @@
     </div>
   </div>
   <div class="weui-cells" style="background:none !important">
-    <a class="weui-cell weui-cell_access bg-white" href="">
+    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.category.page') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
@@ -125,7 +110,7 @@
       <div class="weui-cell__ft">更多</div>
     </a>
     <div class="flex_wrap mar-bottom">
-      <div class="flex bg-white" style="margin-right:10px">
+      <div class="flex50 bg-white" style="margin-right:10px">
         <a href="">
           <div class="product_phone">
             <img src="/static/default/mobile/img/maintain.png" alt="">
@@ -140,7 +125,7 @@
           </div>
         </a>
       </div>
-      <div class="flex bg-white">
+      <div class="flex50 bg-white">
         <a href="">
           <div class="product_phone">
             <img src="/static/default/mobile/img/buy.png" alt="">
@@ -157,7 +142,7 @@
       </div>
     </div>
     <div class="flex_wrap mar-bottom">
-      <div class="flex bg-white" style="margin-right:10px">
+      <div class="flex50 bg-white" style="margin-right:10px">
         <a href="">
           <div class="product_phone">
             <img src="/static/default/mobile/img/install.png" alt="">
@@ -168,21 +153,6 @@
             <div class="price">
               <span>￥1499元</span>
               <span class="price_del"></span>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="flex bg-white">
-        <a href="">
-          <div class="product_phone">
-            <img src="/static/default/mobile/img/maintain.png" alt="">
-          </div>
-          <div class="product_detail">
-            <div class="title">小米MIX 2 全陶瓷尊享版</div>
-            <p class="desc">全面屏2.0，Unibody 全陶瓷</p>
-            <div class="price">
-              <span>￥3699元</span>
-              <span class="price_del">￥4699元</span>
             </div>
           </div>
         </a>

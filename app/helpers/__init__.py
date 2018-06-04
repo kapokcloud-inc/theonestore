@@ -20,6 +20,12 @@ from flask import (
     request,
     render_template as flask_render_template,
 )
+from flask_uploads import (
+    UploadSet, 
+    configure_uploads as flask_configure_uploads, 
+    DEFAULTS,
+    patch_request_class
+)
 
 
 def create_app(config='config/config.cfg', default_app_name='app'):
@@ -47,6 +53,21 @@ def enable_logging(app, log_config="config/logging.ini"):
     log_config = os.path.join(app.root_path, log_config)
     if os.path.isfile(log_config):
         logging.config.fileConfig(log_config)
+
+
+def configure_uploads(app):
+    """配置上传"""
+    UPLOADED_FILES_DEST = app.config.get('UPLOADED_FILES_DEST', 'uploads')
+    if UPLOADED_FILES_DEST[0] != '/':
+        UPLOADED_FILES_DEST = os.path.join(os.getcwd(), 'uploads')
+    
+    print('UPLOADED_FILES_DEST:%s' % UPLOADED_FILES_DEST)
+    app.config['UPLOADED_FILES_DEST'] = UPLOADED_FILES_DEST
+    
+    # default = UploadSet('default', DEFAULTS)
+    # flask_configure_uploads(app, default)
+    # 最大上传文件大小64M，MAX_CONTENT_LENGTH=64*1024*1024
+    patch_request_class(app)
 
 
 def log_info(logtext):

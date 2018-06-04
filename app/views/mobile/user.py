@@ -24,5 +24,5 @@ user = Blueprint('mobile.user', __name__)
 
 @user.route('/')
 def root():
-    """手机站 - 我的"""
+    """手机站 - 个人中心"""
     return render_template('mobile/user/index.html.j2')

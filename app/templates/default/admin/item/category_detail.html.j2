@@ -4,7 +4,7 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    {% set breadcrumbs = [{'title':_('商品分类'), 'href':""}, {'title':_('添加商品分类'), 'href':""}] %}
+    {% set breadcrumbs = [{'title':_('商品分类'), 'href':url_for('admin.item.categories')}, {'title':_('添加商品分类'), 'href':""}] %}
     {{ libs.breadcrumbs(breadcrumbs, button) }}
     <!-- .row -->
     <div class="row">

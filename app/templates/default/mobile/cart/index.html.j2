@@ -1,0 +1,192 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>一店 - 我的购物车</title>
+<link rel="stylesheet" href="/static/default/mobile/css/cart.css"> 
+{% endblock%} 
+
+{% block body %}
+<div class="cart_wrap">
+  <!-- <div class="content_wrap">
+    <div class="weui-cells weui-cells_checkbox">
+      <div class="weui-cell weui-cell_swiped">
+        <div class="weui-cell__bd">
+          <div class="weui-cell">
+            <div class="weui-cell__hd" style="height:50px">
+              <input type="checkbox" class="weui-check" name="checkbox1" value="1"> 
+              <i class="weui-icon-checked"></i>
+              <div class="cart_phone">
+                <img alt="" src="">
+              </div>
+            </div>
+            <div class="weui-cell__bd">
+              <div class="all_title mar-bottom">小米短袖POLO衫 深蓝 S小米短袖POLO衫 深蓝 S</div>
+              <div class="cart-count">
+                <a class="count__btn count__decrease"></a>
+                <input class="count__number" type="number" value="1">
+                <a class="count__btn count__increase"></a>
+              </div>
+            </div>
+            <div class="weui-cell__ft mar-left" style="width:46px">
+              <span class="all_price">1299元</span>
+            </div>
+          </div>
+        </div>
+        <div class="weui-cell__ft">
+          <div onClick="" class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout">编辑</div>
+          <div onClick="" class="weui-swiped-btn weui-swiped-btn_default close-swipeout">删除</div>
+        </div>
+      </div>
+    </div>
+    <div class="weui-cells weui-cells_checkbox">
+      <div class="weui-cell weui-cell_swiped">
+        <div class="weui-cell__bd">
+          <div class="weui-cell">
+            <div class="weui-cell__hd" style="height:50px">
+              <input type="checkbox" class="weui-check" name="checkbox1" value="1"> 
+              <i class="weui-icon-checked"></i>
+              <div class="cart_phone">
+                <img alt="" src="">
+              </div>
+            </div>
+            <div class="weui-cell__bd">
+              <div class="all_title mar-bottom">红米5A全网通版3GB内存32GB</div>
+              <div class="cart-count">
+                <a class="count__btn count__decrease"></a>
+                <input class="count__number" type="number" value="1">
+                <a class="count__btn count__increase"></a>
+              </div>
+            </div>
+            <div class="weui-cell__ft mar-left" style="width:46px">
+              <span class="all_price">699元</span>
+            </div>
+          </div>
+        </div>
+        <div class="weui-cell__ft">
+          <div onClick="" class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout">编辑</div>
+          <div onClick="" class="weui-swiped-btn weui-swiped-btn_default close-swipeout">删除</div>
+        </div>
+      </div>
+    </div>
+    <div class="weui-cells weui-cells_checkbox">
+      <div class="weui-cell weui-cell_swiped">
+        <div class="weui-cell__bd">
+          <div class="weui-cell">
+            <div class="weui-cell__hd" style="height:50px">
+              <input type="checkbox" class="weui-check" name="checkbox1" value="1"> 
+              <i class="weui-icon-checked"></i>
+              <div class="cart_phone">
+                <img alt="" src="">
+              </div>
+            </div>
+            <div class="weui-cell__bd">
+              <div class="all_title mar-bottom"> 红米Note 5 全网通版 4GB内存 64GB</div>
+              <div class="cart-count">
+                <a class="count__btn count__decrease"></a>
+                <input class="count__number" type="number" value="1">
+                <a class="count__btn count__increase"></a>
+              </div>
+            </div>
+            <div class="weui-cell__ft mar-left" style="width:46px">
+              <span class="all_price">1599元</span>
+            </div>
+          </div>
+        </div>
+        <div class="weui-cell__ft">
+          <div onClick="" class="weui-swiped-btn weui-swiped-btn_warn delete-swipeout">编辑</div>
+          <div onClick="" class="weui-swiped-btn weui-swiped-btn_default close-swipeout">删除</div>
+        </div>
+      </div>
+    </div>
+    <div class="settlement_wrap">
+      <div class="weui-cells weui-cells_checkbox">
+        <div class="flex_wrap cart_bar">
+          <div class="col-check">
+            <input type="checkbox" class="weui-check" name="checkbox3">
+            <i class="weui-icon-checked" style="margin-top:0px;margin-left:6px"></i>
+            <p class="all_check">全选</p>
+          </div>
+          <div class="total">
+            <div class="total-price">
+              <span>合计：</span>
+              <span class="all_price">1299元</span>
+            </div>
+            <a href="" class="btn_primary">结算(1)</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="not-cart">
+    <div class="not-cart_img">
+      <img class="notcart" src="/static/default/mobile/img/notcart.png" alt="">
+    </div>
+    <div class="not-cart_text">购物车还是空的</div>
+    <div class="reg_btn">
+      <a href="{{ url_for('mobile.index.root') }}">
+        <button type="button" class="weui-btn weui-btn_red">到商城去逛逛</button>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock%} 
+
+{% block navtabs %}
+<div style="height:60px"></div>
+<div class="foot_wrap">
+  <ul class="footer">
+    <li class="flex">
+      <a href="{{ url_for('mobile.index.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/home.png" alt="">
+        </div>
+        <p class="foot_text">首页</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="{{ url_for('mobile.category.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/category.png" alt="">
+        </div>
+        <p class="foot_text">分类</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="{{ url_for('mobile.cart.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/cartOn.png" alt="">
+        </div>
+        <p class="foot_text on">购物车</p>
+      </a>
+    </li>
+    <li class="flex">
+      <a href="{{ url_for('mobile.user.root') }}">
+        <div class="icom_photo">
+          <img src="/static/default/mobile/img/user.png" alt="">
+        </div>
+        <p class="foot_text">我的</p>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock %} 
+
+{% block script %}
+<script  type="text/javascript">
+  $('.weui-cell_swiped').swipeout();
+
+  var MAX = 100, MIN = 1;
+  $('.count__decrease').click(function (e) {
+    var $input = $(e.currentTarget).parent().find('.count__number');
+    var number = parseInt($input.val() || "0") - 1
+    if (number < MIN) number = MIN;
+    $input.val(number)
+  })
+  $('.count__increase').click(function (e) {
+    var $input = $(e.currentTarget).parent().find('.count__number');
+    var number = parseInt($input.val() || "0") + 1
+    if (number > MAX) number = MAX;
+    $input.val(number)
+  })
+</script>
+{% endblock%}

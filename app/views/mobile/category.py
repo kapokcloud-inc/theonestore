@@ -24,5 +24,11 @@ category = Blueprint('mobile.category', __name__)
 
 @category.route('/')
 def root():
-    """手机站 - 分类"""
+    """手机站 - 分类页"""
     return render_template('mobile/category/index.html.j2')
+
+
+@category.route('/page')
+def page():
+    """手机站 - 分类商品页"""
+    return render_template('mobile/category/page.html.j2')
