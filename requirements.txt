@@ -5,3 +5,4 @@ Flask-SQLAlchemy==2.3.2
 Requests==2.18.4
 Flask-Babel==0.11.2
 Flask-WTF==0.14.2
+arrow==0.12.1

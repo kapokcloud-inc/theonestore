@@ -10,8 +10,9 @@
 from flask_babel import gettext as _
 from flask_wtf import FlaskForm
 from wtforms import (
+    IntegerField,
     StringField,
-    PasswordField,
+    DecimalField,
     FileField,
 )
 from wtforms.validators import (
@@ -20,7 +21,14 @@ from wtforms.validators import (
     EqualTo,
 )
 
-class AdminUsersForm(FlaskForm):
-    """管理员form"""
-    username = StringField(validators=[Length(min=3, max=10, message=_(u'用户名长度在3至10位'))])
+class ItemForm(FlaskForm):
+    """商品form"""
+    goods_id   = IntegerField()
+    goods_name = StringField(validators=[Required(message=_(u'请填写商品名称'))])
+
+
+class CategoryForm(FlaskForm):
+    """分类form"""
+    cat_id   = IntegerField()
+    cat_name = StringField(validators=[Required(message=_(u'请填写分类名称'))])
 

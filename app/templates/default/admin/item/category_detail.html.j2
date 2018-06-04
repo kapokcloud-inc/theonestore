@@ -1,0 +1,20 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    {% set breadcrumbs = [{'title':_('商品分类'), 'href':""}, {'title':_('添加商品分类'), 'href':""}] %}
+    {{ libs.breadcrumbs(breadcrumbs, button) }}
+    <!-- .row -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          
+        </div>
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+</div>
+{% endblock %}

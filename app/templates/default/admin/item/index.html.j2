@@ -1,0 +1,126 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    <div class="row bg-title">
+      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+        {% set is_sale = request.args.get('is_sale', '-1') %}
+        {% set is_hot = request.args.get('is_hot', '-1') %}
+
+        {% set sale_active = 'active' if is_sale == '1' else '' %}
+        <li role="presentation" class="{{ sale_active }}">
+          <a href="{{ url_for('admin.item.index', is_sale=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('销售中')}}</span>
+          </a>
+        </li>
+        {% set not_sale_active = 'active' if is_sale == '0' else '' %}
+        <li role="presentation" class="{{ not_sale_active }}">
+          <a href="{{ url_for('admin.item.index', is_sale=0) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('已下架')}}</span>
+          </a>
+        </li>
+        {% set hot_active = 'active' if (is_sale == '-1' or is_sale == '') and is_hot == '1' else '' %}
+        <li role="presentation" class="{{ hot_active }}">
+          <a href="{{ url_for('admin.item.index', is_hot=1) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-email"></i>
+            </span>
+            <span class="hidden-xs">{{_('热卖')}}</span>
+          </a>
+        </li>
+        <a href="{{ url_for('admin.item.create') }}" target="_blank" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display: block !important;background: #f33155 !important;border: 1px solid #f33155 !important;">
+          {{_('添加商品')}}
+        </a>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="white-box">
+          {% set 
+            form_fields = [
+              {'label':'是否在售', 'name':'is_sale', 'type':'hidden'},
+              {'label':'热卖', 'name':'is_hot', 'type':'hidden'},
+              {'label':'名称', 'name':'goods_name'},
+              {'label':'分类', 'name':'cat_id', 'type':'select', 'options':cats}
+            ]
+          %}
+          {{ libs.build_search_form(form_fields) }}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          <div class="table-responsive">
+            <table class="table product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('ID')}}</th>
+                  <th>{{_('名称')}}</th>
+                  <th>{{_('图片')}}</th>
+                  <th>{{_('分类')}}</th>
+                  <th>{{_('商品金额')}}</th>
+                  <th>{{_('库存数量')}}</th>
+                  <th>{{_('是否在售')}}</th>
+                  <th>{{_('是否热门商品')}}</th>
+                  <th>{{_('是否推荐')}}</th>
+                  <th>{{_('添加时间')}}</th>
+                  <th>{{_('操作')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for item in items %}
+                    <tr>
+                      <td>{{ item.goods_id }}</td>
+                      <td>{{ item.goods_name }}</td>
+                      <td> <img src="{{ item.goods_img }}" alt="" width="80"> </td>
+                      <td>{{ item.cat_name }}</td>
+                      <td>{{ item.goods_price }}</td>
+                      <td>{{ item.stock_quantity }}</td>
+                      <td>
+                        <span class="label {{ const.YES_OR_NO_LABEL.get(item.is_sale, 'label-danger') }} font-weight-100">
+                          {{ const.YES_OR_NO.get(item.is_sale, _('未知错误')) }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="label {{ const.YES_OR_NO_LABEL.get(item.is_hot, 'label-danger') }} font-weight-100">
+                          {{ const.YES_OR_NO.get(item.is_hot, _('未知错误')) }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="label {{ const.YES_OR_NO_LABEL.get(item.is_recommend, 'label-danger') }} font-weight-100">
+                          {{ const.YES_OR_NO.get(item.is_recommend, _('未知错误')) }}
+                        </span>
+                      </td>
+                      <td>{{ item.add_time|timestamp2str }}</td>
+                      <td>
+                        <a href="{{ url_for('admin.item.detail', goods_id=item.goods_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
+                          <i class="ti-marker-alt"></i>
+                        </a>
+                        <!--
+                        <a href="javascript:void(0)" class="text-inverse" title="Delete" data-toggle="tooltip">
+                          <i class="ti-trash"></i>
+                        </a>
+                        -->
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                {{ libs.pagination_html(pagination, 9) }}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

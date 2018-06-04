@@ -1,4 +1,142 @@
-{# 分页html #}
+{# 分页 - 分页html #}
+{% macro pagination_html(pagination, colspan) -%}
+  <tfoot>
+    <tr>
+      <td colspan="2">
+        {{ pagination.total }}{{_('条数据')}}
+      </td>
+      <td colspan="{{ colspan }}">
+        <div class="text-right">
+          {{ build_pagination_html(pagination) }}
+        </div>
+      </td>
+    </tr>
+  </tfoot>
+{%- endmacro %}
+
+{# 分页 - 生成分页html #}
+{% macro build_pagination_html(pagination) %}
+  {% if pagination.total > 0 %}
+    <ul class="pagination">
+      {% set is_disabled = 'disabled' if pagination.page == 1 else '' %}
+      {% set href = 'javascript:;' if pagination.page == 1 else pagination_href(1) %}
+      <li class="footable-page-arrow {{ is_disabled }}">
+        <a data-page="first" href="{{ href }}">«</a>
+      </li>
+
+      {% set is_disabled = '' if pagination.has_prev else 'disabled' %}
+      {% set href = pagination_href(pagination.prev_num) if pagination.has_prev else 'javascript:;' %}
+      <li class="footable-page-arrow {{ is_disabled }}">
+        <a data-page="prev" href="{{ href }}">‹</a>
+      </li>
+
+      {% for page in pagination.iter_pages() %}
+        {% if page %}
+          {% set is_active = 'active' if page == pagination.page else '' %}
+          {% set href = 'javascript:;' if page == pagination.page else pagination_href(page) %}
+          <li class="footable-page {{ is_active }}">
+            <a data-page="{{ page }}" href="{{ href }}">{{ page }}</a>
+          </li>
+        {% else %}
+          <li class="footable-page">
+            <a data-page="..." href="javascript:;">…</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% set is_disabled = '' if pagination.has_next else 'disabled' %}
+      {% set href = pagination_href(pagination.next_num) if pagination.has_next else 'javascript:;' %}
+      <li class="footable-page-arrow {{ is_disabled }}">
+        <a data-page="next" href="{{ href }}">›</a>
+      </li>
+
+      {% set is_disabled = 'disabled' if pagination.page == pagination.pages else '' %}
+      {% set href = 'javascript:;' if pagination.page == pagination.pages else pagination_href(pagination.pages) %}
+      <li class="footable-page-arrow {{ is_disabled }}">
+        <a data-page="last" href="{{ href }}">»</a>
+      </li>
+    </ul>
+  {% endif %}
+{% endmacro %}
+
+{# 分页 - 分页URL #}
+{% macro pagination_href(page, page_size=None) %}
+  {% set page_size = page_size if page_size else request.view_args.get('page_size', None) %}
+  {{ url_for(request.endpoint, page=page, page_size=page_size) }}{% if request.query_string %}{{ '?' + request.query_string }}{% endif %}
+{% endmacro %}
+
+
+{# 搜索表单 #}
+{% macro build_search_form(form_fields, action="", method="GET") %}
+<form id="search_form" class="form" action="{{ action }}" method="{{ method }}">
+  <div class="row">
+    {% for field in form_fields %}
+      {% set label       = field.get('label', '') %}
+      {% set name        = field.get('name', '') %}
+      {% set value       = request.args.get(name, '') %}
+      {% set type        = field.get('type', 'input') %}
+      {% set placeholder = field.get('placeholder', '') %}
+      {% set col_lg      = field.get('col-lg', 'col-lg-2') %}
+
+      {% if type == 'hidden' %}
+        <input type="hidden" id="{{ name }}" name="{{ name }}" value="{{ value }}">
+      {% else %}
+        <div class="{{ col_lg }}">
+          <div class="form-group">
+            <label>{{ label }}</label>
+            {% if type == 'input' %}
+              <input type="text" class="form-control" id="{{ name }}" name="{{ name }}" placeholder="{{ placeholder }}"  value="{{ value }}">
+            {% elif type == 'textarea' %}
+              <textarea class="form-control" id="{{ name }}" name="{{ name }}" >{{ value }}</textarea>
+            {% elif type == 'select' %}
+              {% set options = field.get('options', []) %}
+              <select class="form-control" name="{{ name }}" id="{{ name }}">
+                {% for option in options %}
+                  {% set option_val = '%s' % option.get('value', '') %}
+                  {% set selected = 'selected' if value == option_val else '' %}
+                  <option value="{{ option_val }}" {{ selected }}>{{ option.get('name') }}</option>
+                {% endfor %}
+              </select>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div class="row"><div class="col-lg-12"><div class="hr-line-dashed"></div></div></div>
+  <div class="row">
+    <div class="col-lg-1">
+      <div class="form-group">
+        <button id="search_form_submit" type="submit" class="btn btn-default">
+          {{_('提交')}}
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+{% endmacro %}
+
+
+{# WTF - 文本输入框 #}
+{% macro wtf_input(_field, _label_text="", _value="", _class="", _placeholder="") -%}
+  <div class="form-group">
+    <label class="col-md-3 control-label">{{ _label_text }}</label>
+    <div class="col-md-9">
+      {{ _field(class=_class, value=_value, placeholder=_placeholder) }}
+      {% for error in _field.errors %}
+        <span class="help-block with-errors" style="color: red;">* {{ error }}</span>
+      {% endfor %}
+    </div>
+  </div>
+{%- endmacro %}
+
+{# WTF - 提交按钮 #}
+{% macro wtf_submit() -%}
+  <button class="btn btn-block btn-danger btn-lg btn-rounded">{{_('提交')}}</button>
+{%- endmacro %}
+
+
+{# 其它 - 面包屑html #}
 {% macro breadcrumbs(breadcrumbs=[], button={}) -%}
   <div class="row bg-title">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -13,26 +151,8 @@
       {% if button %}
         <a href="{{ button['href'] }}" target="_blank" 
         class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" 
-        style="display:block!important">{{ button['title'] }}</a>
+        style="display:block !important">{{ button['title'] }}</a>
       {% endif %}
     </div>
   </div>
-{%- endmacro %}
-
-
-{# WTF #}
-{% macro wtf_input(_field, _label_text="", _value="", _class="", _placeholder="") -%}
-  <div class="form-group">
-    <label class="col-md-3 control-label">{{ _label_text }}</label>
-    <div class="col-md-9">
-      {{ _field(class=_class, value=_value, placeholder=_placeholder) }}
-      {% for error in _field.errors %}
-        <span class="help-block with-errors" style="color: red;">* {{ error }}</span>
-      {% endfor %}
-    </div>
-  </div>
-{%- endmacro %}
-
-{% macro wtf_submit() -%}
-  <button class="btn btn-block btn-danger btn-lg btn-rounded">{{_('提交')}}</button>
 {%- endmacro %}
