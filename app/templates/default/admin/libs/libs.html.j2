@@ -36,3 +36,33 @@
 {% macro wtf_submit() -%}
   <button class="btn btn-block btn-danger btn-lg btn-rounded">{{_('提交')}}</button>
 {%- endmacro %}
+
+{# 构造form表单 #}
+{% macro render_form(form, action='', method='POST', enctype='') %}
+<form class="form-horizontal" action="{{ action }}" method="{{ method }}"{% if enctype %} enctype="{{ enctype }}"{% endif %}>
+{%- for name, field  in form._fields|iteritems -%}
+{% if name != 'csrf_token' %}
+  <div class="form-group">
+    <label for="{{ name }}" class="control-label col-xs-12 col-sm-3 col-md-2 col-lg-1">{{ field.label }}</label>
+    <div class="col-xs-12 col-sm-7 col-md-5 col-lg-3">
+    {% for validator in field.validators %}
+    {% endfor %}
+      {{ field(class_='form-control', **kwargs) }}
+    {%- if field.description -%}
+      <span class="help-block m-b-none">{{ field.description }}</span>
+    {%- endif -%}
+    {%- for error in field.errors -%}
+      <span class="help-block m-b-none">{{ error }}</span>
+    {%- endfor -%}
+    </div>
+  </div>
+{% endif %}
+{% endfor %}
+  {{ form.csrf_token }}
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-md-offset-2 col-lg-offset-1 col-xs-12 col-sm-7 col-md-5 col-lg-3">
+      <button type="submit" class="btn btn-danger btn-md " id="submit">保存</button>
+    </div>
+  </div>
+</form>
+{%- endmacro -%}

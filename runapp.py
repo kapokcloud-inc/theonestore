@@ -7,11 +7,14 @@
     :license: BSD, see LICENSE for more details.
 """
 from flask_babel import Babel
+from flask_wtf.csrf import CSRFProtect
+from wtforms.compat import iteritems
 
 from app.helpers import (
     create_app, 
     enable_logging,
-    register_blueprint
+    register_blueprint,
+    configure_uploads
 )
 from app.routes import ROOT_ROUTES
 from app.routes.admin import ADMIN_ROUTES
@@ -31,10 +34,25 @@ babel.init_app(app)
 register_blueprint(app, ROOT_ROUTES)
 register_blueprint(app, ADMIN_ROUTES)
 
+# 数据库初始化
 db.init_app(app)
+
+# 上传文件存储
+configure_uploads(app)
+
+# 启动form表单csr保护
+CSRFProtect(app)
+
+# 注册jinja模板过滤器
+jinja_filter = {
+    'iteritems':iteritems,
+}
+app.jinja_env.filters.update(jinja_filter)
+
 
 if __name__ == '__main__':
     app.config.from_pyfile('config/config.dev.cfg')
     babel.init_app(app)
+    app.jinja_env.auto_reload = True
     app.run(host='127.0.0.1', debug=True, port=5000)
 
