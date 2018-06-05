@@ -3,11 +3,10 @@
 
 {% block body %}
 <div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('管理员'), 'href':""}] %}
+  {% set button = {'title':_('添加管理员'), 'href':url_for('admin.auth.create')} %}
+  {{ libs.breadcrumbs(breadcrumbs, button) }}
   <div class="container-fluid">
-    {% set breadcrumbs = [{'title':_('管理员'), 'href':""}] %}
-    {% set button = {'title':_('添加管理员'), 'href':url_for('admin.auth.create')} %}
-    {{ libs.breadcrumbs(breadcrumbs, button) }}
-    <!-- .row -->
     <div class="row el-element-overlay m-b-40">
       <!-- /.usercard -->
       <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">

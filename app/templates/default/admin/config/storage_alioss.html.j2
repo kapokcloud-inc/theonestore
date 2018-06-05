@@ -62,10 +62,10 @@
           </div>
           <form class="form-horizontal" action="{{ url_for('admin.config.storage_alioss') }}" method="POST">
             {{ form.csrf_token }}
-            {{ libs.wtf_input(form.access_key_id, _('Access Key ID'), data.access_key_id, _class="form-control") }}
-            {{ libs.wtf_input(form.access_key_secret, _('Access Key Secret'), data.access_key_secret, _class="form-control") }}
-            {{ libs.wtf_input(form.bucket_name, _('存储空间'), data.bucket_name, _class="form-control") }}
-            {{ libs.wtf_input(form.cname, _('融合CDN加速域名'), data.cname, _class="form-control") }}
+            {{ libs.wtf_input(form.access_key_id, _('Access Key ID'), _value=data.access_key_id, _class="form-control") }}
+            {{ libs.wtf_input(form.access_key_secret, _('Access Key Secret'), _value=data.access_key_secret, _class="form-control") }}
+            {{ libs.wtf_input(form.bucket_name, _('存储空间'), _value=data.bucket_name, _class="form-control") }}
+            {{ libs.wtf_input(form.cname, _('融合CDN加速域名'), _value=data.cname, _class="form-control") }}
             {{ libs.wtf_submit() }}
           </form>
         </div>

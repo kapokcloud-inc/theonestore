@@ -14,7 +14,8 @@ from flask import (
     session,
     Blueprint,
     redirect,
-    url_for
+    url_for,
+    g
 )
 from flask_babel import gettext as _
 from wtforms.compat import with_metaclass, iteritems, itervalues
@@ -56,12 +57,16 @@ def login():
 @auth.route('/')
 def index():
     """管理员列表"""
+    g.page_title = _(u'管理员')
+
     admin_users = AdminUsers.query.all()
     return render_template('admin/auth/admin_user_index.html.j2', admin_users=admin_users)
 
 @auth.route('/create')
 def create():
     """创建管理员"""
+    g.page_title = _(u'添加管理员')
+
     form = AdminUsersForm(request.form)
     for name, field in iteritems(form._fields):
         log_info('name:%s, type:%s, field_type:%s' % (name, field.type, type(field)))
@@ -76,6 +81,8 @@ def create():
 @auth.route('/edit/<int:admin_uid>')
 def edit(admin_uid):
     """编辑管理员"""
+    g.page_title = _(u'管理员详情')
+
     au = AdminUsers.query.get_or_404(admin_uid)
     return render_template('admin/auth/admin_user_detail.html.j2', au=au)
 

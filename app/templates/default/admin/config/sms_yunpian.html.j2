@@ -62,8 +62,8 @@
           </div>
           <form class="form-horizontal" action="{{ url_for('admin.config.sms_yunpian') }}" method="POST">
             {{ form.csrf_token }}
-            {{ libs.wtf_input(form.ak, _('apikey'), data.ak, _class="form-control") }}
-            {{ libs.wtf_input(form.app_name, _('前缀'), data.app_name, _class="form-control") }}
+            {{ libs.wtf_input(form.ak, _('apikey'), _value=data.ak, _class="form-control") }}
+            {{ libs.wtf_input(form.app_name, _('前缀'), _value=data.app_name, _class="form-control") }}
             {{ libs.wtf_submit() }}
           </form>
         </div>

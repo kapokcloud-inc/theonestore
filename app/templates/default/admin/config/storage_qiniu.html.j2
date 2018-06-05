@@ -62,10 +62,10 @@
           </div>
           <form class="form-horizontal" action="{{ url_for('admin.config.storage_qiniu') }}" method="POST">
             {{ form.csrf_token }}
-            {{ libs.wtf_input(form.access_key, _('ACCESS KEY'), data.access_key, _class="form-control") }}
-            {{ libs.wtf_input(form.secret_key, _('SECRET KEY'), data.secret_key, _class="form-control") }}
-            {{ libs.wtf_input(form.bucket_name, _('存储空间'), data.bucket_name, _class="form-control") }}
-            {{ libs.wtf_input(form.cname, _('融合CDN加速域名'), data.cname, _class="form-control") }}
+            {{ libs.wtf_input(form.access_key, _('ACCESS KEY'), _value=data.access_key, _class="form-control") }}
+            {{ libs.wtf_input(form.secret_key, _('SECRET KEY'), _value=data.secret_key, _class="form-control") }}
+            {{ libs.wtf_input(form.bucket_name, _('存储空间'), _value=data.bucket_name, _class="form-control") }}
+            {{ libs.wtf_input(form.cname, _('融合CDN加速域名'), _value=data.cname, _class="form-control") }}
             {{ libs.wtf_submit() }}
           </form>
         </div>

@@ -24,5 +24,14 @@ def timestamp2str(timestamp, format_style='YYYY-MM-DD HH:mm:ss'):
     return loc.format(format_style)
 
 
+def current_time():
+    """当前时间戳"""
+
+    utc = arrow.utcnow()
+    loc = utc.to('local')
+
+    return loc.timestamp
+
+
 
 

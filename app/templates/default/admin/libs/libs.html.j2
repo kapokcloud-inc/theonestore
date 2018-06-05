@@ -118,11 +118,44 @@
 
 
 {# WTF - 文本输入框 #}
-{% macro wtf_input(_field, _label_text="", _value="", _class="", _placeholder="") -%}
-  <div class="form-group">
-    <label class="col-md-3 control-label">{{ _label_text }}</label>
-    <div class="col-md-9">
-      {{ _field(class=_class, value=_value, placeholder=_placeholder) }}
+{% macro wtf_input(_field, _label_text, _value='', _class='', _type='text', _placeholder='') %}
+  {% if _type == 'text' %}
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label class="control-label">{{ _label_text }}</label>
+        {% set _value = '' if _value == None else _value %}
+        {{ _field(type=_type, class=_class, value=_value, placeholder=_placeholder) }}
+        {% for error in _field.errors %}
+          <span class="help-block with-errors" style="color: red;">* {{ error }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if _type == 'hidden' %}
+    {{ _field(type=_type, value=_value) }}
+  {% endif %}
+{% endmacro %}
+
+{# WTF - select框 #}
+{% macro wtf_select(_field, _label_text, _class='') %}
+  <div class="col-sm-6">
+    <div class="form-group">
+      <label class="control-label">{{ _label_text }}</label>
+      {{ _field(class=_class) }}
+      {% for error in _field.errors %}
+        <span class="help-block with-errors" style="color: red;">* {{ error }}</span>
+      {% endfor %}
+    </div>
+  </div>
+{% endmacro %}
+
+{# WTF - textarea输入框 #}
+{% macro wtf_textarea(_field, _label_text, _class='') %}
+  <div class="col-sm-12">
+    <div class="form-group">
+      <label class="control-label">{{ _label_text }}</label>
+      {{ _field(class=_class) }}
       {% for error in _field.errors %}
         <span class="help-block with-errors" style="color: red;">* {{ error }}</span>
       {% endfor %}
@@ -132,7 +165,9 @@
 
 {# WTF - 提交按钮 #}
 {% macro wtf_submit() -%}
-  <button class="btn btn-block btn-danger btn-lg btn-rounded">{{_('提交')}}</button>
+  <div class="form-group">
+    <button class="btn btn-danger">{{_('提交')}}</button>
+  </div>
 {% endmacro %}
 
 
@@ -168,28 +203,30 @@
 
 
 {# 其它 - 面包屑html #}
-{% macro breadcrumbs(breadcrumbs=[], button={}) -%}
-  <div class="row bg-title">
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-      <ol class="breadcrumb pull-left">
-        {% for _breadcrumbs in breadcrumbs %}
-          {% set is_active = '' if _breadcrumbs['href'] else 'active' %}
-          <li class="{{ is_active }}">
-            {% if _breadcrumbs['href'] %}
-              <a href="{{ _breadcrumbs['href'] }}">{{ _breadcrumbs['title'] }}</a>
-            {% else %}
-              {{ _breadcrumbs['title'] }}
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ol>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-      {% if button %}
-        <a href="{{ button['href'] }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display:block !important">
-          {{ button['title'] }}
-        </a>
-      {% endif %}
+{% macro breadcrumbs(breadcrumbs=[], button={}) %}
+  <div class="container-fluid">
+    <div class="row bg-title">
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <ol class="breadcrumb pull-left">
+          {% for _breadcrumbs in breadcrumbs %}
+            {% set is_active = '' if _breadcrumbs['href'] else 'active' %}
+            <li class="{{ is_active }}">
+              {% if _breadcrumbs['href'] %}
+                <a href="{{ _breadcrumbs['href'] }}">{{ _breadcrumbs['title'] }}</a>
+              {% else %}
+                {{ _breadcrumbs['title'] }}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        {% if button %}
+          <a href="{{ button['href'] }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display:block !important">
+            {{ button['title'] }}
+          </a>
+        {% endif %}
+      </div>
     </div>
   </div>
 {% endmacro %}

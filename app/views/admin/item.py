@@ -15,7 +15,8 @@ from flask import (
     session,
     Blueprint,
     redirect,
-    url_for
+    url_for,
+    g
 )
 from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
@@ -27,6 +28,7 @@ from app.helpers import (
     log_info,
     toint
 )
+from app.helpers.date_time import current_time
 
 from app.forms.admin.item import (
     ItemForm,
@@ -49,11 +51,12 @@ from app.models.item import (
 
 item = Blueprint('admin.item', __name__)
 
-@item.route('/')
-@item.route('/<int:page>')
-@item.route('/<int:page>-<int:page_size>')
+@item.route('/index')
+@item.route('/index/<int:page>')
+@item.route('/index/<int:page>-<int:page_size>')
 def index(page=1, page_size=20):
     """商品列表"""
+    g.page_title = _(u'商品')
 
     args       = request.args
     cat_id     = toint(args.get('cat_id', '0'))
@@ -96,9 +99,11 @@ def index(page=1, page_size=20):
 
 @item.route('/create')
 def create():
-    """新增商品"""
+    """添加商品"""
+    g.page_title = _(u'添加商品')
 
-    wtf_form = ItemForm()
+    wtf_form                = ItemForm()
+    wtf_form.cat_id.choices = [(c.cat_id, c.cat_name) for c in GoodsCategories.query.all()]
 
     return render_template('admin/item/detail.html.j2', wtf_form=wtf_form, item={})
 
@@ -106,9 +111,18 @@ def create():
 @item.route('/detail/<int:goods_id>')
 def detail(goods_id):
     """商品详情"""
+    g.page_title = _(u'商品详情')
 
-    wtf_form = ItemForm()
     item     = Goods.query.get_or_404(goods_id)
+
+    wtf_form                   = ItemForm()
+    wtf_form.cat_id.choices    = [(c.cat_id, c.cat_name) for c in GoodsCategories.query.all()]
+    wtf_form.cat_id.data       = item.cat_id
+    wtf_form.is_sale.data      = item.is_sale
+    wtf_form.is_hot.data       = item.is_hot
+    wtf_form.is_recommend.data = item.is_recommend
+    wtf_form.goods_desc.data   = item.goods_desc
+    wtf_form.detail.data       = item.detail
 
     return render_template('admin/item/detail.html.j2', wtf_form=wtf_form, item=item)
 
@@ -116,10 +130,50 @@ def detail(goods_id):
 @item.route('/save', methods=['POST'])
 def save():
     """保存商品"""
+    g.page_title = _(u'保存商品')
 
-    wtf_form = ItemForm()
+    _current_time = current_time()
+
+    wtf_form                = ItemForm()
+    wtf_form.cat_id.choices = [(c.cat_id, c.cat_name) for c in GoodsCategories.query.all()]
+
+    if wtf_form.validate_on_submit():
+        goods_id = wtf_form.goods_id.data
+        if goods_id:
+            item = Goods.query.get_or_404(goods_id)
+        else:
+            item          = Goods()
+            item.add_time = _current_time
+            db.session.add(item)
+
+        item.cat_id          = wtf_form.cat_id.data
+        item.goods_name      = wtf_form.goods_name.data
+        item.goods_desc      = wtf_form.goods_desc.data
+        item.goods_price     = wtf_form.goods_price.data
+        item.market_price    = wtf_form.market_price.data
+        item.detail          = wtf_form.detail.data
+        item.is_sale         = wtf_form.is_sale.data
+        item.stock_quantity  = wtf_form.stock_quantity.data
+        item.is_hot          = wtf_form.is_hot.data
+        item.is_recommend    = wtf_form.is_recommend.data
+        item.update_time     = _current_time
+        db.session.commit()
+
+        return redirect(url_for('admin.item.index'))
+
+    item = wtf_form.data
 
     return render_template('admin/item/detail.html.j2', wtf_form=wtf_form, item=item)
+
+
+@item.route('/remove/<int:goods_id>')
+def remove(goods_id):
+    """删除商品"""
+    item = Goods.query.get_or_404(goods_id)
+    item.is_delete = 1
+    db.session.commit()
+
+    return redirect(url_for('admin.item.index'))
 
 
 @item.route('/categories')
@@ -127,6 +181,7 @@ def save():
 @item.route('/categories/<int:page>-<int:page_size>')
 def categories(page=1, page_size=20):
     """分类列表"""
+    g.page_title = _(u'分类')
 
     q = GoodsCategories.query
     
@@ -138,9 +193,10 @@ def categories(page=1, page_size=20):
 
 @item.route('/category/create')
 def category_create():
-    """新增分类"""
+    """添加分类"""
+    g.page_title = _(u'添加分类')
 
-    wtf_form = ItemForm()
+    wtf_form = CategoryForm()
 
     return render_template('admin/item/category_detail.html.j2', wtf_form=wtf_form, category={})
 
@@ -148,8 +204,9 @@ def category_create():
 @item.route('/category/detail/<int:cat_id>')
 def category_detail(cat_id):
     """分类详情"""
+    g.page_title = _(u'分类详情')
 
-    wtf_form     = ItemForm()
+    wtf_form = CategoryForm()
     category = GoodsCategories.query.get_or_404(cat_id)
 
     return render_template('admin/item/category_detail.html.j2', wtf_form=wtf_form, category=category)
@@ -158,8 +215,25 @@ def category_detail(cat_id):
 @item.route('/category/save', methods=['POST'])
 def category_save():
     """保存分类"""
+    g.page_title = _(u'保存分类')
 
     wtf_form = CategoryForm()
+
+    if wtf_form.validate_on_submit():
+        cat_id = wtf_form.cat_id.data
+        if cat_id:
+            category = GoodsCategories.query.get_or_404(cat_id)
+        else:
+            category          = GoodsCategories()
+            category.add_time = current_time()
+            db.session.add(category)
+
+        category.cat_name = wtf_form.cat_name.data
+        db.session.commit()
+
+        return redirect(url_for('admin.item.categories'))
+
+    category = wtf_form.data
 
     return render_template('admin/item/category_detail.html.j2', wtf_form=wtf_form, category=category)
 

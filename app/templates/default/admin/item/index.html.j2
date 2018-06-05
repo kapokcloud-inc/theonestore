@@ -37,7 +37,7 @@
             <span class="hidden-xs">{{_('热卖')}}</span>
           </a>
         </li>
-        <a href="{{ url_for('admin.item.create') }}" target="_blank" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display: block !important;background: #f33155 !important;border: 1px solid #f33155 !important;">
+        <a href="{{ url_for('admin.item.create') }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display: block !important;background: #f33155 !important;border: 1px solid #f33155 !important;">
           {{_('添加商品')}}
         </a>
       </ul>
@@ -106,11 +106,9 @@
                         <a href="{{ url_for('admin.item.detail', goods_id=item.goods_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
                           <i class="ti-marker-alt"></i>
                         </a>
-                        <!--
-                        <a href="javascript:void(0)" class="text-inverse" title="Delete" data-toggle="tooltip">
+                        <a href="{{ url_for('admin.item.remove', goods_id=item.goods_id) }}" class="text-inverse" data-toggle="tooltip" title="{{_('删除')}}">
                           <i class="ti-trash"></i>
                         </a>
-                        -->
                       </td>
                     </tr>
                   {% endfor %}

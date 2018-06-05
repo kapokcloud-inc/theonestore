@@ -3,19 +3,44 @@
 
 {% block body %}
 <div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('商品'), 'href':url_for('admin.item.index')}, {'title':g.page_title, 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
-    <div class="row bg-title">
-      
-    </div>
-    <!-- .row -->
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="white-box">
-          
+          <h3 class="box-title m-b-0">{{_('商品基本信息填写')}}</h3>
+          <p class="text-muted m-b-30 font-13">{{_('输入下面的详细信息')}}</p>
+
+          <form action="{{ url_for('admin.item.save') }}" method="POST">
+            <div class="row">
+              {{ libs.wtf_input(wtf_form.goods_name, _('商品名称'), _value=item.goods_name, _class="form-control") }}
+              {{ libs.wtf_input(wtf_form.stock_quantity, _('库存数量'), _value=item.stock_quantity, _class="form-control") }}
+            </div>
+            <div class="row">
+              {{ libs.wtf_input(wtf_form.goods_price, _('商品金额'), _value=item.goods_price, _class="form-control") }}
+              {{ libs.wtf_input(wtf_form.market_price, _('市场价格'), _value=item.market_price, _class="form-control") }}
+            </div>
+            <div class="row">
+              {{ libs.wtf_select(wtf_form.cat_id, _('分类'), _class="form-control") }}
+              {{ libs.wtf_select(wtf_form.is_sale, _('是否在售'), _class="form-control") }}
+            </div>
+            <div class="row">
+              {{ libs.wtf_select(wtf_form.is_hot, _('是否热门商品'), _class="form-control") }}
+              {{ libs.wtf_select(wtf_form.is_recommend, _('是否推荐'), _class="form-control") }}
+            </div>
+            <div class="row">
+              {{ libs.wtf_textarea(wtf_form.goods_desc, _('商品简介'), _class="form-control") }}
+              {{ libs.wtf_textarea(wtf_form.detail, _('商品详细内容'), _class="form-control") }}
+            </div>
+            {% set goods_id = item.goods_id if item.goods_id else 0 %}
+            {{ libs.wtf_input(wtf_form.goods_id, '', _value=goods_id, _type="hidden") }}
+            {{ wtf_form.csrf_token }}
+            {{ libs.wtf_submit() }}
+          </form>
         </div>
       </div>
     </div>
-    <!-- /.row -->
   </div>
 </div>
 {% endblock %}

@@ -1,15 +1,11 @@
 {% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
 
 {% block body %}
 <!-- Page Content -->
 <div id="page-wrapper">
-  <div class="container-fluid">
-    <div class="row bg-title">
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-        <h4 class="page-title">{{_('添加管理员')}}</h4>
-      </div>
-    </div>
-  </div>
+  {% set breadcrumbs = [{'title':_('管理员'), 'href':url_for('admin.auth.index')}, {'title':_('添加管理员'), 'href':''}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
     <!--.row-->
     <div class="row">
@@ -17,7 +13,7 @@
         <div class="white-box">
           <h3 class="box-title m-b-0">{{_('管理员基本信息填写')}}</h3>
           <p class="text-muted m-b-30 font-13">{{_('输入下面的详细信息')}}</p>
-          {{ libs.build_form(form, action=url_for('admin.auth.save'), enctype="multipart/form-data") }}
+          {{ libs.render_form(form, action=url_for('admin.auth.save'), enctype="multipart/form-data") }}
         </div>
       </div>
     </div>
