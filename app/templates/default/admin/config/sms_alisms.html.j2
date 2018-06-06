@@ -62,9 +62,9 @@
           </div>
           <form class="form-horizontal" action="{{ url_for('admin.config.sms_alisms') }}" method="POST">
             {{ form.csrf_token }}
-            {{ libs.wtf_input(form.access_key_id, _('Access Key ID'), data.access_key_id, _class="form-control") }}
-            {{ libs.wtf_input(form.access_key_secret, _('Access Key Secret'), data.access_key_secret, _class="form-control") }}
-            {{ libs.wtf_input(form.app_name, _('前缀'), data.app_name, _class="form-control") }}
+            {{ libs.wtf_input(form.access_key_id, _('Access Key ID'), _value=data.access_key_id, _class="form-control") }}
+            {{ libs.wtf_input(form.access_key_secret, _('Access Key Secret'), _value=data.access_key_secret, _class="form-control") }}
+            {{ libs.wtf_input(form.app_name, _('前缀'), _value=data.app_name, _class="form-control") }}
             {{ libs.wtf_submit() }}
           </form>
         </div>

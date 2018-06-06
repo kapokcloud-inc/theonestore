@@ -14,9 +14,11 @@ from flask import (
     session,
     Blueprint,
     redirect,
-    url_for
+    url_for,
+    g
 )
 from flask_babel import gettext as _
+from wtforms.compat import with_metaclass, iteritems, itervalues
 
 from app.helpers import (
     render_template, 
@@ -24,6 +26,7 @@ from app.helpers import (
     toint
 )
 from app.database import db
+from app.forms.admin.auth import AdminUsersForm
 from app.models.auth import AdminUsers
 from app.services.admin.auth import AuthLoginService
 
@@ -54,18 +57,32 @@ def login():
 @auth.route('/')
 def index():
     """管理员列表"""
+    g.page_title = _(u'管理员')
+
     admin_users = AdminUsers.query.all()
     return render_template('admin/auth/admin_user_index.html.j2', admin_users=admin_users)
 
 @auth.route('/create')
 def create():
     """创建管理员"""
-    return render_template('admin/auth/admin_user_detail.html.j2')
+    g.page_title = _(u'添加管理员')
+
+    form = AdminUsersForm(request.form)
+    for name, field in iteritems(form._fields):
+        log_info('name:%s, type:%s, field_type:%s' % (name, field.type, type(field)))
+        log_info(field)
+        for validator in field.validators:
+            log_info(validator)
+            log_info('--------------------')
+
+    return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
 
 @auth.route('/edit/<int:admin_uid>')
 def edit(admin_uid):
     """编辑管理员"""
+    g.page_title = _(u'管理员详情')
+
     au = AdminUsers.query.get_or_404(admin_uid)
     return render_template('admin/auth/admin_user_detail.html.j2', au=au)
 
@@ -82,11 +99,10 @@ def delete(admin_uid):
 @auth.route('/save', methods=['POST'])
 def save():
     """保存管理员"""
-    form = request.form
-    admin_uid = toint(form.get('admin_uid', '0'))
-    username = form.get('username', '')
-    mobile = form.get('mobile', '')
-    password = form.get('password', '')
-
+    form = AdminUsersForm(request.form)
+    if not form.validate():
+        log_info(form.errors)
+        return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
     return 'save'
+

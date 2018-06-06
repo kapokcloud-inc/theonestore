@@ -1,3 +1,4 @@
+{% import '/default/admin/libs/libs.html.j2' as libs %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/default/admin/plugins/images/favicon.png">
-  <title>{{_('一店-管理后台')}}</title>
+  <title>{{ g.page_title }} - {{_('一店')}}</title>
   <!-- Bootstrap Core CSS -->
   <link href="/static/default/admin/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Menu CSS -->
@@ -17,6 +18,8 @@
   <link href="/static/default/admin/plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
   <!-- morris CSS -->
   <link href="/static/default/admin/plugins/bower_components/morrisjs/morris.css" rel="stylesheet">
+  <!-- Footable CSS -->
+  <link href="/static/default/admin/plugins/bower_components/footable/css/footable.core.css" rel="stylesheet">
   <!-- animation CSS -->
   <link href="/static/default/admin/css/animate.css" rel="stylesheet">
   <!-- Custom CSS -->

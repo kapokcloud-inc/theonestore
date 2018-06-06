@@ -1,0 +1,53 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('商品分类'), 'href':""}] %}
+  {% set button = {'title':_('添加商品分类'), 'href':url_for('admin.item.category_create')} %}
+  {{ libs.breadcrumbs(breadcrumbs, button) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          <div class="table-responsive">
+            <table class="table product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('ID')}}</th>
+                  <th>{{_('名称')}}</th>
+                  <th>{{_('图片')}}</th>
+                  <th>{{_('添加时间')}}</th>
+                  <th>{{_('操作')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for category in categories %}
+                    <tr>
+                      <td>{{ category.cat_id }}</td>
+                      <td>{{ category.cat_name }}</td>
+                      <td> <img src="{{ category.cat_img }}" alt="" width="80"> </td>
+                      <td>{{ category.add_time|timestamp2str }}</td>
+                      <td>
+                        <a href="{{ url_for('admin.item.category_detail', cat_id=category.cat_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
+                          <i class="ti-marker-alt"></i>
+                        </a>
+                        <!--
+                        <a href="javascript:void(0)" class="text-inverse" title="Delete" data-toggle="tooltip">
+                          <i class="ti-trash"></i>
+                        </a>
+                        -->
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                {{ libs.pagination_html(pagination, 3) }}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

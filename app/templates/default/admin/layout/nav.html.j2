@@ -14,17 +14,68 @@
       {% set _view = request.path.split('/')[2] %}
       {%
         set menu_list = [
-                          {'title':_('管理员'), 'href':url_for('admin.auth.index'), 'view':'auth'},
-                          {'title':_('配置项'), 'href':url_for('admin.config.sms_yunpian'), 'view':'config'},
-                        ]
+          {'title':_('管理员'),
+           'href':url_for('admin.auth.index'),
+           'view':'auth',
+           'icon':'mdi-account-card-details',
+           'children':None
+          },
+          {'title':_('商品'),
+           'href':'javascript:;',
+           'view':'item',
+           'icon':'mdi-cart-outline',
+           'children':[
+              {'title':_('商品'),
+              'href':url_for('admin.item.index'),
+              'endpoints':['admin.item.index',
+                           'admin.item.create',
+                           'admin.item.detail',
+                           'admin.item.save']
+              },
+              {'title':_('分类'),
+              'href':url_for('admin.item.categories'),
+              'endpoints':['admin.item.categories',
+                           'admin.item.category_create',
+                           'admin.item.category_detail',
+                           'admin.item.category_save']
+              }
+            ]
+          },
+          {'title':_('配置项'),
+           'href':url_for('admin.config.sms_yunpian'),
+           'view':'config',
+           'icon':'mdi-settings',
+           'children':None
+          },
+        ]
       %}
       {% for menu in menu_list %}
         <li>
           {% set is_active = 'active' if menu['view'] == _view else '' %}
-          <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
-            <i class="mdi mdi-account-card-details fa-fw"></i>
-            <span class="hide-menu">{{ menu['title'] }}</span>
-          </a>
+          {% if menu['children'] == None %}
+            <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
+              <i class="mdi {{ menu['icon'] }} fa-fw"></i>
+              <span class="hide-menu">{{ menu['title'] }}</span>
+            </a>
+          {% else %}
+            <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
+              <i class="mdi {{ menu['icon'] }} fa-fw"></i>
+              <span class="hide-menu">{{ menu['title'] }}<span class="fa arrow"></span></span>
+            </a>
+            {% set aria_expanded = 'true' if menu['view'] == _view else 'false' %}
+            {% set collapse_in = 'collapse in' if menu['view'] == _view else '' %}
+            <ul class="nav nav-second-level {{ collapse_in }}" aria-expanded="{{ aria_expanded }}">
+              {% for child in menu['children'] %}
+                <li>
+                  {% set _is_active = 'active' if request.endpoint in child['endpoints'] else '' %}
+                  <a href="{{ child['href'] }}" class="{{ _is_active }}">
+                    <i class="fa-fw"></i>
+                    <span class="hide-menu">{{ child['title'] }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
         </li>
       {% endfor %}
     </ul>

@@ -14,4 +14,5 @@ ADMIN_ROUTES = (
     (admin.auth,        '/admin/auth'),
     (admin.dashboard,   '/admin/dashboard'),
     (admin.config,      '/admin/config'),
+    (admin.item,        '/admin/item'),
 )
