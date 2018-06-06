@@ -26,3 +26,9 @@ cart = Blueprint('mobile.cart', __name__)
 def root():
     """手机站 - 我的购物车"""
     return render_template('mobile/cart/index.html.j2')
+
+
+@cart.route('/edit')
+def edit():
+    """手机站 - 购物车编辑"""
+    return render_template('mobile/cart/cart_edit.html.j2')

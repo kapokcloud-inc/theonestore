@@ -26,3 +26,33 @@ user = Blueprint('mobile.user', __name__)
 def root():
     """手机站 - 个人中心"""
     return render_template('mobile/user/index.html.j2')
+
+
+@user.route('/info')
+def info():
+    """手机站 - 修改用户信息"""
+    return render_template('mobile/user/user_info.html.j2')
+
+
+@user.route('/address')
+def address():
+    """手机站 - 收货地址管理"""
+    return render_template('mobile/user/delivery_address.html.j2')
+
+
+@user.route('/add')
+def add():
+    """手机站 - 收货地址管理"""
+    return render_template('mobile/user/add_address.html.j2')
+
+
+@user.route('/collect')
+def collect():
+    """手机站 - 我的收藏"""
+    return render_template('mobile/user/collect.html.j2')
+
+
+@user.route('/coupon')
+def coupon():
+    """手机站 - 我的优惠券"""
+    return render_template('mobile/user/coupon.html.j2')

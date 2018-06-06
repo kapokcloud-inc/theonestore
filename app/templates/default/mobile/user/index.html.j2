@@ -1,19 +1,19 @@
 {% extends '/default/mobile/layout/base.html.j2' %} 
 
 {% block head %}
-<title>一店 - 个人中心</title>
+<title>个人中心 - 一店</title>
 <link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
 {% endblock%} 
 
 {% block body %}
 <div class="user_wrap">
   <div class="weui-cells weui-cells_form">
-    <a class="weui-cell weui-cell_access" href="">
+    <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.user.info') }}">
       <div class="weui-cell__hd avatar mar-right">
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">用户名</div>
-      <div class="weui-cell__ft"></div>
+      <div class="weui-cell__ft">修改</div>
     </a>
   </div>
   <div class="user_all_order_wrap">
@@ -63,39 +63,54 @@
     </div>
   </div>
   <div class="weui-cells weui-cells_form">
-    <a href="" class="weui-cell weui-cell_access">
+    <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.user.coupon') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">我的钱包</div>
-      <div class="weui-cell__ft">199元</div>
-    </a>
-    <a href="" class="weui-cell weui-cell_access">
-      <div class="weui-cell__hd">
-        <img src="" alt="">
-      </div>
-      <div class="weui-cell__bd">我的优惠券</div>
+      <div class="weui-cell__bd">优惠券</div>
       <div class="weui-cell__ft">0张</div>
     </a>
     <a href="" class="weui-cell weui-cell_access">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">我的收藏</div>
+      <div class="weui-cell__bd">钱包</div>
+      <div class="weui-cell__ft">199元</div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.user.collect') }}">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">收藏</div>
       <div class="weui-cell__ft"></div>
     </a>
     <a href="" class="weui-cell weui-cell_access">
       <div class="weui-cell__hd">
         <img src="" alt="">
+      </div><div class="weui-cell__bd">消息</div>
+      <div class="weui-cell__ft">未读1条</div>
+    </a>
+  </div>
+  <div class="weui-cells weui-cells_form">
+    <a href="" class="weui-cell weui-cell_access">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">我的邀请</div>
+      <div class="weui-cell__bd">邀请好友</div>
       <div class="weui-cell__ft">邀请新用户送50元</div>
     </a>
     <a href="" class="weui-cell weui-cell_access">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">设置</div>
+      <div class="weui-cell__bd">关于一店</div>
+      <div class="weui-cell__ft"></div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.user.address') }}">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">地址管理</div>
       <div class="weui-cell__ft"></div>
     </a>
   </div>
@@ -104,47 +119,47 @@
       <button type="button" class="weui-btn weui-btn_red">退出登录</button>
     </a>
   </div>
-</div>
-{% endblock%} 
 
-{% block navtabs %}
-<div style="height:60px"></div>
-<div class="foot_wrap">
-  <ul class="footer">
-    <li class="flex">
-      <a href="{{ url_for('mobile.index.root') }}">
-        <div class="icom_photo">
-          <img src="/static/default/mobile/img/home.png" alt="">
-        </div>
-        <p class="foot_text">首页</p>
-      </a>
-    </li>
-    <li class="flex">
-      <a href="{{ url_for('mobile.category.root') }}">
-        <div class="icom_photo">
-          <img src="/static/default/mobile/img/category.png" alt="">
-        </div>
-        <p class="foot_text">分类</p>
-      </a>
-    </li>
-    <li class="flex">
-      <a href="{{ url_for('mobile.cart.root') }}">
-        <div class="icom_photo">
-          <img src="/static/default/mobile/img/cart.png" alt="">
-        </div>
-        <p class="foot_text">购物车</p>
-      </a>
-    </li>
-    <li class="flex">
-      <a href="{{ url_for('mobile.user.root') }}">
-        <div class="icom_photo">
-          <img src="/static/default/mobile/img/userOn.png" alt="">
-        </div>
-        <p class="foot_text on">我的</p>
-      </a>
-    </li>
-  </ul>
+  <div class="height61"></div>
+  <div class="foot_wrap">
+    <ul class="footer">
+      <li class="flex">
+        <a href="{{ url_for('mobile.index.root') }}">
+          <div class="icom_photo">
+            <img src="/static/default/mobile/img/home.png" alt="">
+          </div>
+          <p class="foot_text">首页</p>
+        </a>
+      </li>
+      <li class="flex">
+        <a href="{{ url_for('mobile.category.root') }}">
+          <div class="icom_photo">
+            <img src="/static/default/mobile/img/category.png" alt="">
+          </div>
+          <p class="foot_text">分类</p>
+        </a>
+      </li>
+      <li class="flex">
+        <a href="{{ url_for('mobile.cart.root') }}">
+          <div class="icom_photo">
+            <img src="/static/default/mobile/img/cart.png" alt="">
+          </div>
+          <p class="foot_text">购物车</p>
+        </a>
+      </li>
+      <li class="flex">
+        <a href="{{ url_for('mobile.user.root') }}">
+          <div class="icom_photo">
+            <img src="/static/default/mobile/img/userOn.png" alt="">
+          </div>
+          <p class="foot_text on">我的</p>
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>
-{% endblock %} 
+{% endblock%}
 
-{% block script %}{% endblock%}
+{% block script %}
+<script type="text/javascript"></script>
+{% endblock%}

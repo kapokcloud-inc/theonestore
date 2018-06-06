@@ -1,0 +1,75 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>编辑购物车 - 一店</title>
+<link rel="stylesheet" href="/static/default/mobile/css/cart.css"> 
+{% endblock%} 
+
+{% block body %}
+<div class="cart_wrap">
+  <div class="greykGap mar-top mar-left">商品和数量</div>
+  <div class="weui-cells weui-cells_radio">
+    <div class="weui-cell weui-check__label" for="x11">
+      <div class="weui-cell__bd">
+        <p class="all_title">小米短袖POLO衫 深蓝 S</p>
+      </div>
+      <div class="weui-cell__bd">
+        <div class="all_price align_right">149元</div>
+      </div>
+      <div class="weui-cell__ft ft_width">
+        <input type="radio" class="weui-check" name="radio1" id="x11">
+        <span class="weui-icon-checked"></span>
+      </div>
+    </div>
+    <div class="weui-cell weui-check__label" for="x12">
+      <div class="weui-cell__bd">
+        <p class="all_title">小米短袖POLO衫 深蓝 M</p>
+      </div>
+      <div class="weui-cell__bd">
+        <div class="all_price align_right">149元</div>
+      </div>
+      <div class="weui-cell__ft ft_width">
+        <input type="radio" class="weui-check" name="radio2" id="x12" checked="checked">
+        <span class="weui-icon-checked"></span>
+      </div>
+    </div>
+    <div class="weui-cell weui-check__label" for="x13">
+      <div class="weui-cell__bd">
+        <p class="all_title">小米短袖POLO衫 深蓝 L</p>
+      </div>
+      <div class="weui-cell__bd">
+        <div class="all_price align_right">149元</div>
+      </div>
+      <div class="weui-cell__ft ft_width">
+        <input type="radio" class="weui-check" name="radio3" id="x13">
+        <span class="weui-icon-checked"></span>
+      </div>
+    </div>
+  </div>
+  <div class="weui-cells">
+    <div class="weui-cell">
+      <div class="weui-cell__hd blackGap">购买数量</div>
+      <div class="weui-cell__bd mar-right">
+        <input type="text" class="weui-input align_right blackGap" id="count" value="3" data-values="3">
+      </div>
+    </div>
+  </div>
+  <div class="reg_btn">
+    <button type="button" class="weui-btn weui-btn_red" onClick="determine()">确定</button>
+  </div>
+  <div class="reg_btn">
+    <button type="button" class="weui-btn weui-btn_orange" onClick="delete()">删除</button>
+  </div>
+</div>
+{% endblock%} 
+
+{% block script %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("#count").select({
+      title: "选择购买数量",
+      items: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+    });
+  });
+</script>
+{% endblock%}
