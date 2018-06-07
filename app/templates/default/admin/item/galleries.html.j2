@@ -1,0 +1,174 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/default/admin/plugins/bower_components/dropify/dist/css/dropify.min.css">
+<!-- Popup CSS -->
+<link href="/static/default/admin/plugins/bower_components/Magnific-Popup-master/dist/magnific-popup.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('商品'), 'href':url_for('admin.item.index')}, {'title':g.page_title, 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="white-box">
+          <ul class="nav customtab nav-tabs" role="tablist">
+            <li role="presentation">
+              <a href="{{ url_for('admin.item.detail', goods_id=goods_id) }}">
+                <span class="visible-xs">{{_('基本信息')}}</span>
+                <span class="hidden-xs">{{_('基本信息')}}</span>
+              </a>
+            </li>
+            <li role="presentation">
+              <a href="{{ url_for('admin.item.h5', goods_id=goods_id) }}">
+                <span class="visible-xs">{{_('详情')}}</i></span>
+                <span class="hidden-xs">{{_('详情')}}</span>
+              </a>
+            </li>
+            <li role="presentation" class="active">
+              <a href="javascript:;">
+                <span class="visible-xs">{{_('相册')}}</span>
+                <span class="hidden-xs">{{_('相册')}}</span>
+              </a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="home1">
+              <form action="{{ url_for('admin.item.galleries_save') }}" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                  <div id="upload-0" class="col-xs-6 col-sm-4 ol-md-3 col-lg-2" style="margin-bottom: 10px;">
+                    <input name="galleries" type="file" id="input-file-now" class="dropify" />
+                  </div>
+                  {% for index in range(1, 12) %}
+                    <div id="upload-{{ index }}" class="col-xs-6 col-sm-4 ol-md-3 col-lg-2" style="margin-bottom: 10px;display: none;">
+                      <input name="galleries" type="file" id="input-file-now" class="dropify" />
+                    </div>
+                  {% endfor %}
+                </div>
+                {{ libs.wtf_input(wtf_form.goods_id, '', _value=goods_id, _type="hidden") }}
+                {{ wtf_form.csrf_token }}
+                <div class="form-group" style="margin-bottom: 0px !important;">
+                  <button class="btn btn-success" type="button" onclick="add_upload(this)" data-i="1">添加</button>
+                  <button id="form-submit" class="btn btn-danger" type="submit">提交</button>
+                </div>
+              </form>
+
+              <hr />
+
+              <div class="row zoom-gallery">
+                {% for gallery in galleries %}
+                  <div class="col-xs-6 col-sm-4 ol-md-3 col-lg-2">
+                    <a href="{{ gallery.img }}" title="">
+                      <img class="img-responsive" src="{{ gallery.img }}" />
+                    </a>
+                    <br />
+                    <p class="text-center">
+                      <button type="button" class="btn btn-danger btn-circle" data-toggle="tooltip" title="" data-original-title="删除" onclick="remove({{ gallery.id }}, this)">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </p>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<!-- Magnific popup JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js"></script>
+<script src="/static/default/admin/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup-init.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="/static/default/admin/js/jasny-bootstrap.js"></script>
+<!-- jQuery file upload -->
+<script src="/static/default/admin/plugins/bower_components/dropify/dist/js/dropify.min.js"></script>
+<script type="text/javascript">
+function add_upload(dom) {
+  var $dom = $(dom);
+  var i = $dom.attr('data-i');
+
+  $("#upload-"+i).show();
+
+  $dom.attr('data-i', parseInt(i)+1);
+}
+
+function remove(id, dom) {
+  var $dom = $(dom);
+
+  $.get("{{ url_for('admin.item.galleries_remove') }}", {'id':id}, function(json) {
+    if (json.ret == 0) {
+      var _text = "{{_('删除成功')}}";
+      $.toast({
+          heading: _text,
+          text: '',
+          position: 'top-right',
+          loaderBg: '#ff6849',
+          icon: 'success',
+          hideAfter: 1000,
+          stack: 6
+      });
+
+      $dom.parent().parent().remove();
+    } else {
+      var _text = json.msg;
+      $.toast({
+          heading: "{{_('删除失败')}}",
+          text: _text,
+          position: 'top-right',
+          loaderBg: '#ff6849',
+          icon: 'warning',
+          hideAfter: 3000,
+          stack: 6
+      });
+      return false;
+    }
+  });
+}
+
+$(document).ready(function(){
+  // Basic
+  $('.dropify').dropify();
+
+  // Translated
+  $('.dropify-fr').dropify({
+    messages: {
+      default: 'Glissez-déposez un fichier ici ou cliquez',
+      replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+      remove: 'Supprimer',
+      error: 'Désolé, le fichier trop volumineux'
+    }
+  });
+
+  // Used events
+  var drEvent = $('#input-file-events').dropify();
+  drEvent.on('dropify.beforeClear', function(event, element) {
+    return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+  });
+  drEvent.on('dropify.afterClear', function(event, element) {
+    alert('File deleted');
+  });
+  drEvent.on('dropify.errors', function(event, element) {
+    console.log('Has Errors');
+  });
+
+  var drDestroy = $('#input-file-to-destroy').dropify();
+  drDestroy = drDestroy.data('dropify')
+  $('#toggleDropify').on('click', function(e) {
+    e.preventDefault();
+    if (drDestroy.isDropified()) {
+      drDestroy.destroy();
+    } else {
+      drDestroy.init();
+    }
+  })
+});
+</script>
+{% endblock %}

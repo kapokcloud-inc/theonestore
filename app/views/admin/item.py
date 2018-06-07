@@ -16,7 +16,8 @@ from flask import (
     Blueprint,
     redirect,
     url_for,
-    g
+    g,
+    jsonify
 )
 from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
@@ -32,9 +33,12 @@ from app.helpers.date_time import current_time
 
 from app.forms.admin.item import (
     ItemForm,
+    ItemH5Form,
+    ItemGalleriesForm,
     CategoryForm
 )
 
+from app.services.response import ResponseJson
 from app.services.admin.config import (
     SmsYunpianForm,
     SmsAlismsForm,
@@ -50,6 +54,9 @@ from app.models.item import (
 
 
 item = Blueprint('admin.item', __name__)
+
+resjson = ResponseJson()
+resjson.module_code = 10
 
 @item.route('/index')
 @item.route('/index/<int:page>')
@@ -113,7 +120,7 @@ def detail(goods_id):
     """商品详情"""
     g.page_title = _(u'商品详情')
 
-    item     = Goods.query.get_or_404(goods_id)
+    item = Goods.query.get_or_404(goods_id)
 
     wtf_form                   = ItemForm()
     wtf_form.cat_id.choices    = [(c.cat_id, c.cat_name) for c in GoodsCategories.query.all()]
@@ -122,7 +129,6 @@ def detail(goods_id):
     wtf_form.is_hot.data       = item.is_hot
     wtf_form.is_recommend.data = item.is_recommend
     wtf_form.goods_desc.data   = item.goods_desc
-    wtf_form.detail.data       = item.detail
 
     return render_template('admin/item/detail.html.j2', wtf_form=wtf_form, item=item)
 
@@ -143,6 +149,7 @@ def save():
             item = Goods.query.get_or_404(goods_id)
         else:
             item          = Goods()
+            item.detail   = ''
             item.add_time = _current_time
             db.session.add(item)
 
@@ -151,7 +158,6 @@ def save():
         item.goods_desc      = wtf_form.goods_desc.data
         item.goods_price     = wtf_form.goods_price.data
         item.market_price    = wtf_form.market_price.data
-        item.detail          = wtf_form.detail.data
         item.is_sale         = wtf_form.is_sale.data
         item.stock_quantity  = wtf_form.stock_quantity.data
         item.is_hot          = wtf_form.is_hot.data
@@ -174,6 +180,73 @@ def remove(goods_id):
     db.session.commit()
 
     return redirect(url_for('admin.item.index'))
+
+
+@item.route('/h5/<int:goods_id>')
+def h5(goods_id):
+    """商品H5详情"""
+    g.page_title = _(u'商品详情')
+
+    item     = Goods.query.get_or_404(goods_id)
+    wtf_form = ItemH5Form()
+
+    return render_template('admin/item/h5.html.j2', wtf_form=wtf_form, item=item)
+
+
+@item.route('/h5/save', methods=['POST'])
+def h5_save():
+    """保存商品H5"""
+    g.page_title = _(u'保存商品')
+
+    goods_id      = toint(request.form.get('goods_id', '0'))
+    detail        = request.form.get('detail', '').strip()
+    _current_time = current_time()
+
+    item = Goods.query.get_or_404(goods_id)
+    item.detail = detail
+    db.session.commit()
+
+    return redirect(url_for('admin.item.index'))
+
+
+@item.route('/galleries/<int:goods_id>')
+def galleries(goods_id):
+    """商品相册"""
+    g.page_title = _(u'商品详情')
+
+    galleries = GoodsGalleries.query.filter(GoodsGalleries.goods_id == goods_id).order_by(GoodsGalleries.id.desc()).all()
+    wtf_form  = ItemGalleriesForm()
+
+    return render_template('admin/item/galleries.html.j2', wtf_form=wtf_form, goods_id=goods_id, galleries=galleries)
+
+
+@item.route('/galleries/save', methods=['POST'])
+def galleries_save():
+    """保存商品相册"""
+    g.page_title = _(u'保存商品')
+
+    goods_id      = toint(request.form.get('goods_id', '0'))
+    galleries     = request.files.getlist('galleries')
+    _current_time = current_time()
+    
+    for gallery in galleries:
+        log_info(gallery)
+
+    return redirect(url_for('admin.item.index'))
+
+
+@item.route('/galleries/remove')
+def galleries_remove():
+    """删除商品相册"""
+    resjson.action_code = 10
+
+    id      = toint(request.args.get('id'))
+    gallery = GoodsGalleries.query.filter(GoodsGalleries.id == id).first()
+    db.session.delete(gallery)
+    db.session.commit()
+
+    #return jsonify({'ret':0, 'msg':'ok'})
+    return resjson.print_json(0, u'ok', {'gallery':gallery})
 
 
 @item.route('/categories')

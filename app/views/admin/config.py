@@ -14,7 +14,8 @@ from flask import (
     session,
     Blueprint,
     redirect,
-    url_for
+    url_for,
+    g
 )
 from flask_babel import gettext as _
 
@@ -25,7 +26,7 @@ from app.helpers import (
     toint
 )
 
-from app.services.admin.config import (
+from app.forms.admin.config import (
     SmsYunpianForm,
     SmsAlismsForm,
     StorageQiniuForm,
@@ -39,6 +40,7 @@ config = Blueprint('admin.config', __name__)
 @config.route('/sms/yunpian', methods=["GET", "POST"])
 def sms_yunpian():
     """配置云片短信"""
+    g.page_title = _(u'云片短信')
 
     form = SmsYunpianForm()
     ss   = SysSetting.query.filter(SysSetting.key == 'config_sms_yunpian').first()
@@ -62,6 +64,7 @@ def sms_yunpian():
 @config.route('/sms/alisms', methods=["GET", "POST"])
 def sms_alisms():
     """配置阿里短信"""
+    g.page_title = _(u'阿里短信')
 
     form = SmsAlismsForm()
     ss   = SysSetting.query.filter(SysSetting.key == 'config_sms_alisms').first()
@@ -87,6 +90,7 @@ def sms_alisms():
 @config.route('/storage/qiniu', methods=["GET", "POST"])
 def storage_qiniu():
     """配置七牛存储"""
+    g.page_title = _(u'七牛存储')
 
     form = StorageQiniuForm()
     ss   = SysSetting.query.filter(SysSetting.key == 'config_storage_qiniu').first()
@@ -112,7 +116,8 @@ def storage_qiniu():
 
 @config.route('/storage/alioss', methods=["GET", "POST"])
 def storage_alioss():
-    """配置七牛存储"""
+    """配置阿里存储"""
+    g.page_title = _(u'阿里存储')
 
     form = StorageAliossForm()
     ss   = SysSetting.query.filter(SysSetting.key == 'config_storage_alioss').first()
@@ -134,3 +139,4 @@ def storage_alioss():
             return redirect(url_for('admin.config.storage_alioss'))
 
     return render_template('admin/config/storage_alioss.html.j2', form=form, data=data)
+

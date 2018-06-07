@@ -9,17 +9,16 @@
 """
 
 import arrow
+import time
 
-from app.helpers import (
-    log_info
-)
+from app.helpers import log_info
 
 
 def timestamp2str(timestamp, format_style='YYYY-MM-DD HH:mm:ss'):
     """时间戳转换为指定格式时间"""
 
     utc = arrow.get(timestamp)
-    loc = utc.to('local')
+    loc = utc.to('local')       # 时区 ??
 
     return loc.format(format_style)
 
@@ -27,10 +26,7 @@ def timestamp2str(timestamp, format_style='YYYY-MM-DD HH:mm:ss'):
 def current_time():
     """当前时间戳"""
 
-    utc = arrow.utcnow()
-    loc = utc.to('local')
-
-    return loc.timestamp
+    return int(time.time())
 
 
 
