@@ -26,6 +26,8 @@
   <link href="/static/default/admin/css/style.css" rel="stylesheet">
   <!-- color CSS -->
   <link href="/static/default/admin/css/colors/megna.css" id="theme" rel="stylesheet">
+
+  {% block head %}{% endblock %}
 </head>
 
 <body class="fix-header">
@@ -56,14 +58,13 @@
   <!--Counter js -->
   <script src="/static/default/admin/plugins/bower_components/waypoints/lib/jquery.waypoints.js"></script>
   <script src="/static/default/admin/plugins/bower_components/counterup/jquery.counterup.min.js"></script>
-  
   <!-- Custom Theme JavaScript -->
   <script src="/static/default/admin/js/custom.min.js"></script>
   <script src="/static/default/admin/plugins/bower_components/toast-master/js/jquery.toast.js"></script>
   <!--Style Switcher -->
   <script src="/static/default/admin/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
 
-
+  {% block footer %}{% endblock %}
 </body>
 
 </html>

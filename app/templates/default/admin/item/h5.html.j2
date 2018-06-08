@@ -1,0 +1,79 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('商品'), 'href':url_for('admin.item.index')}, {'title':g.page_title, 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="white-box">
+          <ul class="nav customtab nav-tabs" role="tablist">
+            <li role="presentation">
+              <a href="{{ url_for('admin.item.detail', goods_id=item.goods_id) }}">
+                <span class="visible-xs">{{_('基本信息')}}</span>
+                <span class="hidden-xs">{{_('基本信息')}}</span>
+              </a>
+            </li>
+            <li role="presentation" class="active">
+              <a href="javascript:;">
+                <span class="visible-xs">{{_('详情')}}</i></span>
+                <span class="hidden-xs">{{_('详情')}}</span>
+              </a>
+            </li>
+            <li role="presentation">
+              <a href="{{ url_for('admin.item.galleries', goods_id=item.goods_id) }}">
+                <span class="visible-xs">{{_('相册')}}</span>
+                <span class="hidden-xs">{{_('相册')}}</span>
+              </a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="home1">
+              <form action="{{ url_for('admin.item.h5_save') }}" method="POST">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="control-label">商品详细内容</label>
+                      <script id="detail_html" type="text/plain" style="height:500px;"></script>
+                    </div>
+                  </div>
+                </div>
+                <textarea id="detail" name="detail" style="display: none;"></textarea>
+                {{ libs.wtf_input(wtf_form.goods_id, '', _value=item.goods_id, _type="hidden") }}
+                {{ wtf_form.csrf_token }}
+                {{ libs.wtf_submit() }}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript" src="/static/default/admin/plugins/ue/ueditor.config.js"></script>
+<script type="text/javascript" src="/static/default/admin/plugins/ue/ueditor.all.min.js"></script>
+<script type="text/javascript" src="/static/default/admin/plugins/ue/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  // 初始化ue
+  // 图片上传地址 ??
+  var ueditor = UE.getEditor('detail_html', {serverUrl: '/sys/ueditor/upload'});
+
+  ueditor.ready(function() {
+    ueditor.setContent('{{ item.detail }}');
+    ueditor.setHeight(500);
+  });
+
+  $("#form-submit").click(function(){
+    var content_text = ueditor.getContent();
+    $('#detail').val(content_text);
+  });
+});
+</script>
+{% endblock %}
+

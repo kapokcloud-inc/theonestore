@@ -15,6 +15,7 @@ from flask_wtf.file import (
     FileRequired, 
     FileStorage
 )
+from flask_uploads import IMAGES
 from wtforms import (
     IntegerField,
     StringField,
@@ -25,16 +26,11 @@ from wtforms import (
 )
 from wtforms.validators import (
     Required,
-    Length,
-    EqualTo,
-)
-from wtforms.validators import (
     InputRequired,
     Length,
     EqualTo,
     NumberRange
 )
-from flask_uploads import IMAGES
 
 from app.database import db
 from app.models.item import GoodsCategories
@@ -60,13 +56,12 @@ class ItemForm(FlaskForm):
     goods_desc     = TextAreaField()
     goods_price    = DecimalField(
                         validators=[
-                            NumberRange(min=0, message=u'金额必须大于0')]
+                            NumberRange(min=0, message=u'金额不能小于0')]
                     )
     market_price   = DecimalField(
                         validators=[
-                            NumberRange(min=0, message=u'金额必须大于0')]
+                            NumberRange(min=0, message=u'金额不能小于0')]
                     )
-    detail         = TextAreaField()
     is_sale        = SelectField(
                         coerce=int,
                         choices=[(0, _(u'否')), (1, _(u'是'))]
@@ -89,6 +84,16 @@ class ItemForm(FlaskForm):
                         order_by(GoodsCategories.cat_id.desc()).all()
         _categories = [(category.cat_id, category.cat_name) for category in _categories]
         self.cat_id.choices = _categories"""
+
+
+class ItemH5Form(FlaskForm):
+    """商品H5form"""
+    goods_id = IntegerField()
+
+
+class ItemGalleriesForm(FlaskForm):
+    """商品相册form"""
+    goods_id = IntegerField()
 
 
 class CategoryForm(FlaskForm):
