@@ -1,0 +1,197 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>我的订单- 一店</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+{% endblock%} 
+
+{% block body %}
+<div class="user_wrap">
+  <div class="flex_wrap weui-navbar">
+    <div class="typeStatus">
+      <a class="orderType orderType-on">全部</a>
+    </div>
+    <div class="typeStatus">
+      <a class="orderType">待付款</a>
+    </div>
+    <div class="typeStatus">
+      <a class="orderType">待收货</a>
+    </div>
+    <div class="typeStatus">
+      <a class="orderType">待评价</a>
+    </div>
+    <div class="typeStatus">
+      <a class="orderType">退款/售后</a>
+    </div>
+  </div>
+  <!-- 订单列表没有订单时显示 -->
+  <!-- <div class="not-product">
+    <div class="not-product_img">
+      <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
+    </div>
+    <div class="not-product_text">您暂无相关订单</div>
+    <div class="reg_btn">
+      <a href="{{ url_for('mobile.index.root') }}">
+        <button type="button" class="weui-btn weui-btn_red">到商城去逛逛</button>
+      </a>
+    </div>
+  </div> -->
+  <div class="order_list">
+    <div class="weui-cells weui-cells_form">
+      <a href="{{ url_for('mobile.user.order_detail') }}">
+        <div class="weui-cell">
+          <div class="weui-cell__bd all_add">2018.06.06</div>
+          <div class="weui-cell__ft">
+            <span class="trading_state">待付款</span>
+          </div>
+        </div>
+        <div class="weui-cell">
+          <div class="weui-cell__hd avatar mar-right">
+            <img src="" alt="">
+          </div>
+          <div class="weui-cell__bd">
+            <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
+            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机</div>
+          </div>
+          <div class="weui-cell__ft mar-left">
+            <p class="all_price">￥1299</p>
+            <p>x 1</p>
+          </div>
+        </div>
+        <div class="weui-cell">
+          <div class="weui-cell__bd"></div>
+          <div class="weui-cell__ft amount">
+            <span class="mar-right">共1件商品</span>
+            <span>合计：￥30.60(含运费￥0.00)</span>
+          </div>
+        </div>
+      </a>
+      <div class="weui-cell">
+        <div class="weui-cell__bd"></div>
+        <div class="weui-cell__ft">
+          <!-- <button type="button" class="order_btn">删除订单</button> -->
+          <button type="button" class="order_btn">取消订单</button>
+          <!-- <button type="button" class="order_btn">查看物流</button> -->
+          <button type="button" class="order_btn order-state_btn">付款</button>
+          <!-- <button type="button" class="order_btn order-state_btn">确认收货</button> -->
+          <!-- <a href="{{ url_for('mobile.user.review') }}">
+            <button type="button" class="order_btn order-state_btn">去评价</button>
+          </a> -->
+          <a href="{{ url_for('mobile.cart.root') }}">
+            <button type="button" class="order_btn order-state_btn">再次购买</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="weui-cells weui-cells_form">
+      <a href="{{ url_for('mobile.user.order_detail') }}">
+        <div class="weui-cell">
+          <div class="weui-cell__bd all_add">2018.06.07</div>
+          <div class="weui-cell__ft">
+            <span class="trading_state">待收货</span>
+          </div>
+        </div>
+        <div class="weui-cell">
+          <div class="weui-cell__hd avatar mar-right">
+            <img src="" alt="">
+          </div>
+          <div class="weui-cell__bd">
+            <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
+            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机</div>
+          </div>
+          <div class="weui-cell__ft mar-left">
+            <p class="all_price">￥159</p>
+            <p>x 3</p>
+          </div>
+        </div>
+        <div class="weui-cell">
+          <div class="weui-cell__bd"></div>
+          <div class="weui-cell__ft amount">
+            <span class="mar-right">共3件商品</span>
+            <span>合计：￥659(含运费￥0.00)</span>
+          </div>
+        </div>
+      </a>
+      <div class="weui-cell">
+        <div class="weui-cell__bd"></div>
+        <div class="weui-cell__ft">
+          <!-- <button type="button" class="order_btn">删除订单</button> -->
+          <!-- <button type="button" class="order_btn">取消订单</button> -->
+          <button type="button" class="order_btn">查看物流</button>
+          <!-- <button type="button" class="order_btn order-state_btn">付款</button> -->
+          <button type="button" class="order_btn order-state_btn">确认收货</button>
+          <!-- <a href="{{ url_for('mobile.user.review') }}">
+            <button type="button" class="order_btn order-state_btn">去评价</button>
+          </a> -->
+          <a href="{{ url_for('mobile.cart.root') }}">
+            <button type="button" class="order_btn order-state_btn">再次购买</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="weui-cells weui-cells_form">
+      <a href="{{ url_for('mobile.user.order_detail') }}">
+        <div class="weui-cell">
+          <div class="weui-cell__bd all_add">2018.06.07</div>
+          <div class="weui-cell__ft">
+            <span class="trading_state">待评价</span>
+          </div>
+        </div>
+        <div class="weui-cell">
+          <div class="weui-cell__hd avatar mar-right">
+            <img src="" alt="">
+          </div>
+          <div class="weui-cell__bd">
+            <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
+            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机</div>
+          </div>
+          <div class="weui-cell__ft mar-left">
+            <p class="all_price">￥159</p>
+            <p>x 2</p>
+          </div>
+        </div>
+        <div class="weui-cell">
+          <div class="weui-cell__hd avatar mar-right">
+            <img src="" alt="">
+          </div>
+          <div class="weui-cell__bd">
+            <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
+            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机</div>
+          </div>
+          <div class="weui-cell__ft mar-left">
+            <p class="all_price">￥159</p>
+            <p>x 2</p>
+          </div>
+        </div>
+        <div class="weui-cell">
+          <div class="weui-cell__bd"></div>
+          <div class="weui-cell__ft amount">
+            <span class="mar-right">共2件商品</span>
+            <span>合计：￥359(含运费￥0.00)</span>
+          </div>
+        </div>
+      </a>
+      <div class="weui-cell">
+        <div class="weui-cell__bd"></div>
+        <div class="weui-cell__ft">
+          <button type="button" class="order_btn">删除订单</button>
+          <!-- <button type="button" class="order_btn">取消订单</button> -->
+          <button type="button" class="order_btn">查看物流</button>
+          <!-- <button type="button" class="order_btn order-state_btn">付款</button> -->
+          <!-- <button type="button" class="order_btn order-state_btn">确认收货</button> -->
+          <a href="{{ url_for('mobile.user.review') }}">
+            <button type="button" class="order_btn order-state_btn">去评价</button>
+          </a>
+          <a href="{{ url_for('mobile.cart.root') }}">
+            <button type="button" class="order_btn order-state_btn">再次购买</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock%} 
+
+{% block script %}
+<script type="text/javascript"></script> 
+{% endblock%}

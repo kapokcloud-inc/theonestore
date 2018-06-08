@@ -122,7 +122,7 @@ ul li {
   color: #333;
 }
 .on {
-  color: #f33155;
+  color: #f33155 !important;
 }
 .all_title {
   font-size: 14px;
@@ -138,6 +138,11 @@ ul li {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.all_add {
+  font-size: 14px;
+  color: #999;
+  font-weight: 400;
 }
 .all_price {
   color: #f33155;
@@ -268,4 +273,46 @@ ul li {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+.weui-form-preview__bd {
+  padding: 15px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.weui-cells:after,
+.weui-cells:before {
+  z-index: 0;
+}
+.not_before::before {
+  left: 0px !important;
+}
+.nicktitle {
+  font-size: 14px;
+  color: #333;
+  font-weight: 400;
+}
+.pstR {
+  position: relative;
+}
+.weui-badge {
+  position: absolute;
+  top: 0px;
+  right: 25px;
+  background-color: #fff;
+  color: #f33155;
+  border: 1px solid #f33155;
+  padding: 0px 3px;
+}
+.msg_badge {
+  top: 3px;
+  color: #fff;
+  background: #f33155;
+}
+.weui-uploader__file {
+  width: 70px;
+  height: 70px;
+}
+.weui-uploader__input-box {
+  width: 68px;
+  height: 68px;
 }
