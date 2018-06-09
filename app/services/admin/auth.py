@@ -13,6 +13,7 @@ from hashlib import sha256
 from flask_babel import gettext as _
 
 from app.helpers import log_info
+from app.helpers.date_time import current_timestamp
 from app.models.auth import AdminUsers
 
 
@@ -69,7 +70,7 @@ class SaveAdminUsersService(object):
     """保存管理员用户service"""
     def __init__(self):
         self.admin_user = None
-        self.current_time = int(time.time())
+        self.current_time = current_timestamp()
 
     
     
