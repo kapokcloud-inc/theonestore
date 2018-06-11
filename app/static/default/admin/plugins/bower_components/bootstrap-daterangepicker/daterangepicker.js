@@ -67,12 +67,28 @@
         this.buttonClasses = 'btn btn-sm';
         this.applyClass = 'btn-success';
         this.cancelClass = 'btn-default';
+        // 添加代码 by eason
+        this.clearClass = 'btn-inverse'
 
-        this.locale = {
+        // 注释代码 by eason
+        /*this.locale = {
             format: 'MM/DD/YYYY',
             separator: ' - ',
             applyLabel: 'Apply',
             cancelLabel: 'Cancel',
+            weekLabel: 'W',
+            customRangeLabel: 'Custom Range',
+            daysOfWeek: moment.weekdaysMin(),
+            monthNames: moment.monthsShort(),
+            firstDay: moment.localeData().firstDayOfWeek()
+        };*/
+        // 添加代码 by eason
+        this.locale = {
+            format: 'YYYY-MM-DD',
+            separator: ' - ',
+            applyLabel: 'Apply',
+            cancelLabel: 'Cancel',
+            clearLabel: 'Clear',
             weekLabel: 'W',
             customRangeLabel: 'Custom Range',
             daysOfWeek: moment.weekdaysMin(),
@@ -97,7 +113,8 @@
 
         //html template for the picker UI
         if (typeof options.template !== 'string')
-            options.template = '<div class="daterangepicker dropdown-menu">' +
+            // 注释代码 by eason
+            /*options.template = '<div class="daterangepicker dropdown-menu">' +
                 '<div class="calendar left">' +
                     '<div class="daterangepicker_input">' +
                       '<input class="input-mini" type="text" name="daterangepicker_start" value="" />' +
@@ -124,6 +141,38 @@
                     '<div class="range_inputs">' +
                         '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
                         '<button class="cancelBtn" type="button"></button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';*/
+            // 添加代码 by eason
+            options.template = '<div class="daterangepicker dropdown-menu">' +
+                '<div class="calendar left">' +
+                    '<div class="daterangepicker_input">' +
+                      '<input class="input-mini" type="text" name="daterangepicker_start" value="" />' +
+                      '<i class="fa fa-calendar glyphicon glyphicon-calendar"></i>' +
+                      '<div class="calendar-time">' +
+                        '<div></div>' +
+                        '<i class="fa fa-clock-o glyphicon glyphicon-time"></i>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="calendar-table"></div>' +
+                '</div>' +
+                '<div class="calendar right">' +
+                    '<div class="daterangepicker_input">' +
+                      '<input class="input-mini" type="text" name="daterangepicker_end" value="" />' +
+                      '<i class="fa fa-calendar glyphicon glyphicon-calendar"></i>' +
+                      '<div class="calendar-time">' +
+                        '<div></div>' +
+                        '<i class="fa fa-clock-o glyphicon glyphicon-time"></i>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="calendar-table"></div>' +
+                '</div>' +
+                '<div class="ranges">' +
+                    '<div class="range_inputs">' +
+                        '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
+                        '<button class="cancelBtn" type="button"></button> ' +
+                        '<button class="clearBtn" type="button"></button>' +
                     '</div>' +
                 '</div>' +
             '</div>';
@@ -157,6 +206,10 @@
 
             if (typeof options.locale.cancelLabel === 'string')
               this.locale.cancelLabel = options.locale.cancelLabel;
+
+            // 添加代码 by eason
+            if (typeof options.locale.clearLabel === 'string')
+              this.locale.clearLabel = options.locale.clearLabel;
 
             if (typeof options.locale.weekLabel === 'string')
               this.locale.weekLabel = options.locale.weekLabel;
@@ -203,6 +256,10 @@
 
         if (typeof options.cancelClass === 'string')
             this.cancelClass = options.cancelClass;
+
+        // 添加代码 by eason
+        if (typeof options.clearClass === 'string')
+            this.clearClass = options.clearClass;
 
         if (typeof options.dateLimit === 'object')
             this.dateLimit = options.dateLimit;
@@ -359,7 +416,10 @@
         if (this.autoApply && typeof options.ranges !== 'object') {
             this.container.find('.ranges').hide();
         } else if (this.autoApply) {
-            this.container.find('.applyBtn, .cancelBtn').addClass('hide');
+            // 注释代码 by eason
+            //this.container.find('.applyBtn, .cancelBtn').addClass('hide');
+            // 添加代码 by eason
+            this.container.find('.applyBtn, .cancelBtn, .clearBtn').addClass('hide');
         }
 
         if (this.singleDatePicker) {
@@ -388,13 +448,25 @@
         }
 
         //apply CSS classes and labels to buttons
-        this.container.find('.applyBtn, .cancelBtn').addClass(this.buttonClasses);
+        // 注释代码 by eason
+        /*this.container.find('.applyBtn, .cancelBtn').addClass(this.buttonClasses);
         if (this.applyClass.length)
             this.container.find('.applyBtn').addClass(this.applyClass);
         if (this.cancelClass.length)
             this.container.find('.cancelBtn').addClass(this.cancelClass);
         this.container.find('.applyBtn').html(this.locale.applyLabel);
+        this.container.find('.cancelBtn').html(this.locale.cancelLabel);*/
+        // 添加代码 by eason
+        this.container.find('.applyBtn, .cancelBtn, .clearBtn').addClass(this.buttonClasses);
+        if (this.applyClass.length)
+            this.container.find('.applyBtn').addClass(this.applyClass);
+        if (this.cancelClass.length)
+            this.container.find('.cancelBtn').addClass(this.cancelClass);
+        if (this.clearClass.length)
+            this.container.find('.clearBtn').addClass(this.clearClass);
+        this.container.find('.applyBtn').html(this.locale.applyLabel);
         this.container.find('.cancelBtn').html(this.locale.cancelLabel);
+        this.container.find('.clearBtn').html(this.locale.clearLabel);
 
         //
         // event listeners
@@ -416,6 +488,10 @@
         this.container.find('.ranges')
             .on('click.daterangepicker', 'button.applyBtn', $.proxy(this.clickApply, this))
             .on('click.daterangepicker', 'button.cancelBtn', $.proxy(this.clickCancel, this))
+
+            // 添加代码 by eason
+            .on('click.daterangepicker', 'button.clearBtn', $.proxy(this.clickClear, this))
+
             .on('click.daterangepicker', 'li', $.proxy(this.clickRange, this))
             .on('mouseenter.daterangepicker', 'li', $.proxy(this.hoverRange, this))
             .on('mouseleave.daterangepicker', 'li', $.proxy(this.updateFormInputs, this));
@@ -435,13 +511,14 @@
         // if attached to a text input, set the initial value
         //
 
-        if (this.element.is('input') && !this.singleDatePicker && this.autoUpdateInput) {
+        // 注释代码 by eason
+        /*if (this.element.is('input') && !this.singleDatePicker && this.autoUpdateInput) {
             this.element.val(this.startDate.format(this.locale.format) + this.locale.separator + this.endDate.format(this.locale.format));
             this.element.trigger('change');
         } else if (this.element.is('input') && this.autoUpdateInput) {
             this.element.val(this.startDate.format(this.locale.format));
             this.element.trigger('change');
-        }
+        }*/
 
     };
 
@@ -1105,7 +1182,8 @@
             }
         },
 
-        outsideClick: function(e) {
+        // 注释代码 by eason
+        /*outsideClick: function(e) {
             var target = $(e.target);
             // if the page is clicked anywhere except within the daterangerpicker/button
             // itself then call this.hide()
@@ -1117,7 +1195,7 @@
                 target.closest('.calendar-table').length
                 ) return;
             this.hide();
-        },
+        },*/
 
         showCalendars: function() {
             this.container.addClass('show-calendar');
@@ -1313,6 +1391,14 @@
             this.endDate = this.oldEndDate;
             this.hide();
             this.element.trigger('cancel.daterangepicker', this);
+        },
+
+        // 添加代码 by eason
+        clickClear: function(e) {
+            this.startDate = this.oldStartDate;
+            this.endDate = this.oldEndDate;
+            this.hide();
+            this.element.val('');
         },
 
         monthOrYearChanged: function(e) {

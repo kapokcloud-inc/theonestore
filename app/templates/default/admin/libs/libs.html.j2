@@ -76,12 +76,12 @@
       {% set value       = request.args.get(name, '') %}
       {% set type        = field.get('type', 'input') %}
       {% set placeholder = field.get('placeholder', '') %}
-      {% set col_lg      = field.get('col-lg', 'col-lg-2') %}
+      {% set _class      = field.get('_class', 'col-lg-2') %}
 
       {% if type == 'hidden' %}
         <input type="hidden" id="{{ name }}" name="{{ name }}" value="{{ value }}">
       {% else %}
-        <div class="{{ col_lg }}">
+        <div class="{{ _class }}">
           <div class="form-group">
             <label>{{ label }}</label>
             {% if type == 'input' %}
@@ -97,6 +97,8 @@
                   <option value="{{ option_val }}" {{ selected }}>{{ option.get('name') }}</option>
                 {% endfor %}
               </select>
+            {% elif type == 'daterange' %}
+              <input class="form-control input-daterange-datepicker" type="text" name="{{ name }}" value="{{ value }}" />
             {% endif %}
           </div>
         </div>

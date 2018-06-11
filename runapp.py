@@ -7,6 +7,8 @@
     :license: BSD, see LICENSE for more details.
 """
 
+from json import loads as json_loads
+
 from flask_babel import Babel
 from flask_wtf.csrf import CSRFProtect
 from wtforms.compat import iteritems
@@ -53,7 +55,8 @@ CSRFProtect(app)
 # 注册jinja模板过滤器
 jinja_filters = {
     'iteritems':iteritems,
-    'timestamp2str':timestamp2str
+    'timestamp2str':timestamp2str,
+    'json_loads':json_loads
 }
 app.jinja_env.filters.update(jinja_filters)
 

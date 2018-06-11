@@ -29,7 +29,7 @@ from app.helpers import (
     log_info,
     toint
 )
-from app.helpers.date_time import current_time
+from app.helpers.date_time import current_timestamp
 
 from app.forms.admin.item import (
     ItemForm,
@@ -39,12 +39,6 @@ from app.forms.admin.item import (
 )
 
 from app.services.response import ResponseJson
-from app.services.admin.config import (
-    SmsYunpianForm,
-    SmsAlismsForm,
-    StorageQiniuForm,
-    StorageAliossForm
-)
 
 from app.models.item import (
     Goods,
@@ -138,8 +132,7 @@ def save():
     """保存商品"""
     g.page_title = _(u'保存商品')
 
-    _current_time = current_time()
-
+    _current_timestamp      = current_timestamp()
     wtf_form                = ItemForm()
     wtf_form.cat_id.choices = [(c.cat_id, c.cat_name) for c in GoodsCategories.query.all()]
 
@@ -150,7 +143,7 @@ def save():
         else:
             item          = Goods()
             item.detail   = ''
-            item.add_time = _current_time
+            item.add_time = _current_timestamp
             db.session.add(item)
 
         item.cat_id          = wtf_form.cat_id.data
@@ -162,7 +155,7 @@ def save():
         item.stock_quantity  = wtf_form.stock_quantity.data
         item.is_hot          = wtf_form.is_hot.data
         item.is_recommend    = wtf_form.is_recommend.data
-        item.update_time     = _current_time
+        item.update_time     = _current_timestamp
         db.session.commit()
 
         return redirect(url_for('admin.item.index'))
@@ -198,9 +191,9 @@ def h5_save():
     """保存商品H5"""
     g.page_title = _(u'保存商品')
 
-    goods_id      = toint(request.form.get('goods_id', '0'))
-    detail        = request.form.get('detail', '').strip()
-    _current_time = current_time()
+    goods_id           = toint(request.form.get('goods_id', '0'))
+    detail             = request.form.get('detail', '').strip()
+    _current_timestamp = current_timestamp()
 
     item = Goods.query.get_or_404(goods_id)
     item.detail = detail
@@ -227,7 +220,6 @@ def galleries_save():
 
     goods_id      = toint(request.form.get('goods_id', '0'))
     galleries     = request.files.getlist('galleries')
-    _current_time = current_time()
     
     for gallery in galleries:
         log_info(gallery)
@@ -298,7 +290,7 @@ def category_save():
             category = GoodsCategories.query.get_or_404(cat_id)
         else:
             category          = GoodsCategories()
-            category.add_time = current_time()
+            category.add_time = current_timestamp()
             db.session.add(category)
 
         category.cat_name = wtf_form.cat_name.data
