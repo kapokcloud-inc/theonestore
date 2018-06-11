@@ -24,34 +24,10 @@
   left: 0;
   right: 0;
 }
-.cart_bar {
-  background: #fff;
-  height: 45px;
-  line-height: 45px;
-}
 .all_check {
   display: inline-block;
   color: #333;
   font-size: 12px;
-}
-.total-price {
-  display: inline-block;
-  font-weight: 400;
-  font-size: 14px;
-  color: #333;
-}
-.btn_primary {
-  display: inline-block;
-  font-size: 14px;
-  width: 100px;
-  color: #fff;
-  background: #f33155;
-  margin-left: 10px;
-  text-align: center;
-}
-.total {
-  position: absolute;
-  right: 0;
 }
 .ft_width {
   width: 20px;

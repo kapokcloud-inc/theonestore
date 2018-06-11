@@ -205,3 +205,8 @@
 .uploader_wrap::before {
   border: 0;
 }
+.cancal_image {
+  width: 25px;
+  float: right;
+  margin-right: 15px;
+}

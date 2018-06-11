@@ -316,3 +316,80 @@ ul li {
   width: 68px;
   height: 68px;
 }
+.total-price {
+  display: inline-block;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333;
+}
+.btn_primary {
+  display: inline-block;
+  font-size: 14px;
+  width: 100px;
+  color: #fff;
+  background: #f33155;
+  margin-left: 10px;
+  text-align: center;
+  border: 1px solid #f33155;
+}
+.total {
+  position: absolute;
+  right: 0;
+}
+.submit_order {
+  position: fixed;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+.cart_bar {
+  background: #fff;
+  height: 45px;
+  line-height: 45px;
+}
+.order_bar {
+  height: 45px;
+  background: #fff;
+  line-height: 45px;
+  border-top: 1px solid #ccc;
+}
+.hide {
+  display: none;
+}
+.show {
+  display: block;
+}
+.ranpo {
+  z-index: 460;
+}
+.hide-mask {
+  position: fixed;
+  z-index: 600;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0px;
+  background: rgba(0, 0, 0, 0.7);
+}
+.weui-mask {
+  z-index: 20000 !important;
+}
+.weui-dialog.weui-dialog--visible {
+  z-index: 20000 !important;
+}
+.weui-dialog__btn {
+  color: #f33155 !important;
+  font-size: 16px;
+}
+.weui-dialog .weui-dialog__btn.default {
+  color: #5f646e !important;
+}
+.weui-dialog {
+  transition-duration: 0s !important;
+}
+.funds {
+  font-size: 12px;
+  color: #999;
+  font-weight: 400;
+}

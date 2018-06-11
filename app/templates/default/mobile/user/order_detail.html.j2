@@ -74,7 +74,6 @@
         </div>
       </div>
       <div class="weui-cell__ft">
-        
         <a href="">
           <button type="button" class="order_btn">申请售后</button>
         </a>
@@ -129,7 +128,9 @@
         <!-- <button type="button" class="order_btn">删除订单</button> -->
         <button type="button" class="order_btn">取消订单</button>
         <!-- <button type="button" class="order_btn">查看物流</button> -->
-        <button type="button" class="order_btn order-state_btn">付款</button>
+        <a href="{{ url_for('mobile.user.settlement') }}">
+          <button type="button" class="order_btn order-state_btn">付款</button>
+        </a>
         <!-- <button type="button" class="order_btn order-state_btn">确认收货</button> -->
         <a href="{{ url_for('mobile.user.review') }}">
           <button type="button" class="order_btn order-state_btn">去评价</button>
