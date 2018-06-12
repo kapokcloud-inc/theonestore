@@ -24,7 +24,8 @@ from app.database import db
 from app.helpers import (
     render_template, 
     log_info,
-    toint
+    toint,
+    kt_to_dict
 )
 from app.helpers.date_time import (
     current_timestamp,
@@ -68,11 +69,11 @@ def index(page=1, page_size=20):
             filter(Order.order_id == OrderAddress.order_id)
 
     if tab_status == 1:
-        q = q.filter(Order.pay_status == 1)
+        q = q.filter(Order.order_status == 1).filter(Order.pay_status == 1)
     elif tab_status == 2:
-        q = q.filter(Order.pay_status == 2).filter(Order.shipping_status == 1)
+        q = q.filter(Order.order_status == 1).filter(Order.pay_status == 2).filter(Order.shipping_status == 1)
     elif tab_status == 3:
-        q = q.filter(Order.shipping_status == 2)
+        q = q.filter(Order.order_status == 1).filter(Order.pay_status == 2).filter(Order.shipping_status == 2)
 
     if order_sn:
         q = q.filter(Order.order_sn == order_sn)
@@ -113,8 +114,15 @@ def index(page=1, page_size=20):
         start, end = date_range(shipping_time_daterange)
         q          = q.filter(Order.shipping_time >= start).filter(Order.shipping_time < end)
 
-    orders     = q.order_by(Order.order_id.desc()).offset((page-1)*page_size).limit(page_size).all()
+    _orders    = q.order_by(Order.order_id.desc()).offset((page-1)*page_size).limit(page_size).all()
     pagination = Pagination(None, page, page_size, q.count(), None)
+
+    orders = []
+    for _order in _orders:
+        status_text, action_code = OderStaticMethodsService.order_status_text_and_action_code(_order)
+        _order                   = kt_to_dict(_order)
+        _order['status_text']    = status_text
+        orders.append(_order)
 
     return render_template('admin/order/index.html.j2', pagination=pagination, orders=orders)
 

@@ -76,7 +76,7 @@
       {% set value       = request.args.get(name, '') %}
       {% set type        = field.get('type', 'input') %}
       {% set placeholder = field.get('placeholder', '') %}
-      {% set _class      = field.get('_class', 'col-lg-2') %}
+      {% set _class      = field.get('_class', 'col-lg-3') %}
 
       {% if type == 'hidden' %}
         <input type="hidden" id="{{ name }}" name="{{ name }}" value="{{ value }}">

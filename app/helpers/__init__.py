@@ -149,3 +149,11 @@ def tolong(s):
         pass
 
     return long(0)
+
+
+def kt_to_dict(kt):
+    """KeyedTuple转换成Dict"""
+
+    return kt._asdict()
+
+
