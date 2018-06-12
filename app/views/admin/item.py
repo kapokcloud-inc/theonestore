@@ -215,7 +215,7 @@ def galleries(goods_id):
 
 @item.route('/galleries/save', methods=['POST'])
 def galleries_save():
-    """保存商品相册"""
+    """保存商品相册 ??"""
     g.page_title = _(u'保存商品')
 
     goods_id      = toint(request.form.get('goods_id', '0'))

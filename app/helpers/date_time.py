@@ -49,6 +49,16 @@ def some_day_timestamp(timestamp, days):
     return a_loc.timestamp
 
 
+def before_after_timestamp(timestamp, **kwargs):
+    """"""
+
+    a_utc = arrow.get(timestamp)
+    a_loc = a_utc.to('local')
+    a_loc = a_loc.shift(**kwargs)
+
+    return a_loc.timestamp
+
+
 def date_range(_range, format_style='YYYY-MM-DD'):
     """时间段"""
 

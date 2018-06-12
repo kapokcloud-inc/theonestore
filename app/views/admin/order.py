@@ -30,7 +30,8 @@ from app.helpers.date_time import (
     current_timestamp,
     date_range
 )
-
+from app.services.admin.order import OderStaticMethodsService
+from app.services.response import ResponseJson
 from app.models.order import (
     Order,
     OrderAddress,
@@ -40,6 +41,9 @@ from app.models.order import (
 
 
 order = Blueprint('admin.order', __name__)
+
+resjson = ResponseJson()
+resjson.module_code = 11
 
 @order.route('/index')
 @order.route('/index/<int:page>')
@@ -96,7 +100,7 @@ def index(page=1, page_size=20):
     if orders_id is not None:
         orders_id = [-1] if len(orders_id) == 0 else orders_id
         q = q.filter(Order.order_id.in_(orders_id))
-    
+
     if add_time_daterange:
         start, end = date_range(add_time_daterange)
         q          = q.filter(Order.add_time >= start).filter(Order.add_time < end)
@@ -120,7 +124,76 @@ def detail(order_id):
     """订单详情"""
     g.page_title = _(u'订单详情')
 
-    order = Order.query.get_or_404(order_id)
+    order                    = Order.query.get_or_404(order_id)
+    order_goods              = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
+    order_address            = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
+    status_text, action_code = OderStaticMethodsService.order_status_text_and_action_code(order)
 
-    return render_template('admin/order/detail.html.j2', wtf_form=wtf_form, order=order)
+    return render_template('admin/order/detail.html.j2',
+        order=order,
+        order_goods=order_goods,
+        order_address=order_address,
+        status_text=status_text,
+        action_code=action_code)
+
+
+@order.route('/shipping', methods=['POST'])
+def shipping():
+    """确认发货"""
+    resjson.action_code = 10
+
+    form               = request.form
+    order_id           = toint(form.get('order_id', 0))
+    shipping_sn        = form.get('shipping_sn', '').strip()
+    operation_note     = form.get('operation_note', '').strip()
+    _current_timestamp = current_timestamp()
+
+    order = Order.query.get(order_id)
+    if not order:
+        return resjson.print_json(10, _(u'订单不存在'))
+
+    if order.shipping_status == 2:
+        return resjson.print_json(11, _(u'请勿重复发货'))
+
+    if order.pay_status != 2:
+        return resjson.print_json(12, _(u'未付款订单'))
+
+    order.shipping_sn     = shipping_sn
+    order.shipping_status = 2
+    order.shipping_time   = _current_timestamp
+    order.deliver_status  = 1
+    order.update_time     = _current_timestamp
+
+    db.session.commit()
+
+    return resjson.print_json(0, u'ok')
+
+
+@order.route('/cancel', methods=['POST'])
+def cancel():
+    """取消订单"""
+    resjson.action_code = 11
+
+    form               = request.form
+    order_id           = toint(form.get('order_id', 0))
+    cancel_desc        = form.get('cancel_desc', '').strip()
+    operation_note     = form.get('operation_note', '').strip()
+    _current_timestamp = current_timestamp()
+
+    order = Order.query.get(order_id)
+    if not order:
+        return resjson.print_json(10, _(u'订单不存在'))
+
+    if order.pay_status == 2:
+        return resjson.print_json(11, _(u'不能取消已付款的订单'))
+
+    order.order_status    = 3
+    order.cancel_status   = 2
+    order.cancel_desc     = cancel_desc
+    order.cancel_time     = _current_timestamp
+    order.update_time     = _current_timestamp
+
+    db.session.commit()
+
+    return resjson.print_json(0, u'ok')
 

@@ -1,0 +1,297 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('订单'), 'href':url_for('admin.order.index')}, {'title':g.page_title, 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="panel">
+          <div class="panel panel-default">
+            <div class="panel-heading">{{_('基本信息')}}</div>
+            <div class="panel-body">
+              <div class="row">
+                {{ libs.form_control_static(_('订单ID'), order.order_id) }}
+                {{ libs.form_control_static(_('订单编号'), order.order_sn) }}
+                {{ libs.form_control_static(_('下单用户'), 'Steave') }}
+                {{ libs.form_control_static(_('应付金额'), order.pay_amount) }}
+                {{ libs.form_control_static(_('订单状态'), status_text) }}
+                {{ libs.form_control_static(_('下单时间'), order.add_time|timestamp2str) }}
+                {% if order.paid_time %}
+                  {{ libs.form_control_static(_('支付方式'), order.pay_method) }}
+                  {{ libs.form_control_static(_('支付流水号'), order.pay_tran_id) }}
+                  {{ libs.form_control_static(_('支付时间'), order.paid_time|timestamp2str) }}
+                {% endif %}
+                <!--{{ libs.form_control_static(_('支付状态'), const.PAY_STATUS.get(order.pay_status, _('错误状态'))) }}-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="panel">
+          <div class="panel panel-default">
+            <div class="panel-heading">{{_('收货信息')}}</div>
+            <div class="panel-body">
+              <div class="row">
+                {{ libs.form_control_static(_('姓名'), order_address.name) }}
+                {{ libs.form_control_static(_('手机号码'), order_address.mobile) }}
+                {{ libs.form_control_static(_('邮编'), order_address.zip) }}
+                {% set address = '%s%s%s%s' % (order_address.province, order_address.city, order_address.district, order_address.address) %}
+                {{ libs.form_control_static(_('详细地址'), address) }}
+                {{ libs.form_control_static(_('用户备注'), order.user_remark) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="panel">
+          <div class="panel panel-default">
+            <div class="panel-heading">{{_('商品信息')}}</div>
+            <div class="panel-body form-horizontal">
+              <table class="table product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('商品名称')}}</th>
+                  <th width="80">{{_('商品图片')}}</th>
+                  <th width="80">{{_('商品数量')}}</th>
+                  <th width="80">{{_('销售价格')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for goods in order_goods %}
+                    <tr>
+                      <td>
+                        <a href="{{ url_for('admin.item.detail', goods_id=goods.goods_id) }}">{{ goods.goods_name }}</a>
+                      </td>
+                      <td><img src="{{ goods['goods_img'] }}" width="50" /></td>
+                      <td>{{ goods.goods_quantity }}</td>
+                      <td>{{ goods.goods_price }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="panel">
+          <div class="panel panel-default">
+            <div class="panel-heading">{{_('费用信息')}}</div>
+            <div class="panel-body">
+              <div class="row">
+                {{ libs.form_control_static(_('小计'), order.goods_amount) }}
+                {{ libs.form_control_static(_('运费'), order.shipping_amount) }}
+                {{ libs.form_control_static(_('优惠金额'), order.discount_amount) }}
+                {{ libs.form_control_static(_('应付金额'), order.pay_amount) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="panel">
+          <div class="panel panel-default">
+            <div class="panel-heading">{{_('物流信息')}}</div>
+            <div class="panel-body form-horizontal"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="panel">
+          <div class="panel panel-default">
+            <div class="panel-heading">{{_('操作')}}</div>
+            <div class="panel-body">
+              <!--
+              <div class="form-group">
+                <label class="col-sm-2 control-label">{{_('可执行操作')}}</label>
+                <div class="col-sm-10">
+                  <div class="row">
+                    {% if 1 in action_code %}
+                      <div class="col-lg-2 col-sm-4 col-xs-12">
+                        <button class="btn btn-block btn-info">发货</button>
+                      </div>
+                    {% endif %}
+                    {% if 2 in action_code %}
+                      <div class="col-lg-2 col-sm-4 col-xs-12">
+                        <button class="btn btn-block btn-primary">取消订单</button>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              -->
+              <div class="text-left">
+                <span>可执行操作：</span>
+                {% if 1 in action_code %}
+                  <button class="btn btn-info" data-toggle="modal" data-target="#shipping-modal">{{_('发货')}}</button>
+                {% endif %}
+                {% if 2 in action_code %}
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#cancel-modal">{{_('取消订单')}}</button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="shipping-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">{{_('确认发货')}}</h4> </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">{{_('快递单号')}}：</label>
+            <input type="text" class="form-control" id="shipping_sn">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="control-label">{{_('操作备注')}}：</label>
+            <textarea class="form-control" id="shipping_operation_note"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">
+          {{_('关闭')}}
+        </button>
+        <button type="button" class="btn btn-danger waves-effect waves-light" onclick="shipping()">
+          {{_('确认发货')}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cancel-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">{{_('取消订单')}}</h4> </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="control-label">{{_('取消原因')}}：</label>
+            <input type="text" class="form-control" id="cancel_desc">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="control-label">{{_('操作备注')}}：</label>
+            <textarea class="form-control" id="cancel_operation_note"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">
+          {{_('关闭')}}
+      </button>
+        <button type="button" class="btn btn-danger waves-effect waves-light" onclick="cancel()">
+          {{_('确认取消')}}
+      </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+var csrf_token = "{{ csrf_token() }}";
+var order_id = "{{ order.order_id }}";
+
+function shipping() {
+  var shipping_sn = $("#shipping_sn").val();
+  var operation_note = $("#shipping_operation_note").val();
+  var params = {'csrf_token':csrf_token, 'order_id':order_id, 'shipping_sn':shipping_sn, 'operation_note':operation_note};
+
+  $.post("{{ url_for('admin.order.shipping') }}", params, function(json) {
+    if (json.ret == 0) {
+      var _text = "{{_('发货成功')}}";
+      $.toast({
+          heading: _text,
+          text: '',
+          position: 'top-right',
+          loaderBg: '#ff6849',
+          icon: 'success',
+          hideAfter: 1000,
+          stack: 6
+      });
+
+      setTimeout(function(){
+        location.reload();
+      }, 1000);
+    } else {
+      var _text = json.msg;
+      $.toast({
+          heading: "{{_('错误信息')}}",
+          text: _text,
+          position: 'top-right',
+          loaderBg: '#ff6849',
+          icon: 'warning',
+          hideAfter: 3000,
+          stack: 6
+      });
+      return false;
+    }
+  });
+}
+
+function cancel() {
+  var cancel_desc = $("#cancel_desc").val();
+  var operation_note = $("#cancel_operation_note").val();
+  var params = {'csrf_token':csrf_token, 'order_id':order_id, 'cancel_desc':cancel_desc, 'operation_note':operation_note};
+
+  $.post("{{ url_for('admin.order.cancel') }}", params, function(json) {
+    if (json.ret == 0) {
+      var _text = "{{_('取消成功')}}";
+      $.toast({
+          heading: _text,
+          text: '',
+          position: 'top-right',
+          loaderBg: '#ff6849',
+          icon: 'success',
+          hideAfter: 1000,
+          stack: 6
+      });
+
+      setTimeout(function(){
+        location.reload();
+      }, 1000);
+    } else {
+      var _text = json.msg;
+      $.toast({
+          heading: "{{_('错误信息')}}",
+          text: _text,
+          position: 'top-right',
+          loaderBg: '#ff6849',
+          icon: 'warning',
+          hideAfter: 3000,
+          stack: 6
+      });
+      return false;
+    }
+  });
+}
+</script>
+{% endblock %}
+
