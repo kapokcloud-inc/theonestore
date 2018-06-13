@@ -134,7 +134,7 @@ ul li {
 }
 .all_desc {
   font-size: 12px;
-  color: #b0b0b0;
+  color: #999;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -144,12 +144,17 @@ ul li {
   color: #999;
   font-weight: 400;
 }
+.all_time {
+  font-size: 12px;
+  color: #999;
+  font-weight: 400;
+}
 .all_price {
   color: #f33155;
   font-size: 14px;
 }
 .all-price_del {
-  color: #b0b0b0;
+  color: #999;
   font-size: 14px;
   text-decoration: line-through;
 }
@@ -234,12 +239,18 @@ ul li {
   height: 50px;
   display: block;
 }
+.toolbar {
+  background: #fff;
+}
 .toolbar .title {
   font-size: 16px;
 }
 .toolbar .picker-button {
   color: #f33155;
   font-size: 16px;
+}
+.weui-select-modal .weui-cells {
+  margin: 0 !important;
 }
 .weui-switch-cp__input:checked ~ .weui-switch-cp__box,
 .weui-switch:checked {
@@ -285,6 +296,22 @@ ul li {
 }
 .not_before::before {
   left: 0px !important;
+}
+.tag_btn {
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  font-size: 12px;
+  color: #333;
+  background-color: #fff;
+  width: 65px;
+  height: 28px;
+  text-align: center;
+  margin-right: 10px;
+}
+.tag_btn-on {
+  background-color: #f33155;
+  color: #fff;
+  border: 1px solid #f33155;
 }
 .nicktitle {
   font-size: 14px;
@@ -392,4 +419,55 @@ ul li {
   font-size: 12px;
   color: #999;
   font-weight: 400;
+}
+.apply-service_num {
+  width: 85px;
+  height: 22px;
+  line-height: 22px;
+  position: relative;
+}
+.num_minus {
+  padding: 10px 10px;
+  float: left;
+}
+.num_minus::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 6px;
+  height: 2px;
+  width: 10px;
+  background: #d8d8d8;
+}
+.num_add {
+  padding: 10px 10px;
+  float: left;
+}
+.num_add::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 6px;
+  height: 2px;
+  width: 10px;
+  background: #d8d8d8;
+}
+.num_add::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  height: 10px;
+  width: 2px;
+  background: #d8d8d8;
+}
+.num_ipt {
+  float: left;
+  width: 37px;
+  height: 16px;
+  margin: 2px 3px;
+  text-align: center;
+  color: #d8d8d8;
+  font-size: 12px;
+  border: 1px solid #d8d8d8;
 }

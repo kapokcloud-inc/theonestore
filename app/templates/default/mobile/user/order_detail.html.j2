@@ -57,7 +57,7 @@
         </div>
       </div>
       <div class="weui-cell__ft">
-        <a href="">
+        <a href="{{ url_for('mobile.user.apply_aftersale') }}">
           <button type="button" class="order_btn">申请售后</button>
         </a>
       </div>
@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="weui-cell__ft">
-        <a href="">
+        <a href="{{ url_for('mobile.user.apply_aftersale') }}">
           <button type="button" class="order_btn">申请售后</button>
         </a>
       </div>
@@ -125,19 +125,42 @@
     <div class="weui-cell">
       <div class="weui-cell__bd"></div>
       <div class="weui-cell__ft">
-        <!-- <button type="button" class="order_btn">删除订单</button> -->
-        <button type="button" class="order_btn">取消订单</button>
-        <!-- <button type="button" class="order_btn">查看物流</button> -->
-        <a href="{{ url_for('mobile.user.settlement') }}">
+        <button type="button" class="order_btn" onclick="del()">删除订单</button>
+        <!-- <button type="button" class="order_btn" onclick="cancelOrder()">取消订单</button> -->
+        <!-- <a href="{{ url_for('mobile.user.logistics') }}">
+          <button type="button" class="order_btn">查看物流</button>
+        </a> -->
+        <!-- <a href="{{ url_for('mobile.user.settlement') }}">
           <button type="button" class="order_btn order-state_btn">付款</button>
-        </a>
-        <!-- <button type="button" class="order_btn order-state_btn">确认收货</button> -->
-        <a href="{{ url_for('mobile.user.review') }}">
+        </a> -->
+        <button type="button" class="order_btn order-state_btn" onclick="confirm()">确认收货</button>
+        <!-- <a href="{{ url_for('mobile.user.review') }}">
           <button type="button" class="order_btn order-state_btn">去评价</button>
-        </a>
+        </a> -->
         <a href="{{ url_for('mobile.cart.root') }}">
           <button type="button" class="order_btn order-state_btn">再次购买</button>
         </a>
+      </div>
+    </div>
+  </div>
+  <div class="hide ranpo" id="confirmReceipt">
+    <div class="hide-mask"></div>
+    <div class="weui-actionsheet weui-actionsheet_toggle">
+      <div class="weui-actionsheet__menu">
+        <input type="hidden" name="" id="" value="">
+        <div class="weui-actionsheet__cell not-product_text">
+          <span>确认收货</span>
+          <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="cancel()">
+        </div>
+        <div class="not-product">
+          <div class="not-product_img">
+            <img class="notproduct" src="/static/default/mobile/img/orderK.png" alt="">
+          </div>
+          <div class="not-product_text">您的订单已确认收货成功</div>
+          <div class="reg_btn">
+            <button type="button" class="weui-btn weui-btn_red" onClick="review()">去评价</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -145,5 +168,62 @@
 {% endblock%} 
 
 {% block script %}
-<script type="text/javascript"></script> 
+<script type="text/javascript">
+
+var $confirmReceipt = $('#confirmReceipt');
+
+//确认收货弹窗
+function confirm() {
+  $.confirm({
+    title: '确认收货',
+    text: '确认收到此订单的商品了么？',
+    onOK: function () {
+      $confirmReceipt.removeClass('hide');
+      if (!$confirmReceipt.hasClass('show')) {
+        $confirmReceipt.addClass('show');
+      }
+    },
+    onCancel: function () { }
+  });
+}
+
+//关闭确认收货弹窗
+function cancel() {
+  $confirmReceipt.removeClass('show');
+  if (!$confirmReceipt.hasClass('hide')) {
+    $confirmReceipt.addClass('hide');
+  }
+}
+
+//点击去评价商品，关闭确认收货弹窗
+function review() {
+  $confirmReceipt.removeClass('show');
+  if (!$confirmReceipt.hasClass('hide')) {
+    $confirmReceipt.addClass('hide');
+  }
+
+  var url = "/mobile/user/review";
+  window.location.href = url;
+}
+
+//取消订单弹窗
+function cancelOrder() {
+  $.confirm({
+    title: '取消订单',
+    text: '确定取消该订单？',
+    onOK: function () { },
+    onCancel: function () { }
+  });
+}
+
+//删除订单弹窗
+function del() {
+  $.confirm({
+    title: '删除订单',
+    text: '确定删除该订单？',
+    onOK: function () { },
+    onCancel: function () { }
+  });
+}
+</script> 
 {% endblock%}
