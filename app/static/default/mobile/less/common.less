@@ -1,5 +1,7 @@
 @charset "UTF-8";
 
+@import "variables.less";
+
 *{
   padding: 0;
   margin: 0;
@@ -35,10 +37,10 @@ ul li{list-style:none;}
   padding: 15px;
 }
 .weui-cell__bd{
-  font-size: 14px;
+  font-size: @font-size14;
 }
 .weui-cell__ft{
-  font-size: 12px !important;
+  font-size: @font-size12 !important;
 }
 .mar-top{
   margin-top: 10px;
@@ -65,7 +67,7 @@ ul li{list-style:none;}
   padding-bottom: 10px;
 }
 .bg-white{
-  background: #fff !important;
+  background: @white-color !important;
 }
 .height61{
   height: 61px;
@@ -92,8 +94,8 @@ ul li{list-style:none;}
   padding: 15px;
   background: #f3f4f5;
   text-align: center;
-  color: #666;
-  font-size: 14px;
+  color: @grey-color6;
+  font-size: @font-size14;
 }
 .footer{
   position: fixed;
@@ -102,8 +104,8 @@ ul li{list-style:none;}
   display: flex;
   height: 50px;
   border-top: 1px solid #ddd;
-  background: #fff;
-  font-size: 12px;
+  background: @white-color;
+  font-size: @font-size12;
   text-align: center;
 }
 .icom_photo{
@@ -116,38 +118,43 @@ ul li{list-style:none;}
   }
 }
 .foot_text{
-  color: #333;
+  color: @black-color;
 }
 .on{
-  color: #f33155 !important;
+  color: @main-color !important;
 }
 .all_title{
-  font-size: 14px;
-  font-weight: 400;
-  color: #333;
+  font-size: @font-size14;
+  font-weight: @font-weight400;
+  color: @black-color;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .all_desc{
-  font-size: 12px;
-  color: #b0b0b0;
+  font-size: @font-size12;
+  color: @grey-color9;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .all_add{
-  font-size: 14px;
-  color: #999;
-  font-weight: 400;
+  font-size: @font-size14;
+  color: @grey-color9;
+  font-weight: @font-weight400;
+}
+.all_time{
+  font-size: @font-size12;
+  color: @grey-color9;
+  font-weight: @font-weight400;
 }
 .all_price{
-  color: #f33155;
-  font-size: 14px;
+  color: @main-color;
+  font-size: @font-size14;
 }
 .all-price_del{
-  color: #b0b0b0;
-  font-size: 14px;
+  color: @grey-color9;
+  font-size: @font-size14;
   text-decoration: line-through;
 }
 .weui-cell__hd img{
@@ -164,15 +171,15 @@ ul li{list-style:none;}
   padding: 15px;
 }
 .weui-btn_red {
-  background: #f33155 !important;
-  font-size: 16px;
-  font-weight: 400;
+  background: @main-color !important;
+  font-size: @font-size16;
+  font-weight: @font-weight400;
   height: 45px;
 }
 .weui-btn_orange{
   background: #EA6B32 !important;
-  font-size: 16px;
-  font-weight: 400;
+  font-size: @font-size16;
+  font-weight: @font-weight400;
   height: 45px;
 }
 .avatar{
@@ -184,24 +191,24 @@ ul li{list-style:none;}
   }
 }
 .blackGap{
-  font-size: 14px !important;
-  color: #333;
-  font-weight: 400;
+  font-size: @font-size14 !important;
+  color: @black-color;
+  font-weight: @font-weight400;
 }
 .greykGap{
-  font-size: 14px !important;
-  color: #666;
-  font-weight: 400;
+  font-size: @font-size14 !important;
+  color: @grey-color6;
+  font-weight: @font-weight400;
 }
 .edit,.delete{
-  color: #999;
-  font-weight: 400;
+  color: @grey-color9;
+  font-weight: @font-weight400;
 }
 .weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before{
-  color: #f33155 !important;
+  color: @main-color !important;
 }
 .weui-cells_radio .weui-check:checked+.weui-icon-checked:before{
-  color: #f33155 !important;
+  color: @main-color !important;
 }
 .align_right{
   text-align: right;
@@ -215,8 +222,8 @@ ul li{list-style:none;}
   margin-left: -10px !important;
 }
 .weui-cell_primary{
-  color: #333;
-  font-size: 16px;
+  color: @black-color;
+  font-size: @font-size16;
 }
 .all-ava{
   position: relative; 
@@ -231,23 +238,27 @@ ul li{list-style:none;}
   display: block;
 }
 .toolbar{
+  background: @white-color;
   .title{
-    font-size: 16px;
+    font-size: @font-size16;
   }
   .picker-button{
-    color: #f33155;
-    font-size: 16px;
+    color: @main-color;
+    font-size: @font-size16;
   }
 }
+.weui-select-modal .weui-cells{
+  margin: 0 !important;
+}
 .weui-switch-cp__input:checked~.weui-switch-cp__box, .weui-switch:checked{
-  border-color: #f33155;
-  background-color: #f33155;
+  border-color: @main-color;
+  background-color: @main-color;
 }
 .weui-picker-modal .picker-item.picker-selected{
-  color: #333;
+  color: @black-color;
 }
 .weui-picker-modal .picker-item{
-  font-size: 16px;
+  font-size: @font-size16;
 }
 .not-product {
   text-align: center;
@@ -261,9 +272,9 @@ ul li{list-style:none;}
   background: #E1E2E2;
 }
 .not-product_text {
-  font-size: 16px;
-  color: #333;
-  font-weight: 400;
+  font-size: @font-size16;
+  color: @black-color;
+  font-weight: @font-weight400;
 }
 .notproduct {
   width: 50px;
@@ -273,7 +284,7 @@ ul li{list-style:none;}
 }
 .weui-form-preview__bd{
   padding: 15px;
-  font-size: 14px;
+  font-size: @font-size14;
   line-height: 1.8;
 }
 .weui-cells:after, .weui-cells:before{
@@ -282,10 +293,26 @@ ul li{list-style:none;}
 .not_before::before{
   left: 0px !important;
 }
+.tag_btn{
+  border: 1px solid @grey-color;
+  border-radius: 30px;
+  font-size: @font-size12;
+  color: @black-color;
+  background-color: @white-color;
+  width: 65px;
+  height: 28px;
+  text-align: center;
+  margin-right: 10px;
+}
+.tag_btn-on{
+  background-color: @main-color;
+  color: @white-color;
+  border: 1px solid @main-color;
+}
 .nicktitle{
-  font-size: 14px;
-  color: #333;
-  font-weight: 400;
+  font-size: @font-size14;
+  color: @black-color;
+  font-weight: @font-weight400;
 }
 .pstR{
   position: relative;
@@ -294,15 +321,15 @@ ul li{list-style:none;}
   position: absolute;
   top: 0px;
   right: 25px;
-  background-color:#fff;
-  color: #f33155;
-  border: 1px solid #f33155;
+  background-color:@white-color;
+  color: @main-color;
+  border: 1px solid @main-color;
   padding: 0px 3px;
 }
 .msg_badge{
   top: 3px;
-  color: #fff;
-  background: #f33155;
+  color: @white-color;
+  background: @main-color;
 }
 .weui-uploader__file{
   width: 70px;
@@ -314,19 +341,19 @@ ul li{list-style:none;}
 }
 .total-price{
   display: inline-block;
-  font-weight: 400;
-  font-size: 14px;
-  color: #333;
+  font-weight: @font-weight400;
+  font-size: @font-size14;
+  color: @black-color;
 }
 .btn_primary{
   display: inline-block;
-  font-size: 14px;
+  font-size: @font-size14;
   width: 100px;
-  color: #fff;
-  background: #f33155;
+  color: @white-color;
+  background: @main-color;
   margin-left: 10px;
   text-align: center;
-  border: 1px solid #f33155;
+  border: 1px solid @main-color;
 }
 .total{
   position: absolute;
@@ -340,15 +367,15 @@ ul li{list-style:none;}
   z-index: 10;
 }
 .cart_bar{
-  background: #fff;
+  background: @white-color;
   height: 45px;
   line-height: 45px;
 }
 .order_bar{
   height: 45px;
-  background: #fff;
+  background: @white-color;
   line-height: 45px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid @grey-color;
 }
 .hide{
   display: none;
@@ -375,8 +402,8 @@ ul li{list-style:none;}
   z-index: 20000 !important;
 }
 .weui-dialog__btn{
-  color: #f33155 !important;
-  font-size: 16px;
+  color: @main-color !important;
+  font-size: @font-size16;
 }
 .weui-dialog .weui-dialog__btn.default{
   color: #5f646e !important;
@@ -385,7 +412,58 @@ ul li{list-style:none;}
   transition-duration:0s !important;
 }
 .funds{
-  font-size: 12px;
-  color: #999;
-  font-weight: 400;
+  font-size: @font-size12;
+  color: @grey-color9;
+  font-weight: @font-weight400;
+}
+.apply-service_num{
+  width: 85px;
+  height: 22px;
+  line-height: 22px;
+  position: relative;
+}
+.num_minus{
+  padding: 10px 10px;
+  float: left;
+  &::before{
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 6px;
+    height: 2px;
+    width: 10px;
+    background: #d8d8d8;
+  }
+}
+.num_add{
+  padding: 10px 10px;
+  float: left;
+  &::before{
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 6px;
+    height: 2px;
+    width: 10px;
+    background: #d8d8d8;
+  }
+  &::after{
+    content: "";
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    height: 10px;
+    width: 2px;
+    background: #d8d8d8;
+  }
+}
+.num_ipt{
+  float: left;
+  width: 37px;
+  height: 16px;
+  margin: 2px 3px;
+  text-align: center;
+  color: #d8d8d8;
+  font-size: @font-size12;
+  border: 1px solid #d8d8d8;
 }

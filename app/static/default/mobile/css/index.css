@@ -54,7 +54,7 @@
 }
 .product_detail .desc {
   font-size: 12px;
-  color: #b0b0b0;
+  color: #999;
   margin-bottom: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -65,7 +65,7 @@
   color: #f33155;
 }
 .product_detail .price .price_del {
-  color: #b0b0b0;
+  color: #999;
   text-decoration: line-through;
 }
 .weui-cells:after {
