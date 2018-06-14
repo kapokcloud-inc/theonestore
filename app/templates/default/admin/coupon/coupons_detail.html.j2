@@ -1,0 +1,69 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('优惠券'), 'href':url_for('admin.coupon.index')}, {'title':g.page_title, 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="white-box">
+          <h3 class="box-title m-b-0">{{_('用户优惠券基本信息填写')}}</h3>
+          <p class="text-muted m-b-30 font-13">{{_('输入下面的详细信息')}}</p>
+
+          <form action="{{ url_for('admin.coupon.coupons_save') }}" method="POST">
+            <div class="row">
+              {{ libs.wtf_input(wtf_form.uid, _('用户ID'), _value=coupon.uid, _class="form-control") }}
+              {{ libs.wtf_select(wtf_form.cb_id, _('优惠券'), _class="form-control") }}
+            </div>
+            <div class="row">
+              {{ libs.wtf_input(wtf_form.begin_time, _('开始时间'), _value=coupon.begin_time, _class="form-control datepicker-autoclose", _help="*留空代表无限制") }}
+              {{ libs.wtf_input(wtf_form.end_time, _('结束时间'), _value=coupon.end_time, _class="form-control datepicker-autoclose", _help="*留空代表无限制") }}
+            </div>
+            <div class="row">
+              {{ libs.wtf_input(wtf_form.coupon_amount, _('优惠券金额'), _value=coupon.coupon_amount, _class="form-control") }}
+              {{ libs.wtf_input(wtf_form.limit_amount, _('满减额度'), _value=coupon.limit_amount, _class="form-control") }}
+            </div>
+            <div class="row">
+              {{ libs.wtf_select(wtf_form.is_valid, _('是否有效'), _class="form-control") }}
+              {{ libs.wtf_input(wtf_form.coupon_from, _('优惠券来源说明'), _value=coupon.coupon_from, _class="form-control") }}
+            </div>
+            {% set coupon_id = coupon.coupon_id if coupon.coupon_id else 0 %}
+            {{ libs.wtf_input(wtf_form.coupon_id, '', _value=coupon_id, _type="hidden") }}
+            {{ wtf_form.csrf_token }}
+            {{ libs.wtf_submit() }}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<!-- Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/moment/moment.js"></script>
+<!-- Clock Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>
+<!-- Color Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asColor.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asGradient.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js"></script>
+<!-- Date Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js?v=35"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  // Date Picker
+  $(".datepicker-autoclose").datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
+  });
+});
+</script>
+{% endblock %}
+

@@ -128,14 +128,13 @@
                   <th>{{_('发货时间')}}</th>
                   <th>{{_('状态')}}</th>
                   <th>{{_('下单时间')}}</th>
+                  <th>{{_('操作')}}</th>
                 </tr>
               </thead>
                 <tbody>
                   {% for order in orders %}
                     <tr>
-                      <td>
-                        <a href="{{url_for('admin.order.detail', order_id=order['order_id'])}}">{{ order.order_sn }}</a>
-                      </td>
+                      <td>{{ order.order_sn }}</td>
                       <td>
                         {% set items = order['goods_data']|json_loads %}
                         {% for item in items %}
@@ -152,6 +151,11 @@
                       <td>{{ shipping_time }}</td>
                       <td>{{ order['status_text'] }}</td>
                       <td>{{ order['add_time']|timestamp2str }}</td>
+                      <td>
+                        <a href="{{url_for('admin.order.detail', order_id=order['order_id'])}}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">
+                          <i class="ti-pencil-alt"></i>
+                        </a>
+                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>

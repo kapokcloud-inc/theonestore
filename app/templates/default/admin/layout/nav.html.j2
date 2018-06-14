@@ -47,6 +47,24 @@
            'icon':'mdi mdi-truck-delivery',
            'children':None
           },
+          {'title':_('优惠券'),
+           'href':'javascript:;',
+           'view':'coupon',
+           'icon':'mdi mdi-cart-outline',
+           'children':[
+              {'title':_('优惠券'),
+              'href':url_for('admin.coupon.index'),
+              'endpoints':['admin.coupon.index',
+                           'admin.coupon.create',
+                           'admin.coupon.detail',
+                           'admin.coupon.save']
+              },
+              {'title':_('用户优惠券'),
+              'href':url_for('admin.coupon.coupons'),
+              'endpoints':['admin.coupon.coupons']
+              }
+            ]
+          },
           {'title':_('配置项'),
            'href':url_for('admin.config.sms_yunpian'),
            'view':'config',

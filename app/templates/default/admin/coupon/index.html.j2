@@ -1,0 +1,116 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block head %}
+<!-- Color picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/css/asColorPicker.css" rel="stylesheet">
+  <!-- Date picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+  <!-- Daterange picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+  <link href="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    <div class="row bg-title">
+      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+        {% set tab_status = request.args.get('tab_status', '0') %}
+
+        {% set all_active = 'active' if tab_status == '0' else '' %}
+        <li role="presentation" class="{{ all_active }}">
+          <a href="{{ url_for('admin.coupon.index', tab_status=0) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('全部')}}</span>
+          </a>
+        </li>
+        {% set unpaid_active = 'active' if tab_status == '1' else '' %}
+        <li role="presentation" class="{{ unpaid_active }}">
+          <a href="{{ url_for('admin.coupon.index', tab_status=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('使用中')}}</span>
+          </a>
+        </li>
+        {% set unshipped_active = 'active' if tab_status == '2' else '' %}
+        <li role="presentation" class="{{ unshipped_active }}">
+          <a href="{{ url_for('admin.coupon.index', tab_status=2) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-email"></i>
+            </span>
+            <span class="hidden-xs">{{_('已过期')}}</span>
+          </a>
+        </li>
+        <a href="{{ url_for('admin.coupon.create') }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display: block !important;background: #f33155 !important;border: 1px solid #f33155 !important;">
+          {{_('添加优惠券')}}
+        </a>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="white-box">
+          {% set 
+            form_fields = [
+              {'label':'批次名称', 'name':'cb_name'}
+            ]
+          %}
+          {{ libs.build_search_form(form_fields) }}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          <div class="table-responsive">
+            <table class="table product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('批次ID')}}</th>
+                  <th>{{_('批次名称')}}</th>
+                  <th>{{_('优惠券名称')}}</th>
+                  <th>{{_('开始时间')}}</th>
+                  <th>{{_('结束时间')}}</th>
+                  <th>{{_('优惠券金额')}}</th>
+                  <th>{{_('满减额度')}}</th>
+                  <th>{{_('是否有效')}}</th>
+                  <th>{{_('添加时间')}}</th>
+                  <th>{{_('操作')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for batch in batches %}
+                    <tr>
+                      <td>{{ batch.cb_id }}</td>
+                      <td>{{ batch.cb_name }}</td>
+                      <td>{{ batch.coupon_name }}</td>
+                      {% set begin_time = _('无限制') if batch.begin_time == 0 else batch.begin_time|timestamp2str %}
+                      <td>{{ begin_time }}</td>
+                      {% set end_time = _('无限制') if batch.end_time == 0 else batch.end_time|timestamp2str %}
+                      <td>{{ end_time }}</td>
+                      <td>{{ batch.coupon_amount }}</td>
+                      <td>{{ batch.limit_amount }}</td>
+                      <td>{{ const.YES_OR_NO.get(batch.is_valid, '错误') }}</td>
+                      <td>{{ batch.add_time|timestamp2str }}</td>
+                      <td>
+                        <a href="{{ url_for('admin.coupon.detail', cb_id=batch.cb_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
+                          <i class="ti-pencil-alt"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                {{ libs.pagination_html(pagination, 9) }}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

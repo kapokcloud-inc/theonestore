@@ -1,0 +1,113 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block head %}
+<!-- Color picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/css/asColorPicker.css" rel="stylesheet">
+  <!-- Date picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+  <!-- Daterange picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+  <link href="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':g.page_title, 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="white-box">
+          {% set 
+            form_fields = [
+              {'label':'批次ID', 'name':'cb_id'}
+            ]
+          %}
+          {{ libs.build_search_form(form_fields) }}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          <div class="table-responsive">
+            <table class="table product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('优惠券ID')}}</th>
+                  <th>{{_('批次ID')}}</th>
+                  <th>{{_('优惠券名称')}}</th>
+                  <th>{{_('激活时间')}}</th>
+                  <th>{{_('过期时间')}}</th>
+                  <th>{{_('优惠券金额')}}</th>
+                  <th>{{_('满减额度')}}</th>
+                  <th>{{_('是否有效')}}</th>
+                  <th>{{_('是否已使用')}}</th>
+                  <th>{{_('领取时间')}}</th>
+                  <th>{{_('操作')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for coupon in coupons %}
+                    <tr>
+                      <td>{{ coupon.coupon_id }}</td>
+                      <td>{{ coupon.cb_id }}</td>
+                      <td>{{ coupon.coupon_name }}</td>
+                      {% set begin_time = _('无限制') if coupon.begin_time == 0 else coupon.begin_time|timestamp2str %}
+                      <td>{{ begin_time }}</td>
+                      {% set end_time = _('无限制') if coupon.end_time == 0 else coupon.end_time|timestamp2str %}
+                      <td>{{ end_time }}</td>
+                      <td>{{ coupon.coupon_amount }}</td>
+                      <td>{{ coupon.limit_amount }}</td>
+                      <td>{{ const.YES_OR_NO.get(coupon.is_valid, '错误') }}</td>
+                      {% set is_used = '是' if coupon.order_id else '否' %}
+                      <td>{{ is_used }}</td>
+                      <td>{{ coupon.add_time|timestamp2str }}</td>
+                      <td>
+                        <a href="javascript:void(0);" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
+                          <i class="ti-pencil-alt"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                {{ libs.pagination_html(pagination, 9) }}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<!-- Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/moment/moment.js"></script>
+<!-- Clock Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>
+<!-- Color Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asColor.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asGradient.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js"></script>
+<!-- Date Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js?v=35"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  // Daterange picker
+  $('.input-daterange-datepicker').daterangepicker({
+    format: 'YYYY-MM-DD',
+    buttonClasses: ['btn', 'btn-sm'],
+    applyClass: 'btn-success',
+    cancelClass: 'btn-info',
+    clearClass: 'btn-inverse'
+  });
+});
+</script>
+{% endblock %}
+
