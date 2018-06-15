@@ -58,14 +58,14 @@
             <div class="panel-heading">{{_('商品信息')}}</div>
             <div class="panel-body form-horizontal">
               <table class="table product-overview footable" id="myTable">
-              <thead>
-                <tr>
-                  <th>{{_('商品名称')}}</th>
-                  <th width="80">{{_('商品图片')}}</th>
-                  <th width="80">{{_('商品数量')}}</th>
-                  <th width="80">{{_('销售价格')}}</th>
-                </tr>
-              </thead>
+                <thead>
+                  <tr>
+                    <th>{{_('商品名称')}}</th>
+                    <th width="80">{{_('商品图片')}}</th>
+                    <th width="80">{{_('商品数量')}}</th>
+                    <th width="80">{{_('销售价格')}}</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {% for goods in order_goods %}
                     <tr>
@@ -106,7 +106,28 @@
         <div class="panel">
           <div class="panel panel-default">
             <div class="panel-heading">{{_('物流信息')}}</div>
-            <div class="panel-body form-horizontal"></div>
+            <div class="panel-body form-horizontal">
+              {% if express_msg == 'ok' %}
+                <table class="table product-overview footable" id="myTable">
+                  <thead>
+                    <tr>
+                      <th>{{_('时间')}}</th>
+                      <th>{{_('内容')}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for express in express_data %}
+                      <tr>
+                        <td>{{ express['ftime'] }}</td>
+                        <td>{{ express['context'] }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% else %}
+                <p>{{ express_msg }}</p>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>

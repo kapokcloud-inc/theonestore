@@ -34,7 +34,6 @@ from wtforms.validators import (
 )
 
 from app.database import db
-from app.forms.admin import NotExist
 from app.helpers import (
     render_template, 
     log_info,

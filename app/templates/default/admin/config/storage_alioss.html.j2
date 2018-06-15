@@ -4,28 +4,7 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    <div class="row bg-title">
-      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
-        <li role="presentation" class="">
-          <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="messages" role="tab" aria-expanded="true" style="background:none !important">
-            <span class="visible-xs">{{_('短信')}}</span>
-            <span class="hidden-xs">{{_('短信')}}</span>
-          </a>
-        </li>
-        <li role="presentation" class="active">
-          <a href="{{ url_for('admin.config.storage_qiniu') }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">{{_('存储')}}</span>
-            <span class="hidden-xs">{{_('存储')}}</span>
-          </a>
-        </li>
-        <li role="presentation" class="">
-          <a href="#messages1" aria-controls="syetem" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">{{_('系统')}}</span>
-            <span class="hidden-xs">{{_('系统')}}</span>
-          </a>
-        </li>
-      </ul>
-    </div>
+    {{ libs.setting_page_tabs('storage') }}
     <!-- .row -->
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
