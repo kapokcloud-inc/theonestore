@@ -18,9 +18,9 @@
   height: 180px;
 }
 .index_wrap .swiper-pagination {
-  top: 200px;
+  bottom: 0px;
   left: 50%;
-  transform: translate(-75%, 0);
+  transform: translate(-50%, 0);
 }
 .index_wrap .swiper-pagination .swiper-pagination-bullet {
   margin-left: 5px;

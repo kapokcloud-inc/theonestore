@@ -21,3 +21,53 @@
   color: #333;
   font-size: 14px;
 }
+.detail_title {
+  padding: 15px;
+  background: #fff;
+}
+.detail_title .all_title {
+  height: 30px;
+  line-height: 30px;
+}
+.detail_title .all_desc {
+  white-space: normal;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.detail_title .all_price {
+  height: 30px;
+  line-height: 30px;
+}
+.icon_wrap {
+  width: 40px;
+  padding: 10px;
+}
+.icon_wrap img {
+  width: 30px;
+  height: 30px;
+}
+.cartTo,
+.buyTo {
+  text-align: center;
+  line-height: 50px;
+}
+.cartTo {
+  background: #EA8D42;
+}
+.buyTo {
+  background: #f33155;
+}
+.to_text {
+  color: #fff;
+  font-size: 16px;
+}
+.tagImg {
+  width: 15px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.tagText {
+  font-size: 12px;
+}

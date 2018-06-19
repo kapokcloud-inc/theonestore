@@ -1,7 +1,7 @@
 {% extends '/default/mobile/layout/base.html.j2' %} 
 
 {% block head %}
-<title>订单详情- 一店</title>
+<title>{{_('订单详情- 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
 {% endblock%} 
 
@@ -56,10 +56,8 @@
           <span>x 1</span>
         </div>
       </div>
-      <div class="weui-cell__ft">
-        <a href="{{ url_for('mobile.user.apply_aftersale') }}">
-          <button type="button" class="order_btn">申请售后</button>
-        </a>
+      <div class="weui-cell__ft applySale">
+        <button type="button" class="order_btn">申请售后</button>
       </div>
     </div>
     <div class="weui-cell" onclick="enter()">
@@ -73,10 +71,8 @@
           <span>x 1</span>
         </div>
       </div>
-      <div class="weui-cell__ft">
-        <a href="{{ url_for('mobile.user.apply_aftersale') }}">
-          <button type="button" class="order_btn">申请售后</button>
-        </a>
+      <div class="weui-cell__ft applySale">
+        <button type="button" class="order_btn">申请售后</button>
       </div>
     </div>
     <div class="weui-form-preview">
@@ -169,6 +165,18 @@
 
 {% block script %}
 <script type="text/javascript">
+//点击进入商品详情
+function enter() {
+  var url = "/mobile/category/product/detail";
+  window.location.href = url;
+}
+//点击进入申请售后
+$('.applySale').click(function (event) {       //event:事件对象
+  event.stopPropagation();                        //停止事件冒泡
+
+  var url = "/mobile/user/apply/aftersale";
+  window.location.href = url;
+});
 
 var $confirmReceipt = $('#confirmReceipt');
 

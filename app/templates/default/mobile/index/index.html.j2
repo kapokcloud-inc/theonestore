@@ -1,7 +1,7 @@
 {% extends '/default/mobile/layout/base.html.j2' %}
 
 {% block head %}
-<title>首页 - 一店</title>
+<title>{{_('首页 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/index.css">
 {% endblock%}
 
@@ -41,8 +41,8 @@
         </div>
       </div>
     </div>
+    <div class="swiper-pagination"></div>
   </div>
-  <div class="swiper-pagination"></div>
   <div class="weui-cells" style="background:none !important">
     <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.category.page') }}">
       <div class="weui-cell__hd">
@@ -53,7 +53,7 @@
     </a>
     <div class="flex_wrap mar-bottom">
       <div class="flex50 bg-white mar-right">
-        <a href="">
+        <a href="{{ url_for('mobile.category.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/maintain.png" alt="">
           </div>
@@ -68,7 +68,7 @@
         </a>
       </div>
       <div class="flex50 bg-white">
-        <a href="">
+        <a href="{{ url_for('mobile.category.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/buy.png" alt="">
           </div>
@@ -85,7 +85,7 @@
     </div>
     <div class="flex_wrap mar-bottom">
       <div class="flex50 bg-white mar-right">
-        <a href="">
+        <a href="{{ url_for('mobile.category.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/install.png" alt="">
           </div>
@@ -111,7 +111,7 @@
     </a>
     <div class="flex_wrap mar-bottom">
       <div class="flex50 bg-white mar-right">
-        <a href="">
+        <a href="{{ url_for('mobile.category.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/maintain.png" alt="">
           </div>
@@ -126,7 +126,7 @@
         </a>
       </div>
       <div class="flex50 bg-white">
-        <a href="">
+        <a href="{{ url_for('mobile.category.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/buy.png" alt="">
           </div>
@@ -143,7 +143,7 @@
     </div>
     <div class="flex_wrap mar-bottom">
       <div class="flex50 bg-white mar-right">
-        <a href="">
+        <a href="{{ url_for('mobile.category.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/install.png" alt="">
           </div>
@@ -211,7 +211,7 @@
 <script type="text/javascript">
   $(".swiper-container").swiper({
     loop: true,
-    autoplay: 5000,
+    autoplay: 3000,
   });
 </script>
 {% endblock%}

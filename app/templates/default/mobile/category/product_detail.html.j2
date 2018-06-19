@@ -1,0 +1,121 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>{{_('商品详情 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/category.css">
+<link rel="stylesheet" href="/static/default/mobile/css/index.css"> 
+{% endblock%} 
+
+{% block body %}
+<div class="index_wrap">
+  <div></div>
+  <div class="category_wrap">
+    <div class="swiper-container" id="swiper_height" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img class="swiper-img" src="/static/default/mobile/img/buy.png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img class="swiper-img" src="/static/default/mobile/img/install.png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img class="swiper-img" src="/static/default/mobile/img/maintain.png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img class="swiper-img" src="/static/default/mobile/img/install.png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img class="swiper-img" src="/static/default/mobile/img/buy.png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img class="swiper-img" src="/static/default/mobile/img/maintain.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+  <div class="detail_title">
+    <div class="all_title">米家扫地机器人</div>
+    <div class="all_desc">高精度激光测距，智能规划路径 / 1800Pa 大风压澎湃吸力 / 远程智能控制 ，定时清扫 / 大电池持久清扫</div>
+    <div class="all_price">￥1699</div>
+  </div>
+  <div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="javascript:;">
+      <div class="weui-cell__hd">
+        <label class="weui-label greykGap">规格</label>
+      </div>
+      <div class="weui-cell__bd">
+        <span class="blackGap">米家扫地机器人 白色</span>
+        <span class="mar-left">x 1</span>
+      </div>
+      <div class="weui-cell__ft"></div>
+    </a>
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
+        <span class="tagText">7天无理由退货</span>
+      </div>
+      <div class="weui-cell__bd">
+        <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
+        <span class="tagText">运费险</span>
+      </div>
+      <div class="weui-cell__bd">
+        <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
+        <span class="tagText">365天保修</span>
+      </div>
+    </div>
+  </div>
+  <div class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="">
+      <div class="weui-cell__bd">
+        <span class="blackGap">评价</span>
+        <span class="mar-left">好评99.99%</span>
+      </div>
+      <div class="weui-cell__ft">
+        <span>共计3.7万条</span>
+      </div>
+    </a>
+    <div class="weui-cell">
+      <button type="button" class="tag_btn">好评</button>
+      <button type="button" class="tag_btn">中评</button>
+      <button type="button" class="tag_btn">差评</button>
+      <button type="button" class="tag_btn">有图</button>
+    </div>
+  </div>
+  <div class="height61"></div>
+  <div class="footer">
+    <div class="icon_wrap">
+      <img src="/static/default/mobile/img/like.png" alt="">
+    </div>
+    <div class="icon_wrap">
+      <img src="/static/default/mobile/img/cart.png" alt="">
+    </div>
+    <div class="flex cartTo">
+      <span class="to_text">加入购物车</span>
+    </div>
+    <div class="flex buyTo">
+      <span class="to_text">立即购买</span>
+    </div>
+  </div>
+</div>
+{% endblock%} 
+
+{% block script %}
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+  $(".swiper-container").swiper({
+    loop: true,
+    autoplay: 3000,
+  });
+  $(document).ready(function (){
+    var h_w = document.body.clientWidth + 'px';
+    var img = document.getElementsByClassName('swiper-img');
+    var swiperH = document.getElementById('swiper_height');
+    for(var i = 0;i < img.length;i++){
+      img[i].style.width = h_w;
+      img[i].style.height = h_w;
+    }
+    swiperH.style.height = h_w;
+  });
+</script> 
+{% endblock%}
