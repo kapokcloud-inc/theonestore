@@ -33,19 +33,23 @@ from app.models.item import (
 )
 
 
-category = Blueprint('mobile.category', __name__)
+item = Blueprint('mobile.item', __name__)
 
-@category.route('/')
-def root():
-    """手机站 - 分类页"""
+@item.route('/')
+def index():
+    """商品列表页"""
 
-    categories = db.session.query(GoodsCategories.cat_id, GoodsCategories.cat_name, GoodsCategories.cat_img).\
-        filter(GoodsCategories.is_show == 1).order_by(GoodsCategories.sorting.desc(), GoodsCategories.cat_id.desc()).all()
+    items      = ItemStaticMethodsService.items(request.args)
+    paging_url = url_for('mobile.item.paging', **request.args)
 
-    return render_template('mobile/category/index.html.j2', categories=categories)
+    return render_template('mobile/item/index.html.j2', items=items, paging_url=paging_url)
 
 
-@category.route('/page')
-def page():
-    """手机站 - 分类商品页"""
-    return render_template('mobile/category/page.html.j2')
+@item.route('/paging')
+def paging():
+    """加载分页"""
+
+    items = ItemStaticMethodsService.items(request.args)
+
+    return render_template('mobile/item/paging.html.j2', items=items)
+
