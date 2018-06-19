@@ -109,7 +109,7 @@
   <div class="row">
     <div class="col-lg-1">
       <div class="form-group">
-        <button id="search_form_submit" type="submit" class="btn btn-default">
+        <button id="search_form_submit" type="submit" class="btn btn-info">
           {{_('提交')}}
         </button>
       </div>
@@ -120,21 +120,31 @@
 
 
 {# WTF - 文本输入框 #}
-{% macro wtf_input(_field, _label_text, _value='', _class='', _type='text', _placeholder='') %}
+{% macro wtf_input(_field, _label_text, _value='', _class='', _type='text', _placeholder='', _help='') %}
   {% if _type == 'text' %}
     <div class="col-sm-6">
       <div class="form-group">
         <label class="control-label">{{ _label_text }}</label>
         {% set _value = '' if _value == None else _value %}
         {{ _field(type=_type, class=_class, value=_value, placeholder=_placeholder) }}
+        {% if _help %}
+          <span class="help-block">
+            <small>{{ _help }}</small>
+          </span>
+        {% endif %}
         {% for error in _field.errors %}
           <span class="help-block with-errors" style="color: red;">* {{ error }}</span>
         {% endfor %}
       </div>
     </div>
-  {% endif %}
-
-  {% if _type == 'hidden' %}
+  {% elif _type == 'static' %}
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label class="control-label">{{ _label_text }}</label>
+        <span class="{{_class}}">{{ _value }}</span>
+      </div>
+    </div>
+  {% elif _type == 'hidden' %}
     {{ _field(type=_type, value=_value) }}
   {% endif %}
 {% endmacro %}
@@ -243,6 +253,42 @@
         <span class="form-control-static">{{ content }}</span>
       </div>
     </div>
+  </div>
+{% endmacro %}
+
+{# 其它 - form-control-static #}
+{% macro setting_page_tabs(_active) %}
+  <div class="row bg-title">
+    <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+      {% set active = 'active' if _active == 'sms' %}
+      <li role="presentation" class="{{ active }}">
+        <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="messages" role="tab" aria-expanded="true" style="background:none !important">
+          <span class="visible-xs">{{_('短信')}}</span>
+          <span class="hidden-xs">{{_('短信')}}</span>
+        </a>
+      </li>
+      {% set active = 'active' if _active == 'storage' %}
+      <li role="presentation" class="{{ active }}">
+        <a href="{{ url_for('admin.config.storage_qiniu') }}" aria-controls="messages" role="tab" aria-expanded="false" style="background:none !important">
+          <span class="visible-xs">{{_('存储')}}</span>
+          <span class="hidden-xs">{{_('存储')}}</span>
+        </a>
+      </li>
+      {% set active = 'active' if _active == 'shipping' %}
+      <li role="presentation" class="{{ active }}">
+        <a href="{{ url_for('admin.config.shipping') }}" aria-controls="messages" role="tab" aria-expanded="false" style="background:none !important">
+          <span class="visible-xs">{{_('快递')}}</span>
+          <span class="hidden-xs">{{_('快递')}}</span>
+        </a>
+      </li>
+      {% set active = 'active' if _active == 'system' %}
+      <li role="presentation" class="{{ active }}">
+        <a href="#messages1" aria-controls="messages" role="tab" aria-expanded="false" style="background:none !important">
+          <span class="visible-xs">{{_('系统')}}</span>
+          <span class="hidden-xs">{{_('系统')}}</span>
+        </a>
+      </li>
+    </ul>
   </div>
 {% endmacro %}
 

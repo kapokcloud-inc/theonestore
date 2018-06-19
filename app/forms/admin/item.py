@@ -56,11 +56,11 @@ class ItemForm(FlaskForm):
     goods_desc     = TextAreaField()
     goods_price    = DecimalField(
                         validators=[
-                            NumberRange(min=0, message=u'金额不能小于0')]
+                            NumberRange(min=0, message=_(u'金额不能小于0'))]
                     )
     market_price   = DecimalField(
                         validators=[
-                            NumberRange(min=0, message=u'金额不能小于0')]
+                            NumberRange(min=0, message=_(u'金额不能小于0'))]
                     )
     is_sale        = SelectField(
                         coerce=int,
@@ -68,7 +68,7 @@ class ItemForm(FlaskForm):
                     )
     stock_quantity = IntegerField(
                         validators=[
-                            NumberRange(min=0, message=u'商品库存不能小于0')]
+                            NumberRange(min=0, message=_(u'商品库存不能小于0'))]
                     )
     is_hot         = SelectField(
                         coerce=int,
@@ -101,7 +101,7 @@ class CategoryForm(FlaskForm):
     cat_id   = IntegerField()
     cat_name = StringField(
                     _(u'分类名称'), 
-                    render_kw={'placeholder':u'请输入分类名称'},
+                    render_kw={'placeholder':_(u'请输入分类名称')},
                     validators=[
                         InputRequired(message=_(u'必填项'))]
                 )

@@ -137,12 +137,19 @@ def detail(order_id):
     order_address            = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
     status_text, action_code = OderStaticMethodsService.order_status_text_and_action_code(order)
 
+    express_msg  = ''
+    express_data = []
+    if order.shipping_status == 2:
+        express_msg, express_data = OderStaticMethodsService.express(order.shipping_code, order.shipping_sn)
+
     return render_template('admin/order/detail.html.j2',
         order=order,
         order_goods=order_goods,
         order_address=order_address,
         status_text=status_text,
-        action_code=action_code)
+        action_code=action_code,
+        express_msg=express_msg,
+        express_data=express_data)
 
 
 @order.route('/shipping', methods=['POST'])

@@ -1,0 +1,68 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    {{ libs.setting_page_tabs('shipping') }}
+    <!-- .row -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="white-box">
+          <table class="table product-overview footable" id="myTable">
+            <thead>
+              <tr>
+                <th>{{_('ID')}}</th>
+                <th>{{_('快递名称')}}</th>
+                <th>{{_('满多少包邮')}}</th>
+                <th>{{_('运费')}}</th>
+                <th>{{_('是否启用')}}</th>
+                <th>{{_('是否默认')}}</th>
+                <th>{{_('排序')}}</th>
+                <th>{{_('操作')}}</th>
+              </tr>
+            </thead>
+              <tbody>
+                {% for shipping in shipping_list %}
+                  <tr>
+                    <td>{{ shipping.shipping_id }}</td>
+                    <td>{{ shipping.shipping_name }}</td>
+                    {% if shipping.free_limit_amount > 0 %}
+                      <td>{{ shipping.free_limit_amount }}</td>
+                      <td>{{ shipping.shipping_amount }}</td>
+                    {% else %}
+                      <td colspan="2">{{_('免运费')}}</td>
+                    {% endif %}
+                    <td>
+                      {% if shipping.is_enable == 1 %}
+                        <button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button>
+                      {% else %}
+                        <button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if shipping.is_default == 1 %}
+                        <button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button>
+                      {% else %}
+                        <button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button>
+                      {% endif %}
+                    </td>
+                    <td>{{ shipping.sorting }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.config.shipping_detail', shipping_id=shipping.shipping_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
+                          <i class="ti-marker-alt"></i>
+                        </a>
+                        </a>
+                      </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+</div>
+{% endblock %}

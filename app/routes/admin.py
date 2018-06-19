@@ -16,4 +16,5 @@ ADMIN_ROUTES = (
     (admin.config,      '/admin/config'),
     (admin.item,        '/admin/item'),
     (admin.order,       '/admin/order'),
+    (admin.coupon,      '/admin/coupon')
 )

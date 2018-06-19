@@ -26,12 +26,14 @@ from app.helpers import (
     toint
 )
 
+from app.forms.admin.shipping import ShippingForm
 from app.forms.admin.config import (
     SmsYunpianForm,
     SmsAlismsForm,
     StorageQiniuForm,
     StorageAliossForm
 )
+from app.models.shipping import Shipping
 from app.models.sys import SysSetting
 
 
@@ -139,4 +141,64 @@ def storage_alioss():
             return redirect(url_for('admin.config.storage_alioss'))
 
     return render_template('admin/config/storage_alioss.html.j2', form=form, data=data)
+
+
+@config.route('/shipping')
+def shipping():
+    """快递"""
+    g.page_title = _(u'快递')
+
+    shipping_list = Shipping.query.\
+                        order_by(Shipping.is_default.desc(), Shipping.is_enable.desc(), Shipping.sorting.desc()).all()
+
+    return render_template('admin/config/shipping.html.j2', shipping_list=shipping_list)
+
+
+@config.route('/shipping/detail/<int:shipping_id>')
+def shipping_detail(shipping_id):
+    """快递详情"""
+    g.page_title = _(u'快递详情')
+
+    shipping = Shipping.query.get_or_404(shipping_id)
+
+    wtf_form                 = ShippingForm()
+    wtf_form.is_enable.data  = shipping.is_enable
+    wtf_form.is_default.data = shipping.is_default
+    wtf_form.is_free.data    = 1 if shipping.free_limit_amount == 0 else 0
+    log_info(wtf_form.is_free.data)
+
+    return render_template('admin/config/shipping_detail.html.j2', wtf_form=wtf_form, shipping=shipping)
+
+
+@config.route('/shipping/save', methods=['POST'])
+def shipping_save():
+    """保存快递"""
+    g.page_title = _(u'保存快递')
+
+    wtf_form    = ShippingForm()
+    shipping_id = wtf_form.shipping_id.data
+    shipping    = Shipping.query.get_or_404(shipping_id)
+
+    if wtf_form.validate_on_submit():
+        shipping.shipping_amount   = wtf_form.shipping_amount.data
+        shipping.free_limit_amount = wtf_form.free_limit_amount.data
+        shipping.is_enable         = wtf_form.is_enable.data
+        shipping.is_default        = wtf_form.is_default.data
+        shipping.sorting           = wtf_form.sorting.data
+
+        if shipping.is_default == 1:
+            _shipping_list = Shipping.query.\
+                                filter(Shipping.shipping_id != shipping_id).\
+                                filter(Shipping.is_default == 1).all()
+            for _shipping in _shipping_list:
+                _shipping.is_default = 0
+
+        db.session.commit()
+
+        return redirect(url_for('admin.config.shipping'))
+
+    wtf_form.shipping_name.data = shipping.shipping_name
+    shipping                    = wtf_form.data
+
+    return render_template('admin/config/shipping_detail.html.j2', wtf_form=wtf_form, shipping=shipping)
 

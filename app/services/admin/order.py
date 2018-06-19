@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for more details.
 """
 import time
+import requests
 from hashlib import sha256
 
 from flask_babel import gettext as _
@@ -63,4 +64,24 @@ class OderStaticMethodsService(object):
 
         return (status_text, action_code)
     
-    
+
+    @staticmethod
+    def express(com, code):
+        """查询物流"""
+
+        # 查询
+        data = {'type':com, 'postid':code, 'id':1, 'valicode':'', 'temp':'0.49738534969422676'}
+        url  = 'https://m.kuaidi100.com/query'
+        res  = requests.post(url, data=data)
+        res.encoding = 'utf8'
+
+        # 检查 - 获取验证信息
+        if res.status_code != 200:
+            return (_(u'查询失败'), [])
+
+        data = res.json()
+        if data['message'] != 'ok':
+            return (_(u'查询失败'), [])
+
+        return ('ok', data['data'])
+
