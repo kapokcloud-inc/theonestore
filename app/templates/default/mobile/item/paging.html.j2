@@ -1,3 +1,19 @@
 {% for item in items %}
-  <p style="margin: 100px;">{{ item.goods_name }}</p>
+  <li class="list_item">
+    <a href="{{ url_for('mobile.item.detail', goods_id=item.goods_id) }}">
+      <div class="product_phone">
+        <img src="{{ item.goods_img }}" alt="">
+      </div>
+      <div class="product_detail">
+        <div class="title">{{ item.goods_name }}</div>
+        <p class="desc">{{ item.goods_desc }}</p>
+        <div class="price">
+          <span>￥{{ item.goods_price }}元</span>
+          {% if item.market_price > 0 %}
+            <span class="price_del">￥{{ item.market_price }}元</span>
+          {% endif %}
+        </div>
+      </div>
+    </a>
+  </li>
 {% endfor %}

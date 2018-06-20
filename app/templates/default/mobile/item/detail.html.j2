@@ -26,32 +26,19 @@
     <div class="category_wrap">
       <div class="swiper-container" id="swiper_height" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
         <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <img class="swiper-img" src="/static/default/mobile/img/buy.png" alt="">
-          </div>
-          <div class="swiper-slide">
-            <img class="swiper-img" src="/static/default/mobile/img/install.png" alt="">
-          </div>
-          <div class="swiper-slide">
-            <img class="swiper-img" src="/static/default/mobile/img/maintain.png" alt="">
-          </div>
-          <div class="swiper-slide">
-            <img class="swiper-img" src="/static/default/mobile/img/install.png" alt="">
-          </div>
-          <div class="swiper-slide">
-            <img class="swiper-img" src="/static/default/mobile/img/buy.png" alt="">
-          </div>
-          <div class="swiper-slide">
-            <img class="swiper-img" src="/static/default/mobile/img/maintain.png" alt="">
-          </div>
+          {% for gallery in galleries %}
+            <div class="swiper-slide">
+              <img class="swiper-img" src="{{ gallery.img }}" alt="">
+            </div>
+          {% endfor %}
         </div>
       </div>
       <div class="swiper-pagination"></div>
     </div>
     <div class="detail_title">
-      <div class="all_title">米家扫地机器人</div>
-      <div class="all_desc">高精度激光测距，智能规划路径 / 1800Pa 大风压澎湃吸力 / 远程智能控制 ，定时清扫 / 大电池持久清扫</div>
-      <div class="all_price">￥1699</div>
+      <div class="all_title">{{ item.goods_name }}</div>
+      <div class="all_desc">{{ item.goods_desc }}</div>
+      <div class="all_price">￥{{ item.goods_price }}</div>
     </div>
     <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="javascript:;" onclick="choice()">

@@ -172,7 +172,7 @@ def remove(goods_id):
     item.is_delete = 1
     db.session.commit()
 
-    return redirect(url_for('admin.item.index'))
+    return redirect(request.headers['Referer'])
 
 
 @item.route('/h5/<int:goods_id>')

@@ -9,88 +9,27 @@
 
 {% block body %}
 <div class="page_wrap mar-top">
-  <ul class="all_list">
-    <li class="list_item">
-      <a href="{{ url_for('mobile.item.detail', goods_id=99) }}">
-        <div class="product_phone">
-          <img src="/static/default/mobile/img/maintain.png" alt="">
-        </div>
-        <div class="product_detail">
-          <div class="title">小米Note 3 4GB+64GB</div>
-          <p class="desc">1600万美颜自拍，2倍变焦双摄</p>
-          <div class="price">
-            <span>￥999元</span>
-            <span class="price_del">￥1299元</span>
-          </div>
-        </div>
-      </a>
-    </li>
-    <li class="list_item">
-      <a href="{{ url_for('mobile.item.detail', goods_id=99) }}">
-        <div class="product_phone">
-          <img src="/static/default/mobile/img/buy.png" alt="">
-        </div>
-        <div class="product_detail">
-          <div class="title">红米S2 3GB+32GB</div>
-          <p class="desc">前置1600万超大像素智能美拍</p>
-          <div class="price">
-            <span>￥1099元</span>
-            <span class="price_del"></span>
-          </div>
-        </div>
-      </a>
-    </li>
-    <li class="list_item">
-      <a href="{{ url_for('mobile.item.detail', goods_id=99) }}">
-        <div class="product_phone">
-          <img src="/static/default/mobile/img/buy.png" alt="">
-        </div>
-        <div class="product_detail">
-          <div class="title">红米S2 3GB+32GB</div>
-          <p class="desc">前置1600万超大像素智能美拍</p>
-          <div class="price">
-            <span>￥1099元</span>
-            <span class="price_del"></span>
-          </div>
-        </div>
-      </a>
-    </li>
-    <li class="list_item">
-      <a href="{{ url_for('mobile.item.detail', goods_id=99) }}">
-        <div class="product_phone">
-          <img src="/static/default/mobile/img/maintain.png" alt="">
-        </div>
-        <div class="product_detail">
-          <div class="title">红米S2 3GB+32GB</div>
-          <p class="desc">前置1600万超大像素智能美拍</p>
-          <div class="price">
-            <span>￥1099元</span>
-            <span class="price_del"></span>
-          </div>
-        </div>
-      </a>
-    </li>
-    <li class="list_item">
-      <a href="{{ url_for('mobile.item.detail', goods_id=99) }}">
-        <div class="product_phone">
-          <img src="/static/default/mobile/img/maintain.png" alt="">
-        </div>
-        <div class="product_detail">
-          <div class="title">红米S2 3GB+32GB</div>
-          <p class="desc">前置1600万超大像素智能美拍</p>
-          <div class="price">
-            <span>￥1099元</span>
-            <span class="price_del"></span>
-          </div>
-        </div>
-      </a>
-    </li>
-  </ul>
-  <div id="paging-data-list">
+  <ul id="paging-data-list" class="all_list">
     {% for item in items %}
-      <p style="margin: 100px;">{{ item.goods_name }}</p>
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.detail', goods_id=item.goods_id) }}">
+          <div class="product_phone">
+            <img src="{{ item.goods_img }}" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">{{ item.goods_name }}</div>
+            <p class="desc">{{ item.goods_desc }}</p>
+            <div class="price">
+              <span>￥{{ item.goods_price }}元</span>
+              {% if item.market_price > 0 %}
+                <span class="price_del">￥{{ item.market_price }}元</span>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+      </li>
     {% endfor %}
-  </div>
+  </ul>
 
   {{ libs.footer() }}
 </div>

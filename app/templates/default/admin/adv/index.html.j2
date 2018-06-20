@@ -1,0 +1,96 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block head %}
+  <!-- Color picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/css/asColorPicker.css" rel="stylesheet">
+  <!-- Date picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+  <!-- Daterange picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+  <link href="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    <div class="row bg-title">
+      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+        {% set tab_status = request.args.get('tab_status', '0') %}
+
+        {% set all_active = 'active' if tab_status == '0' else '' %}
+        <li role="presentation" class="{{ all_active }}">
+          <a href="{{ url_for('admin.adv.index', tab_status=0) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('全部')}}</span>
+          </a>
+        </li>
+        {% set status_1_active = 'active' if tab_status == '1' else '' %}
+        <li role="presentation" class="{{ status_1_active }}">
+          <a href="{{ url_for('admin.adv.index', tab_status=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('首页Banner')}}</span>
+          </a>
+        </li>
+        <a href="{{ url_for('admin.adv.create') }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display: block !important;background: #f33155 !important;border: 1px solid #f33155 !important;">
+          {{_('添加广告')}}
+        </a>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          <div class="table-responsive">
+            <table class="table product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('广告ID')}}</th>
+                  <th>{{_('分类')}}</th>
+                  <th>{{_('图片')}}</th>
+                  <th>{{_('简介')}}</th>
+                  <th>{{_('跳转类型')}}</th>
+                  <th>{{_('跳转目标')}}</th>
+                  <th>{{_('外部链接')}}</th>
+                  <th>{{_('排序')}}</th>
+                  <th>{{_('是否显示')}}</th>
+                  <th>{{_('操作')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for adv in advs %}
+                    <tr>
+                      <td>{{ adv.adv_id }}</td>
+                      <td>{{ const.ADV_AC.get(adv.ac_id, '') }}</td>
+                      <td> <img src="{{ adv.img }}" alt="" width="80"> </td>
+                      <td>{{ adv.desc }}</td>
+                      <td>{{ const.ADV_TTYPE.get(adv.ttype, '') }}</td>
+                      <td>{{ adv.tid }}</td>
+                      <td>{{ adv.url }}</td>
+                      <td>{{ adv.sorting }}</td>
+                      <td>{{ const.YES_OR_NO.get(adv.is_show, '') }}</td>
+                      <td>
+                        <a href="{{ url_for('admin.adv.detail', adv_id=adv.adv_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
+                          <i class="ti-pencil-alt"></i>
+                        </a>
+                        <a href="{{ url_for('admin.adv.remove', adv_id=adv.adv_id) }}" class="text-inverse" data-toggle="tooltip" title="{{_('删除')}}">
+                          <i class="ti-trash"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                {{ libs.pagination_html(pagination, 8) }}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
