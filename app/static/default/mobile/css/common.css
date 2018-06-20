@@ -108,6 +108,7 @@ ul li {
   background: #fff;
   font-size: 12px;
   text-align: center;
+  z-index: 10;
 }
 .icom_photo {
   width: 100%;
@@ -126,7 +127,7 @@ ul li {
 }
 .all_title {
   font-size: 14px;
-  font-weight: 400;
+  font-weight: bold;
   color: #333;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -478,4 +479,21 @@ ul li {
 }
 .weui-label {
   width: 80px;
+}
+.all_list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+.all_list .list_item {
+  position: relative;
+  flex: 0 1 calc(50% - 5px);
+  background: #fff;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.all_list .list_item:not(:nth-child(2n)) {
+  margin-right: 10px;
 }

@@ -1,0 +1,100 @@
+@charset "UTF-8";
+
+@import "variables.less";
+
+.detail_title{
+  padding: 15px;
+  background: @white-color;
+  .all_title{
+    height: 30px;
+    line-height: 30px;
+  }
+  .all_desc{
+    white-space: normal;
+    text-overflow: ellipsis;
+    display: -webkit-box; 
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .all_price{
+    height: 30px;
+    line-height: 30px;
+  }
+}
+.icon_wrap{
+  width: 40px;
+  padding: 10px;
+  img{
+    width: 30px;
+    height: 30px;
+  }
+}
+.cartTo, .buyTo{
+  text-align: center;
+  line-height: 50px;
+}
+.cartTo{
+  background: #EA8D42;
+}
+.buyTo{
+  background: @main-color;
+}
+.to_text{
+  color: @white-color;
+  font-size: @font-size16;
+}
+.tagImg{
+  width: 15px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.tagText{
+  font-size: @font-size12;
+}
+.review-type_btn{
+  flex: 1;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: @font-size12;
+  color:@black-color;
+  background: #e5e5e5;
+  margin-right: 10px;
+  border-radius: 30px;
+  border: none;
+}
+.review-type_btn:last-child{
+  margin-right:0px;
+}
+.review-type_btn.btnOn{
+  background: @main-color;
+  color: @white-color;
+}
+.praise_rate{
+  color: @main-color;
+}
+.detail-top{
+  height: 46px;
+  &_title{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    padding: 0 90px;
+    line-height: 44px;
+    text-align: center;
+    background: @white-color;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  &_item{
+    flex: 1;
+    text-align: center;
+    span{
+      font-size: @font-size14;
+      color: @black-color;
+      font-weight: @font-weight400;
+    }
+  }
+}

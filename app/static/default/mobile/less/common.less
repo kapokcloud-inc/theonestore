@@ -107,6 +107,7 @@ ul li{list-style:none;}
   background: @white-color;
   font-size: @font-size12;
   text-align: center;
+  z-index: 10;
 }
 .icom_photo{
   width: 100%;
@@ -125,7 +126,7 @@ ul li{list-style:none;}
 }
 .all_title{
   font-size: @font-size14;
-  font-weight: @font-weight400;
+  font-weight: bold;
   color: @black-color;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -474,4 +475,21 @@ ul li{list-style:none;}
 }
 .weui-label{
   width: 80px;
+}
+.all_list{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: hidden;
+  .list_item{
+    position: relative;
+    flex: 0 1 calc(50% - 5px); 
+    background: @white-color;
+    margin-bottom: 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .list_item:not(:nth-child(2n)){
+    margin-right: 10px;
+  }
 }

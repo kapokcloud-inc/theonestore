@@ -44,16 +44,16 @@
     <div class="swiper-pagination"></div>
   </div>
   <div class="weui-cells" style="background:none !important">
-    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.category.page') }}">
+    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.item.recommend') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd" style="font-size:16px">热卖单品</div>
+      <div class="weui-cell__bd" style="font-size:16px">推荐</div>
       <div class="weui-cell__ft">更多</div>
     </a>
-    <div class="flex_wrap mar-bottom">
-      <div class="flex50 bg-white mar-right">
-        <a href="{{ url_for('mobile.category.product_detail') }}">
+    <ul class="all_list">
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/maintain.png" alt="">
           </div>
@@ -66,9 +66,9 @@
             </div>
           </div>
         </a>
-      </div>
-      <div class="flex50 bg-white">
-        <a href="{{ url_for('mobile.category.product_detail') }}">
+      </li>
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/buy.png" alt="">
           </div>
@@ -81,37 +81,50 @@
             </div>
           </div>
         </a>
-      </div>
-    </div>
-    <div class="flex_wrap mar-bottom">
-      <div class="flex50 bg-white mar-right">
-        <a href="{{ url_for('mobile.category.product_detail') }}">
+      </li>
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.product_detail') }}">
           <div class="product_phone">
-            <img src="/static/default/mobile/img/install.png" alt="">
+            <img src="/static/default/mobile/img/buy.png" alt="">
           </div>
           <div class="product_detail">
-            <div class="title">小米5X 4GB+64GB</div>
-            <p class="desc">光学变焦双摄，拍人更美</p>
+            <div class="title">红米S2 3GB+32GB</div>
+            <p class="desc">前置1600万超大像素智能美拍</p>
             <div class="price">
-              <span>￥1499元</span>
+              <span>￥1099元</span>
               <span class="price_del"></span>
             </div>
           </div>
         </a>
-      </div>
-    </div>
+      </li>
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.product_detail') }}">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/maintain.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">红米S2 3GB+32GB</div>
+            <p class="desc">前置1600万超大像素智能美拍</p>
+            <div class="price">
+              <span>￥1099元</span>
+              <span class="price_del"></span>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
   </div>
   <div class="weui-cells" style="background:none !important">
-    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.category.page') }}">
+    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.item.hot') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd" style="font-size:16px">必购爆款</div>
+      <div class="weui-cell__bd" style="font-size:16px">热卖</div>
       <div class="weui-cell__ft">更多</div>
     </a>
-    <div class="flex_wrap mar-bottom">
-      <div class="flex50 bg-white mar-right">
-        <a href="{{ url_for('mobile.category.product_detail') }}">
+    <ul class="all_list">
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/maintain.png" alt="">
           </div>
@@ -124,9 +137,9 @@
             </div>
           </div>
         </a>
-      </div>
-      <div class="flex50 bg-white">
-        <a href="{{ url_for('mobile.category.product_detail') }}">
+      </li>
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.product_detail') }}">
           <div class="product_phone">
             <img src="/static/default/mobile/img/buy.png" alt="">
           </div>
@@ -139,25 +152,38 @@
             </div>
           </div>
         </a>
-      </div>
-    </div>
-    <div class="flex_wrap mar-bottom">
-      <div class="flex50 bg-white mar-right">
-        <a href="{{ url_for('mobile.category.product_detail') }}">
+      </li>
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.product_detail') }}">
           <div class="product_phone">
-            <img src="/static/default/mobile/img/install.png" alt="">
+            <img src="/static/default/mobile/img/buy.png" alt="">
           </div>
           <div class="product_detail">
-            <div class="title">小米5X 4GB+64GB</div>
-            <p class="desc">光学变焦双摄，拍人更美</p>
+            <div class="title">红米S2 3GB+32GB</div>
+            <p class="desc">前置1600万超大像素智能美拍</p>
             <div class="price">
-              <span>￥1499元</span>
+              <span>￥1099元</span>
               <span class="price_del"></span>
             </div>
           </div>
         </a>
-      </div>
-    </div>
+      </li>
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.product_detail') }}">
+          <div class="product_phone">
+            <img src="/static/default/mobile/img/maintain.png" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">红米S2 3GB+32GB</div>
+            <p class="desc">前置1600万超大像素智能美拍</p>
+            <div class="price">
+              <span>￥1099元</span>
+              <span class="price_del"></span>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
   </div>
 
   <footer class="company">

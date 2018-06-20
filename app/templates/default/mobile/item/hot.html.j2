@@ -1,10 +1,10 @@
-{% extends '/default/mobile/layout/base.html.j2' %}
-{% import '/default/mobile/libs/libs.html.j2' as libs %}
+{% extends '/default/mobile/layout/base.html.j2' %} 
+{% import '/default/mobile/libs/libs.html.j2' as libs %} 
 
 {% block head %}
-<title>{{_('分类商品页 - 一店')}}</title>
+<title>{{_('热卖 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/category.css">
-<link rel="stylesheet" href="/static/default/mobile/css/index.css">
+<link rel="stylesheet" href="/static/default/mobile/css/index.css"> 
 {% endblock%}
 
 {% block body %}
@@ -86,16 +86,9 @@
       </a>
     </li>
   </ul>
-  <div id="paging-data-list">
-    {% for item in items %}
-      <p style="margin: 100px;">{{ item.goods_name }}</p>
-    {% endfor %}
-  </div>
 
   {{ libs.footer() }}
 </div>
-{% endblock%}
+{% endblock%} 
 
-{% block script %}
-{{ libs.paging_js(paging_url, 52) }}
-{% endblock%}
+{% block script %} {% endblock%}

@@ -43,15 +43,3 @@ def root():
         filter(GoodsCategories.is_show == 1).order_by(GoodsCategories.sorting.desc(), GoodsCategories.cat_id.desc()).all()
 
     return render_template('mobile/category/index.html.j2', categories=categories)
-
-
-@category.route('/page')
-def page():
-    """手机站 - 分类商品页"""
-    return render_template('mobile/category/page.html.j2')
-
-
-@category.route('/product/detail')
-def product_detail():
-    """手机站 - 商品详情页"""
-    return render_template('mobile/category/product_detail.html.j2')
