@@ -57,16 +57,30 @@ def paging():
 @item.route('/<int:goods_id>')
 def detail(goods_id):
     """ 商品详情页 """
-    return render_template('mobile/item/detail.html.j2')
+
+    item      = Goods.query.get_or_404(goods_id)
+    galleries = db.session.query(GoodsGalleries.img).filter(GoodsGalleries.goods_id == goods_id).all()
+
+    return render_template('mobile/item/detail.html.j2', item=item, galleries=galleries)
 
 
 @item.route('/recommend')
 def recommend():
     """ 推荐 """
-    return render_template('mobile/item/recommend.html.j2')
+
+    params     = {'is_recommend':1}
+    items      = ItemStaticMethodsService.items(params)
+    paging_url = url_for('mobile.item.paging', **params)
+
+    return render_template('mobile/item/recommend.html.j2', items=items, paging_url=paging_url)
 
 
 @item.route('/hot')
 def hot():
     """ 热卖 """
-    return render_template('mobile/item/hot.html.j2')
+
+    params     = {'is_hot':1}
+    items      = ItemStaticMethodsService.items(params)
+    paging_url = url_for('mobile.item.paging', **params)
+
+    return render_template('mobile/item/hot.html.j2', items=items, paging_url=paging_url)
