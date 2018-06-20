@@ -14,5 +14,6 @@ MOBILE_ROUTES = (
     (mobile.category,       '/mobile/category'),
     (mobile.cart,           '/mobile/cart'),
     (mobile.user,           '/mobile/user'),
-    (mobile.item,           '/mobile/item')
+    (mobile.item,           '/mobile/item'),
+    (mobile.comment,        '/mobile/comment')
 )

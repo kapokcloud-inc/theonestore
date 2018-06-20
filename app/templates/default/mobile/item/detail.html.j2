@@ -3,7 +3,8 @@
 {% block head %}
 <title>{{_('商品详情 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/item.css">
-<link rel="stylesheet" href="/static/default/mobile/css/index.css"> 
+<link rel="stylesheet" href="/static/default/mobile/css/index.css">
+<link rel="stylesheet" href="/static/default/mobile/css/cart.css">
 {% endblock %} 
 
 {% block body %}
@@ -53,35 +54,109 @@
       <div class="all_price">￥1699</div>
     </div>
     <div class="weui-cells">
-      <a class="weui-cell weui-cell_access" href="javascript:;">
+      <a class="weui-cell weui-cell_access" href="javascript:;" onclick="choice()">
         <div class="weui-cell__hd">
           <label class="weui-label greykGap">规格</label>
         </div>
         <div class="weui-cell__bd">
-          <span class="blackGap">米家扫地机器人 白色</span>
+          <span class="blackGap">米家扫地机器人</span>
           <span class="mar-left">x 1</span>
         </div>
         <div class="weui-cell__ft"></div>
       </a>
+      <div class="hide ranpo" id="specifications">
+        <div class="hide-mask"></div>
+        <div class="weui-actionsheet weui-actionsheet_toggle">
+          <div class="weui-actionsheet__menu bg-white">
+            <input type="hidden" name="" id="" value="">
+            <div class="weui-actionsheet__cell not-product_text">
+              <span>选择商品规格</span>
+            </div>
+            <div class="weui-cell">
+              <div class="weui-cell__hd height50">
+                <div class="cart_phone">
+                  <img alt="" src="">
+                </div>
+              </div>
+              <div class="weui-cell__bd">
+                <p class="all_title mar-bottom">小米短袖POLO衫 深蓝</p>
+              </div>
+              <div class="weui-cell__ft mar-left width46">
+                <span class="all_price">1299元</span>
+              </div>
+            </div>
+            <div class="weui-cell">
+              <div class="weui-cell__bd blackGap">购买数量</div>
+              <div class="weui-cell__ft mar-left">
+                <div class="apply-service_num">
+                  <i class="num_minus"></i>
+                  <input class="num_ipt" type="text" id="wareNum" name="wareNum" value="1" minnum="1">
+                  <i class="num_add"></i>
+                </div>
+              </div>
+            </div>
+            <div class="reg_btn">
+              <button type="button" class="weui-btn weui-btn_red" onClick="determine()">确定</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="weui-cell">
-        <div class="weui-cell__bd">
-          <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
-          <span class="tagText">7天无理由退货</span>
+        <ul class="detail_serve weui-cell__bd">
+          <li class="detail_serve_item">
+            <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
+            <span class="tagText">7天无理由退货</span>
+          </li>
+          <li class="detail_serve_item">
+            <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
+            <span class="tagText">运费险</span>
+          </li>
+          <li class="detail_serve_item">
+            <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
+            <span class="tagText">48小时内发货</span>
+          </li>
+        </ul>
+        <div class="weui-cell__ft mar-left" onclick="tips()">
+          <img class="tipsImg" src="/static/default/mobile/img/tips.png" alt="">
         </div>
-        <div class="weui-cell__bd">
-          <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
-          <span class="tagText">运费险</span>
-        </div>
-        <div class="weui-cell__bd">
-          <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
-          <span class="tagText">365天保修</span>
+        <div class="hide ranpo" id="explain">
+          <div class="hide-mask"></div>
+          <div class="weui-actionsheet weui-actionsheet_toggle">
+            <div class="weui-actionsheet__menu bg-white">
+              <input type="hidden" name="" id="" value="">
+              <div class="weui-actionsheet__cell not-product_text">
+                <span>服务说明</span>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__bd">
+                  <p class="blackGap">7天无理由退货</p>
+                  <p class="greykGap mar-top">此商品支持7天无理由退货，换货</p>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__bd">
+                  <p class="blackGap">运费险</p>
+                  <p class="greykGap  mar-top">购买此商品赠送运费险</p>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__bd">
+                  <p class="blackGap">48小时内发货</p>
+                  <p class="greykGap mar-top">商家承诺下单成功48小时内发货</p>
+                </div>
+              </div>
+              <div class="reg_btn">
+                <button type="button" class="weui-btn weui-btn_red" onClick="know()">知道了</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div id="review">
     <div class="weui-cells">
-      <a class="weui-cell weui-cell_access" href="">
+      <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.comment.goods', goods_id=99) }}">
         <div class="weui-cell__bd">
           <span class="blackGap">评价</span>
           <span class="mar-left praise_rate">好评99%</span>
@@ -90,16 +165,83 @@
           <span>共计3487条</span>
         </div>
       </a>
-      <div class="weui-cell">
-        <button type="button" class="review-type_btn btnOn">好评 9864</button>
-        <button type="button" class="review-type_btn">中评 262</button>
-        <button type="button" class="review-type_btn">差评 306</button>
-        <button type="button" class="review-type_btn">有图 1459</button>
+      <div class="weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__hd">
+          <img class="weui-media-box__thumb ava" src="/static/default/mobile/img/like.png" alt="">
+        </div>
+        <div class="weui-media-box__bd">
+          <div class="all_title">大头ssss</div>
+          <div class="all_add" style="margin-top:5px">2018-06-20 21:48:43</div>
+          <div class="review_cnt">评论大头ssss好评中评差评有图</div>
+          <div class="review_att">
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+          </div>
+        </div>
       </div>
-      <div class="weui-cell"></div>
+      <div class="weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__hd">
+          <img class="weui-media-box__thumb ava" src="/static/default/mobile/img/like.png" alt="">
+        </div>
+        <div class="weui-media-box__bd">
+          <div class="all_title">大头ssss</div>
+          <div class="all_add" style="margin-top:5px">2018-06-20 21:48:43</div>
+          <div class="review_cnt">评论大头ssss好评中评差评有图评论大头ssss好评中评差评有图评论大头ssss好评中评差评有图</div>
+          <div class="review_att">
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+            <span class="review_img">
+              <img src="" alt="">
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div id="productDetail"></div>
+  <div id="productDetail">
+    <div class="weui-cells">
+      <div class="weui-cell">
+        <div>商品详情</div>
+      </div>
+    </div>
+    <ul>
+      <li style="width:100%;overflow: hidden;">
+        <img style="width:100%;" src="/static/default/mobile/img/buy.png" alt="">
+      </li>
+      <li style="width:100%;overflow: hidden;">
+        <img style="width:100%;" src="/static/default/mobile/img/install.png" alt="">
+      </li>
+      <li style="width:100%;overflow: hidden;">
+        <img style="width:100%;" src="/static/default/mobile/img/maintain.png" alt="">
+      </li>
+      <li style="width:100%;overflow: hidden;">
+        <img style="width:100%;" src="/static/default/mobile/img/buy.png" alt="">
+      </li>
+    </ul>
+  </div>
   <div class="height61"></div>
   <div class="footer">
     <div class="icon_wrap">
@@ -108,12 +250,12 @@
     <div class="icon_wrap">
       <img src="/static/default/mobile/img/cart.png" alt="">
     </div>
-    <div class="flex cartTo">
-      <span class="to_text">加入购物车</span>
+    <div class="flex" onclick="cartTo()">
+      <button type="button" class="cartTo">加入购物车</button>
     </div>
-    <div class="flex buyTo">
-      <span class="to_text">立即购买</span>
-    </div>
+    <a href="{{ url_for('mobile.user.settlement') }}" class="flex">
+      <button type="button" class="buyTo">立即购买</button>
+    </a>
   </div>
 </div>
 {% endblock %} 
@@ -121,19 +263,69 @@
 {% block script %}
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js" charset="utf-8"></script>
 <script type="text/javascript">
+  //获取屏幕的宽度
+  $(document).ready(function () {
+      var h_w = document.body.clientWidth + 'px';
+      var img = document.getElementsByClassName('swiper-img');
+      var swiperH = document.getElementById('swiper_height');
+      for (var i = 0; i < img.length; i++) {
+        img[i].style.width = h_w;
+        img[i].style.height = h_w;
+      }
+      swiperH.style.height = h_w;
+    });
+
+  //轮播图
   $(".swiper-container").swiper({
     loop: true,
     autoplay: 3000,
   });
-  $(document).ready(function (){
-    var h_w = document.body.clientWidth + 'px';
-    var img = document.getElementsByClassName('swiper-img');
-    var swiperH = document.getElementById('swiper_height');
-    for(var i = 0;i < img.length;i++){
-      img[i].style.width = h_w;
-      img[i].style.height = h_w;
+
+  //计数器
+  var MAX = 10, MIN = 1;
+  $('.num_minus').click(function (e) {
+    var $input = $(e.currentTarget).parent().find('#wareNum');
+    var number = parseInt($input.val() || "0") - 1
+    if (number < MIN) number = MIN;
+    $input.val(number)
+  })
+  $('.num_add').click(function (e) {
+    var $input = $(e.currentTarget).parent().find('#wareNum');
+    var number = parseInt($input.val() || "0") + 1
+    if (number > MAX) number = MAX;
+    $input.val(number)
+  })
+
+  var $explain = $('#explain');
+  var $specifications = $('#specifications');
+  //服务说明弹窗
+  function tips() {
+    // 显示弹窗
+    if ($explain.hasClass('hide')) {
+      $explain.removeClass('hide').addClass('show');
     }
-    swiperH.style.height = h_w;
-  });
+  }
+  //服务说明弹窗
+  function know() {
+    // 关闭弹窗
+    if ($explain.hasClass('show')) {
+      $explain.removeClass('show').addClass('hide');
+    }
+  }
+
+  //选择商品规格弹窗
+  function choice() {
+    // 显示弹窗
+    if ($specifications.hasClass('hide')) {
+      $specifications.removeClass('hide').addClass('show');
+    }
+  }
+  //选择商品规格弹窗
+  function determine() {
+    // 关闭弹窗
+    if ($specifications.hasClass('show')) {
+      $specifications.removeClass('show').addClass('hide');
+    }
+  }
 </script> 
 {% endblock %}

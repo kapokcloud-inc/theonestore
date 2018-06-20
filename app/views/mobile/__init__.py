@@ -13,3 +13,4 @@ from .category import category
 from .cart import cart
 from .user import user
 from .item import item
+from .comment import comment

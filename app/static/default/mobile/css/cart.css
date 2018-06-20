@@ -1,15 +1,15 @@
 @charset "UTF-8";
-.cart_wrap .cart_phone {
+.cart_phone {
   display: inline-block;
   width: 50px;
   height: 50px;
   margin-right: 10px;
 }
-.cart_wrap .cart_phone img {
+.cart_phone img {
   width: 100%;
   height: 50px;
 }
-.cart_wrap .cart_count {
+.cart_count {
   color: #666;
   font-size: 12px;
   font-weight: 400;
@@ -35,4 +35,49 @@
 }
 .weui-picker-modal .weui-cells_radio .weui-cell__ft {
   width: 20px;
+}
+.weui-cell .apply-service_num {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+}
+.weui-cell .num_minus,
+.weui-cell .num_add {
+  padding: 15px;
+  float: left;
+}
+.weui-cell .num_minus::before {
+  top: 15px;
+  left: 5px;
+  height: 2px;
+  width: 16px;
+  background: #f33155;
+}
+.weui-cell .num_add::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  right: 5px;
+  height: 2px;
+  width: 16px;
+  background: #f33155;
+}
+.weui-cell .num_add::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  height: 16px;
+  width: 2px;
+  background: #f33155;
+}
+.weui-cell .num_ipt {
+  float: left;
+  width: 48px;
+  height: 28px;
+  margin: 0px 5px;
+  text-align: center;
+  color: #f33155;
+  font-size: 14px;
+  border: 1px solid #f33155;
 }

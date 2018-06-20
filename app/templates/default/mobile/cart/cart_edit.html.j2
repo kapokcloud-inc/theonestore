@@ -7,7 +7,8 @@
 
 {% block body %}
 <div class="cart_wrap">
-  <div class="greykGap mar-top mar-left">商品和数量</div>
+  <!-- 暂不需要 -->
+  <!-- <div class="greykGap mar-top mar-left">商品和数量</div>
   <div class="weui-cells weui-cells_radio">
     <div class="weui-cell weui-check__label" for="x11">
       <div class="weui-cell__bd">
@@ -45,12 +46,32 @@
         <span class="weui-icon-checked"></span>
       </div>
     </div>
+  </div> -->
+  
+  <div class="weui-cells">
+    <div class="weui-cell">
+      <div class="weui-cell__hd height50">
+        <div class="cart_phone">
+          <img alt="" src="">
+        </div>
+      </div>
+      <div class="weui-cell__bd">
+        <p class="all_title mar-bottom">小米短袖POLO衫 深蓝</p>
+      </div>
+      <div class="weui-cell__ft mar-left width46">
+        <span class="all_price">1299元</span>
+      </div>
+    </div>
   </div>
   <div class="weui-cells">
     <div class="weui-cell">
-      <div class="weui-cell__hd blackGap">购买数量</div>
-      <div class="weui-cell__bd mar-right">
-        <input type="text" class="weui-input align_right blackGap" id="count" value="3" data-values="3">
+      <div class="weui-cell__bd blackGap">购买数量</div>
+      <div class="weui-cell__ft mar-left">
+        <div class="apply-service_num">
+          <i class="num_minus"></i>
+          <input class="num_ipt" type="text" id="wareNum" name="wareNum" value="1" minnum="1">
+          <i class="num_add"></i>
+        </div>
       </div>
     </div>
   </div>
@@ -65,11 +86,19 @@
 
 {% block script %}
 <script type="text/javascript">
-  $(document).ready(function(){
-    $("#count").select({
-      title: "选择购买数量",
-      items: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-    });
-  });
+  //计数器
+  var MAX = 10, MIN = 1;
+  $('.num_minus').click(function (e) {
+    var $input = $(e.currentTarget).parent().find('#wareNum');
+    var number = parseInt($input.val() || "0") - 1
+    if (number < MIN) number = MIN;
+    $input.val(number)
+  })
+  $('.num_add').click(function (e) {
+    var $input = $(e.currentTarget).parent().find('#wareNum');
+    var number = parseInt($input.val() || "0") + 1
+    if (number > MAX) number = MAX;
+    $input.val(number)
+  })
 </script>
 {% endblock %}
