@@ -53,3 +53,20 @@ def paging():
 
     return render_template('mobile/item/paging.html.j2', items=items)
 
+
+@item.route('/product/detail')
+def product_detail():
+    """ 商品详情页 """
+    return render_template('mobile/item/product_detail.html.j2')
+
+
+@item.route('recommend')
+def recommend():
+    """ 推荐 """
+    return render_template('mobile/item/recommend.html.j2')
+
+
+@item.route('hot')
+def hot():
+    """ 热卖 """
+    return render_template('mobile/item/hot.html.j2')
