@@ -1,4 +1,5 @@
 {% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
 
 {% block head %}
 <title>{{_('首页 - 一店')}}</title>
@@ -7,20 +8,6 @@
 
 {% block body %} 
 <div class="index_wrap">
-  <div class="weui-search-bar" id="searchBar">
-    <form class="weui-search-bar__form">
-      <div class="weui-search-bar__box">
-        <i class="weui-icon-search"></i>
-        <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" required="">
-        <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
-      </div>
-      <label class="weui-search-bar__label" id="searchText">
-        <i class="weui-icon-search"></i>
-        <span>搜索</span>
-      </label>
-    </form>
-    <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
-  </div>
   <div class="category_wrap">
     <div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
       <div class="swiper-wrapper">
@@ -39,6 +26,20 @@
             <img class="swiper-img" src="/static/default/mobile/img/maintain.png" alt="">
           </a>
         </div>
+        {% for adv in advs %}
+          {% set url = '' %}
+          {% set url = '/mobile/item/detail?goods_id=%%s' %% adv.tid if adv.ttype == 1 else '' %}
+          {% set url = '/mobile/item/?cat_id=%%s' %% adv.tid if adv.ttype == 2 else '' %}
+          {% set url = '/mobile/item/hot' if adv.ttype == 3 else '' %}
+          {% set url = '/mobile/item/recommend' if adv.ttype == 4 else '' %}
+          {% set url = adv.url if url == '' %}
+          {% set url = 'javascript:void(0);' if url == '' %}
+          <div class="swiper-slide">
+            <a href="{{ url }}">
+              <img class="swiper-img" src="{{ adv.img }}" alt="">
+            </a>
+          </div>
+        {% endfor %}
       </div>
     </div>
     <div class="swiper-pagination"></div>

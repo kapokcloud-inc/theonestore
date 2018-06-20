@@ -39,7 +39,7 @@ item = Blueprint('mobile.item', __name__)
 def index():
     """商品列表页"""
 
-    items      = ItemStaticMethodsService.items(request.args)
+    items      = ItemStaticMethodsService.items(request.args.to_dict())
     paging_url = url_for('mobile.item.paging', **request.args)
 
     return render_template('mobile/item/index.html.j2', items=items, paging_url=paging_url)
@@ -49,7 +49,7 @@ def index():
 def paging():
     """加载分页"""
 
-    items = ItemStaticMethodsService.items(request.args)
+    items = ItemStaticMethodsService.items(request.args.to_dict())
 
     return render_template('mobile/item/paging.html.j2', items=items)
 
