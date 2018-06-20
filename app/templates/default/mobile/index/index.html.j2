@@ -11,27 +11,12 @@
   <div class="category_wrap">
     <div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
       <div class="swiper-wrapper">
-        <div class="swiper-slide">
-          <a href="">
-            <img class="swiper-img" src="/static/default/mobile/img/buy.png" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="">
-            <img class="swiper-img" src="/static/default/mobile/img/install.png" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="">
-            <img class="swiper-img" src="/static/default/mobile/img/maintain.png" alt="">
-          </a>
-        </div>
         {% for adv in advs %}
           {% set url = '' %}
-          {% set url = '/mobile/item/detail?goods_id=%%s' %% adv.tid if adv.ttype == 1 else '' %}
-          {% set url = '/mobile/item/?cat_id=%%s' %% adv.tid if adv.ttype == 2 else '' %}
-          {% set url = '/mobile/item/hot' if adv.ttype == 3 else '' %}
-          {% set url = '/mobile/item/recommend' if adv.ttype == 4 else '' %}
+          {% set url = '/mobile/item/%%s' %% adv.tid if adv.ttype == 1 else '' %}
+          {% set url = url_for('mobile.item.index', cat_id=adv.tid) if adv.ttype == 2 else '' %}
+          {% set url = url_for('mobile.item.hot') if adv.ttype == 3 else '' %}
+          {% set url = url_for('mobile.item.recommend') if adv.ttype == 4 else '' %}
           {% set url = adv.url if url == '' %}
           {% set url = 'javascript:void(0);' if url == '' %}
           <div class="swiper-slide">

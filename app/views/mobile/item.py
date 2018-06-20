@@ -60,13 +60,13 @@ def product_detail():
     return render_template('mobile/item/product_detail.html.j2')
 
 
-@item.route('recommend')
+@item.route('/recommend')
 def recommend():
     """ 推荐 """
     return render_template('mobile/item/recommend.html.j2')
 
 
-@item.route('hot')
+@item.route('/hot')
 def hot():
     """ 热卖 """
     return render_template('mobile/item/hot.html.j2')
