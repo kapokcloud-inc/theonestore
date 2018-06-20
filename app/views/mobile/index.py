@@ -17,6 +17,8 @@ from flask import (
 )
 from flask_babel import gettext as _
 
+from app.database import db
+
 from app.helpers import render_template
 
 from app.services.api.item import ItemStaticMethodsService
