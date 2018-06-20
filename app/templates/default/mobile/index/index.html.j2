@@ -13,7 +13,7 @@
       <div class="swiper-wrapper">
         {% for adv in advs %}
           {% set url = '' %}
-          {% set url = '/mobile/item/%%s' %% adv.tid if adv.ttype == 1 else '' %}
+          {% set url = url_for('mobile.item.detail', goods_id=adv.tid) if adv.ttype == 1 else '' %}
           {% set url = url_for('mobile.item.index', cat_id=adv.tid) if adv.ttype == 2 else '' %}
           {% set url = url_for('mobile.item.hot') if adv.ttype == 3 else '' %}
           {% set url = url_for('mobile.item.recommend') if adv.ttype == 4 else '' %}
