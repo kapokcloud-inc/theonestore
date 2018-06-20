@@ -54,10 +54,10 @@ def paging():
     return render_template('mobile/item/paging.html.j2', items=items)
 
 
-@item.route('/product/detail')
-def product_detail():
+@item.route('/<int:goods_id>')
+def detail(goods_id):
     """ 商品详情页 """
-    return render_template('mobile/item/product_detail.html.j2')
+    return render_template('mobile/item/detail.html.j2')
 
 
 @item.route('/recommend')
