@@ -177,16 +177,21 @@
 {%- for name, field  in form._fields|iteritems -%}
 {% if name != 'csrf_token' %}
   <div class="form-group">
-    <label for="{{ name }}" class="control-label col-xs-12 col-sm-3 col-md-2 col-lg-1">{{ field.label }}</label>
-    <div class="col-xs-12 col-sm-7 col-md-5 col-lg-3">
-    {% for validator in field.validators %}
-    {% endfor %}
-      {{ field(class_='form-control', **kwargs) }}
+    <label for="{{ name }}" class="control-label col-xs-12 col-sm-3 col-md-2 col-lg-1">{{ get_required_star(field) }}{{ field.label|safe }}</label>
+    <div class="col-xs-12 col-sm-7 col-md-5 col-lg-3{%if field.errors%} has-error{%endif%}">
+    {% set class_ = 'form-control' %}
+    {% set required = '' %}
+    {% if field.flags.required %}
+      {{ field(class_=class_,   **kwargs) }}
+    {% else %}
+      {{ field(class_=class_,  **kwargs) }}
+    {% endif %}
+
     {%- if field.description -%}
-      <span class="help-block m-b-none">{{ field.description }}</span>
+      <span class="help-block m-b-none">{{ field.description|safe }}</span>
     {%- endif -%}
     {%- for error in field.errors -%}
-      <span class="help-block m-b-none">{{ error }}</span>
+      <span class="help-block m-b-none">{{ error|safe }}</span>
     {%- endfor -%}
     </div>
   </div>
@@ -199,6 +204,51 @@
     </div>
   </div>
 </form>
+{%- endmacro -%}
+
+{% macro form_field(field) -%}
+    {% set with_label = kwargs.pop('with_label', False) %}
+    {% set placeholder = '' %}
+    {% if not with_label %}
+        {% set placeholder = field.label.text %}
+    {% endif %}
+    <div class="control-group {% if field.errors %}error{% endif %}">
+        {% if with_label %}
+            <label for="{{ field.id }}" class="control-label">
+                {{ field.label.text }}{% if field.flags.required %} *{% endif %}:
+            </label>
+        {% endif %}
+        <div class="controls">
+            {% set class_ = kwargs.pop('class_', '') %}
+            {% if field.flags.required %}
+                {% set class_ = class_ + ' required' %}
+            {% endif %}
+            {% if field.type == 'BooleanField' %}
+                <label class="checkbox">
+                    {{ field(class_=class_, **kwargs) }}
+                    {{ field.label.text|safe }}
+                </label>
+            {% else %}
+                {% if field.type in ('TextField', 'TextAreaField', 'PasswordField') %}
+                    {% set class_ = class_ + ' input-xlarge' %}
+                {% elif field.type == 'FileField' %}
+                    {% set class_ = class_ + ' input-file' %}
+                {% endif %}
+                {{ field(class_=class_, placeholder=placeholder, **kwargs) }}
+            {% endif %}
+            {% if field.errors %}
+                <span class="error help-inline">{{ field.errors|join(', ') }}</span>
+            {% endif %}
+            {% if field.description %}
+                <p class="help-block">{{ field.description|safe }}</p>
+            {% endif %}
+        </div>
+    </div>
+{%- endmacro %}
+
+{# 获取必填项星号 #}
+{%- macro get_required_star(field) -%}
+{%- if field.flags.required -%} <span style="color:#f33155;padding-right:5px;">*</span>{%- endif -%}
 {%- endmacro -%}
 
 

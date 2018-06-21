@@ -39,13 +39,6 @@ from app.forms.admin.item import (
 )
 
 from app.services.response import ResponseJson
-from app.services.admin.config import (
-    SmsYunpianForm,
-    SmsAlismsForm,
-    StorageQiniuForm,
-    StorageAliossForm
-)
-
 from app.models.item import (
     Goods,
     GoodsCategories,

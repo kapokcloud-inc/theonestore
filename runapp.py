@@ -17,7 +17,8 @@ from app.helpers import (
     create_app, 
     enable_logging,
     register_blueprint,
-    configure_uploads
+    configure_uploads,
+    is_required
 )
 from app.helpers.date_time import timestamp2str
 
@@ -53,7 +54,8 @@ CSRFProtect(app)
 # 注册jinja模板过滤器
 jinja_filters = {
     'iteritems':iteritems,
-    'timestamp2str':timestamp2str
+    'timestamp2str':timestamp2str,
+    'is_required':is_required
 }
 app.jinja_env.filters.update(jinja_filters)
 

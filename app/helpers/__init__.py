@@ -26,6 +26,7 @@ from flask_uploads import (
     DEFAULTS,
     patch_request_class
 )
+from wtforms.validators import Required, InputRequired, DataRequired
 
 
 def create_app(config='config/config.cfg', default_app_name='app'):
@@ -149,3 +150,18 @@ def tolong(s):
         pass
 
     return long(0)
+
+
+def is_required(field):
+    """是否是必填项
+    :param field 表单field
+    """
+    if field is not None and hasattr(field, 'validators'):
+        for validator in field.validators:
+            if ( isinstance(validator, Required)
+                    or isinstance(validator, InputRequired)
+                    or isinstance(validator, DataRequired)) :
+                return True
+
+    return False
+
