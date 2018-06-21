@@ -13,6 +13,7 @@ import gettext
 import logging
 import logging.config
 import string
+import uuid
 
 from flask import (
     Flask,
@@ -157,3 +158,7 @@ def kt_to_dict(kt):
     return kt._asdict()
 
 
+def get_uuid():
+    """获取uuid"""
+
+    return uuid.uuid4()

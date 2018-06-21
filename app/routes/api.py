@@ -11,5 +11,6 @@
 from app.views import api
 
 API_ROUTES = (
-    (api.like, '/api/like'),
+    (api.like,      '/api/like'),
+    (api.weixin,    '/api/weixin')
 )
