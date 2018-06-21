@@ -69,11 +69,12 @@ def create():
 
     form = AdminUsersForm(request.form)
     for name, field in iteritems(form._fields):
-        log_info('name:%s, type:%s, field_type:%s' % (name, field.type, type(field)))
-        log_info(field)
         for validator in field.validators:
-            log_info(validator)
-            log_info('--------------------')
+            if hasattr(validator, 'field_flags'):
+                if 'required' in validator.field_flags:
+                    log_info(u'必填项')
+        
+        log_info('--------------------')
 
     return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 

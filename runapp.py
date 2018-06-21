@@ -19,7 +19,7 @@ from app.helpers import (
     create_app, 
     enable_logging,
     register_blueprint,
-    configure_uploads
+    configure_uploads,
 )
 from app.helpers.date_time import timestamp2str
 
@@ -58,7 +58,7 @@ CSRFProtect(app)
 jinja_filters = {
     'iteritems':iteritems,
     'timestamp2str':timestamp2str,
-    'json_loads':json_loads
+    'json_loads':json_loads,
 }
 app.jinja_env.filters.update(jinja_filters)
 

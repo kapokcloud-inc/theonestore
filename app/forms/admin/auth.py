@@ -18,6 +18,7 @@ from flask_wtf.file import (
 from wtforms import (
     StringField,
     PasswordField,
+    TextAreaField
 )
 from wtforms.widgets.core import (
     TextArea,
