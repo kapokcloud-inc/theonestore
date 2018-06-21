@@ -1,9 +1,9 @@
 {% extends '/default/mobile/layout/base.html.j2' %} 
 
 {% block head %}
-<title>添加收货地址 - 一店</title>
+<title>{{_('添加收货地址 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
-{% endblock%} 
+{% endblock %} 
 
 {% block body %}
 <div class="user_wrap">
@@ -56,10 +56,10 @@
     <button type="button" class="weui-btn weui-btn_red" onClick="save()">保存</button>
   </div>
   <div class="reg_btn">
-    <button type="button" class="weui-btn weui-btn_orange" onClick="delete()">删除</button>
+    <button type="button" class="weui-btn weui-btn_orange" onClick="del()">删除</button>
   </div>
 </div>
-{% endblock%} 
+{% endblock %} 
 
 {% block script %}
 <script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/city-picker.min.js" type="text/javascript" charset="utf-8"></script>
@@ -77,4 +77,4 @@ $(document).ready(function(){
   });
 });
 </script>
-{% endblock%}
+{% endblock %}

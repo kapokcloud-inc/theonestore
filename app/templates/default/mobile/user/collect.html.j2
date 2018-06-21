@@ -1,9 +1,9 @@
 {% extends '/default/mobile/layout/base.html.j2' %} 
 
 {% block head %}
-<title>我的收藏 - 一店</title>
+<title>{{_('我的收藏 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
-{% endblock%} 
+{% endblock %} 
 
 {% block body %}
 <div class="user_wrap">
@@ -17,7 +17,7 @@
         <div class="all_desc">骁龙636 八核处理器</div>
       </div>
       <div class="weui-cell__ft mar-left width46">
-        <span class="delete" onClick="delete()">删除</span>
+        <span class="delete" onClick="del()">删除</span>
       </div>
     </div>
     <div class="weui-cell">
@@ -29,7 +29,7 @@
         <div class="all_desc">时尚外观，挂在脖子上的好耳机</div>
       </div>
       <div class="weui-cell__ft mar-left width46">
-        <span class="delete" onClick="delete()">删除</span>
+        <span class="delete" onClick="del()">删除</span>
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@
     <div class="not-product_img">
       <img class="notproduct" src="/static/default/mobile/img/notcollect.png" alt="">
     </div>
-    <div class="not-product_text">暂无收藏商品</div>
+    <div class="not-product_text">您暂无收藏商品</div>
     <div class="reg_btn">
       <a href="{{ url_for('mobile.index.root') }}">
         <button type="button" class="weui-btn weui-btn_red">到商城去逛逛</button>
@@ -46,8 +46,8 @@
     </div>
   </div> -->
 </div>
-{% endblock%} 
+{% endblock %} 
 
 {% block script %}
 <script type="text/javascript"></script> 
-{% endblock%}
+{% endblock %}

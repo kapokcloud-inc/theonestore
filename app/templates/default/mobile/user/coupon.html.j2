@@ -1,9 +1,9 @@
 {% extends '/default/mobile/layout/base.html.j2' %} 
 
 {% block head %}
-<title>我的优惠券- 一店</title>
+<title>{{_('我的优惠券- 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
-{% endblock%} 
+{% endblock %} 
 
 {% block body %}
 <div class="weui-tab">
@@ -20,13 +20,20 @@
   </div>
   <div class="weui-tab__bd">
     <div id="couponType_1" class="weui-tab__bd-item weui-tab__bd-item--active">
+      <!-- 没有相关优惠券时显示 -->
+      <!-- <div class="not-product">
+        <div class="not-product_img">
+          <img class="notproduct" src="/static/default/mobile/img/notcoupons.png" alt="">
+        </div>
+        <div class="not-product_text">您暂无相关优惠券</div>
+      </div> -->
       <div class="coupon_list">
         <div class="bg-white coupon_item weui-cell">
           <div class="off_money weui-cell__hd">
             <div class="wave"></div>
             <span class="symbol">￥</span>
             <span class="money_num">10</span>
-            <p class="money_text">满￥200.0减</p>
+            <p class="money_text">满￥200减</p>
           </div>
           <div class="coupon_right weui-cell__bd">
             <div class="all_title height25">全品类(特例商品除外)</div>
@@ -44,7 +51,7 @@
             <div class="wave"></div>
             <span class="symbol">￥</span>
             <span class="money_num">20</span>
-            <p class="money_text">满￥200.0减</p>
+            <p class="money_text">满￥200减</p>
           </div>
           <div class="coupon_right weui-cell__bd">
             <div class="all_title height25">全品类(特例商品除外)</div>
@@ -62,7 +69,7 @@
             <div class="wave"></div>
             <span class="symbol">￥</span>
             <span class="money_num">10</span>
-            <p class="money_text">满￥200.0减</p>
+            <p class="money_text">满￥200减</p>
           </div>
           <div class="coupon_right weui-cell__bd">
             <div class="all_title height25">全品类(特例商品除外)</div>
@@ -76,13 +83,20 @@
       </div>
     </div>
     <div id="couponType_2" class="weui-tab__bd-item">
+      <!-- 没有相关优惠券时显示 -->
+      <!-- <div class="not-product">
+        <div class="not-product_img">
+          <img class="notproduct" src="/static/default/mobile/img/notcoupons.png" alt="">
+        </div>
+        <div class="not-product_text">您暂无相关优惠券</div>
+      </div> -->
       <div class="coupon_list">
         <div class="bg-white coupon_item weui-cell">
           <div class="off_money weui-cell__hd off_money-on">
             <div class="wave wave-on"></div>
             <span class="symbol">￥</span>
             <span class="money_num">10</span>
-            <p class="money_text">满￥200.0减</p>
+            <p class="money_text">满￥200减</p>
           </div>
           <div class="coupon_right weui-cell__bd">
             <div class="all_title height25 all_title-on">全品类(特例商品除外)</div>
@@ -94,13 +108,20 @@
       </div>
     </div>
     <div id="couponType_3" class="weui-tab__bd-item">
+      <!-- 没有相关优惠券时显示 -->
+      <!-- <div class="not-product">
+        <div class="not-product_img">
+          <img class="notproduct" src="/static/default/mobile/img/notcoupons.png" alt="">
+        </div>
+        <div class="not-product_text">您暂无相关优惠券</div>
+      </div> -->
       <div class="coupon_list">
         <div class="bg-white coupon_item weui-cell">
           <div class="off_money weui-cell__hd off_money-on">
             <div class="wave wave-on"></div>
             <span class="symbol">￥</span>
             <span class="money_num">10</span>
-            <p class="money_text">满￥200.0减</p>
+            <p class="money_text">满￥200减</p>
           </div>
           <div class="coupon_right weui-cell__bd">
             <div class="all_title height25 all_title-on">全品类(特例商品除外)</div>
@@ -113,8 +134,8 @@
     </div>
   </div>
 </div>
-{% endblock%} 
+{% endblock %} 
 
 {% block script %}
 <script type="text/javascript"></script> 
-{% endblock%}
+{% endblock %}

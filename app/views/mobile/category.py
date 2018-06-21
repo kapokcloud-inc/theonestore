@@ -17,18 +17,29 @@ from flask import (
 )
 from flask_babel import gettext as _
 
-from app.helpers import render_template
+from app.database import db
+
+from app.helpers import (
+    render_template,
+    log_info
+)
+
+from app.services.api.item import ItemStaticMethodsService
+
+from app.models.item import (
+    Goods,
+    GoodsCategories,
+    GoodsGalleries
+)
+
 
 category = Blueprint('mobile.category', __name__)
-
 
 @category.route('/')
 def root():
     """手机站 - 分类页"""
-    return render_template('mobile/category/index.html.j2')
 
+    categories = db.session.query(GoodsCategories.cat_id, GoodsCategories.cat_name, GoodsCategories.cat_img).\
+        filter(GoodsCategories.is_show == 1).order_by(GoodsCategories.sorting.desc(), GoodsCategories.cat_id.desc()).all()
 
-@category.route('/page')
-def page():
-    """手机站 - 分类商品页"""
-    return render_template('mobile/category/page.html.j2')
+    return render_template('mobile/category/index.html.j2', categories=categories)

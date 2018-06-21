@@ -17,13 +17,13 @@
           {'title':_('管理员'),
            'href':url_for('admin.auth.index'),
            'view':'auth',
-           'icon':'mdi-account-card-details',
+           'icon':'mdi mdi-account-card-details',
            'children':None
           },
           {'title':_('商品'),
            'href':'javascript:;',
            'view':'item',
-           'icon':'mdi-cart-outline',
+           'icon':'mdi mdi-cart-outline',
            'children':[
               {'title':_('商品'),
               'href':url_for('admin.item.index'),
@@ -41,10 +41,40 @@
               }
             ]
           },
+          {'title':_('订单'),
+           'href':url_for('admin.order.index'),
+           'view':'order',
+           'icon':'mdi mdi-truck-delivery',
+           'children':None
+          },
+          {'title':_('优惠券'),
+           'href':'javascript:;',
+           'view':'coupon',
+           'icon':'mdi mdi-cart-outline',
+           'children':[
+              {'title':_('优惠券'),
+              'href':url_for('admin.coupon.index'),
+              'endpoints':['admin.coupon.index',
+                           'admin.coupon.create',
+                           'admin.coupon.detail',
+                           'admin.coupon.save']
+              },
+              {'title':_('用户优惠券'),
+              'href':url_for('admin.coupon.coupons'),
+              'endpoints':['admin.coupon.coupons']
+              }
+            ]
+          },
+          {'title':_('广告'),
+           'href':url_for('admin.adv.index'),
+           'view':'adv',
+           'icon':'mdi mdi-monitor-multiple',
+           'children':None
+          },
           {'title':_('配置项'),
            'href':url_for('admin.config.sms_yunpian'),
            'view':'config',
-           'icon':'mdi-settings',
+           'icon':'mdi mdi-settings',
            'children':None
           },
         ]
@@ -54,12 +84,12 @@
           {% set is_active = 'active' if menu['view'] == _view else '' %}
           {% if menu['children'] == None %}
             <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
-              <i class="mdi {{ menu['icon'] }} fa-fw"></i>
+              <i class="{{ menu['icon'] }} fa-fw"></i>
               <span class="hide-menu">{{ menu['title'] }}</span>
             </a>
           {% else %}
             <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
-              <i class="mdi {{ menu['icon'] }} fa-fw"></i>
+              <i class="{{ menu['icon'] }} fa-fw"></i>
               <span class="hide-menu">{{ menu['title'] }}<span class="fa arrow"></span></span>
             </a>
             {% set aria_expanded = 'true' if menu['view'] == _view else 'false' %}

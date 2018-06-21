@@ -38,7 +38,7 @@ class AdminUsersForm(FlaskForm):
     """管理员form"""
     username = StringField(_(u'用户名'), 
                 description=_(u'详细用户名'),
-                render_kw={'placeholder':u'请输入用户名'},
+                render_kw={'placeholder':_(u'请输入用户名')},
                 validators=[
                     InputRequired(message=_(u'必填项')), 
                     Length(min=3, max=10, message=_(u'用户名长度在3至10位'))

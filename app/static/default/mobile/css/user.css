@@ -9,15 +9,6 @@
 .order_status .foot_text {
   padding-top: 5px;
 }
-.weui-badge {
-  position: absolute;
-  top: 0px;
-  right: 25px;
-  background-color: #fff;
-  color: #f33155;
-  border: 1px solid #f33155;
-  padding: 0px 3px;
-}
 .weui-cell__bd {
   font-size: 14px;
   font-weight: 400;
@@ -98,8 +89,6 @@
 }
 .weui-navbar {
   position: fixed;
-  top: 0;
-  width: 100%;
   background: #fff;
 }
 .weui-navbar__item.weui-bar__item--on {
@@ -126,8 +115,168 @@
   background-image: radial-gradient(transparent 0px, transparent 3px, #ccc 3px, #ccc 4px, white 4px, white);
 }
 .all_title.all_title-on {
-  color: #b0b0b0;
+  color: #999;
 }
 .coupon_btn.coupon_btn-on {
   color: #999;
+}
+.typeStatus {
+  flex: 1;
+  height: 49px;
+  line-height: 46px;
+  text-align: center;
+}
+.orderType {
+  display: inline-block;
+  width: 60px;
+  margin: 0 auto;
+  color: #333;
+  font-size: 14px;
+  font-weight: 400;
+}
+.orderType-on {
+  color: #f33155;
+  border-bottom: 3px solid #f33155;
+}
+.order_list {
+  padding-top: 50px;
+  padding-bottom: 30px;
+}
+.trading_state,
+.logistics_info {
+  color: #f33155;
+  font-size: 14px;
+  font-weight: 400;
+}
+.amount {
+  color: #333;
+  font-size: 14px !important;
+}
+.order_btn {
+  color: #333;
+  font-size: 12px;
+  width: 68px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  margin-left: 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+}
+.order-state_btn {
+  color: #f33155;
+  border: 1px solid #f33155;
+}
+.actual_payment::before {
+  border: 0;
+}
+.review_text {
+  width: 100%;
+  font-size: 14px;
+  color: #333;
+  resize: none;
+  border: none;
+}
+.comment_type {
+  padding: 15px;
+  border-bottom: 1px solid #f3f4f5;
+}
+.product_image {
+  width: 45px;
+  height: 45px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.uploader_wrap::before {
+  border: 0;
+}
+.cancal_image {
+  width: 25px;
+  float: right;
+  margin-right: 15px;
+}
+.logistics_state {
+  background: #fff;
+  font-size: 14px;
+  color: #333;
+  padding: 15px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.track_shipflow {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+}
+.track_shipflow::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  background-color: #e5e5e5;
+  height: 1px;
+  bottom: 0px;
+  left: 50px;
+  right: 0px;
+}
+.track_shipflow::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  background-color: #e5e5e5;
+  width: 1px;
+  top: 35px;
+  left: 25px;
+  bottom: -17px;
+}
+.track_shipflow.last_child::before {
+  height: 0;
+}
+.track_shipflow.last_child::after {
+  width: 0;
+}
+.track_shipflow.cur::after {
+  background: linear-gradient(0deg, #e8e8ed, #f33155);
+}
+.logistics_step {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin: 15px 0px 0px 15px;
+  text-align: center;
+}
+.type_dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #ccc;
+  border-radius: 50%;
+  z-index: 2;
+}
+.telNum {
+  color: #f33155;
+  font-size: 14px;
+  font-weight: 400;
+}
+.track_shipflow.cur .balckGap,
+.track_shipflow.cur .all_time {
+  color: #f33155;
+}
+.track_shipflow.cur .type_dot {
+  background: #f33155;
+}
+.track_shipflow.cur .type_dot::after {
+  content: "";
+  position: absolute;
+  box-sizing: border-box;
+  top: 50%;
+  left: 50%;
+  margin-top: -9px;
+  margin-left: -9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  border: 1px solid #f33155;
 }

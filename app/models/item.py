@@ -29,6 +29,9 @@ class Goods(BaseModel, db.Model):
     is_delete = db.Column(db.Integer, default=0)
     is_hot = db.Column(db.Integer, default=0)
     is_recommend = db.Column(db.Integer, default=0)
+    view_count = db.Column(db.Integer, default=0)
+    fav_count = db.Column(db.Integer, default=0)
+    sale_count = db.Column(db.Integer, default=0)
     add_time = db.Column(db.Integer, default=0)
     update_time = db.Column(db.Integer, default=None)
 
@@ -41,6 +44,8 @@ class GoodsCategories(BaseModel, db.Model):
     cat_name = db.Column(db.String(32), default='')
     cat_img = db.Column(db.String(255), default='')
     parent_id = db.Column(db.Integer, default=0)
+    is_show = db.Column(db.Integer, default=0)
+    sorting = db.Column(db.Integer, default=0)
     add_time = db.Column(db.Integer, default=0)
 
 

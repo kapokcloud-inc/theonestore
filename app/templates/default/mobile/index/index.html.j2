@@ -1,215 +1,107 @@
 {% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
 
 {% block head %}
-<title>首页 - 一店</title>
+<title>{{_('首页 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/index.css">
-{% endblock%}
+{% endblock %}
 
 {% block body %} 
 <div class="index_wrap">
-  <div class="weui-search-bar" id="searchBar">
-    <form class="weui-search-bar__form">
-      <div class="weui-search-bar__box">
-        <i class="weui-icon-search"></i>
-        <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" required="">
-        <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
-      </div>
-      <label class="weui-search-bar__label" id="searchText">
-        <i class="weui-icon-search"></i>
-        <span>搜索</span>
-      </label>
-    </form>
-    <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
-  </div>
   <div class="category_wrap">
     <div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
       <div class="swiper-wrapper">
-        <div class="swiper-slide">
-          <a href="">
-            <img class="swiper-img" src="/static/default/mobile/img/buy.png" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="">
-            <img class="swiper-img" src="/static/default/mobile/img/install.png" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="">
-            <img class="swiper-img" src="/static/default/mobile/img/maintain.png" alt="">
-          </a>
-        </div>
+        {% for adv in advs %}
+          {% set url = '' %}
+          {% set url = url_for('mobile.item.detail', goods_id=adv.tid) if adv.ttype == 1 else url %}
+          {% set url = url_for('mobile.item.index', cat_id=adv.tid) if adv.ttype == 2 else url %}
+          {% set url = url_for('mobile.item.hot') if adv.ttype == 3 else url %}
+          {% set url = url_for('mobile.item.recommend') if adv.ttype == 4 else url %}
+          {% set url = adv.url if url == '' else url %}
+          {% set url = 'javascript:void(0);' if url == '' else url %}
+          <div class="swiper-slide">
+            <a href="{{ url }}">
+              <img class="swiper-img" src="{{ adv.img }}" alt="">
+            </a>
+          </div>
+        {% endfor %}
       </div>
     </div>
+    <div class="swiper-pagination"></div>
   </div>
-  <div class="swiper-pagination"></div>
   <div class="weui-cells" style="background:none !important">
-    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.category.page') }}">
+    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.item.recommend') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd" style="font-size:16px">热卖单品</div>
+      <div class="weui-cell__bd" style="font-size:16px">推荐</div>
       <div class="weui-cell__ft">更多</div>
     </a>
-    <div class="flex_wrap mar-bottom">
-      <div class="flex50 bg-white mar-right">
-        <a href="">
-          <div class="product_phone">
-            <img src="/static/default/mobile/img/maintain.png" alt="">
-          </div>
-          <div class="product_detail">
-            <div class="title">小米Note 3 4GB+64GB</div>
-            <p class="desc">1600万美颜自拍，2倍变焦双摄</p>
-            <div class="price">
-              <span>￥999元</span>
-              <span class="price_del">￥1299元</span>
+    <ul class="all_list">
+      {% for item in recommend_items %}
+        <li class="list_item">
+          <a href="{{ url_for('mobile.item.detail', goods_id=item.goods_id) }}">
+            <div class="product_phone">
+              <img src="{{ item.goods_img }}" alt="">
             </div>
-          </div>
-        </a>
-      </div>
-      <div class="flex50 bg-white">
-        <a href="">
-          <div class="product_phone">
-            <img src="/static/default/mobile/img/buy.png" alt="">
-          </div>
-          <div class="product_detail">
-            <div class="title">红米S2 3GB+32GB</div>
-            <p class="desc">前置1600万超大像素智能美拍</p>
-            <div class="price">
-              <span>￥1099元</span>
-              <span class="price_del"></span>
+            <div class="product_detail">
+              <div class="title">{{ item.goods_name }}</div>
+              <p class="desc">{{ item.goods_desc }}</p>
+              <div class="all_price">
+                <span>￥{{ item.goods_price }}</span>
+                {% if item.market_price > 0 %}
+                  <span class="price_del">￥{{ item.market_price }}</span>
+                {% endif %}
+              </div>
             </div>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="flex_wrap mar-bottom">
-      <div class="flex50 bg-white mar-right">
-        <a href="">
-          <div class="product_phone">
-            <img src="/static/default/mobile/img/install.png" alt="">
-          </div>
-          <div class="product_detail">
-            <div class="title">小米5X 4GB+64GB</div>
-            <p class="desc">光学变焦双摄，拍人更美</p>
-            <div class="price">
-              <span>￥1499元</span>
-              <span class="price_del"></span>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-  <div class="weui-cells" style="background:none !important">
-    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.category.page') }}">
-      <div class="weui-cell__hd">
-        <img src="" alt="">
-      </div>
-      <div class="weui-cell__bd" style="font-size:16px">必购爆款</div>
-      <div class="weui-cell__ft">更多</div>
-    </a>
-    <div class="flex_wrap mar-bottom">
-      <div class="flex50 bg-white mar-right">
-        <a href="">
-          <div class="product_phone">
-            <img src="/static/default/mobile/img/maintain.png" alt="">
-          </div>
-          <div class="product_detail">
-            <div class="title">小米Note 3 4GB+64GB</div>
-            <p class="desc">1600万美颜自拍，2倍变焦双摄</p>
-            <div class="price">
-              <span>￥999元</span>
-              <span class="price_del">￥1299元</span>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="flex50 bg-white">
-        <a href="">
-          <div class="product_phone">
-            <img src="/static/default/mobile/img/buy.png" alt="">
-          </div>
-          <div class="product_detail">
-            <div class="title">红米S2 3GB+32GB</div>
-            <p class="desc">前置1600万超大像素智能美拍</p>
-            <div class="price">
-              <span>￥1099元</span>
-              <span class="price_del"></span>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="flex_wrap mar-bottom">
-      <div class="flex50 bg-white mar-right">
-        <a href="">
-          <div class="product_phone">
-            <img src="/static/default/mobile/img/install.png" alt="">
-          </div>
-          <div class="product_detail">
-            <div class="title">小米5X 4GB+64GB</div>
-            <p class="desc">光学变焦双摄，拍人更美</p>
-            <div class="price">
-              <span>￥1499元</span>
-              <span class="price_del"></span>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <footer class="company">
-    2018 &copy; 深圳市木棉花云网络科技有限公司
-  </footer>
-
-  <div class="height61"></div>
-  <div class="foot_wrap">
-    <ul class="footer">
-      <li class="flex">
-        <a href="{{ url_for('mobile.index.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/homeOn.png" alt="">
-          </div>
-          <p class="foot_text on">首页</p>
-        </a>
-      </li>
-      <li class="flex">
-        <a href="{{ url_for('mobile.category.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/category.png" alt="">
-          </div>
-          <p class="foot_text">分类</p>
-        </a>
-      </li>
-      <li class="flex">
-        <a href="{{ url_for('mobile.cart.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/cart.png" alt="">
-          </div>
-          <p class="foot_text">购物车</p>
-        </a>
-      </li>
-      <li class="flex">
-        <a href="{{ url_for('mobile.user.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/user.png" alt="">
-          </div>
-          <p class="foot_text">我的</p>
-        </a>
-      </li>
+          </a>
+        </li>
+      {% endfor %}
     </ul>
   </div>
+  <div class="weui-cells" style="background:none !important">
+    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.item.hot') }}">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd" style="font-size:16px">热卖</div>
+      <div class="weui-cell__ft">更多</div>
+    </a>
+    <ul class="all_list">
+      {% for item in hot_items %}
+        <li class="list_item">
+          <a href="{{ url_for('mobile.item.detail', goods_id=item.goods_id) }}">
+            <div class="product_phone">
+              <img src="{{ item.goods_img }}" alt="">
+            </div>
+            <div class="product_detail">
+              <div class="title">{{ item.goods_name }}</div>
+              <p class="desc">{{ item.goods_desc }}</p>
+              <div class="all_price">
+                <span>￥{{ item.goods_price }}</span>
+                {% if item.market_price > 0 %}
+                  <span class="price_del">￥{{ item.market_price }}</span>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  {{ libs.footer() }}
+
+  {{ libs.bottom_navigation_bar() }}
 </div>
-{% endblock%}
+{% endblock %}
 
 {% block script %} 
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js" charset="utf-8"></script>
 <script type="text/javascript">
   $(".swiper-container").swiper({
     loop: true,
-    autoplay: 5000,
+    autoplay: 3000,
   });
 </script>
 {% endblock%}

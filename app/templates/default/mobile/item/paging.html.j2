@@ -1,0 +1,19 @@
+{% for item in items %}
+  <li class="list_item">
+    <a href="{{ url_for('mobile.item.detail', goods_id=item.goods_id) }}">
+      <div class="product_phone">
+        <img src="{{ item.goods_img }}" alt="">
+      </div>
+      <div class="product_detail">
+        <div class="title">{{ item.goods_name }}</div>
+        <p class="desc">{{ item.goods_desc }}</p>
+        <div class="all_price">
+          <span>￥{{ item.goods_price }}</span>
+          {% if item.market_price > 0 %}
+            <span class="price_del">￥{{ item.market_price }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </a>
+  </li>
+{% endfor %}

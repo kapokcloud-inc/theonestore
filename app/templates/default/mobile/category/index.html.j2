@@ -1,120 +1,35 @@
-{% extends '/default/mobile/layout/base.html.j2' %} 
+{% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
 
 {% block head %}
-<title>分类页 - 一店</title>
+<title>{{_('分类页 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/category.css"> 
-{% endblock%}
+{% endblock %}
 
 {% block body %}
 <div class="category_wrap mar-top">
-  <ul class="category">
-    <li class="flex34">
-      <a href="{{ url_for('mobile.category.page') }}">
-        <div class="category_phone">
-          <img src="/static/default/mobile/img/buy.png" alt="">
-        </div>
-        <p class="category_name">热卖单品</p>
-      </a>
-    </li>
-    <li class="flex34">
-      <a href="{{ url_for('mobile.category.page') }}">
-        <div class="category_phone">
-          <img src="/static/default/mobile/img/install.png" alt="">
-        </div>
-        <p class="category_name">必购爆款</p>
-      </a>
-    </li>
-    <li class="flex34">
-      <a href="{{ url_for('mobile.category.page') }}">
-        <div class="category_phone">
-          <img src="/static/default/mobile/img/maintain.png" alt="">
-        </div>
-        <p class="category_name">每日新品</p>
-      </a>
-    </li>
-  </ul>
-  <ul class="category">
-    <li class="flex34">
-      <a href="{{ url_for('mobile.category.page') }}">
-        <div class="category_phone">
-          <img src="/static/default/mobile/img/buy.png" alt="">
-        </div>
-        <p class="category_name">手机</p>
-      </a>
-    </li>
-    <li class="flex34">
-      <a href="{{ url_for('mobile.category.page') }}">
-        <div class="category_phone">
-          <img src="/static/default/mobile/img/install.png" alt="">
-        </div>
-        <p class="category_name">化妆品</p>
-      </a>
-    </li>
-    <li class="flex34">
-      <a href="{{ url_for('mobile.category.page') }}">
-        <div class="category_phone">
-          <img src="/static/default/mobile/img/maintain.png" alt="">
-        </div>
-        <p class="category_name">衣服</p>
-      </a>
-    </li>
-  </ul>
-  <ul class="category">
-    <li class="flex34">
-      <a href="{{ url_for('mobile.category.page') }}">
-        <div class="category_phone">
-          <img src="/static/default/mobile/img/buy.png" alt="">
-        </div>
-        <p class="category_name">手机</p>
-      </a>
-    </li>
-    <li class="flex34">
-      <a href="{{ url_for('mobile.category.page') }}">
-        <div class="category_phone">
-          <img src="/static/default/mobile/img/install.png" alt="">
-        </div>
-        <p class="category_name">化妆品</p>
-      </a>
-    </li>
-  </ul>
-  <div class="height61"></div>
-  <div class="foot_wrap">
-    <ul class="footer">
-      <li class="flex">
-        <a href="{{ url_for('mobile.index.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/home.png" alt="">
-          </div>
-          <p class="foot_text">首页</p>
-        </a>
-      </li>
-      <li class="flex">
-        <a href="{{ url_for('mobile.category.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/categoryOn.png" alt="">
-          </div>
-          <p class="foot_text on">分类</p>
-        </a>
-      </li>
-      <li class="flex">
-        <a href="{{ url_for('mobile.cart.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/cart.png" alt="">
-          </div>
-          <p class="foot_text">购物车</p>
-        </a>
-      </li>
-      <li class="flex">
-        <a href="{{ url_for('mobile.user.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/user.png" alt="">
-          </div>
-          <p class="foot_text">我的</p>
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-{% endblock%} 
+  {% for category in categories %}
+    {% if loop.index0%3 == 0 %}
+      <ul class="category">
+    {% endif %}
 
-{% block script %}{% endblock%}
+    <li class="flex34">
+      <a href="{{ url_for('mobile.item.index', cat_id=category.cat_id) }}">
+        <div class="category_phone">
+          <img src="{{ category.cat_img }}" alt="">
+        </div>
+        <p class="category_name">{{ category.cat_name }}</p>
+      </a>
+    </li>
+
+    {% if not loop.first and loop.index0%2 == 0 %}
+      </ul>
+    {% elif loop.last and loop.index0%2 != 0 %}
+      </ul>
+    {% endif %}
+  {% endfor %}
+
+  {{ libs.bottom_navigation_bar() }}
+</div>
+{% endblock %}
+

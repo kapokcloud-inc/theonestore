@@ -7,6 +7,8 @@
     :license: BSD, see LICENSE for more details.
 """
 
+from json import loads as json_loads
+
 from flask_babel import Babel
 from flask_wtf.csrf import CSRFProtect
 from wtforms.compat import iteritems
@@ -18,13 +20,13 @@ from app.helpers import (
     enable_logging,
     register_blueprint,
     configure_uploads,
-    is_required
 )
 from app.helpers.date_time import timestamp2str
 
 from app.routes import ROOT_ROUTES
 from app.routes.admin import ADMIN_ROUTES
 from app.routes.mobile import MOBILE_ROUTES
+from app.routes.api import API_ROUTES
 
 
 # 创建App
@@ -41,6 +43,7 @@ babel.init_app(app)
 register_blueprint(app, ROOT_ROUTES)
 register_blueprint(app, ADMIN_ROUTES)
 register_blueprint(app, MOBILE_ROUTES)
+register_blueprint(app, API_ROUTES)
 
 # 数据库初始化
 db.init_app(app)
@@ -55,7 +58,7 @@ CSRFProtect(app)
 jinja_filters = {
     'iteritems':iteritems,
     'timestamp2str':timestamp2str,
-    'is_required':is_required
+    'json_loads':json_loads,
 }
 app.jinja_env.filters.update(jinja_filters)
 

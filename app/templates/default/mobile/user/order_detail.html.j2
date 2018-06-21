@@ -1,0 +1,237 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>{{_('订单详情- 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+{% endblock %} 
+
+{% block body %}
+<div class="user_wrap">
+  <div class="weui-cells weui-cells_form">
+    <a class="weui-cell weui-cell_access" href="">
+      <div class="weui-cell__hd mar-right">
+        <img src="/static/default/mobile/img/deliverInfo.png" alt="" style="width:20px">
+      </div>
+      <div class="weui-cell__bd">
+        <div class="logistics_info">由【广东深圳南山中转部】发往【广东珠海斗门】
+        </div>
+        <div class="all_add">2018-06-13 19:30:43</div>
+      </div>
+      <div class="weui-cell__ft"></div>
+    </a>
+    <div class="weui-cell not_before">
+      <div class="weui-cell__hd mar-right">
+        <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
+      </div>
+      <div class="weui-cell__bd">
+        <div class="blackGap">
+          <span>收件人：</span>
+          <span>大头</span>
+          <span class="mar-left">13510515229</span>
+        </div>
+        <div class="address blackGap">
+          <span>收货地址：</span>
+          <span>深圳市 龙华新区 民治大道 深圳市龙华新区民治大道深圳市龙华新区民治大道</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <a href="{{ url_for('mobile.index.root') }}" class="all_title">一店</a>
+      </div>
+      <div class="weui-cell__ft">
+        <span class="trading_state">等待买家付款</span>
+      </div>
+    </div>
+    <div class="weui-cell not_before" onclick="enter()">
+      <div class="weui-cell__hd avatar mar-right">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">
+        <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
+        <div class="all_desc height25">
+          <span class="mar-right all_price">￥1299</span>
+          <span>x 1</span>
+        </div>
+      </div>
+      <div class="weui-cell__ft applySale">
+        <button type="button" class="order_btn">申请售后</button>
+      </div>
+    </div>
+    <div class="weui-cell" onclick="enter()">
+      <div class="weui-cell__hd avatar mar-right">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">
+        <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
+        <div class="all_desc height25">
+          <span class="mar-right all_price">￥1299</span>
+          <span>x 1</span>
+        </div>
+      </div>
+      <div class="weui-cell__ft applySale">
+        <button type="button" class="order_btn">申请售后</button>
+      </div>
+    </div>
+    <div class="weui-form-preview">
+      <div class="weui-form-preview__bd">
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">商品总价</label>
+          <span class="weui-form-preview__value">￥1299</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">运费</label>
+          <span class="weui-form-preview__value">￥12</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">优惠促销</label>
+          <span class="weui-form-preview__value">-￥159</span>
+        </div>
+      </div>
+    </div>
+    <div class="weui-cell actual_payment">
+      <div class="weui-cell__bd">实际付款</div>
+      <div class="weui-cell__ft">
+        <span class="all_price" style="font-size:16px">￥1599</span>
+      </div>
+    </div>
+  </div>
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-form-preview">
+      <div class="weui-form-preview__bd">
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">订单编号</label>
+          <span class="weui-form-preview__value">201806071423</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">创建时间</label>
+          <span class="weui-form-preview__value">2018-06-07 15:31:33</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">付款时间</label>
+          <span class="weui-form-preview__value">2018-06-07 15:31:45</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="height:66px"></div>
+  <div class="footer" style="display:block;height:56px">
+    <div class="weui-cell">
+      <div class="weui-cell__bd"></div>
+      <div class="weui-cell__ft">
+        <button type="button" class="order_btn" onclick="del()">删除订单</button>
+        <!-- <button type="button" class="order_btn" onclick="cancelOrder()">取消订单</button> -->
+        <!-- <a href="{{ url_for('mobile.user.logistics') }}">
+          <button type="button" class="order_btn">查看物流</button>
+        </a> -->
+        <!-- <a href="{{ url_for('mobile.user.settlement') }}">
+          <button type="button" class="order_btn order-state_btn">付款</button>
+        </a> -->
+        <button type="button" class="order_btn order-state_btn" onclick="confirm()">确认收货</button>
+        <!-- <a href="{{ url_for('mobile.user.review') }}">
+          <button type="button" class="order_btn order-state_btn">去评价</button>
+        </a> -->
+        <a href="{{ url_for('mobile.cart.root') }}">
+          <button type="button" class="order_btn order-state_btn">再次购买</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="hide ranpo" id="confirmReceipt">
+    <div class="hide-mask"></div>
+    <div class="weui-actionsheet weui-actionsheet_toggle">
+      <div class="weui-actionsheet__menu">
+        <input type="hidden" name="" id="" value="">
+        <div class="weui-actionsheet__cell not-product_text">
+          <span>确认收货</span>
+          <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="cancel()">
+        </div>
+        <div class="not-product">
+          <div class="not-product_img">
+            <img class="notproduct" src="/static/default/mobile/img/orderK.png" alt="">
+          </div>
+          <div class="not-product_text">您的订单已确认收货成功</div>
+          <div class="reg_btn">
+            <button type="button" class="weui-btn weui-btn_red" onClick="review()">去评价</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 
+
+{% block script %}
+<script type="text/javascript">
+//点击进入商品详情
+function enter() {
+  var url = "/mobile/category/product/detail";
+  window.location.href = url;
+}
+//点击进入申请售后
+$('.applySale').click(function (event) {       //event:事件对象
+  event.stopPropagation();                        //停止事件冒泡
+
+  var url = "/mobile/user/apply/aftersale";
+  window.location.href = url;
+});
+
+var $confirmReceipt = $('#confirmReceipt');
+
+//确认收货弹窗
+function confirm() {
+  $.confirm({
+    title: '确认收货',
+    text: '确认收到此订单的商品了么？',
+    onOK: function () {
+      $confirmReceipt.removeClass('hide');
+      if (!$confirmReceipt.hasClass('show')) {
+        $confirmReceipt.addClass('show');
+      }
+    },
+    onCancel: function () { }
+  });
+}
+
+//关闭确认收货弹窗
+function cancel() {
+  $confirmReceipt.removeClass('show');
+  if (!$confirmReceipt.hasClass('hide')) {
+    $confirmReceipt.addClass('hide');
+  }
+}
+
+//点击去评价商品，关闭确认收货弹窗
+function review() {
+  $confirmReceipt.removeClass('show');
+  if (!$confirmReceipt.hasClass('hide')) {
+    $confirmReceipt.addClass('hide');
+  }
+
+  var url = "/mobile/user/review";
+  window.location.href = url;
+}
+
+//取消订单弹窗
+function cancelOrder() {
+  $.confirm({
+    title: '取消订单',
+    text: '确定取消该订单？',
+    onOK: function () { },
+    onCancel: function () { }
+  });
+}
+
+//删除订单弹窗
+function del() {
+  $.confirm({
+    title: '删除订单',
+    text: '确定删除该订单？',
+    onOK: function () { },
+    onCancel: function () { }
+  });
+}
+</script> 
+{% endblock %}

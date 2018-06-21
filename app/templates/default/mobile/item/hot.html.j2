@@ -1,0 +1,41 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+{% import '/default/mobile/libs/libs.html.j2' as libs %} 
+
+{% block head %}
+<title>{{_('热卖 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/category.css">
+<link rel="stylesheet" href="/static/default/mobile/css/index.css"> 
+{% endblock %}
+
+{% block body %}
+<div class="page_wrap mar-top">
+  <ul id="paging-data-list" class="all_list">
+    {% for item in items %}
+      <li class="list_item">
+        <a href="{{ url_for('mobile.item.detail', goods_id=item.goods_id) }}">
+          <div class="product_phone">
+            <img src="{{ item.goods_img }}" alt="">
+          </div>
+          <div class="product_detail">
+            <div class="title">{{ item.goods_name }}</div>
+            <p class="desc">{{ item.goods_desc }}</p>
+            <div class="all_price">
+              <span>￥{{ item.goods_price }}</span>
+              {% if item.market_price > 0 %}
+                <span class="price_del">￥{{ item.market_price }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  {{ libs.footer() }}
+</div>
+{% endblock %} 
+
+{% block script %}
+  {{ libs.paging_js(paging_url, 52) }}
+{% endblock%}
+

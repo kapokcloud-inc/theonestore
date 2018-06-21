@@ -76,12 +76,12 @@
       {% set value       = request.args.get(name, '') %}
       {% set type        = field.get('type', 'input') %}
       {% set placeholder = field.get('placeholder', '') %}
-      {% set col_lg      = field.get('col-lg', 'col-lg-2') %}
+      {% set _class      = field.get('_class', 'col-lg-3') %}
 
       {% if type == 'hidden' %}
         <input type="hidden" id="{{ name }}" name="{{ name }}" value="{{ value }}">
       {% else %}
-        <div class="{{ col_lg }}">
+        <div class="{{ _class }}">
           <div class="form-group">
             <label>{{ label }}</label>
             {% if type == 'input' %}
@@ -97,6 +97,8 @@
                   <option value="{{ option_val }}" {{ selected }}>{{ option.get('name') }}</option>
                 {% endfor %}
               </select>
+            {% elif type == 'daterange' %}
+              <input class="form-control input-daterange-datepicker" type="text" name="{{ name }}" value="{{ value }}" />
             {% endif %}
           </div>
         </div>
@@ -107,7 +109,7 @@
   <div class="row">
     <div class="col-lg-1">
       <div class="form-group">
-        <button id="search_form_submit" type="submit" class="btn btn-default">
+        <button id="search_form_submit" type="submit" class="btn btn-info">
           {{_('提交')}}
         </button>
       </div>
@@ -118,21 +120,31 @@
 
 
 {# WTF - 文本输入框 #}
-{% macro wtf_input(_field, _label_text, _value='', _class='', _type='text', _placeholder='') %}
+{% macro wtf_input(_field, _label_text, _value='', _class='', _type='text', _placeholder='', _help='') %}
   {% if _type == 'text' %}
     <div class="col-sm-6">
       <div class="form-group">
         <label class="control-label">{{ _label_text }}</label>
         {% set _value = '' if _value == None else _value %}
         {{ _field(type=_type, class=_class, value=_value, placeholder=_placeholder) }}
+        {% if _help %}
+          <span class="help-block">
+            <small>{{ _help }}</small>
+          </span>
+        {% endif %}
         {% for error in _field.errors %}
           <span class="help-block with-errors" style="color: red;">* {{ error }}</span>
         {% endfor %}
       </div>
     </div>
-  {% endif %}
-
-  {% if _type == 'hidden' %}
+  {% elif _type == 'static' %}
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label class="control-label">{{ _label_text }}</label>
+        <span class="{{_class}}">{{ _value }}</span>
+      </div>
+    </div>
+  {% elif _type == 'hidden' %}
     {{ _field(type=_type, value=_value) }}
   {% endif %}
 {% endmacro %}
@@ -206,46 +218,6 @@
 </form>
 {%- endmacro -%}
 
-{% macro form_field(field) -%}
-    {% set with_label = kwargs.pop('with_label', False) %}
-    {% set placeholder = '' %}
-    {% if not with_label %}
-        {% set placeholder = field.label.text %}
-    {% endif %}
-    <div class="control-group {% if field.errors %}error{% endif %}">
-        {% if with_label %}
-            <label for="{{ field.id }}" class="control-label">
-                {{ field.label.text }}{% if field.flags.required %} *{% endif %}:
-            </label>
-        {% endif %}
-        <div class="controls">
-            {% set class_ = kwargs.pop('class_', '') %}
-            {% if field.flags.required %}
-                {% set class_ = class_ + ' required' %}
-            {% endif %}
-            {% if field.type == 'BooleanField' %}
-                <label class="checkbox">
-                    {{ field(class_=class_, **kwargs) }}
-                    {{ field.label.text|safe }}
-                </label>
-            {% else %}
-                {% if field.type in ('TextField', 'TextAreaField', 'PasswordField') %}
-                    {% set class_ = class_ + ' input-xlarge' %}
-                {% elif field.type == 'FileField' %}
-                    {% set class_ = class_ + ' input-file' %}
-                {% endif %}
-                {{ field(class_=class_, placeholder=placeholder, **kwargs) }}
-            {% endif %}
-            {% if field.errors %}
-                <span class="error help-inline">{{ field.errors|join(', ') }}</span>
-            {% endif %}
-            {% if field.description %}
-                <p class="help-block">{{ field.description|safe }}</p>
-            {% endif %}
-        </div>
-    </div>
-{%- endmacro %}
-
 {# 获取必填项星号 #}
 {%- macro get_required_star(field) -%}
 {%- if field.flags.required -%} <span style="color:#f33155;padding-right:5px;">*</span>{%- endif -%}
@@ -278,6 +250,55 @@
         {% endif %}
       </div>
     </div>
+  </div>
+{% endmacro %}
+
+
+{# 其它 - form-control-static #}
+{% macro form_control_static(label, content) %}
+  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+    <div class="form-group">
+      <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label">{{ label }}：</label>
+      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+        <span class="form-control-static">{{ content }}</span>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{# 其它 - form-control-static #}
+{% macro setting_page_tabs(_active) %}
+  <div class="row bg-title">
+    <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+      {% set active = 'active' if _active == 'sms' %}
+      <li role="presentation" class="{{ active }}">
+        <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="messages" role="tab" aria-expanded="true" style="background:none !important">
+          <span class="visible-xs">{{_('短信')}}</span>
+          <span class="hidden-xs">{{_('短信')}}</span>
+        </a>
+      </li>
+      {% set active = 'active' if _active == 'storage' %}
+      <li role="presentation" class="{{ active }}">
+        <a href="{{ url_for('admin.config.storage_qiniu') }}" aria-controls="messages" role="tab" aria-expanded="false" style="background:none !important">
+          <span class="visible-xs">{{_('存储')}}</span>
+          <span class="hidden-xs">{{_('存储')}}</span>
+        </a>
+      </li>
+      {% set active = 'active' if _active == 'shipping' %}
+      <li role="presentation" class="{{ active }}">
+        <a href="{{ url_for('admin.config.shipping') }}" aria-controls="messages" role="tab" aria-expanded="false" style="background:none !important">
+          <span class="visible-xs">{{_('快递')}}</span>
+          <span class="hidden-xs">{{_('快递')}}</span>
+        </a>
+      </li>
+      {% set active = 'active' if _active == 'system' %}
+      <li role="presentation" class="{{ active }}">
+        <a href="#messages1" aria-controls="messages" role="tab" aria-expanded="false" style="background:none !important">
+          <span class="visible-xs">{{_('系统')}}</span>
+          <span class="hidden-xs">{{_('系统')}}</span>
+        </a>
+      </li>
+    </ul>
   </div>
 {% endmacro %}
 

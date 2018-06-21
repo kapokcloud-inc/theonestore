@@ -1,27 +1,20 @@
 @charset "UTF-8";
 
+@import "variables.less";
+
 .order_status{
   display: flex;
   border-top: 1px solid #ddd;
-  font-size: 12px;
+  font-size: @font-size12;
   text-align: center;
   padding: 5px 0px;
   .foot_text{
     padding-top:5px;
   }
 }
-.weui-badge{
-  position: absolute;
-  top: 0px;
-  right: 25px;
-  background-color:#fff;
-  color: #f33155;
-  border: 1px solid #f33155;
-  padding: 0px 3px;
-}
 .weui-cell__bd{
-  font-size: 14px;
-  font-weight: 400;
+  font-size: @font-size14;
+  font-weight: @font-weight400;
 }
 .user_all_order_wrap{
   .icom_photo{
@@ -31,14 +24,14 @@
   }
 }
 .phone_num,.mminentExpiry{
-  color: #999;
-  font-size: 12px;
-  font-weight: 400;
+  color: @grey-color9;
+  font-size: @font-size12;
+  font-weight: @font-weight400;
 }
 .address{
-  color: #333;
-  font-size: 12px;
-  font-weight: 400;
+  color: @black-color;
+  font-size: @font-size12;
+  font-weight: @font-weight400;
   margin-top: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -47,7 +40,7 @@
   -webkit-line-clamp: 2; 
 }
 .add_tag{
-  color: #f33155;
+  color: @main-color;
 }
 .coupon_list{
   margin: 10px;
@@ -64,19 +57,19 @@
   padding-top: 15px;
   padding-bottom: 10px;
   text-align: center;
-  background: #f33155;
-  color: #fff;
+  background: @main-color;
+  color: @white-color;
 }
 .symbol{
-  font-size: 16px;
+  font-size: @font-size16;
   font-weight: bold;
 }
 .money_num{
   font-size: 24px;
 }
 .money_text{
-  font-size: 14px;
-  font-weight: 400;
+  font-size: @font-size14;
+  font-weight: @font-weight400;
 }
 .wave{
   position: absolute;
@@ -86,7 +79,7 @@
   width: 4px;
   background-size:8px 8px;
   background-position: -4px 5px;
-  background-image:radial-gradient(transparent 0px, transparent 3px, #f33155 3px, #f33155 4px, white 4px, white)
+  background-image:radial-gradient(transparent 0px, transparent 3px, @main-color 3px, @main-color 4px, white 4px, white)
 }
 .coupon_right{
   padding: 10px;
@@ -98,17 +91,15 @@
   text-align: center;
   margin-left: 10px;
   margin-right: 10px;
-  color: #f33155;
+  color: @main-color;
 }
 .weui-navbar{
   position: fixed;
-  top: 0;
-  width: 100%;
-  background: #fff;
+  background: @white-color;
 }
 .weui-navbar__item.weui-bar__item--on{
-  color: #f33155;
-  background: #fff;
+  color: @main-color;
+  background: @white-color;
 }
 .weui-navbar__item{
   display: block;
@@ -116,22 +107,180 @@
   height: 50px;
   line-height: 50px;
   text-align: center;
-  font-size: 14px;
-  color: #333;
+  font-size: @font-size14;
+  color: @black-color;
   padding: 0;
 }
 .weui-navbar__item:after{
   border-right: 0;
 }
 .off_money.off_money-on{
-  background: #ccc;
+  background: @grey-color;
 }
 .wave.wave-on{
   background-image:radial-gradient(transparent 0px, transparent 3px, #ccc 3px, #ccc 4px, white 4px, white)
 }
 .all_title.all_title-on{
-  color: #b0b0b0;
+  color: @grey-color9;
 }
 .coupon_btn.coupon_btn-on{
-  color: #999;
+  color: @grey-color9;
+}
+.typeStatus{
+  flex: 1;
+  height: 49px;
+  line-height: 46px;
+  text-align: center;
+}
+.orderType{
+  display: inline-block;
+  width: 60px;
+  margin: 0 auto;
+  color: @black-color;
+  font-size: @font-size14;
+  font-weight: @font-weight400;
+}
+.orderType-on{
+  color: @main-color;
+  border-bottom: 3px solid @main-color;
+}
+.order_list{
+  padding-top: 50px;
+  padding-bottom: 30px;
+}
+.trading_state,.logistics_info{
+  color: @main-color;
+  font-size: @font-size14;
+  font-weight: @font-weight400;
+}
+.amount{
+  color: @black-color;
+  font-size: @font-size14 !important;
+}
+.order_btn{
+  color: @black-color;
+  font-size: @font-size12;
+  width: 68px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  margin-left: 10px;
+  background: @white-color;
+  border: 1px solid @grey-color;
+  border-radius: 15px;
+}
+.order-state_btn{
+  color: @main-color;
+  border: 1px solid @main-color;
+}
+.actual_payment::before{
+  border: 0;
+}
+.review_text{
+  width: 100%;
+  font-size: @font-size14;
+  color: @black-color;
+  resize:none;
+  border: none;
+}
+.comment_type{
+  padding: 15px;
+  border-bottom: 1px solid #f3f4f5;
+}
+.product_image{
+  width: 45px;
+  height: 45px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.uploader_wrap::before{
+  border: 0;
+}
+.cancal_image{
+  width:25px;
+  float:right;
+  margin-right:15px;
+}
+.logistics_state{
+  background: @white-color;
+  font-size: @font-size14;
+  color: @black-color;
+  padding: 15px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.track_shipflow{
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+}
+.track_shipflow::before{
+  content: "";
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  background-color: #e5e5e5;
+  height: 1px;
+  bottom: 0px;
+  left: 50px;
+  right: 0px;
+}
+.track_shipflow::after{
+  content: "";
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  background-color: #e5e5e5;
+  width: 1px;
+  top: 35px;
+  left: 25px;
+  bottom: -17px;
+}
+.track_shipflow.last_child::before{
+  height: 0;
+}
+.track_shipflow.last_child::after{
+  width: 0;
+}
+.track_shipflow.cur::after{
+  background: linear-gradient(0deg,#e8e8ed,#f33155);
+}
+.logistics_step{
+  position: relative;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  margin: 15px 0px 0px 15px;
+  text-align: center;
+}
+.type_dot{
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #ccc;
+  border-radius: 50%;
+  z-index: 2;
+}
+.telNum{
+  color: @main-color;
+  font-size: @font-size14;
+  font-weight: @font-weight400;
+}
+.track_shipflow.cur .balckGap, .track_shipflow.cur .all_time{
+  color: @main-color;
+}
+.track_shipflow.cur .type_dot{
+  background: @main-color;
+}
+.track_shipflow.cur .type_dot::after{
+  content: "";
+  position: absolute;
+  box-sizing: border-box;
+  top: 50%;
+  left: 50%;
+  margin-top: -9px;
+  margin-left: -9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  border: 1px solid @main-color;
 }

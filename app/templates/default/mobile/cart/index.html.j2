@@ -1,9 +1,10 @@
-{% extends '/default/mobile/layout/base.html.j2' %} 
+{% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
 
 {% block head %}
-<title>我的购物车 - 一店</title>
+<title>{{_('我的购物车 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/cart.css"> 
-{% endblock%} 
+{% endblock %} 
 
 {% block body %}
 <div class="cart_wrap">
@@ -22,7 +23,7 @@
           <div class="cart_count">x 1</div>
         </div>
         <div class="weui-cell__ft mar-left width46">
-          <span class="all_price">1299元</span>
+          <span class="all_price">￥1299</span>
         </div>
       </div>
     </div>
@@ -40,7 +41,7 @@
           <div class="cart_count">x 2</div>
         </div>
         <div class="weui-cell__ft mar-left width46">
-          <span class="all_price">699元</span>
+          <span class="all_price">￥699</span>
         </div>
       </div>
     </div>
@@ -58,7 +59,7 @@
           <div class="cart_count">x 1</div>
         </div>
         <div class="weui-cell__ft mar-left width46">
-          <span class="all_price">1599元</span>
+          <span class="all_price">￥1599</span>
         </div>
       </div>
     </div>
@@ -73,9 +74,9 @@
           <div class="total">
             <div class="total-price">
               <span>合计：</span>
-              <span class="all_price">1299元</span>
+              <span class="all_price" style="font-size:18px">￥1299</span>
             </div>
-            <a href="" class="btn_primary">结算(4)</a>
+            <a href="{{ url_for('mobile.user.settlement') }}" class="btn_primary">结算(4)</a>
           </div>
         </div>
       </div>
@@ -86,7 +87,7 @@
     <div class="not-product_img">
       <img class="notproduct" src="/static/default/mobile/img/notcart.png" alt="">
     </div>
-    <div class="not-product_text">购物车还是空的</div>
+    <div class="not-product_text">您的购物车空空如也</div>
     <div class="reg_btn">
       <a href="{{ url_for('mobile.index.root') }}">
         <button type="button" class="weui-btn weui-btn_red">到商城去逛逛</button>
@@ -94,45 +95,9 @@
     </div>
   </div> -->
 
-  <div class="height61"></div>
-  <div class="foot_wrap">
-    <ul class="footer">
-      <li class="flex">
-        <a href="{{ url_for('mobile.index.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/home.png" alt="">
-          </div>
-          <p class="foot_text">首页</p>
-        </a>
-      </li>
-      <li class="flex">
-        <a href="{{ url_for('mobile.category.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/category.png" alt="">
-          </div>
-          <p class="foot_text">分类</p>
-        </a>
-      </li>
-      <li class="flex">
-        <a href="{{ url_for('mobile.cart.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/cartOn.png" alt="">
-          </div>
-          <p class="foot_text on">购物车</p>
-        </a>
-      </li>
-      <li class="flex">
-        <a href="{{ url_for('mobile.user.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/user.png" alt="">
-          </div>
-          <p class="foot_text">我的</p>
-        </a>
-      </li>
-    </ul>
-  </div>
+  {{ libs.bottom_navigation_bar() }}
 </div>
-{% endblock%} 
+{% endblock %} 
 
 {% block script %}
 <script  type="text/javascript">
@@ -141,4 +106,4 @@
     window.location.href = url;
   });
 </script>
-{% endblock%}
+{% endblock %}

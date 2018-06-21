@@ -1,0 +1,126 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>{{_('申请售后服务- 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+{% endblock %} 
+
+{% block body %}
+<div class="user_wrap">
+ <div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <div class="blackGap mar-bottom">服务类型</div>
+        <button type="button" class="tag_btn tag_btn-on">仅退款</button>
+        <button type="button" class="tag_btn">退货退款</button>
+        <button type="button" class="tag_btn">仅换货</button>
+        <p class="all_desc mar-top">仅退款：未收到货(包含未签收)，或卖家协商同意前提下</p>
+        <!-- <p class="all_desc mar-top">退货退款：已收到货，需要退换已收到的货物</p>
+        <p class="all_desc mar-top">仅换货：已收到货，货物拍错或是损坏，可跟卖家协商换货</p> -->
+      </div>
+    </div>
+  </div>
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+      <div class="weui-cell__hd avatar mar-right">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">
+        <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
+        <div class="all_desc height25">
+          <span class="mar-right all_price">￥1299</span>
+          <span>x 3</span>
+        </div>
+      </div>
+      <div class="weui-cell__ft mar-left">
+        <div class="apply-service_num">
+          <i class="num_minus"></i>
+          <input class="num_ipt" type="text" id="wareNum" name="wareNum" value="1" minnum="1">
+          <i class="num_add"></i>
+        </div>
+      </div>
+    </div>
+    <a class="weui-cell weui-cell_access" href="javascript:;" id="goods_state">
+      <div class="weui-cell__bd blackGap">
+        <p class="blackGap">货物状态</p>
+      </div>
+      <div class="weui-cell__ft mar-left">
+        <input type="text" class="weui-input align_right" placeholder="请选择" value="" data-values="">
+      </div>
+    </a>
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <p class="blackGap mar-bottom">退款说明</p>
+        <div class="weui-cell" style="background:#f3f4f5;border-radius:5px;">
+          <textarea class="review_text" name="name" rows="5" placeholder="请输入退款说明..." style="background:#f3f4f5"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <p class="blackGap">
+          退款金额：
+          <span class="all_price">￥22</span>
+        </p>
+        <p class="all_desc mar-top">注：退款金额将返回到您原支付账户</p>
+      </div>
+    </div>
+  </div>
+  <div class="weui-gallery" style="display: none">
+    <span class="weui-gallery__img"></span>
+    <div class="weui-gallery__opr">
+      <a href="javascript:" class="weui-gallery__del">
+        <i class="weui-icon-delete weui-icon_gallery-delete"></i>
+      </a>
+    </div>
+  </div>
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-cell uploader_wrap">
+      <div class="weui-cell__bd">
+        <div class="blackGap mar-bottom">上传凭证</div>
+        <div class="weui-uploader">
+          <div class="weui-uploader__bd">
+            <ul class="weui-uploader__files" id="uploaderFiles"></ul>
+            <div class="weui-uploader__input-box">
+              <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="height:75px"></div>
+  <div class="footer" style="display:block;height:65px">
+    <a class="weui-cell weui-cell_access" href="javascript:;" style="padding:10px" onclick="submit()">
+      <button type="button" class="weui-btn weui-btn_red">提交申请</button>
+    </a>
+  </div>
+</div>
+{% endblock %} 
+
+{% block script %}
+<script type="text/javascript">
+
+$(document).ready(function () {
+  $("#goods_state").select({
+    title: "货物状态",
+    items: ["未收到货", "已收到货"]
+  });
+});
+
+//计数器
+var MAX = 10, MIN = 1;
+$('.num_minus').click(function (e) {
+  var $input = $(e.currentTarget).parent().find('#wareNum');
+  var number = parseInt($input.val() || "0") - 1
+  if (number < MIN) number = MIN;
+  $input.val(number)
+})
+$('.num_add').click(function (e) {
+  var $input = $(e.currentTarget).parent().find('#wareNum');
+  var number = parseInt($input.val() || "0") + 1
+  if (number > MAX) number = MAX;
+  $input.val(number)
+})
+</script> 
+{% endblock %}

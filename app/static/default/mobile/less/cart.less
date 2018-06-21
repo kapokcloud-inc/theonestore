@@ -1,21 +1,21 @@
 @charset "UTF-8";
 
-.cart_wrap{
-  .cart_phone{
-    display: inline-block;
-    width: 50px;
+@import "variables.less";
+
+.cart_phone{
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  img{
+    width: 100%;
     height: 50px;
-    margin-right: 10px;
-    img{
-      width: 100%;
-      height: 50px;
-    }
   }
-  .cart_count{
-    color: #666;
-    font-size: 12px;
-    font-weight: 400;
-  }
+}
+.cart_count{
+  color: @grey-color6;
+  font-size: @font-size12;
+  font-weight: @font-weight400;
 }
 .weui-icon-checked{
   margin-top:-40px;
@@ -27,34 +27,10 @@
   left: 0;
   right: 0;
 }
-.cart_bar{
-  background: #fff;
-  height: 45px;
-  line-height: 45px;;
-}
 .all_check{
   display: inline-block;
-  color: #333;
-  font-size: 12px;
-}
-.total-price{
-  display: inline-block;
-  font-weight: 400;
-  font-size: 14px;
-  color: #333;
-}
-.btn_primary{
-  display: inline-block;
-  font-size: 14px;
-  width: 100px;
-  color: #fff;
-  background: #f33155;
-  margin-left: 10px;
-  text-align: center;
-}
-.total{
-  position: absolute;
-  right: 0;
+  color: @black-color;
+  font-size: @font-size12;
 }
 .ft_width{
   width: 20px;
@@ -65,6 +41,52 @@
     .weui-cell__ft{
       width: 20px;
     }
+  }
+}
+.weui-cell{
+  .apply-service_num{
+    width: 120px;
+    height: 30px;
+    line-height: 30px; 
+  }
+  .num_minus,.num_add{
+    padding: 15px;
+    float: left;
+  }
+  .num_minus::before{
+    top: 15px;
+    left: 5px;
+    height: 2px;
+    width: 16px;
+    background: @main-color;
+  }
+  .num_add::before {
+    content: "";
+    position: absolute;
+    top: 15px;
+    right: 5px;
+    height: 2px;
+    width: 16px;
+    background: @main-color;
+  }
+  .num_add::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    height: 16px;
+    width: 2px;
+    background: @main-color;
+  }
+  .num_ipt {
+    float: left;
+    width: 48px;
+    height: 28px;
+    margin: 0px 5px;
+    text-align: center;
+    color: @main-color;
+    font-size: @font-size14;
+    border: 1px solid @main-color;
   }
 }
  

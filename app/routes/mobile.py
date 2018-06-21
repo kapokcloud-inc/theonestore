@@ -10,8 +10,10 @@
 from app.views import mobile
 
 MOBILE_ROUTES = (
-    (mobile.index,        '/mobile'),
-    (mobile.category,     '/mobile/category'),
-    (mobile.cart,         '/mobile/cart'),
-    (mobile.user,         '/mobile/user'),
+    (mobile.index,          '/mobile'),
+    (mobile.category,       '/mobile/category'),
+    (mobile.cart,           '/mobile/cart'),
+    (mobile.user,           '/mobile/user'),
+    (mobile.item,           '/mobile/item'),
+    (mobile.comment,        '/mobile/comment')
 )
