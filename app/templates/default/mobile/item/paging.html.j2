@@ -7,10 +7,10 @@
       <div class="product_detail">
         <div class="title">{{ item.goods_name }}</div>
         <p class="desc">{{ item.goods_desc }}</p>
-        <div class="price">
-          <span>￥{{ item.goods_price }}元</span>
+        <div class="all_price">
+          <span>￥{{ item.goods_price }}</span>
           {% if item.market_price > 0 %}
-            <span class="price_del">￥{{ item.market_price }}元</span>
+            <span class="price_del">￥{{ item.market_price }}</span>
           {% endif %}
         </div>
       </div>

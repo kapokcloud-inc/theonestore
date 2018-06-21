@@ -34,22 +34,22 @@
   }
 }
 .product_phone{
-  width: 150px;
-  height: 150px;
-  margin: 0 auto;
+  margin: 0px 10px;
+  overflow: hidden;
   img{
     width: 100%;
-    height: 150px;
+    height: 100%;
   }
 }
 .product_detail{
-  padding: 10px;
-  text-align: center;
+  margin: 10px;
+  overflow: hidden;
   .title{
     font-size: @font-size14;
     font-weight: @font-weight400;
     color: @black-color;
-    margin-bottom: 8px;
+    height: 25px;
+    line-height: 25px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -57,18 +57,11 @@
   .desc{
     font-size: @font-size12;
     color: @grey-color9;
-    margin-bottom: 10px;
+    height: 25px;
+    line-height: 25px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .price{
-    font-size: @font-size14;
-    color: @main-color;
-    .price_del{
-      color: @grey-color9;
-      text-decoration: line-through;
-    }
   }
 }
 .weui-cells:after{

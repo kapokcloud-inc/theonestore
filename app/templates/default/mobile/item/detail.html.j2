@@ -38,7 +38,12 @@
     <div class="detail_title">
       <div class="all_title">{{ item.goods_name }}</div>
       <div class="all_desc">{{ item.goods_desc }}</div>
-      <div class="all_price">￥{{ item.goods_price }}</div>
+      <div class="all_price">
+        <span>￥{{ item.goods_price }}</span>
+        {% if item.market_price > 0 %}
+        <span class="price_del">￥{{ item.market_price }}</span>
+        {% endif %}
+      </div>
     </div>
     <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="javascript:;" onclick="choice()">
@@ -69,7 +74,7 @@
                 <p class="all_title mar-bottom">小米短袖POLO衫 深蓝</p>
               </div>
               <div class="weui-cell__ft mar-left width46">
-                <span class="all_price">1299元</span>
+                <span class="all_price">￥1299</span>
               </div>
             </div>
             <div class="weui-cell">

@@ -1,4 +1,5 @@
-{% extends '/default/mobile/layout/base.html.j2' %} 
+{% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
 
 {% block head %}
 <title>{{_('个人中心 - 一店')}}</title>
@@ -75,7 +76,7 @@
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">钱包</div>
-      <div class="weui-cell__ft">199.00元</div>
+      <div class="weui-cell__ft">199元</div>
     </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.user.collect') }}">
       <div class="weui-cell__hd">
@@ -121,45 +122,7 @@
     </a>
   </div>
 
-  <div class="height61"></div>
-  <div class="foot_wrap">
-    <ul class="footer">
-      <li class="flex pstR">
-        <a href="{{ url_for('mobile.index.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/home.png" alt="">
-          </div>
-          <p class="foot_text">首页</p>
-        </a>
-      </li>
-      <li class="flex pstR">
-        <a href="{{ url_for('mobile.category.root') }}">
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/category.png" alt="">
-          </div>
-          <p class="foot_text">分类</p>
-        </a>
-      </li>
-      <li class="flex pstR">
-        <a href="{{ url_for('mobile.cart.root') }}">
-          <span class="weui-badge msg_badge">3</span>
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/cart.png" alt="">
-          </div>
-          <p class="foot_text">购物车</p>
-        </a>
-      </li>
-      <li class="flex pstR">
-        <a href="{{ url_for('mobile.user.root') }}">
-          <span class="weui-badge msg_badge">1</span>
-          <div class="icom_photo">
-            <img src="/static/default/mobile/img/userOn.png" alt="">
-          </div>
-          <p class="foot_text on">我的</p>
-        </a>
-      </li>
-    </ul>
-  </div>
+  {{ libs.bottom_navigation_bar() }}
 </div>
 {% endblock %}
 
