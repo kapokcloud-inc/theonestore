@@ -13,6 +13,7 @@ import gettext
 import logging
 import logging.config
 import string
+import uuid
 
 from flask import (
     Flask,
@@ -171,3 +172,7 @@ def static_uri(uri):
     log_debug('uri:%s'%uri)
     return uri
 
+def get_uuid():
+    """获取uuid"""
+
+    return uuid.uuid4()

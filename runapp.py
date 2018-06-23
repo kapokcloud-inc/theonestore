@@ -20,13 +20,17 @@ from app.helpers import (
     enable_logging,
     register_blueprint,
     configure_uploads,
+<<<<<<< HEAD
     static_uri,
+=======
+>>>>>>> e0637355dbd0a43781e6c748e0a48d2ce3234739
 )
 from app.helpers.date_time import timestamp2str
 
 from app.routes import ROOT_ROUTES
 from app.routes.admin import ADMIN_ROUTES
 from app.routes.mobile import MOBILE_ROUTES
+from app.routes.api import API_ROUTES
 
 
 # 创建App
@@ -43,6 +47,7 @@ babel.init_app(app)
 register_blueprint(app, ROOT_ROUTES)
 register_blueprint(app, ADMIN_ROUTES)
 register_blueprint(app, MOBILE_ROUTES)
+register_blueprint(app, API_ROUTES)
 
 # 数据库初始化
 db.init_app(app)
