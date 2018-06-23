@@ -10,21 +10,21 @@
 {% block body %}
 <div class="detail-top">
   <div class="detail-top_title">
-    <a class="detail-top_item" href="#product">
-      <span class="on">商品</span>
+    <a class="detail-top_item on" href="#nav1" id="nav11">
+      <span>商品</span>
     </a>
-    <a class="detail-top_item" href="#review">
+    <a class="detail-top_item" href="#nav2" id="nav22">
       <span>评价</span>
     </a>
-    <a class="detail-top_item" href="#productDetail">
+    <a class="detail-top_item" href="#nav3" id="nav33">
       <span>详情</span>
     </a>
   </div>
 </div>
 <div class="index_wrap">
-  <div id="product">
+  <div id="nav1">
     <div class="category_wrap">
-      <div class="swiper-container" id="swiper_height" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
+      <div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
         <div class="swiper-wrapper">
           {% for gallery in galleries %}
             <div class="swiper-slide">
@@ -146,7 +146,7 @@
       </div>
     </div>
   </div>
-  <div id="review">
+  <div id="nav2">
     <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.comment.goods', goods_id=99) }}">
         <div class="weui-cell__bd">
@@ -162,7 +162,10 @@
           <img class="weui-media-box__thumb ava" src="/static/default/mobile/img/like.png" alt="">
         </div>
         <div class="weui-media-box__bd">
-          <div class="all_title">大头ssss</div>
+          <div class="all_title">
+            大头ssss
+            <span class="typeText">中评</span>
+          </div>
           <div class="all_add" style="margin-top:5px">2018-06-20 21:48:43</div>
           <div class="review_cnt">评论大头ssss好评中评差评有图</div>
           <div class="review_att">
@@ -189,7 +192,10 @@
           <img class="weui-media-box__thumb ava" src="/static/default/mobile/img/like.png" alt="">
         </div>
         <div class="weui-media-box__bd">
-          <div class="all_title">大头ssss</div>
+          <div class="all_title">
+            大头ssss
+            <span class="typeText">好评</span>
+          </div>
           <div class="all_add" style="margin-top:5px">2018-06-20 21:48:43</div>
           <div class="review_cnt">评论大头ssss好评中评差评有图评论大头ssss好评中评差评有图评论大头ssss好评中评差评有图</div>
           <div class="review_att">
@@ -213,39 +219,38 @@
       </div>
     </div>
   </div>
-  <div id="productDetail">
+  <div id="nav3">
     <div class="weui-cells">
-      <div class="weui-cell">
-        <div>商品详情</div>
-      </div>
+      <div class="pro-detail_tit">商品详情</div>
+      <ul class="">
+        <li style="width: 100%;overflow: hidden;line-height: 0">
+          <img style="width:100%;" src="/static/default/mobile/img/buy.png" alt="">
+        </li>
+        <li style="width: 100%;overflow: hidden;line-height: 0">
+          <img style="width:100%;" src="/static/default/mobile/img/install.png" alt="">
+        </li>
+        <li style="width: 100%;overflow: hidden;line-height: 0">
+          <img style="width:100%;" src="/static/default/mobile/img/maintain.png" alt="">
+        </li>
+        <li style="width: 100%;overflow: hidden;line-height: 0">
+          <img style="width:100%;" src="/static/default/mobile/img/buy.png" alt="">
+        </li>
+      </ul>
     </div>
-    <ul>
-      <li style="width:100%;overflow: hidden;">
-        <img style="width:100%;" src="/static/default/mobile/img/buy.png" alt="">
-      </li>
-      <li style="width:100%;overflow: hidden;">
-        <img style="width:100%;" src="/static/default/mobile/img/install.png" alt="">
-      </li>
-      <li style="width:100%;overflow: hidden;">
-        <img style="width:100%;" src="/static/default/mobile/img/maintain.png" alt="">
-      </li>
-      <li style="width:100%;overflow: hidden;">
-        <img style="width:100%;" src="/static/default/mobile/img/buy.png" alt="">
-      </li>
-    </ul>
   </div>
   <div class="height61"></div>
   <div class="footer">
-    <div class="icon_wrap">
+    <div class="icon_wrap" style="border-right:1px solid #e5e5e5">
       <img src="/static/default/mobile/img/like.png" alt="">
     </div>
     <div class="icon_wrap">
+      <span class="weui-badge msg_badge">3</span>
       <img src="/static/default/mobile/img/cart.png" alt="">
     </div>
-    <div class="flex" onclick="cartTo()">
+    <div style="flex:3" onclick="cartTo()">
       <button type="button" class="cartTo">加入购物车</button>
     </div>
-    <a href="{{ url_for('mobile.user.settlement') }}" class="flex">
+    <a href="{{ url_for('mobile.user.settlement') }}" style="flex:3">
       <button type="button" class="buyTo">立即购买</button>
     </a>
   </div>
@@ -255,22 +260,27 @@
 {% block script %}
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js" charset="utf-8"></script>
 <script type="text/javascript">
-  //获取屏幕的宽度
-  $(document).ready(function () {
-      var h_w = document.body.clientWidth + 'px';
-      var img = document.getElementsByClassName('swiper-img');
-      var swiperH = document.getElementById('swiper_height');
-      for (var i = 0; i < img.length; i++) {
-        img[i].style.width = h_w;
-        img[i].style.height = h_w;
+  $(function () {
+    $(window).scroll(function () {
+      //为页面添加页面滚动监听事件
+      var wst = $(window).scrollTop()+46 //滚动条距离顶端值
+      for (i = 1; i < 4; i++) {             //加循环
+        if ($("#nav" + i).offset().top <= wst) { //判断滚动条位置
+          $('.detail-top_item').removeClass("on"); //清除c类
+          $("#nav" + i + i).addClass("on");	//给当前导航加c类
+        }
       }
-      swiperH.style.height = h_w;
+    })
+
+    $(".detail-top_item").click(function () {
+      $(this).addClass('on').siblings().removeClass('on');
     });
+  });
 
   //轮播图
   $(".swiper-container").swiper({
     loop: true,
-    autoplay: 3000,
+    //autoplay: 3000,
   });
 
   //计数器

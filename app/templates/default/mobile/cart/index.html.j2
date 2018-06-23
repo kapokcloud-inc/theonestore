@@ -3,7 +3,7 @@
 
 {% block head %}
 <title>{{_('我的购物车 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/mobile/css/cart.css"> 
+<link rel="stylesheet" href="{{'/static/default/mobile/css/cart.css'|static_uri}}"> 
 {% endblock %} 
 
 {% block body %}
@@ -12,14 +12,14 @@
     <div class="weui-cells weui-cells_checkbox">
       <div class="weui-cell">
         <div class="weui-cell__hd height50">
-          <input type="checkbox" class="weui-check" name="checkbox1" value="1" checked="checked"> 
+          <input type="checkbox" class="weui-check" name="checkbox1" value="1"> 
           <i class="weui-icon-checked icon_checked"></i>
           <div class="cart_phone">
             <img alt="" src="">
           </div>
         </div>
         <div class="weui-cell__bd">
-          <div class="all_title mar-bottom">小米短袖POLO衫 深蓝</div>
+          <div class="all_title mar-bottom">小米短袖POLO衫 深蓝 小米短袖POLO衫 深蓝11</div>
           <div class="cart_count">x 1</div>
         </div>
         <div class="weui-cell__ft mar-left width46">
@@ -55,7 +55,7 @@
           </div>
         </div>
         <div class="weui-cell__bd">
-          <div class="all_title mar-bottom"> 红米Note 5 全网通版 4GB内存 64GB</div>
+          <div class="all_title mar-bottom"> 红米Note 5 全网通版 红米Note 5 全网通版 红米Note 5 全网通版</div>
           <div class="cart_count">x 1</div>
         </div>
         <div class="weui-cell__ft mar-left width46">

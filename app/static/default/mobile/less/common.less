@@ -11,6 +11,7 @@
 body{
   background: #f3f4f5;
 }
+
 a{text-decoration: none;}
 ul li{list-style:none;}
 .ava{
@@ -38,6 +39,7 @@ ul li{list-style:none;}
 }
 .weui-cell__bd{
   font-size: @font-size14;
+  overflow: hidden;
 }
 .weui-cell__ft{
   font-size: @font-size12 !important;
@@ -483,8 +485,11 @@ ul li{list-style:none;}
   width: 80px;
 }
 .all_list{
+  display: -webkit-flex;
   display: flex;
+   -webkit-flex-direction: row;
   flex-direction: row;
+   -webkit-flex-wrap: wrap;
   flex-wrap: wrap;
   overflow: hidden;
   .list_item{
