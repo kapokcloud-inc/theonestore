@@ -12,6 +12,8 @@ from flask_babel import gettext as _
 from app.database import db
 
 from app.helpers import (
+    model_create,
+    model_update,
     log_info,
     toint
 )
@@ -50,5 +52,4 @@ class UserCreateService(object):
     def create(self):
         """创建"""
 
-        self.user = User(**self.user_data)
-        db.session.add(self.user)
+        self.user = model_create(User, self.user_data)

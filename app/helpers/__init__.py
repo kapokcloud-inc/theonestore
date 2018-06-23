@@ -28,6 +28,8 @@ from flask_uploads import (
     patch_request_class
 )
 
+from app.database import db
+
 
 def create_app(config='config/config.cfg', default_app_name='app'):
     """创建app
@@ -35,7 +37,7 @@ def create_app(config='config/config.cfg', default_app_name='app'):
     @param default_app_name 默认App名称
     """
     app = Flask(default_app_name)
-    
+
     # config
     if config:
         app.config.from_pyfile(config)
@@ -50,7 +52,7 @@ def enable_logging(app, log_config="config/logging.ini"):
     """
     if not log_config:
         return
-    
+
     log_config = os.path.join(app.root_path, log_config)
     if os.path.isfile(log_config):
         logging.config.fileConfig(log_config)
@@ -61,10 +63,10 @@ def configure_uploads(app):
     UPLOADED_FILES_DEST = app.config.get('UPLOADED_FILES_DEST', 'uploads')
     if UPLOADED_FILES_DEST[0] != '/':
         UPLOADED_FILES_DEST = os.path.join(os.getcwd(), 'uploads')
-    
+
     print('UPLOADED_FILES_DEST:%s' % UPLOADED_FILES_DEST)
     app.config['UPLOADED_FILES_DEST'] = UPLOADED_FILES_DEST
-    
+
     # default = UploadSet('default', DEFAULTS)
     # flask_configure_uploads(app, default)
     # 最大上传文件大小64M，MAX_CONTENT_LENGTH=64*1024*1024
@@ -88,7 +90,7 @@ def log_debug(logtext):
         extra_log = {'clientip':request.remote_addr}
         logger = logging.getLogger('web.debug')
         logger.debug(logtext, extra=extra_log)
-    
+
 
 def register_blueprint(app, modules):
     """注册Blueprint"""
@@ -161,4 +163,37 @@ def kt_to_dict(kt):
 def get_uuid():
     """获取uuid"""
 
-    return uuid.uuid4()
+    return '%s' % uuid.uuid4()
+
+
+def model_create(model, data, commit=False):
+    """Model - 创建"""
+
+    record = model(**data)
+    db.session.add(record)
+
+    if commit:
+        db.session.commit()
+
+    return record
+
+
+def model_update(record, data, commit=False):
+    """Model - 更新"""
+
+    for attr, value in data.items():
+        setattr(record, attr, value)
+
+    if commit:
+        db.session.commit()
+
+    return record
+
+
+def model_delete(record, commit=False):
+    """Model - 删除"""
+
+    db.session.delete(record)
+
+    if commit:
+        db.session.commit()

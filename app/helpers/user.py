@@ -27,9 +27,8 @@ def check_login():
     """检查登录"""
 
     uid = toint(session.get('uid', '0'))
-    if uid == 0:
-        session['weixin_login_url'] = request.headers['Referer']
-        redirect(url_for('api.wx.login'))
+
+    return False if uid == 0 else True
 
 
 def set_user_session(user):
@@ -38,3 +37,15 @@ def set_user_session(user):
     session['uid']      = user.uid
     session['nickname'] = user.nickname
     session['avatar']   = user.avatar
+
+
+def get_uid():
+    """获取用户ID"""
+
+    return toint(session.get('uid', 0))
+
+
+def get_session_id():
+    """获取用户session_id"""
+
+    return session.get('session_id', '')

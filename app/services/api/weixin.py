@@ -119,10 +119,10 @@ class WeiXinLoginService(object):
         if errcode > 0:
             return False
 
-        openid     = data.get('openid')
-        unionid    = data.get('unionid')
-        user_data  = {}
-        key1_key2  = {'nickname':'nickname', 'avatar':'headimgurl', 'gender':'sex',
+        openid    = data.get('openid')
+        unionid   = data.get('unionid')
+        user_data = {}
+        key1_key2 = {'nickname':'nickname', 'avatar':'headimgurl', 'gender':'sex',
                         'country':'country', 'province':'province', 'city':'city'}
         for key1, key2 in key1_key2.items():
             user_data[key1] = data.get(key2, '')

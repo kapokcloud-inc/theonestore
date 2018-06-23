@@ -13,6 +13,8 @@ from flask_babel import Babel
 from flask_wtf.csrf import CSRFProtect
 from wtforms.compat import iteritems
 
+from app import configure_before
+
 from app.database import db
 
 from app.helpers import (
@@ -61,6 +63,8 @@ jinja_filters = {
     'json_loads':json_loads,
 }
 app.jinja_env.filters.update(jinja_filters)
+
+configure_before(app)
 
 
 if __name__ == '__main__':
