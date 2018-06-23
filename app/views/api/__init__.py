@@ -9,4 +9,5 @@
 """
 
 from .like import like
+from .weixin import weixin
 

@@ -7,12 +7,13 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
-
+import time
 import os
 import gettext
 import logging
 import logging.config
 import string
+import uuid
 
 from flask import (
     Flask,
@@ -148,3 +149,21 @@ def kt_to_dict(kt):
     return kt._asdict()
 
 
+def static_uri(uri):
+    """静态文件uri"""
+    debug = current_app.config['DEBUG']    
+    if debug is True:
+        if uri.find('?') != -1:
+            uri += u'&'
+        else:
+            uri += u'?'
+        
+        uri += u'_=%d' % (int(time.time()),)
+
+    log_debug('uri:%s'%uri)
+    return uri
+
+def get_uuid():
+    """获取uuid"""
+
+    return uuid.uuid4()

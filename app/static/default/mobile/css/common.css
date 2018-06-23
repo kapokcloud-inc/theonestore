@@ -39,6 +39,7 @@ ul li {
 }
 .weui-cell__bd {
   font-size: 14px;
+  overflow: hidden;
 }
 .weui-cell__ft {
   font-size: 12px !important;
@@ -487,8 +488,11 @@ ul li {
   width: 80px;
 }
 .all_list {
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: row;
   flex-direction: row;
+  -webkit-flex-wrap: wrap;
   flex-wrap: wrap;
   overflow: hidden;
 }
