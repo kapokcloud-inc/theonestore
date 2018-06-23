@@ -20,10 +20,7 @@ from app.helpers import (
     enable_logging,
     register_blueprint,
     configure_uploads,
-<<<<<<< HEAD
     static_uri,
-=======
->>>>>>> e0637355dbd0a43781e6c748e0a48d2ce3234739
 )
 from app.helpers.date_time import timestamp2str
 
