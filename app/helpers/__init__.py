@@ -114,13 +114,13 @@ def toint(s, base=10):
     ns = u'%s' % s
     if ns.find('.') != -1:
         try:
-            return int(string.atof(ns))
+            return int(float(ns))
         except ValueError:
             #忽略错误
             pass
     else:
         try:
-            return string.atoi(ns, base)
+            return int(ns, base)
         except ValueError:
             #忽略错误
             pass
@@ -135,20 +135,11 @@ def tofloat(s):
     :return: float
     """
     try:
-        return string.atof(s)
+        return float(s)
     except ValueError:
         pass
 
     return float(0)
-
-
-def tolong(s):
-    try:
-        return string.atol(s)
-    except ValueError:
-        pass
-
-    return long(0)
 
 
 def kt_to_dict(kt):
