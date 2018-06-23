@@ -19,7 +19,8 @@ from app.helpers import (
     create_app, 
     enable_logging,
     register_blueprint,
-    configure_uploads
+    configure_uploads,
+    static_uri,
 )
 from app.helpers.date_time import timestamp2str
 
@@ -54,16 +55,19 @@ CSRFProtect(app)
 
 # 注册jinja模板过滤器
 jinja_filters = {
-    'iteritems':iteritems,
-    'timestamp2str':timestamp2str,
-    'json_loads':json_loads
+    'iteritems': iteritems,
+    'timestamp2str': timestamp2str,
+    'json_loads': json_loads,
+    'static_uri': static_uri,
 }
 app.jinja_env.filters.update(jinja_filters)
+app.jinja_env.cache_size = 0
 
 
 if __name__ == '__main__':
     app.config.from_pyfile('config/config.dev.cfg')
     babel.init_app(app)
     app.jinja_env.auto_reload = True
-    app.run(host='127.0.0.1', debug=True, port=5000)
+    app.jinja_env.cache_size = 0
+    app.run(host='0.0.0.0', debug=True, port=5000)
 

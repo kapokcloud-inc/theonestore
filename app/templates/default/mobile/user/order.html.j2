@@ -2,12 +2,12 @@
 
 {% block head %}
 <title>{{_('我的订单- 一店')}}</title>
-<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+<link rel="stylesheet" href="{{'/static/default/mobile/css/user.css'|static_uri}}"> 
 {% endblock %} 
 
 {% block body %}
 <div class="user_wrap">
-  <div class="flex_wrap weui-navbar">
+  <div class="weui-navbar">
     <div class="typeStatus">
       <a class="orderType orderType-on">全部</a>
     </div>
@@ -21,7 +21,7 @@
       <a class="orderType">待评价</a>
     </div>
     <div class="typeStatus">
-      <a class="orderType">退款/售后</a>
+      <a class="orderType">退款售后</a>
     </div>
   </div>
   <!-- 订单列表没有订单时显示 -->
@@ -50,8 +50,8 @@
             <img src="" alt="">
           </div>
           <div class="weui-cell__bd">
-            <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
-            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机</div>
+            <div class="all_title height25">小米蓝牙项圈耳机小米蓝牙项圈耳机小米蓝牙项圈耳机 黑色</div>
+            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机 时尚外观，挂在脖子上的好耳机</div>
           </div>
           <div class="weui-cell__ft mar-left">
             <p class="all_price">￥1299</p>

@@ -1,5 +1,6 @@
 @charset "UTF-8";
 .order_status {
+  display: -webkit-flex;
   display: flex;
   border-top: 1px solid #ddd;
   font-size: 12px;
@@ -205,7 +206,9 @@
 }
 .track_shipflow {
   position: relative;
+  display: -webkit-flex;
   display: flex;
+  -webkit-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 .track_shipflow::before {

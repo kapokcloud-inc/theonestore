@@ -2,6 +2,7 @@
 .category_wrap .category {
   background: #fff;
   padding: 10px;
+  display: -webkit-flex;
   display: flex;
   text-align: center;
 }
