@@ -150,7 +150,7 @@ class CheckoutService(object):
 
         # 快递金额
         if shipping.free_limit_amount > self.items_amount:
-            self.shipping_amount = shipping.shipping_amount
+            self.shipping_amount = Decimal(shipping.shipping_amount)
 
         if self.coupon_id:
             # 检查 - 优惠券
@@ -164,7 +164,7 @@ class CheckoutService(object):
                 coupon.begin_time <= self.current_time and
                 coupon.end_time >= self.current_time and
                 coupon.limit_amount <= self.items_amount):
-                self.coupon_amount   = coupon.coupon_amount
+                self.coupon_amount   = Decimal(coupon.coupon_amount)
                 self.discount_amount = self.coupon_amount
 
         # 应付金额

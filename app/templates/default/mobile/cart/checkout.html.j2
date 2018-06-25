@@ -22,7 +22,7 @@
           <span id="default_address_mobile" class="mar-left">{{ mobile }}</span>
         </div>
         <div class="address" style="color:#666 !important">
-          <span>收货地址：</span>
+          <span>{{_('收货地址')}}：</span>
           {% set province = default_address.province if default_address else '' %}
           {% set city = default_address.city if default_address else '' %}
           {% set district = default_address.district if default_address else '' %}
@@ -36,7 +36,7 @@
       <div class="weui-cell__hd mar-right">
         <img src="/static/default/mobile/img/add.png" alt="" style="width:20px">
       </div>
-      <div class="weui-cell__bd blackGap">新建地址</div>
+      <div class="weui-cell__bd blackGap">{{_('新建地址')}}</div>
       <div class="weui-cell__ft mar-left"></div>
     </a>
     <div class="hide ranpo" id="addressList">
@@ -45,48 +45,33 @@
         <div class="weui-actionsheet__menu">
           <input type="hidden" name="" id="" value="">
           <div class="weui-actionsheet__cell not-product_text">
-            <span>新建收货地址</span>
+            <span>{{_('新建收货地址')}}</span>
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" id="choiceCancel">
           </div>
-          <div class="weui-cell addressitem">
-            <div class="weui-cell__hd mar-right">
-              <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
-            </div>
-            <div class="weui-cell__bd">
-              <span class="all_title">大头</span>
-              <span class="mar-left">13510515229</span>
-              <div class="address">
-                <span class="add_tag">[默认]</span>
-                <span class="add_tag">[家]</span>
-                <span>深圳市 龙华新区 民治大道 深圳市龙华新区民治大道深圳市龙华新区民治大道</span>
+          {% for address in addresses %}
+            <div class="weui-cell addressitem">
+              <div class="weui-cell__hd mar-right">
+                <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
+              </div>
+              <div class="weui-cell__bd">
+                <span class="all_title">{{ address.name }}</span>
+                <span class="mar-left">{{ address.mobile }}</span>
+                <div class="address">
+                  <span class="add_tag"></span>
+                  <span class="add_tag"></span>
+                  <span>{{ address.province }} {{ address.city }} {{ address.district }} {{ address.address }}</span>
+                </div>
+              </div>
+              <div class="weui-cell__ft mar-left width46">
+                <span class="edit" onClick="newAddress({{ address.ua_id }})">{{_('编辑')}}</span>
               </div>
             </div>
-            <div class="weui-cell__ft mar-left width46">
-              <span class="edit" onClick="newAddress()">编辑</span>
-            </div>
-          </div>
-          <div class="weui-cell addressitem">
-            <div class="weui-cell__hd mar-right">
-              <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
-            </div>
-            <div class="weui-cell__bd">
-              <span class="all_title">大头</span>
-              <span class="mar-left">13510515229</span>
-              <div class="address">
-                <span class="add_tag"></span>
-                <span class="add_tag"></span>
-                <span>深圳市 龙华新区 民治大道 深圳市龙华新区民治大道深圳市龙华新区民治大道</span>
-              </div>
-            </div>
-            <div class="weui-cell__ft mar-left width46">
-              <span class="edit" onClick="newAddress()">编辑</span>
-            </div>
-          </div>
+          {% endfor %}
           <a class="weui-cell weui-cell_access bg-white" href="javascript:;" onclick="newAddress()">
             <div class="weui-cell__hd mar-right">
               <img src="/static/default/mobile/img/add.png" alt="" style="width:20px">
             </div>
-            <div class="weui-cell__bd blackGap">新建地址</div>
+            <div class="weui-cell__bd blackGap">{{_('新建地址')}}</div>
             <div class="weui-cell__ft mar-left"></div>
           </a>
         </div>
@@ -98,36 +83,36 @@
         <div class="weui-actionsheet__menu">
           <input type="hidden" name="" id="" value="">
           <div class="weui-actionsheet__cell not-product_text">
-            <span>新建收货地址</span>
+            <span>{{_('新建收货地址')}}</span>
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="cancel()">
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="请填写收件人姓名" value="">
+              <input class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人姓名')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="请填写收件人手机号码" value="">
+              <input class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人手机号码')}}" value="">
             </div>
           </div>
           <div class="weui-cell weui-cell_select weui-cell_select-after">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="请选择收件地区" value="" id='city-picker'>
+              <input class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="" id='city-picker'>
             </div>
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="请填写详细地址：如街道、道路、门牌号等" value="">
+              <input class="weui-input greykGap" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="请填写邮政编码" value="">
+              <input class="weui-input greykGap" type="text" placeholder="{{_('请填写邮政编码')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
-            <button type="button" class="weui-btn weui-btn_red" onClick="save()">保存</button>
+            <button type="button" class="weui-btn weui-btn_red" onClick="save()">{{_('保存')}}</button>
           </div>
         </div>
       </div>
@@ -136,46 +121,38 @@
   <div class="weui-cells weui-cells_form">
     <div class="weui-cell">
       <div class="weui-cell__bd">
-        <a href="{{ url_for('mobile.index.root') }}" class="all_title">一店</a>
+        <a href="{{ url_for('mobile.index.root') }}" class="all_title">{{_('一店')}}</a>
       </div>
     </div>
-    <div class="weui-cell not_before">
-      <div class="weui-cell__hd avatar mar-right">
-        <img src="" alt="">
+    {% for cart in carts %}
+      {% set not_before = 'not_before' if loop.first else '' %}
+      <div class="weui-cell {{ not_before }}">
+        <div class="weui-cell__hd avatar mar-right">
+          <img src="" alt="">
+        </div>
+        <div class="weui-cell__bd">
+          <div class="all_title height25">{{ cart.item.goods_name }}</div>
+          <div class="all_desc height25">{{ cart.item.goods_desc }}</div>
+        </div>
+        <div class="weui-cell__ft mar-left">
+          <span class="all_price height25">￥{{ cart.item.goods_price }}</span>
+          <p class="height25">x {{ cart.cart.quantity }}</p>
+        </div>
       </div>
-      <div class="weui-cell__bd">
-        <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
-        <div class="all_desc height25">红米Note 5 全网通版 4GB内存 64GB</div>
-      </div>
-      <div class="weui-cell__ft mar-left">
-        <span class="all_price height25">￥1599</span>
-        <p class="height25">x 1</p>
-      </div>
-    </div>
-    <div class="weui-cell">
-      <div class="weui-cell__hd avatar mar-right">
-        <img src="" alt="">
-      </div>
-      <div class="weui-cell__bd">
-        <div class="all_title height25">红米Note 5 全网通版 4核 4GB内存 64GB</div>
-        <div class="all_desc height25">小米蓝牙项圈耳机 黑色</div>
-      </div>
-      <div class="weui-cell__ft mar-left">
-        <span class="all_price height25">￥1599</span>
-        <p class="height25">x 1</p>
-      </div>
-    </div>
+    {% endfor %}
     <a class="weui-cell weui-cell_access bg-white" href="javascript:;">
-      <div class="weui-cell__bd blackGap">配送方式</div>
+      <div class="weui-cell__bd blackGap">{{_('配送方式')}}</div>
       <div class="weui-cell__ft mar-left">
-        <input type="text" class="weui-input align_right" id="express_type" value="快递 免邮" data-values="快递 免邮">
+        <input id="shipping_selected" type="text" class="weui-input align_right" value="{{_('请选择配送方式')}}" data-values="{{ default_shipping.shipping_id }}">
       </div>
     </a>
   </div>
   <div class="weui-cells weui-cells_form">
-    <a class="weui-cell weui-cell_access"  href="javascript:;" onclick="choiceCoupon()">
-      <div class="weui-cell__bd blackGap">优惠券码</div>
-      <div class="weui-cell__ft">使用优惠</div>
+    {% set _onclick = 'onclick="choiceCoupon()"' if coupons else '' %}
+    {% set _text = _('使用优惠') if coupons else _('无可用优惠券') %}
+    <a class="weui-cell weui-cell_access"  href="javascript:void(0);" {{ _onclick }}>
+      <div class="weui-cell__bd blackGap">{{_('优惠券码')}}</div>
+      <div id="coupon_text" class="weui-cell__ft">{{ _text }}</div>
     </a>
     <div class="hide ranpo" id="couponList">
       <div class="hide-mask"></div>
@@ -183,72 +160,48 @@
         <div class="weui-actionsheet__menu">
           <input type="hidden" name="" id="" value="">
           <div class="weui-actionsheet__cell not-product_text bg-white">
-            <span>选择优惠券</span>
+            <span>{{_('选择优惠券')}}</span>
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="closeCoupon()">
           </div>
-          <div class="coupon_list">
-            <div class="bg-white coupon_item weui-cell">
-              <div class="off_money weui-cell__hd">
-                <div class="wave"></div>
-                <span class="symbol">￥</span>
-                <span class="money_num">10</span>
-                <p class="money_text">满￥200减</p>
-              </div>
-              <div class="coupon_right weui-cell__bd">
-                <div class="all_title height25">全品类(特例商品除外)</div>
-                <div class="all_desc height20">2018.06.01~2018.06.10</div>
-                <div class="mminentExpiry height25">即将过期</div>
-              </div>
-            </div>
-          </div>
-          <div class="coupon_list">
-            <div class="bg-white coupon_item weui-cell">
-              <div class="off_money weui-cell__hd">
-                <div class="wave"></div>
-                <span class="symbol">￥</span>
-                <span class="money_num">20</span>
-                <p class="money_text">满￥200减</p>
-              </div>
-              <div class="coupon_right weui-cell__bd">
-                <div class="all_title height25">全品类(特例商品除外)</div>
-                <div class="all_desc height20">2018.06.01~2018.06.18</div>
-                <div class="mminentExpiry height25"></div>
+          {% for coupon in coupons %}
+            {% set coupon_title = _('%s元优惠券' % coupon.coupon_amount) %}
+            {% set is_valid = 1 if items_amount >= coupon.limit_amount else 0 %}
+            <div class="coupon_list" data-coupon-id="{{ coupon.coupon_id }}" data-coupon-title="{{ coupon_title }}" data-is-valid="{{ is_valid }}">
+              <div class="bg-white coupon_item weui-cell">
+                {% set is_valid_css = 'off_money' if is_valid else 'off_money' %}
+                <div class="{{ is_valid_css }} weui-cell__hd">
+                  <div class="wave"></div>
+                  <span class="symbol">￥</span>
+                  <span class="money_num">{{ coupon.coupon_amount }}</span>
+                  <p class="money_text">{{_('满￥%s减' % coupon.limit_amount)}}</p>
+                </div>
+                <div class="coupon_right weui-cell__bd">
+                  <div class="all_title height25">{{_('全场通用')}}</div>
+                  <div class="all_desc height20">{{ coupon.begin_time|timestamp2str('YYYY.MM.DD') }}~{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</div>
+                  <div class="mminentExpiry height25"></div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="coupon_list">
-            <div class="bg-white coupon_item weui-cell">
-              <div class="off_money weui-cell__hd">
-                <div class="wave"></div>
-                <span class="symbol">￥</span>
-                <span class="money_num">10</span>
-                <p class="money_text">满￥200减</p>
-              </div>
-              <div class="coupon_right weui-cell__bd">
-                <div class="all_title height25">全品类(特例商品除外)</div>
-                <div class="all_desc height20">2018.06.01~2018.06.18</div>
-                <div class="mminentExpiry height25"></div>
-              </div>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
     </div>
+    <input id="coupon_id" type="hidden" value="0" />
   </div>
   <div class="weui-cells weui-cells_form">
     <div class="weui-form-preview">
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label blackGap">商品总价</label>
-          <span class="weui-form-preview__value">￥1299</span>
+          <label class="weui-form-preview__label blackGap">{{_('商品总价')}}</label>
+          <span id="items_amount" class="weui-form-preview__value">￥{{ items_amount }}</span>
         </div>
         <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label blackGap">运费</label>
-          <span class="weui-form-preview__value">+￥12</span>
+          <label class="weui-form-preview__label blackGap">{{_('运费')}}</label>
+          <span id="shipping_amount" class="weui-form-preview__value">+￥{{ shipping_amount }}</span>
         </div>
         <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label blackGap">优惠金额</label>
-          <span class="weui-form-preview__value">-￥0</span>
+          <label class="weui-form-preview__label blackGap">{{_('优惠金额')}}</label>
+          <span id="discount_amount" class="weui-form-preview__value">-￥{{ discount_amount }}</span>
         </div>
       </div>
     </div>
@@ -258,10 +211,10 @@
     <div class="flex_wrap order_bar">
       <div class="total">
         <div class="total-price">
-          <span>支付金额：</span>
-          <span class="all_price" style="font-size:18px">￥1299</span>
+          <span>{{_('支付金额')}}：</span>
+          <span id="pay_amount" class="all_price" style="font-size:18px">￥{{ pay_amount }}</span>
         </div>
-        <div class="btn_primary" onclick="submit()">提交订单</div>
+        <div class="btn_primary" onclick="submit()">{{_('提交订单')}}</div>
       </div>
     </div>
     <div class="hide ranpo" id="payList">
@@ -319,14 +272,38 @@ var $newAdd = $('#newAdd');
 var $couponList = $('#couponList');
 var $payList = $('#payList');
 
+// 结算金额
+function checkout_amounts() {
+  var shipping_id = $("#shipping_selected").attr('data-values');
+  var coupon_id = $("#coupon_id").val();
+
+  $.get("{{ url_for('api.cart.checkout_amounts') }}", {'shipping_id':shipping_id, 'coupon_id':coupon_id}, function(json) {
+    if (json.ret != 0) {
+      alert(json.msg);
+      return false;
+    }
+
+    $("#items_amount").text('￥'+json.data.items_amount);
+    $("#shipping_amount").text('+￥'+json.data.shipping_amount);
+    $("#discount_amount").text('-￥'+json.data.discount_amount);
+    $("#pay_amount").text('￥'+json.data.pay_amount);
+    return true;
+  });
+}
+
 $(document).ready(function () {
   $("#city-picker").cityPicker({
     title: "请选择所在地"
   });
 
-  $("#express_type").select({
+  $("#shipping_selected").select({
     title: "选择配送方式",
-    items: ["快递 免邮", "普通快递 运费￥8", "顺丰次日达 ￥15"]
+    items: {{ shipping_list }},
+    input: "{{ shipping_title }}"
+  });
+
+  $("#shipping_selected").change(function(){
+    checkout_amounts();
   });
 });
 
@@ -410,6 +387,20 @@ function choiceCoupon() {
 //选中优惠券
 $('.coupon_list').click(function (event) {        //event:事件对象
   event.stopPropagation();                        //停止事件冒泡
+
+  var coupon_id = $(this).attr('data-coupon-id');
+  var coupon_title = $(this).attr('data-coupon-title');
+  var is_valid = $(this).attr('data-is-valid');
+
+  if (is_valid != 1) {
+    return false;
+  }
+
+  $("#coupon_id").val(coupon_id);
+  $("#coupon_text").text(coupon_title);
+
+  checkout_amounts();
+
   $couponList.removeClass('show');
   if (!$couponList.hasClass('hide')) {
     $couponList.addClass('hide');

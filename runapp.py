@@ -23,6 +23,7 @@ from app.helpers import (
     register_blueprint,
     configure_uploads,
     static_uri,
+    toint
 )
 from app.helpers.date_time import timestamp2str
 
@@ -63,6 +64,7 @@ jinja_filters = {
     'timestamp2str': timestamp2str,
     'json_loads': json_loads,
     'static_uri': static_uri,
+    'toint': toint
 }
 app.jinja_env.filters.update(jinja_filters)
 app.jinja_env.cache_size = 0

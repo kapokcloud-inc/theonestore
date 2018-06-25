@@ -25,12 +25,13 @@ from app.helpers import (
 )
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import (
+    check_login,
     get_uid,
     get_session_id
 )
 
 from app.services.response import ResponseJson
-from app.services.api.cart import CartService
+from app.services.api.cart import CartService, CheckoutService
 
 from app.models.item import Goods
 from app.models.cart import Cart
@@ -190,3 +191,30 @@ def checked():
     cs.check()
 
     return resjson.print_json(0, u'ok', {'items_amount':cs.items_amount, 'items_quantity':cs.items_quantity})
+
+
+@cart.route('/checkout/amounts')
+def checkout_amounts():
+    """结算金额"""
+    resjson.action_code = 13
+
+    #if not check_login():
+    #    session['weixin_login_url'] = request.headers['Referer']
+    #    return resjson.print_json(10, _(u'未登陆'))
+    #uid = get_uid()
+    uid = 1
+
+    args = request.args
+    shipping_id = toint(args.get('shipping_id', '0'))
+    coupon_id   = toint(args.get('coupon_id', '0'))
+
+    carts    = db.session.query(Cart.cart_id).filter(Cart.uid == uid).filter(Cart.is_checked).all()
+    carts_id = [cart.cart_id for cart in carts]
+
+    cs = CheckoutService(uid, carts_id, shipping_id, coupon_id)
+    if not cs.check():
+        return resjson.print_json(11, cs.msg)
+
+    data = {'items_amount':cs.items_amount, 'shipping_amount':cs.shipping_amount,
+            'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount}
+    return resjson.print_json(0, u'ok', data)
