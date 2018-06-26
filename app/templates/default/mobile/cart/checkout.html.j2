@@ -101,7 +101,7 @@
           </div>
           <div class="weui-cell weui-cell_select weui-cell_select-after">
             <div class="weui-cell__bd">
-              <input id="edit_address_province" class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="" id='city-picker'>
+              <input id="edit_address_province" class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
@@ -161,17 +161,17 @@
     <div class="hide ranpo" id="couponList">
       <div class="hide-mask"></div>
       <div class="weui-actionsheet weui-actionsheet_toggle">
-        <div class="weui-actionsheet__menu">
+        <div class="weui-actionsheet__menu bg-white">
           <input type="hidden" name="" id="" value="">
-          <div class="weui-actionsheet__cell not-product_text bg-white">
+          <div class="weui-actionsheet__cell not-product_text">
             <span>{{_('选择优惠券')}}</span>
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="closeCoupon()">
           </div>
           {% for coupon in coupons %}
             {% set coupon_title = _('%s元优惠券' % coupon.coupon_amount) %}
             {% set is_valid = 1 if items_amount >= coupon.limit_amount else 0 %}
-            <div class="coupon_list weui-cells_radio" data-coupon-id="{{ coupon.coupon_id }}" data-coupon-title="{{ coupon_title }}" data-is-valid="{{ is_valid }}">
-              <div class="coupon_item weui-cell weui-check__label" for="">
+            <div class="coupon_list weui-cells_radio">
+              <div class="coupon_item weui-cell weui-check__label" data-coupon-id="{{ coupon.coupon_id }}" data-coupon-title="{{ coupon_title }}" data-is-valid="{{ is_valid }}">
                 {% set is_valid_css = 'off_money' if is_valid else 'off_money off_money-on' %}
                 <div class="{{ is_valid_css }} weui-cell__hd">
                   {% set is_valid_css = 'wave' if is_valid else 'wave wave-on' %}
@@ -186,8 +186,8 @@
                   <div class="all_desc height20">{{ coupon.begin_time|timestamp2str('YYYY.MM.DD') }}~{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</div>
                   <div class="mminentExpiry height25"></div>
                 </div>
-                <div class="weui-cell__ft" style="width:30px">
-                  <input type="radio" class="weui-check" name="radio1" id="" checked="checked"> 
+                <div class="weui-cell__ft" style="width:30px; display: none;">
+                  <input type="radio" class="weui-check" checked="checked">
                   <i class="weui-icon-checked icon_checked" style="margin-top:0px !important;margin-left:0px !important"></i>
                 </div>
               </div>
@@ -350,12 +350,14 @@ $('#choiceCancel').click(function (event) {            //event:事件对象
 
 //新建收货地址
 function newAddress(ua_id=0, name='', mobile='', province='', city='', district='', address='', zip='', detail='') {
+  var pcd = province != '' ? province+' '+city+' '+district : '';
+  
   // 显示新建地址弹窗
   if ($newAdd.hasClass('hide')) {
     $("#edit_address_ua_id").val(ua_id);
     $("#edit_address_name").val(name);
     $("#edit_address_mobile").val(mobile);
-    $("#edit_address_province").val(province);
+    $("#edit_address_province").val(pcd);
     $("#edit_address_city").val(city);
     $("#edit_address_district").val(district);
     $("#edit_address_address").val(address);
@@ -405,15 +407,25 @@ function choiceCoupon() {
 }
 
 //选中优惠券
-$('.coupon_list').click(function (event) {        //event:事件对象
+$('.coupon_item').click(function (event) {        //event:事件对象
   event.stopPropagation();                        //停止事件冒泡
 
   var coupon_id = $(this).attr('data-coupon-id');
   var coupon_title = $(this).attr('data-coupon-title');
   var is_valid = $(this).attr('data-is-valid');
+  var _coupon_id = $("#coupon_id").val();
 
   if (is_valid != 1) {
     return false;
+  }
+
+  if (_coupon_id == coupon_id) {
+    coupon_id = 0;
+    coupon_title = "{{_('使用优惠券')}}";
+    $(this).find('.weui-cell__ft').hide();
+  } else {
+    $(".coupon_item").find('.weui-cell__ft').hide();
+    $(this).find('.weui-cell__ft').show();
   }
 
   $("#coupon_id").val(coupon_id);
