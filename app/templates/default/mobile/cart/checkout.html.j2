@@ -143,7 +143,7 @@
     <a class="weui-cell weui-cell_access bg-white" href="javascript:;">
       <div class="weui-cell__bd blackGap">{{_('配送方式')}}</div>
       <div class="weui-cell__ft mar-left">
-        <input id="shipping_selected" type="text" class="weui-input align_right" value="{{_('请选择配送方式')}}" data-values="{{ default_shipping.shipping_id }}">
+        <input id="shipping_selected" type="text" class="weui-input align_right" style="width:200px" value="{{_('请选择配送方式')}}" data-values="{{ default_shipping.shipping_id }}">
       </div>
     </a>
   </div>
@@ -166,19 +166,25 @@
           {% for coupon in coupons %}
             {% set coupon_title = _('%s元优惠券' % coupon.coupon_amount) %}
             {% set is_valid = 1 if items_amount >= coupon.limit_amount else 0 %}
-            <div class="coupon_list" data-coupon-id="{{ coupon.coupon_id }}" data-coupon-title="{{ coupon_title }}" data-is-valid="{{ is_valid }}">
-              <div class="bg-white coupon_item weui-cell">
-                {% set is_valid_css = 'off_money' if is_valid else 'off_money' %}
+            <div class="coupon_list weui-cells_radio" data-coupon-id="{{ coupon.coupon_id }}" data-coupon-title="{{ coupon_title }}" data-is-valid="{{ is_valid }}">
+              <div class="coupon_item weui-cell weui-check__label" for="">
+                {% set is_valid_css = 'off_money' if is_valid else 'off_money off_money-on' %}
                 <div class="{{ is_valid_css }} weui-cell__hd">
-                  <div class="wave"></div>
+                  {% set is_valid_css = 'wave' if is_valid else 'wave wave-on' %}
+                  <div class="{{ is_valid_css }}"></div>
                   <span class="symbol">￥</span>
                   <span class="money_num">{{ coupon.coupon_amount }}</span>
                   <p class="money_text">{{_('满￥%s减' % coupon.limit_amount)}}</p>
                 </div>
                 <div class="coupon_right weui-cell__bd">
-                  <div class="all_title height25">{{_('全场通用')}}</div>
+                  {% set is_valid_css = 'all_title' if is_valid else 'all_title all_title-on' %}
+                  <div class="{{ is_valid_css }} height25">{{_('全场通用')}}</div>
                   <div class="all_desc height20">{{ coupon.begin_time|timestamp2str('YYYY.MM.DD') }}~{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</div>
                   <div class="mminentExpiry height25"></div>
+                </div>
+                <div class="weui-cell__ft" style="width:30px">
+                  <input type="radio" class="weui-check" name="radio1" id="" checked="checked"> 
+                  <i class="weui-icon-checked icon_checked" style="margin-top:0px !important;margin-left:0px !important"></i>
                 </div>
               </div>
             </div>

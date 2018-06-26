@@ -109,6 +109,9 @@
 .weui-navbar__item:after {
   border-right: 0;
 }
+.weui-navbar:after {
+  border-bottom: none !important;
+}
 .off_money.off_money-on {
   background: #ccc;
 }
