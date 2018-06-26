@@ -350,7 +350,7 @@ $('#choiceCancel').click(function (event) {            //event:事件对象
 
 //新建收货地址
 function newAddress(ua_id=0, name='', mobile='', province='', city='', district='', address='', zip='', detail='') {
-  var pcd = province != '' ? province+' '+city+' '+district : '';
+  var pcd = (province != '') ? (province+' '+city+' '+district) : '';
   
   // 显示新建地址弹窗
   if ($newAdd.hasClass('hide')) {
