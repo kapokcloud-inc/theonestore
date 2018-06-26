@@ -185,8 +185,8 @@ ul li {
   font-weight: 400;
   height: 45px;
 }
-.weui-btn_orange {
-  background: #EA6B32 !important;
+.weui-btn_c {
+  background: #c8c8c8 !important;
   font-size: 16px;
   font-weight: 400;
   height: 45px;
@@ -271,10 +271,12 @@ ul li {
 .weui-picker-modal .picker-item {
   font-size: 16px;
 }
-.not-product {
+.not-product,
+.cmpl-pay {
   text-align: center;
 }
-.not-product_img {
+.not-product_img,
+.cmpl-img {
   position: relative;
   width: 100px;
   height: 100px;
@@ -282,7 +284,8 @@ ul li {
   margin: 50px auto 30px;
   background: #E1E2E2;
 }
-.not-product_text {
+.not-product_text,
+.cmpl-text {
   font-size: 16px;
   color: #333;
   font-weight: 400;
@@ -292,6 +295,18 @@ ul li {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+.cmpl-pay_img {
+  width: 100px;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.weui-icon_msg {
+  font-size: 100px !important;
+}
+.weui-icon-success {
+  color: #f33155 !important;
 }
 .weui-form-preview__bd {
   padding: 15px;
