@@ -185,8 +185,8 @@ ul li{list-style:none;}
   font-weight: @font-weight400;
   height: 45px;
 }
-.weui-btn_orange{
-  background: #EA6B32 !important;
+.weui-btn_c{
+  background: #c8c8c8 !important;
   font-size: @font-size16;
   font-weight: @font-weight400;
   height: 45px;
@@ -269,10 +269,10 @@ ul li{list-style:none;}
 .weui-picker-modal .picker-item{
   font-size: @font-size16;
 }
-.not-product {
+.not-product,.cmpl-pay {
   text-align: center;
 }
-.not-product_img {
+.not-product_img,.cmpl-img {
   position: relative;
   width: 100px;
   height: 100px;
@@ -280,16 +280,28 @@ ul li{list-style:none;}
   margin: 50px auto 30px;
   background: #E1E2E2;
 }
-.not-product_text {
+.not-product_text,.cmpl-text {
   font-size: @font-size16;
   color: @black-color;
   font-weight: @font-weight400;
 }
-.notproduct {
+.notproduct{
   width: 50px;
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+.cmpl-pay_img{
+  width: 100px;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.weui-icon_msg{
+  font-size: 100px !important;
+}
+.weui-icon-success{
+  color:#f33155 !important;
 }
 .weui-form-preview__bd{
   padding: 15px;
@@ -503,4 +515,10 @@ ul li{list-style:none;}
   .list_item:not(:nth-child(2n)){
     margin-right: 10px;
   }
+}
+.weui-picker-container, .weui-picker-overlay{
+  z-index: 10000;
+  top: 0;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
 }

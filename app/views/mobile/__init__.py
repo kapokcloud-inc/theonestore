@@ -14,3 +14,4 @@ from .cart import cart
 from .user import user
 from .item import item
 from .comment import comment
+from .pay import pay
