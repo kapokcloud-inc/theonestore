@@ -116,6 +116,7 @@
           </div>
           <div class="weui-cell">
             <input id="edit_address_ua_id" type="hidden" value="0" />
+            {{ wtf_form.csrf_token }}
             <button type="button" class="weui-btn weui-btn_red" onClick="save()">{{_('保存')}}</button>
           </div>
         </div>
@@ -276,7 +277,7 @@
 <script src="/static/default/mobile/js/jquery.fileupload.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-
+var csrftoken = $('#csrf_token').val();
 var $addressList = $('#addressList');
 var $newAdd = $('#newAdd');
 var $couponList = $('#couponList');
@@ -388,10 +389,35 @@ function cancel() {
 
 //点击保存，关闭新建或编辑收货地址弹窗
 function save() {
-  $newAdd.removeClass('show');
-  if (!$newAdd.hasClass('hide')) {
-    $newAdd.addClass('hide');
-  }
+  var ua_id = $("#edit_address_ua_id").val();
+  var name = $("#edit_address_name").val();
+  var mobile = $("#edit_address_mobile").val();
+  var address = $("#edit_address_address").val();
+
+  var params = {'ua_id':ua_id, 'name':name, 'mobile':mobile, 'address':address}
+  $.ajax({
+    type: 'POST',
+    url: "{{ url_for('api.me.address_save') }}",
+    headers: {'X-CSRFToken':csrftoken},
+    data: params,
+    dataType: 'json',
+    timeout: 300,
+    async: false,
+    success: function (json) {
+      if (json.ret == 0) {
+        $newAdd.removeClass('show');
+        if (!$newAdd.hasClass('hide')) {
+          $newAdd.addClass('hide');
+        }
+      } else {
+        $.toast(json.msg, "text");
+        return false;
+      }
+    },
+    error: function (xhr, type) {
+      $.toast("{{_('网络错误')}}", "text");
+    }
+  });
 }
 
 //选择优惠券

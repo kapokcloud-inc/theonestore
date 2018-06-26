@@ -33,6 +33,8 @@ from app.helpers.user import (
 
 from app.services.api.cart import CartService, CheckoutService
 
+from app.forms.api.me import AddressForm
+
 from app.models.coupon import Coupon
 from app.models.shipping import Shipping
 from app.models.user import UserAddress
@@ -81,8 +83,6 @@ def checkout():
                         order_by(Shipping.sorting.desc(), Shipping.shipping_amount.asc()).all()
     if len(_shipping_list) <= 0:
         return render_template('mobile/cart/checkout.html.j2', msg=_(u'系统末配置快递'))
-    #_shipping_list = [{'title':shipping.shipping_name, 'value':shipping.shipping_id} for shipping in _shipping_list]
-    #shipping_list  = repr(_shipping_list)
 
     # 默认快递
     default_shipping = Shipping.query.filter(Shipping.is_enable == 1).filter(Shipping.is_default == 1).first()
@@ -115,10 +115,12 @@ def checkout():
     shipping_title = _(u'%s  ￥%s(满￥%s免运费)' %\
                         (default_shipping.shipping_name, default_shipping.shipping_amount, default_shipping.free_limit_amount))
 
+    wtf_form = AddressForm()
+
     data = {'carts':cs.carts, 'items_amount':cs.items_amount, 'shipping_amount':cs.shipping_amount,
             'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount,
             'addresses':addresses, 'default_address':default_address,
             'shipping_list':shipping_list, 'default_shipping':default_shipping, 'shipping_title':shipping_title,
-            'coupons':coupons}
+            'coupons':coupons, 'wtf_form':wtf_form}
 
     return render_template('mobile/cart/checkout.html.j2', **data)
