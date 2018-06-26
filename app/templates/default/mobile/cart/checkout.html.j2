@@ -9,7 +9,7 @@
 <div class="user_wrap">
   <div class="choiceAddress">
     {% set display = '' if default_address else 'display:none;' %}
-    <a id="address" class="weui-cell weui-cell_access bg-white" href="javascript:;" onclick="choiceAdd()" style="{{ display }}">
+    <a id="current_address" class="weui-cell weui-cell_access bg-white" href="javascript:;" onclick="choiceAdd()" style="{{ display }}">
       <div class="weui-cell__hd mar-right">
         <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
       </div>
@@ -17,9 +17,9 @@
         <div class="blackGap">
           <span>{{_('收件人')}}：</span>
           {% set name = default_address.name if default_address else '' %}
-          <span id="default_address_name">{{ name }}</span>
+          <span id="current_address_name">{{ name }}</span>
           {% set mobile = default_address.mobile if default_address else '' %}
-          <span id="default_address_mobile" class="mar-left">{{ mobile }}</span>
+          <span id="current_address_mobile" class="mar-left">{{ mobile }}</span>
         </div>
         <div class="address" style="color:#666 !important">
           <span>{{_('收货地址')}}：</span>
@@ -27,18 +27,20 @@
           {% set city = default_address.city if default_address else '' %}
           {% set district = default_address.district if default_address else '' %}
           {% set address = default_address.address if default_address else '' %}
-          <span id="default_address_address">{{ province }} {{ city }} {{ district }} {{ address }}</span>
+          <span id="current_address_address">{{ province }} {{ city }} {{ district }} {{ address }}</span>
         </div>
       </div>
       <div class="weui-cell__ft mar-left"></div>
     </a>
-    <a class="weui-cell weui-cell_access bg-white" href="javascript:;" onclick="newAddress()">
-      <div class="weui-cell__hd mar-right">
-        <img src="/static/default/mobile/img/add.png" alt="" style="width:20px">
-      </div>
-      <div class="weui-cell__bd blackGap">{{_('新建地址')}}</div>
-      <div class="weui-cell__ft mar-left"></div>
-    </a>
+    {% if not default_address %}
+      <a class="weui-cell weui-cell_access bg-white" href="javascript:;" onclick="newAddress()">
+        <div class="weui-cell__hd mar-right">
+          <img src="/static/default/mobile/img/add.png" alt="" style="width:20px">
+        </div>
+        <div class="weui-cell__bd blackGap">{{_('新建地址')}}</div>
+        <div class="weui-cell__ft mar-left"></div>
+      </a>
+    {% endif %}
     <div class="hide ranpo" id="addressList">
       <div class="hide-mask"></div>
       <div class="weui-actionsheet weui-actionsheet_toggle">
@@ -49,6 +51,7 @@
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" id="choiceCancel">
           </div>
           {% for address in addresses %}
+            {% set detail = '%s %s %s %s' % (address.province, address.city, address.district, address.address) %}
             <div class="weui-cell addressitem">
               <div class="weui-cell__hd mar-right">
                 <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
@@ -59,11 +62,11 @@
                 <div class="address">
                   <span class="add_tag"></span>
                   <span class="add_tag"></span>
-                  <span>{{ address.province }} {{ address.city }} {{ address.district }} {{ address.address }}</span>
+                  <span>{{ detail }}</span>
                 </div>
               </div>
               <div class="weui-cell__ft mar-left width46">
-                <span class="edit" onClick="newAddress({{ address.ua_id }})">{{_('编辑')}}</span>
+                <span class="edit" onClick="newAddress({{ address.ua_id }}, '{{ address.name }}', '{{ address.mobile }}', '{{ address.province }}', '{{ address.city }}', '{{ address.district }}', '{{ address.address }}', '{{ detail }}')">{{_('编辑')}}</span>
               </div>
             </div>
           {% endfor %}
@@ -88,30 +91,31 @@
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人姓名')}}" value="">
+              <input id="edit_address_name" class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人姓名')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人手机号码')}}" value="">
+              <input id="edit_address_mobile" class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人手机号码')}}" value="">
             </div>
           </div>
           <div class="weui-cell weui-cell_select weui-cell_select-after">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="" id='city-picker'>
+              <input id="edit_address_province" class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="" id='city-picker'>
             </div>
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}" value="">
+              <input id="edit_address_address" class="weui-input greykGap" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
             <div class="weui-cell__bd">
-              <input class="weui-input greykGap" type="text" placeholder="{{_('请填写邮政编码')}}" value="">
+              <input id="edit_address_zip" class="weui-input greykGap" type="text" placeholder="{{_('请填写邮政编码')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
+            <input id="edit_address_ua_id" type="hidden" value="0" />
             <button type="button" class="weui-btn weui-btn_red" onClick="save()">{{_('保存')}}</button>
           </div>
         </div>
@@ -292,7 +296,7 @@ function checkout_amounts() {
 }
 
 $(document).ready(function () {
-  $("#city-picker").cityPicker({
+  $("#edit_address_province").cityPicker({
     title: "请选择所在地"
   });
 
@@ -339,9 +343,19 @@ $('#choiceCancel').click(function (event) {            //event:事件对象
 });
 
 //新建收货地址
-function newAddress() {
+function newAddress(ua_id=0, name='', mobile='', province='', city='', district='', address='', zip='', detail='') {
   // 显示新建地址弹窗
   if ($newAdd.hasClass('hide')) {
+    $("#edit_address_ua_id").val(ua_id);
+    $("#edit_address_name").val(name);
+    $("#edit_address_mobile").val(mobile);
+    $("#edit_address_province").val(province);
+    $("#edit_address_city").val(city);
+    $("#edit_address_district").val(district);
+    $("#edit_address_address").val(address);
+    $("#edit_address_zip").val(zip);
+    $("#edit_address_detail").val(detail);
+
     $newAdd.removeClass('hide').addClass('show');
 
     // 隐藏新建地址弹窗
