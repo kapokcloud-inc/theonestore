@@ -1,0 +1,39 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+
+{% block head %}
+<title>{{_('钱包充值 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/pay.css">
+{% endblock %}
+
+{% block body %}
+<div class="recharge-wrap">
+  <div class="weui-cell" style="padding:33px 15px">
+    <div class="weui-cell__hd">
+      <label class="weui-label">{{_('充值金额：')}}</label>
+    </div>
+    <div class="weui-cell__bd recharge_money">
+      <input name="goods_amount" class="weui-input " type="number" min="1" max="10000" step="1" value="" placeholder="{{_('请输入充值金额')}}">
+    </div>
+  </div>
+</div>
+<div class="weui-cells weui-cells_form weui-cells_radio">
+  <div class="weui-panel__hd">
+    <strong>{{_('支付方式')}}</strong>
+  </div>
+  <label class="weui-cell weui-check__label">
+    <div class="weui-cell__hd">
+      <img class="weixin" src="/static/default/mobile/img/weixin.png" alt="">
+    </div>
+    <div class="weui-cell__bd">{{_('微信支付')}}</div>
+    <div class="weui-cell__ft">
+      <input class="weui-check" type="radio" name="pay_type" value="weixin" checked="">
+      <span class="weui-icon-checked"></span>
+    </div>
+  </label>
+</div>
+<div class="reg_btn">
+  <button id="weui-btn" type="button" class="weui-btn weui-btn_red" onclick="paynow()">{{_('确认支付')}}</button>
+</div>
+{% endblock %}
+
+{% block script %} {% endblock %}

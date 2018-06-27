@@ -1,3 +1,84 @@
 @charset "UTF-8";
 
 @import "variables.less";
+
+@height17:17px;
+
+.top_item{
+  width: 100%;
+  background-color: @main-color;
+}
+.title-wrap{
+  padding: 15px;
+  color: @white-color;
+}
+.wallet{
+  margin-top: 15px;
+  font-size: @font-size12;
+}
+.money{
+  font-size: 54px;
+}
+.flex-wrap{
+  display: flex;
+  width: 100%;
+  background-color: @white-color;
+}
+.recharge{
+  position: relative;
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: @font-size14;
+  color: @black-color;
+  text-align: center;
+  border-right: 1px solid #e5e5e5;
+}
+.rechargeImg{
+  display: inline-block;
+  width: @height17;
+  vertical-align: middle;
+  margin-top: 5px;
+}
+.rechargeImg img{
+  width: 100%;
+}
+.weui-cell__hd{
+  img{
+    display: block;
+    width: @height17;
+    margin-right: @height17;
+  }
+  .weixin{
+    width: 22px;
+  }
+}
+.remark_user{
+  font-size: @font-size14;
+  color: @black-color;
+  margin-bottom: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.funds{
+  width: 80px;
+  font-size: @font-size16;
+}
+.changeRu{
+  color: @main-color;
+}
+.changeChu{
+  color: #EA8D42;
+}
+.recharge-wrap{
+  background-color: @white-color;
+}
+.weui-panel__hd:after{
+  height: 0;
+  border-bottom: none;
+}
+.recharge_money{
+  color: @main-color;
+  font-size: 22px;
+}

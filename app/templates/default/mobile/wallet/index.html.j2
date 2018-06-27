@@ -1,0 +1,53 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+
+{% block head %}
+<title>{{_('我的钱包 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/pay.css">
+{% endblock %}
+
+{% block body %}
+<div class="wallet-top">
+  <div class="top_item">
+    <div class="title-wrap">
+      <p class="wallet">{{_('钱包余额（元）')}}</p>
+      <p class="money">{{_('1314.00')}}</p>
+    </div>
+  </div>
+  <div class="flex-wrap">
+    <a href="{{ url_for('mobile.wallet.recharge') }}" class="recharge flex50">
+      <div class="rechargeImg">
+        <img src="/static/default/mobile/img/recharge.png" alt="">
+      </div>
+      <span>{{_('充值')}}</span>
+    </a>
+  </div>
+</div>
+<div class="weui-cells weui-cells_form">
+  <div class="weui-cell">
+    <div class="weui-cell__hd">
+      <img src="/static/default/mobile/img/transaction.png" alt="">
+    </div>
+    <div class="weui-cell__bd all_title">{{_('交易明细')}}</div>
+  </div>
+  <a class="weui-cell" href="{{ url_for('mobile.wallet.detail') }}">
+    <div class="weui-cell__bd">
+      <p class="remark_user">{{_('订单支付')}}</p>
+      <p class="all_add">{{_('2018-06-25 17:49:41')}}</p>
+    </div>
+    <div class="weui-cell__ft mar-left">
+      <p class="funds changeChu">{{_('-120.00')}}</p>
+    </div>
+  </a>
+  <a class="weui-cell" href="{{ url_for('mobile.wallet.detail') }}">
+    <div class="weui-cell__bd">
+      <p class="remark_user">{{_('订单收入')}}</p>
+      <p class="all_add">{{_('2018-06-27 15:39:41')}}</p>
+    </div>
+    <div class="weui-cell__ft mar-left">
+      <p class="funds changeRu">{{_('+90.00')}}</p>
+    </div>
+  </a>
+</div>
+{% endblock %}
+
+{% block script %} {% endblock %}
