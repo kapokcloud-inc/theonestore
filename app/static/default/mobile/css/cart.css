@@ -27,7 +27,7 @@
 .all_check {
   display: inline-block;
   color: #333;
-  font-size: 12px;
+  font-size: 14px;
 }
 .ft_width {
   width: 20px;
@@ -80,4 +80,10 @@
   color: #f33155;
   font-size: 14px;
   border: 1px solid #f33155;
+}
+.checked_wrap {
+  height: 0;
+  position: absolute;
+  top: 25px;
+  left: 10px;
 }

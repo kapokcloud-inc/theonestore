@@ -15,3 +15,4 @@ from .user import user
 from .item import item
 from .comment import comment
 from .pay import pay
+from .wallet import wallet

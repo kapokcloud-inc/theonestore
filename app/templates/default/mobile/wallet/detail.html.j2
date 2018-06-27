@@ -1,0 +1,37 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+
+{% block head %}
+<title>{{_('交易明细详情 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/pay.css">
+{% endblock %}
+
+{% block body %}
+<div class="weui-cells weui-cells_form">
+  <div class="weui-form-preview">
+    <div class="weui-form-preview__hd">
+      <label class="weui-form-preview__label">{{_('出账金额')}}</label>
+      <em class="weui-form-preview__value changeChu">{{_('120.00')}}</em>
+    </div>
+    <div class="weui-form-preview__hd">
+      <label class="weui-form-preview__label">{{_('入账金额')}}</label>
+      <em class="weui-form-preview__value changeRu">{{_('90.00')}}</em>
+    </div>
+    <div class="weui-form-preview__bd">
+      <div class="weui-form-preview__item">
+        <label class="weui-form-preview__label">{{_('类型')}}</label>
+        <span class="weui-form-preview__value">{{_('订单支付')}}</span>
+      </div>
+      <div class="weui-form-preview__item">
+        <label class="weui-form-preview__label">{{_('时间')}}</label>
+        <span class="weui-form-preview__value">{{_('2018-06-25 17:49:41')}}</span>
+      </div>
+      <div class="weui-form-preview__item">
+        <label class="weui-form-preview__label">{{_('交易单号')}}</label>
+        <span class="weui-form-preview__value">{{_('20180627174941118')}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %} {% endblock %}
