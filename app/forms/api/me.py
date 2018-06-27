@@ -27,22 +27,6 @@ from wtforms.validators import (
     ValidationError
 )
 
-from app.database import db
-from app.helpers import (
-    render_template, 
-    log_info,
-    toint
-)
-
-
-class checkFree(object):
-    def __init__(self, message=_(u'金额不能小于或等于0')):
-        self.message = message
-
-    def __call__(self, form, field):
-        if form.is_free.data == 0 and field.data <= 0:
-            raise ValidationError(self.message)
-
 
 class AddressForm(FlaskForm):
     """收货地址form"""
@@ -53,5 +37,4 @@ class AddressForm(FlaskForm):
     city       = StringField(validators=[Required(message=_(u'请填写城市'))])
     district   = StringField(validators=[Required(message=_(u'请填写行政区'))])
     address    = StringField(validators=[Required(message=_(u'请填写详细地址'))])
-    zip        = StringField()
-    is_default = IntegerField(validators=[NumberRange(min=0, max=1)])
+    is_default = IntegerField()

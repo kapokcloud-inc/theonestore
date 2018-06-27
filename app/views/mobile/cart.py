@@ -95,6 +95,8 @@ def checkout():
     # 收货地址
     addresses       = UserAddress.query.filter(UserAddress.uid == uid).order_by(UserAddress.is_default.desc()).all()
     default_address = UserAddress.query.filter(UserAddress.uid == uid).filter(UserAddress.is_default == 1).first()
+    if not default_address:
+        default_address = UserAddress.query.filter(UserAddress.uid == uid).order_by(UserAddress.ua_id.desc()).first()
 
     # 优惠券
     coupons = Coupon.query.\

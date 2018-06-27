@@ -16,6 +16,9 @@ from flask_babel import gettext as _
 from app.database import db
 
 from app.helpers import (
+    model_create,
+    model_update,
+    model_delete,
     log_info,
     toint
 )
@@ -29,7 +32,7 @@ from app.services.response import ResponseJson
 
 from app.forms.api.me import AddressForm
 
-from app.models.like import Like
+from app.models.user import UserAddress
 
 
 me = Blueprint('api.me', __name__)
@@ -48,8 +51,8 @@ def address_save():
     #uid = get_uid()
     uid = 1
 
-    wtf_form           = AddressForm()
-    _current_timestamp = current_timestamp()
+    wtf_form     = AddressForm()
+    current_time = current_timestamp()
 
     if not wtf_form.validate_on_submit():
         log_info(dir(wtf_form.errors))
@@ -58,4 +61,38 @@ def address_save():
             msg = value[0]
         return resjson.print_json(11, msg)
 
-    return resjson.print_json(0, u'ok')
+    is_default = toint(request.form.get('is_default', '-1'))
+    if is_default not in [-1,0,1]:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    ua_id = wtf_form.ua_id.data
+    if ua_id:
+        user_address = UserAddress.query.filter(UserAddress.ua_id == ua_id).filter(UserAddress.uid == uid).first()
+        if not user_address:
+            return resjson.print_json(12, _(u'收货地址不存在'))
+    else:
+        data         = {'uid':uid, 'add_time':current_time}
+        user_address = model_create(UserAddress, data)
+
+    data = {'name':wtf_form.name.data, 'mobile':wtf_form.mobile.data, 'province':wtf_form.province.data,
+            'city':wtf_form.city.data, 'district':wtf_form.district.data, 'address':wtf_form.address.data,
+            'update_time':current_time}
+
+    default = UserAddress.query.filter(UserAddress.uid == uid).first()
+    if not default:
+        is_default = 1
+
+    if is_default == 0:
+        data['is_default'] = 1
+    elif is_default == 1:
+        default = UserAddress.query.filter(UserAddress.uid == uid).filter(UserAddress.is_default == 1).first()
+        if default.ua_id != ua_id:
+            default.is_default = 0
+
+        data['is_default'] = 1
+
+    user_address = model_update(user_address, data)
+
+    db.session.commit()
+
+    return resjson.print_json(0, u'ok', {'ua_id':user_address.ua_id})
