@@ -95,8 +95,7 @@
         <div class="flex_wrap cart_bar">
           <div class="col-check">
             {% set checked = 'checked' if total_quantity == items_quantity else '' %}
-            {% set is_all = 1 if total_quantity == items_quantity else 0 %}
-            <input type="checkbox" class="weui-check" name="checkbox4" {{ checked }} data-is-all="{{ is_all }}" onclick="is_all()">
+            <input type="checkbox" class="weui-check" name="checkbox4" {{ checked }}>
             <i class="weui-icon-checked" style="margin-left:10px !important"></i>
             <p class="all_check">全选</p>
           </div>
@@ -129,5 +128,5 @@
 {% endblock %} 
 
 {% block script %}
-<script type="text/javascript"></script>
+<script  type="text/javascript"></script>
 {% endblock %}
