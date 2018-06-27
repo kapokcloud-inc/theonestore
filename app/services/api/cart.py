@@ -35,6 +35,7 @@ class CartService(object):
         self.carts          = []                    # 购物车商品项
         self.items_amount   = Decimal('0.00')       # 选中商品项商品总价
         self.items_quantity = 0                     # 选中商品项总件数
+        self.total_quantity = 0                     # 商品项总件数
 
     def check(self):
         """检查"""
@@ -67,13 +68,16 @@ class CartService(object):
                 is_valid     = 0
                 valid_status = 2
 
-            if is_valid:
-                # 选中商品项商品总价
-                _items_amount = Decimal(item.goods_price) * cart.quantity
-                self.items_amount += _items_amount
+            if is_valid == 1:
+                if cart.is_checked == 1:
+                    # 选中商品项商品总价
+                    _items_amount = Decimal(item.goods_price) * cart.quantity
+                    self.items_amount += _items_amount
 
-                # 选中商品项总件数
-                self.items_quantity += cart.quantity
+                    # 选中商品项总件数
+                    self.items_quantity += cart.quantity
+
+                self.total_quantity += cart.quantity
 
             self.carts.append({'cart':cart, 'item':item, 'is_valid':is_valid, 'valid_status':valid_status})
 

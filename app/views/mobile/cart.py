@@ -55,7 +55,7 @@ def root():
     cs.check()
 
     return render_template('mobile/cart/index.html.j2', carts=cs.carts,
-        items_amount=cs.items_amount, items_quantity=cs.items_quantity)
+        items_amount=cs.items_amount, items_quantity=cs.items_quantity, total_quantity=cs.total_quantity)
 
 
 @cart.route('/edit/<int:cart_id>')
