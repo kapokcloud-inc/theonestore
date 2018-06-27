@@ -35,6 +35,7 @@ from app.services.api.cart import CartService, CheckoutService
 
 from app.forms.api.me import AddressForm
 
+from app.models.item import Goods
 from app.models.coupon import Coupon
 from app.models.shipping import Shipping
 from app.models.user import UserAddress
@@ -57,10 +58,27 @@ def root():
         items_amount=cs.items_amount, items_quantity=cs.items_quantity)
 
 
-@cart.route('/edit')
-def edit():
+@cart.route('/edit/<int:cart_id>')
+def edit(cart_id):
     """手机站 - 购物车编辑"""
-    return render_template('mobile/cart/cart_edit.html.j2')
+
+    uid        = get_uid()
+    session_id = get_session_id()
+
+    q = Cart.query.filter(Cart.cart_id == cart_id)
+
+    if uid:
+        q = q.filter(Cart.uid == uid)
+    else:
+        q = q.filter(Cart.session_id == session_id)
+
+    cart = q.first()
+
+    item = None
+    if cart:
+        item = Goods.query.get(cart.goods_id)
+
+    return render_template('mobile/cart/cart_edit.html.j2', cart=cart, item=item)
 
 
 @cart.route('/checkout')

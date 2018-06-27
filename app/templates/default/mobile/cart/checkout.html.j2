@@ -433,48 +433,50 @@ function save() {
   var params = {'ua_id':ua_id, 'name':name, 'mobile':mobile, 'province':province, 'city':city, 'district':district, 'address':address}
   $.post("{{ url_for('api.me.address_save') }}", params, function(json) {
     if (json.ret == 0) {
-      ua_id = json.data.ua_id;
+      var _ua_id = json.data.ua_id;
 
-      $("#current_address_ua_id").val(ua_id);
+      $("#current_address_ua_id").val(_ua_id);
       $("#current_address_name").text(name);
       $("#current_address_mobile").text(mobile);
       $("#current_address_full").text(full);
 
-      $("#"+ua_id+"_address_name").text(name);
-      $("#"+ua_id+"_address_mobile").text(mobile);
-      $("#"+ua_id+"_address_province").val(province);
-      $("#"+ua_id+"_address_city").val(city);
-      $("#"+ua_id+"_address_district").val(district);
-      $("#"+ua_id+"_address_address").val(address);
-      $("#"+ua_id+"_address_full").text(full);
+      $("#"+_ua_id+"_address_name").text(name);
+      $("#"+_ua_id+"_address_mobile").text(mobile);
+      $("#"+_ua_id+"_address_province").val(province);
+      $("#"+_ua_id+"_address_city").val(city);
+      $("#"+_ua_id+"_address_district").val(district);
+      $("#"+_ua_id+"_address_address").val(address);
+      $("#"+_ua_id+"_address_full").text(full);
 
       $newAdd.removeClass('show');
       if (!$newAdd.hasClass('hide')) {
         $newAdd.addClass('hide');
       }
 
-      var html_text = '<div class="weui-cell addressitem" onclick="selected_address('+ ua_id + ')">' +
-                        '<div class="weui-cell__hd mar-right">' +
-                          '<img src="/static/default/mobile/img/address.png" alt="" style="width:20px">' +
-                        '</div>' +
-                        '<div class="weui-cell__bd">' +
-                          '<span id="'+ ua_id + '_address_name" class="all_title">' + name +'</span>' +
-                          '<span id="'+ ua_id + '_address_mobile" class="mar-left">' + mobile + '</span>' +
-                          '<div class="address">' +
-                            '<span class="add_tag"></span>' +
-                            '<span class="add_tag"></span>' +
-                            '<span id="'+ ua_id + '_address_full">' + full + '</span>' +
-                            '<input id="'+ ua_id + '_address_province" type="hidden" value="' + province + '" />' +
-                            '<input id="'+ ua_id + '_address_city" type="hidden" value="' + city + '" />' +
-                            '<input id="'+ ua_id + '_address_district" type="hidden" value="' + district + '" />' +
-                            '<input id="'+ ua_id + '_address_address" type="hidden" value="'+ address + '" />' +
+      if (ua_id != _ua_id) {
+        var html_text = '<div class="weui-cell addressitem" onclick="selected_address('+ _ua_id + ')">' +
+                          '<div class="weui-cell__hd mar-right">' +
+                            '<img src="/static/default/mobile/img/address.png" alt="" style="width:20px">' +
                           '</div>' +
-                        '</div>' +
-                        '<div class="weui-cell__ft mar-left width46">' +
-                          '<span class="edit" onClick="newAddress('+ ua_id + ')">' + "{{_('编辑')}}" + '</span>' +
-                        '</div>' +
-                      '</div>';
-      $("#add_address").before(html_text);
+                          '<div class="weui-cell__bd">' +
+                            '<span id="'+ _ua_id + '_address_name" class="all_title">' + name +'</span>' +
+                            '<span id="'+ _ua_id + '_address_mobile" class="mar-left">' + mobile + '</span>' +
+                            '<div class="address">' +
+                              '<span class="add_tag"></span>' +
+                              '<span class="add_tag"></span>' +
+                              '<span id="'+ _ua_id + '_address_full">' + full + '</span>' +
+                              '<input id="'+ _ua_id + '_address_province" type="hidden" value="' + province + '" />' +
+                              '<input id="'+ _ua_id + '_address_city" type="hidden" value="' + city + '" />' +
+                              '<input id="'+ _ua_id + '_address_district" type="hidden" value="' + district + '" />' +
+                              '<input id="'+ _ua_id + '_address_address" type="hidden" value="'+ address + '" />' +
+                            '</div>' +
+                          '</div>' +
+                          '<div class="weui-cell__ft mar-left width46">' +
+                            '<span class="edit" onClick="newAddress('+ _ua_id + ')">' + "{{_('编辑')}}" + '</span>' +
+                          '</div>' +
+                        '</div>';
+        $("#add_address").before(html_text);
+      }
     } else {
       $.toast(json.msg, "text");
       return false;
