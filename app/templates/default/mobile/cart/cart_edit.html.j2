@@ -52,34 +52,35 @@
     <div class="weui-cell">
       <div class="weui-cell__hd height50">
         <div class="cart_phone">
-          <img alt="" src="">
+          <img alt="" src="{{ item.goods_img }}">
         </div>
       </div>
       <div class="weui-cell__bd">
-        <p class="all_title">小米短袖POLO衫 深蓝</p>
+        <p class="all_title mar-bottom">{{ item.goods_name }}</p>
       </div>
       <div class="weui-cell__ft mar-left width46">
-        <span class="all_price">￥1299</span>
+        <span class="all_price">￥{{ item.goods_price }}</span>
       </div>
     </div>
   </div>
   <div class="weui-cells">
     <div class="weui-cell">
-      <div class="weui-cell__bd blackGap">购买数量</div>
+      <div class="weui-cell__bd blackGap">{{_('购买数量')}}</div>
       <div class="weui-cell__ft mar-left">
         <div class="apply-service_num">
           <i class="num_minus"></i>
-          <input class="num_ipt" type="text" id="wareNum" name="wareNum" value="1" minnum="1">
+          <input class="num_ipt" type="text" id="quantity" name="quantity" value="{{ cart.quantity }}" minnum="1">
           <i class="num_add"></i>
         </div>
       </div>
     </div>
   </div>
+  <input id="cart_id" type="hidden" value="{{ cart.cart_id }}" />
   <div class="reg_btn">
-    <button type="button" class="weui-btn weui-btn_red" onClick="determine()">确定</button>
+    <button type="button" class="weui-btn weui-btn_red" onClick="submit()">{{_('确定')}}</button>
   </div>
   <div class="reg_btn">
-    <button type="button" class="weui-btn weui-btn_c" onClick="del()">删除</button>
+    <button type="button" class="weui-btn weui-btn_c" onClick="remove()">{{_('删除')}}</button>
   </div>
 </div>
 {% endblock %} 
@@ -89,16 +90,47 @@
   //计数器
   var MAX = 10, MIN = 1;
   $('.num_minus').click(function (e) {
-    var $input = $(e.currentTarget).parent().find('#wareNum');
+    var $input = $(e.currentTarget).parent().find('#quantity');
     var number = parseInt($input.val() || "0") - 1
     if (number < MIN) number = MIN;
     $input.val(number)
   })
   $('.num_add').click(function (e) {
-    var $input = $(e.currentTarget).parent().find('#wareNum');
+    var $input = $(e.currentTarget).parent().find('#quantity');
     var number = parseInt($input.val() || "0") + 1
     if (number > MAX) number = MAX;
     $input.val(number)
   })
+
+  function submit() {
+    var cart_id = $("#cart_id").val();
+    var quantity = $("#quantity").val();
+
+    $.get("{{ url_for('api.cart.update') }}", {'cart_id':cart_id, 'quantity':quantity}, function(json) {
+      if (json.ret == 0) {
+        window.location.href="{{ url_for('mobile.cart.root') }}";
+      } else {
+        $.toast(json.msg, "text");
+        return false;
+      }
+    });
+  }
+
+  function remove() {
+    $.confirm("{{_('确认删除？')}}", function() {
+      var cart_id = $("#cart_id").val();
+
+      $.get("{{ url_for('api.cart.remove') }}", {'carts_id':cart_id}, function(json) {
+        if (json.ret == 0) {
+          window.location.href="{{ url_for('mobile.cart.root') }}";
+        } else {
+          $.toast(json.msg, "text");
+          return false;
+        }
+      });
+    }, function() {
+      //点击取消后的回调函数
+    });
+  }
 </script>
 {% endblock %}
