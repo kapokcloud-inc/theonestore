@@ -52,30 +52,30 @@ class CartService(object):
             valid_status = 0    # 失效状态: 0.默认; 1.下架; 2.缺货;
 
             # 检查 - 商品
-            goods = Goods.query.get(cart.goods_id)
-            if not goods:
+            item = Goods.query.get(cart.goods_id)
+            if not item:
                 is_valid     = 0
                 valid_status = 1
 
             # 检查 - 商品是否已经下架
-            if goods.is_sale != 1:
+            if item.is_sale != 1:
                 is_valid     = 0
                 valid_status = 1
 
             # 检查 - 商品是否库存不足
-            if goods.stock_quantity <= 0:
+            if item.stock_quantity <= 0:
                 is_valid     = 0
                 valid_status = 2
 
             if is_valid:
                 # 选中商品项商品总价
-                _items_amount = goods.price * cart.quantity
+                _items_amount = Decimal(item.goods_price) * cart.quantity
                 self.items_amount += _items_amount
 
                 # 选中商品项总件数
                 self.items_quantity += cart.quantity
 
-            self.carts.append({'cart':cart, 'goods':goods, 'is_valid':is_valid, 'valid_status':valid_status})
+            self.carts.append({'cart':cart, 'item':item, 'is_valid':is_valid, 'valid_status':valid_status})
 
         return True
 

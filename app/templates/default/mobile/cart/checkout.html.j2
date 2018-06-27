@@ -27,7 +27,9 @@
           {% set city = default_address.city if default_address else '' %}
           {% set district = default_address.district if default_address else '' %}
           {% set address = default_address.address if default_address else '' %}
-          <span id="current_address_address">{{ province }} {{ city }} {{ district }} {{ address }}</span>
+          {% set ua_id = default_address.ua_id if default_address else 0 %}
+          <span id="current_address_full">{{ province }} {{ city }} {{ district }} {{ address }}</span>
+          <input id="current_address_ua_id" type="hidden" value="{{ ua_id }}" />
         </div>
       </div>
       <div class="weui-cell__ft mar-left"></div>
@@ -51,26 +53,30 @@
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" id="choiceCancel">
           </div>
           {% for address in addresses %}
-            {% set detail = '%s %s %s %s' % (address.province, address.city, address.district, address.address) %}
-            <div class="weui-cell addressitem">
+            {% set full = '%s %s %s %s' % (address.province, address.city, address.district, address.address) %}
+            <div class="weui-cell addressitem" onclick="selected_address({{ address.ua_id }})">
               <div class="weui-cell__hd mar-right">
                 <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
               </div>
               <div class="weui-cell__bd">
-                <span class="all_title">{{ address.name }}</span>
-                <span class="mar-left">{{ address.mobile }}</span>
+                <span id="{{ address.ua_id }}_address_name" class="all_title">{{ address.name }}</span>
+                <span id="{{ address.ua_id }}_address_mobile" class="mar-left">{{ address.mobile }}</span>
                 <div class="address">
                   <span class="add_tag"></span>
                   <span class="add_tag"></span>
-                  <span>{{ detail }}</span>
+                  <span id="{{ address.ua_id }}_address_full">{{ full }}</span>
+                  <input id="{{ address.ua_id }}_address_province" type="hidden" value="{{ address.province }}" />
+                  <input id="{{ address.ua_id }}_address_city" type="hidden" value="{{ address.city }}" />
+                  <input id="{{ address.ua_id }}_address_district" type="hidden" value="{{ address.district }}" />
+                  <input id="{{ address.ua_id }}_address_address" type="hidden" value="{{ address.address }}" />
                 </div>
               </div>
               <div class="weui-cell__ft mar-left width46">
-                <span class="edit" onClick="newAddress({{ address.ua_id }}, '{{ address.name }}', '{{ address.mobile }}', '{{ address.province }}', '{{ address.city }}', '{{ address.district }}', '{{ address.address }}', '{{ detail }}')">{{_('编辑')}}</span>
+                <span class="edit" onClick="newAddress({{ address.ua_id }})">{{_('编辑')}}</span>
               </div>
             </div>
           {% endfor %}
-          <a class="weui-cell weui-cell_access bg-white" href="javascript:;" onclick="newAddress()">
+          <a id="add_address" class="weui-cell weui-cell_access bg-white" href="javascript:;" onclick="newAddress()">
             <div class="weui-cell__hd mar-right">
               <img src="/static/default/mobile/img/add.png" alt="" style="width:20px">
             </div>
@@ -101,7 +107,7 @@
           </div>
           <div class="weui-cell weui-cell_select weui-cell_select-after">
             <div class="weui-cell__bd">
-              <input id="edit_address_province" class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="">
+              <input id="edit_address_pcd" class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
@@ -110,12 +116,8 @@
             </div>
           </div>
           <div class="weui-cell">
-            <div class="weui-cell__bd">
-              <input id="edit_address_zip" class="weui-input greykGap" type="text" placeholder="{{_('请填写邮政编码')}}" value="">
-            </div>
-          </div>
-          <div class="weui-cell">
             <input id="edit_address_ua_id" type="hidden" value="0" />
+            {{ wtf_form.csrf_token }}
             <button type="button" class="weui-btn weui-btn_red" onClick="save()">{{_('保存')}}</button>
           </div>
         </div>
@@ -276,11 +278,15 @@
 <script src="/static/default/mobile/js/jquery.fileupload.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-
 var $addressList = $('#addressList');
 var $newAdd = $('#newAdd');
 var $couponList = $('#couponList');
 var $payList = $('#payList');
+
+var csrftoken = $('#csrf_token').val();
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
 
 // 结算金额
 function checkout_amounts() {
@@ -289,7 +295,7 @@ function checkout_amounts() {
 
   $.get("{{ url_for('api.cart.checkout_amounts') }}", {'shipping_id':shipping_id, 'coupon_id':coupon_id}, function(json) {
     if (json.ret != 0) {
-      alert(json.msg);
+      $.toast(json.msg, "text");
       return false;
     }
 
@@ -302,10 +308,6 @@ function checkout_amounts() {
 }
 
 $(document).ready(function () {
-  $("#edit_address_province").cityPicker({
-    title: "请选择所在地"
-  });
-
   $("#shipping_selected").select({
     title: "选择配送方式",
     items: {{ shipping_list }},
@@ -330,13 +332,25 @@ function choiceAdd(){
 }
 
 //选中地址
-$('.addressitem').click(function (event) {        //event:事件对象
-  event.stopPropagation();                        //停止事件冒泡
+function selected_address(ua_id) {
+  var name = $("#"+ua_id+"_address_name").text();
+  var mobile = $("#"+ua_id+"_address_mobile").text();
+  var province = $("#"+ua_id+"_address_province").val();
+  var city = $("#"+ua_id+"_address_city").val();
+  var district = $("#"+ua_id+"_address_district").val();
+  var address = $("#"+ua_id+"_address_address").val();
+  var full = province + ' ' + city + ' ' + district + ' ' + ' ' + address;
+
+  $("#current_address_ua_id").val(ua_id);
+  $("#current_address_name").text(name);
+  $("#current_address_mobile").text(mobile);
+  $("#current_address_full").text(full);
+
   $addressList.removeClass('show');
   if (!$addressList.hasClass('hide')) {
     $addressList.addClass('hide');
   }
-});
+};
 
 //取消选择地址弹窗
 $('#choiceCancel').click(function (event) {            //event:事件对象
@@ -349,7 +363,24 @@ $('#choiceCancel').click(function (event) {            //event:事件对象
 });
 
 //新建收货地址
-function newAddress(ua_id=0, name='', mobile='', province='', city='', district='', address='', zip='', detail='') {
+function newAddress() {
+  var ua_id = arguments[0] ? arguments[0] : 0;
+  var name = '';
+  var mobile = '';
+  var province = '';
+  var city = '';
+  var district = '';
+  var address = '';
+
+  if (ua_id > 0) {
+    name = $("#"+ua_id+"_address_name").text();
+    mobile = $("#"+ua_id+"_address_mobile").text();
+    province = $("#"+ua_id+"_address_province").val();
+    city = $("#"+ua_id+"_address_city").val();
+    district = $("#"+ua_id+"_address_district").val();
+    address = $("#"+ua_id+"_address_address").val();
+  }
+
   var pcd = (province != '') ? (province+' '+city+' '+district) : '';
   
   // 显示新建地址弹窗
@@ -357,12 +388,12 @@ function newAddress(ua_id=0, name='', mobile='', province='', city='', district=
     $("#edit_address_ua_id").val(ua_id);
     $("#edit_address_name").val(name);
     $("#edit_address_mobile").val(mobile);
-    $("#edit_address_province").val(pcd);
-    $("#edit_address_city").val(city);
-    $("#edit_address_district").val(district);
+    $("#edit_address_pcd").val(pcd);
     $("#edit_address_address").val(address);
-    $("#edit_address_zip").val(zip);
-    $("#edit_address_detail").val(detail);
+
+    $("#edit_address_pcd").cityPicker({
+      title: "请选择所在地"
+    });
 
     $newAdd.removeClass('hide').addClass('show');
 
@@ -388,10 +419,67 @@ function cancel() {
 
 //点击保存，关闭新建或编辑收货地址弹窗
 function save() {
-  $newAdd.removeClass('show');
-  if (!$newAdd.hasClass('hide')) {
-    $newAdd.addClass('hide');
-  }
+  var ua_id = $("#edit_address_ua_id").val();
+  var name = $("#edit_address_name").val();
+  var mobile = $("#edit_address_mobile").val();
+  var pcd = $("#edit_address_pcd").val();
+  var address = $("#edit_address_address").val();
+  var pcd_arr = pcd.split(' ');
+  var province = pcd_arr[0];
+  var city = pcd_arr[1];
+  var district = pcd_arr[2];
+  var full = pcd + ' ' + address;
+
+  var params = {'ua_id':ua_id, 'name':name, 'mobile':mobile, 'province':province, 'city':city, 'district':district, 'address':address}
+  $.post("{{ url_for('api.me.address_save') }}", params, function(json) {
+    if (json.ret == 0) {
+      ua_id = json.data.ua_id;
+
+      $("#current_address_ua_id").val(ua_id);
+      $("#current_address_name").text(name);
+      $("#current_address_mobile").text(mobile);
+      $("#current_address_full").text(full);
+
+      $("#"+ua_id+"_address_name").text(name);
+      $("#"+ua_id+"_address_mobile").text(mobile);
+      $("#"+ua_id+"_address_province").val(province);
+      $("#"+ua_id+"_address_city").val(city);
+      $("#"+ua_id+"_address_district").val(district);
+      $("#"+ua_id+"_address_address").val(address);
+      $("#"+ua_id+"_address_full").text(full);
+
+      $newAdd.removeClass('show');
+      if (!$newAdd.hasClass('hide')) {
+        $newAdd.addClass('hide');
+      }
+
+      var html_text = '<div class="weui-cell addressitem" onclick="selected_address('+ ua_id + ')">' +
+                        '<div class="weui-cell__hd mar-right">' +
+                          '<img src="/static/default/mobile/img/address.png" alt="" style="width:20px">' +
+                        '</div>' +
+                        '<div class="weui-cell__bd">' +
+                          '<span id="'+ ua_id + '_address_name" class="all_title">' + name +'</span>' +
+                          '<span id="'+ ua_id + '_address_mobile" class="mar-left">' + mobile + '</span>' +
+                          '<div class="address">' +
+                            '<span class="add_tag"></span>' +
+                            '<span class="add_tag"></span>' +
+                            '<span id="'+ ua_id + '_address_full">' + full + '</span>' +
+                            '<input id="'+ ua_id + '_address_province" type="hidden" value="' + province + '" />' +
+                            '<input id="'+ ua_id + '_address_city" type="hidden" value="' + city + '" />' +
+                            '<input id="'+ ua_id + '_address_district" type="hidden" value="' + district + '" />' +
+                            '<input id="'+ ua_id + '_address_address" type="hidden" value="'+ address + '" />' +
+                          '</div>' +
+                        '</div>' +
+                        '<div class="weui-cell__ft mar-left width46">' +
+                          '<span class="edit" onClick="newAddress('+ ua_id + ')">' + "{{_('编辑')}}" + '</span>' +
+                        '</div>' +
+                      '</div>';
+      $("#add_address").before(html_text);
+    } else {
+      $.toast(json.msg, "text");
+      return false;
+    }
+  });
 }
 
 //选择优惠券
@@ -449,6 +537,7 @@ function closeCoupon(){
 
 //选择支付方式
 function submit() {
+  console.log($("#current_address_ua_id").val());
   // 显示选择地址弹窗
   if ($payList.hasClass('hide')) {
     $payList.removeClass('hide').addClass('show');

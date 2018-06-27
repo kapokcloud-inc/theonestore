@@ -9,6 +9,7 @@
 {% block body %}
 <div class="cart_wrap">
   <div class="content_wrap">
+    <!--
     <div class="weui-cells weui-cells_checkbox">
       <div class="weui-cell">
         <div class="weui-cell__hd height50">
@@ -63,6 +64,28 @@
         </div>
       </div>
     </div>
+    -->
+    {% for cart in carts %}
+      <div class="weui-cells weui-cells_checkbox">
+        <div class="weui-cell">
+          <div class="weui-cell__hd height50">
+            {% set checked = 'checked' if cart.cart.is_checked == 1 else '' %}
+            <input type="checkbox" class="weui-check" name="checkbox3" value="{{ cart.cart.cart_id }}" {{ checked }}> 
+            <i class="weui-icon-checked icon_checked"></i>
+            <div class="cart_phone">
+              <img alt="" src="">
+            </div>
+          </div>
+          <div class="weui-cell__bd">
+            <div class="all_title mar-bottom">{{ cart.item.goods_name }}</div>
+            <div class="cart_count">x {{ cart.cart.quantity }}</div>
+          </div>
+          <div class="weui-cell__ft mar-left width46">
+            <span class="all_price">￥{{ cart.item.goods_price }}</span>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
     <div class="settlement_wrap">
       <div class="weui-cells weui-cells_checkbox">
         <div class="flex_wrap cart_bar">
