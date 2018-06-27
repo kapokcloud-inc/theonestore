@@ -67,7 +67,7 @@
     -->
     {% for cart in carts %}
       <div class="weui-cells weui-cells_checkbox">
-        <div class="checked_wrap" onclick="check()">
+        <div class="checked_wrap" onclick="check">
           {% set checked = 'checked' if cart.cart.is_checked == 1 else '' %}
           <input type="checkbox" class="weui-check" name="checkbox3" value="{{ cart.cart.cart_id }}" {{ checked }}>
           <i class="weui-icon-checked"></i>
