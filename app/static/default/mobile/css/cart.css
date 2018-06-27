@@ -81,3 +81,9 @@
   font-size: 14px;
   border: 1px solid #f33155;
 }
+.checked_wrap {
+  height: 0;
+  position: absolute;
+  top: 25px;
+  left: 10px;
+}
