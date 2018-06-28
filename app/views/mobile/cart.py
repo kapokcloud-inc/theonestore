@@ -136,9 +136,11 @@ def checkout():
                         (default_shipping.shipping_name, default_shipping.shipping_amount, default_shipping.free_limit_amount))
 
     wtf_form = AddressForm()
+    carts_id = [cart_id.__str__() for cart_id in carts_id]
+    carts_id = ','.join(carts_id)
 
-    data = {'carts':cs.carts, 'items_amount':cs.items_amount, 'shipping_amount':cs.shipping_amount,
-            'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount,
+    data = {'carts':cs.carts, 'carts_id':carts_id, 'items_amount':cs.items_amount,
+            'shipping_amount':cs.shipping_amount, 'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount,
             'addresses':addresses, 'default_address':default_address,
             'shipping_list':shipping_list, 'default_shipping':default_shipping, 'shipping_title':shipping_title,
             'coupons':coupons, 'wtf_form':wtf_form}

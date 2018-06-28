@@ -40,7 +40,7 @@ from app.models.cart import Cart
 cart = Blueprint('api.cart', __name__)
 
 resjson = ResponseJson()
-resjson.module_code = 11
+resjson.module_code = 12
 
 @cart.route('/add')
 def add():

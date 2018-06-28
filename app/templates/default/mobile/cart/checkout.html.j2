@@ -226,6 +226,8 @@
           <span>{{_('支付金额')}}：</span>
           <span id="pay_amount" class="all_price" style="font-size:18px">￥{{ pay_amount }}</span>
         </div>
+        <input id="carts_id" type="hidden" value="{{ carts_id }}" />
+        <input id="order_id" type="hidden" value="0" />
         <div class="btn_primary" onclick="submit()">{{_('提交订单')}}</div>
       </div>
     </div>
@@ -288,7 +290,7 @@ $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
 
-// 结算金额
+//结算金额
 function checkout_amounts() {
   var shipping_id = $("#shipping_selected").attr('data-values');
   var coupon_id = $("#coupon_id").val();
@@ -321,11 +323,11 @@ $(document).ready(function () {
 
 //选择收货地址
 function choiceAdd(){
-  // 显示选择地址弹窗
+  //显示选择地址弹窗
   if ($addressList.hasClass('hide')) {
     $addressList.removeClass('hide').addClass('show');
 
-    // 隐藏选择地址弹窗
+    //隐藏选择地址弹窗
   } else {
     $addressList.removeClass('show').addClass('hide');
   }
@@ -383,7 +385,7 @@ function newAddress() {
 
   var pcd = (province != '') ? (province+' '+city+' '+district) : '';
   
-  // 显示新建地址弹窗
+  //显示新建地址弹窗
   if ($newAdd.hasClass('hide')) {
     $("#edit_address_ua_id").val(ua_id);
     $("#edit_address_name").val(name);
@@ -397,7 +399,7 @@ function newAddress() {
 
     $newAdd.removeClass('hide').addClass('show');
 
-    // 隐藏新建地址弹窗
+    //隐藏新建地址弹窗
   } else {
     $newAdd.removeClass('show').addClass('hide');
   }
@@ -486,11 +488,11 @@ function save() {
 
 //选择优惠券
 function choiceCoupon() {
-  // 显示优惠券弹窗
+  //显示优惠券弹窗
   if ($couponList.hasClass('hide')) {
     $couponList.removeClass('hide').addClass('show');
 
-    // 隐藏优惠券弹窗
+    //隐藏优惠券弹窗
   } else {
     $couponList.removeClass('show').addClass('hide');
   }
@@ -539,12 +541,46 @@ function closeCoupon(){
 
 //选择支付方式
 function submit() {
-  console.log($("#current_address_ua_id").val());
+  var order_id = parseInt($("#order_id").val());
+
+  if (order_id == 0) {
+    var carts_id = $("#carts_id").val();
+    var ua_id = parseInt($("#current_address_ua_id").val());
+    var shipping_id = parseInt($("#shipping_selected").attr('data-values'));
+    var coupon_id = $("#coupon_id").val();
+
+    if (carts_id == '') {
+      $.toast("{{_('请先选购商品')}}", "text");
+      return false;
+    }
+
+    if (ua_id == 0) {
+      $.toast("{{_('请先设置收货地址')}}", "text");
+      return false;
+    }
+
+    if (shipping_id == 0) {
+      $.toast("{{_('请先选择快递')}}", "text");
+      return false;
+    }
+
+    var params = {'carts_id':carts_id, 'ua_id':ua_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id}
+    $.post("{{ url_for('api.order.create') }}", params, function(json) {
+      if (json.ret == 0) {
+        var order = json.data.order;
+        $("#order_id").val(order.order_id);
+      } else {
+        $.toast(json.msg, "text");
+        return false;
+      }
+    });
+  }
+
   // 显示选择地址弹窗
   if ($payList.hasClass('hide')) {
     $payList.removeClass('hide').addClass('show');
 
-    // 隐藏选择地址弹窗
+  // 隐藏选择地址弹窗
   } else {
     $payList.removeClass('show').addClass('hide');
   }
@@ -559,7 +595,7 @@ function closePay() {
 }
 
 //选中支付方式
-$('.weui-check__label').click(function (event) {        //event:事件对象
+$('.weui-check__label').click(function (event) {  //event:事件对象
   event.stopPropagation();                        //停止事件冒泡
   $payList.removeClass('show');
   if (!$payList.hasClass('hide')) {
