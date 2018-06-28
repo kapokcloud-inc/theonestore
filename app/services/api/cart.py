@@ -94,9 +94,12 @@ class CheckoutService(object):
         self.shipping_id       = shipping_id            # 快递ID
         self.coupon_id         = coupon_id              # 优惠券ID
         self.current_time      = current_timestamp()
+        self.coupon            = None                   # 优惠券实例
+        self.shipping          = None                   # 快递实例
         self.carts             = []                     # 购物车商品项
         self.items_id          = []                     # 选中商品项商品ID列表
         self.items_amount      = Decimal('0.00')        # 选中商品项商品总价
+        self.items_quantity    = 0                      # 选中商品项总件数
         self.shipping_amount   = Decimal('0.00')        # 快递金额
         self.coupon_amount     = Decimal('0.00')        # 优惠券金额
         self.discount_amount   = Decimal('0.00')        # 优惠金额
@@ -140,35 +143,38 @@ class CheckoutService(object):
             _items_amount      = item.goods_price * cart.quantity
             self.items_amount += Decimal(_items_amount)
 
-            self.carts_id.append(item.goods_id)
+            self.items_id.append(item.goods_id)
 
             self.carts.append({'cart':cart, 'item':item})
+
+            # 选中商品项总件数
+            self.items_quantity += cart.quantity
 
         self.items_id = list(set(self.items_id))
 
         # 检查 - 快递
-        shipping = Shipping.query.get(self.shipping_id)
-        if not shipping:
+        self.shipping = Shipping.query.get(self.shipping_id)
+        if not self.shipping:
             self.msg = _(u'快递不存在')
             return False
 
         # 快递金额
-        if shipping.free_limit_amount > self.items_amount:
-            self.shipping_amount = Decimal(shipping.shipping_amount)
+        if self.shipping.free_limit_amount > self.items_amount:
+            self.shipping_amount = Decimal(self.shipping.shipping_amount)
 
         if self.coupon_id:
             # 检查 - 优惠券
-            coupon = Coupon.query.filter(Coupon.coupon_id == self.coupon_id).filter(Coupon.uid == self.uid).first()
-            if not coupon:
-                self.msg = _('优惠券不存在')
+            self.coupon = Coupon.query.filter(Coupon.coupon_id == self.coupon_id).filter(Coupon.uid == self.uid).first()
+            if not self.coupon:
+                self.msg = _(u'优惠券不存在')
                 return False
 
             # 优惠券金额
-            if (coupon.is_valid == 1 and
-                coupon.begin_time <= self.current_time and
-                coupon.end_time >= self.current_time and
-                coupon.limit_amount <= self.items_amount):
-                self.coupon_amount   = Decimal(coupon.coupon_amount)
+            if (self.coupon.is_valid == 1 and
+                self.coupon.begin_time <= self.current_time and
+                self.coupon.end_time >= self.current_time and
+                self.coupon.limit_amount <= self.items_amount):
+                self.coupon_amount   = Decimal(self.coupon.coupon_amount)
                 self.discount_amount = self.coupon_amount
 
         # 应付金额
