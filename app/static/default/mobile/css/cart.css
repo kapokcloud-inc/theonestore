@@ -87,3 +87,20 @@
   top: 25px;
   left: 10px;
 }
+.icon-checked {
+  margin-left: 15px !important;
+  margin-top: 30px !important;
+}
+.invalid_price {
+  color: #666;
+  font-size: 14px;
+  font-weight: 400;
+}
+.invalid_title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -9,93 +9,48 @@
 {% block body %}
 <div class="cart_wrap">
   <div class="content_wrap">
-    <!--
-    <div class="weui-cells weui-cells_checkbox">
-      <div class="weui-cell">
-        <div class="weui-cell__hd height50">
-          <input type="checkbox" class="weui-check" name="checkbox1" value="1"> 
-          <i class="weui-icon-checked"></i>
-          <div class="cart_phone">
-            <img alt="" src="">
-          </div>
-        </div>
-        <div class="weui-cell__bd">
-          <div class="all_title mar-bottom">小米短袖POLO衫 深蓝 小米短袖POLO衫 深蓝11</div>
-          <div class="cart_count">x 1</div>
-        </div>
-        <div class="weui-cell__ft mar-left width46">
-          <span class="all_price">￥1299</span>
-        </div>
-      </div>
-    </div>
-    <div class="weui-cells weui-cells_checkbox">
-      <div class="weui-cell">
-        <div class="weui-cell__hd height50">
-          <input type="checkbox" class="weui-check" name="checkbox2" value="2" checked="checked"> 
-          <i class="weui-icon-checked"></i>
-          <div class="cart_phone">
-            <img alt="" src="">
-          </div>
-        </div>
-        <div class="weui-cell__bd">
-          <div class="all_title mar-bottom">红米5A全网通版3GB内存32GB</div>
-          <div class="cart_count">x 2</div>
-        </div>
-        <div class="weui-cell__ft mar-left width46">
-          <span class="all_price">￥699</span>
-        </div>
-      </div>
-    </div>
-    <div class="weui-cells weui-cells_checkbox">
-      <div class="weui-cell">
-        <div class="weui-cell__hd height50">
-          <input type="checkbox" class="weui-check" name="checkbox3" value="3" checked="checked"> 
-          <i class="weui-icon-checked"></i>
-          <div class="cart_phone">
-            <img alt="" src="">
-          </div>
-        </div>
-        <div class="weui-cell__bd">
-          <div class="all_title mar-bottom"> 红米Note 5 全网通版 红米Note 5 全网通版 红米Note 5 全网通版</div>
-          <div class="cart_count">x 1</div>
-        </div>
-        <div class="weui-cell__ft mar-left width46">
-          <span class="all_price">￥1599</span>
-        </div>
-      </div>
-    </div>
-    -->
     {% for cart in carts %}
-      <div class="weui-cells weui-cells_checkbox">
-        <div class="checked_wrap" onclick="check">
-          {% set checked = 'checked' if cart.cart.is_checked == 1 else '' %}
-          {% set checked = checked if cart.is_valid == 1 else '' %}
-          {% set is_valid = 'is_valid' if cart.is_valid == 1 else '' %}
-          <input type="checkbox" class="weui-check {{ is_valid }}" name="checkbox3" value="{{ cart.cart.cart_id }}" {{ checked }} data-cart-id="{{ cart.cart.cart_id }}" data-quantity="{{ cart.cart.quantity }}" data-is-valid="{{ cart.is_valid }}">
-          <i class="weui-icon-checked"></i>
-        </div>
-        <a class="weui-cell" style="margin-left:50px;padding-left:0px" href="{{ url_for('mobile.cart.edit', cart_id=cart.cart.cart_id) }}">
-          <div class="weui-cell__hd height50">
-            <div class="cart_phone">
-              <img alt="" src="">
-            </div>
+      <div class="weui-cells weui-cells_checkbox flex_wrap">
+        <label class="weui-check__label" for="cart{{cart.cart.cart_id}}">
+          <div class="col-check">
+            {% set checked = 'checked' if cart.cart.is_checked == 1 else '' %}
+            {% set checked = checked if cart.is_valid == 1 else '' %}
+            {% set is_valid = 'is_valid' if cart.is_valid == 1 else '' %}
+            <input type="checkbox" class="weui-check {{ is_valid }}" name="checkbox1" 
+              id="cart{{cart.cart.cart_id}}" value="{{ cart.cart.cart_id }}" {{ checked }}  
+              data-cart-id="{{ cart.cart.cart_id }}" data-quantity="{{ cart.cart.quantity }}" 
+              data-is-valid="{{ cart.is_valid }}">
+            <i class="weui-icon-checked icon-checked"></i>
+          </div>
+        </label>
+        <a class="weui-cell" style="overflow:hidden;width:100%" href="{{ url_for('mobile.cart.edit', cart_id=cart.cart.cart_id) }}">
+          <div class="weui-cell__hd cart_phone">
+            <img alt="" src="">
           </div>
           <div class="weui-cell__bd">
             <div class="all_title mar-bottom">{{ cart.item.goods_name }}</div>
-            <div class="cart_count">x {{ cart.cart.quantity }}</div>
+            <!-- 商品失效时显示 -->
+            <!-- <div class="invalid_title mar-bottom">{{ cart.item.goods_name }}</div> -->
+            <div class="cart_count">
+              <span>x {{ cart.cart.quantity }}</span>
+              <!-- 商品失效时显示 -->
+              <!-- <span class="mar-left">已失效</span> -->
+            </div>
           </div>
           <div class="weui-cell__ft mar-left width46">
             <span class="all_price">￥{{ cart.item.goods_price }}</span>
+            <!-- 商品失效时显示 -->
+            <!-- <span class="invalid_price">￥{{ cart.item.goods_price }}</span> -->
           </div>
         </a>
       </div>
     {% endfor %}
     <div class="settlement_wrap">
       <div class="weui-cells weui-cells_checkbox">
-        <div class="flex_wrap cart_bar">
+        <label class="flex_wrap cart_bar weui-check__label" for="s1">
           <div class="col-check">
             {% set checked = 'checked' if total_quantity == items_quantity else '' %}
-            <input type="checkbox" class="weui-check" name="checkbox4" {{ checked }}>
+            <input type="checkbox" class="weui-check" name="checkbox1" id="s1" {{ checked }}>
             <i class="weui-icon-checked" style="margin-left:10px !important"></i>
             <p class="all_check">全选</p>
           </div>
@@ -106,7 +61,7 @@
             </div>
             <a href="{{ url_for('mobile.cart.checkout') }}" class="btn_primary">{{_('结算(%s)' % items_quantity)}}</a>
           </div>
-        </div>
+        </label>
       </div>
     </div>
   </div>

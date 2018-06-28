@@ -34,7 +34,8 @@
   font-weight: normal;
 }
 .cartTo,
-.buyTo {
+.buyTo,
+.downOut {
   width: 100%;
   text-align: center;
   line-height: 50px;
@@ -47,6 +48,9 @@
 }
 .buyTo {
   background: #f33155;
+}
+.downOut {
+  background: #c8c8c8;
 }
 .tagImg {
   width: 15px;
