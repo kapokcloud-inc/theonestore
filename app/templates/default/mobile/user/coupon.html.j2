@@ -9,13 +9,13 @@
 <div class="weui-tab">
   <div class="weui-navbar">
     <a class="weui-navbar__item weui-bar__item--on" href="#couponType_1">
-      未使用 (3)
+      {{_('未使用')}} (3)
     </a>
     <a class="weui-navbar__item" href="#couponType_2">
-      已使用 (1)
+      {{_('已使用')}} (1)
     </a>
     <a class="weui-navbar__item" href="#couponType_3">
-      已失效 (1)
+      {{_('已失效')}} (1)
     </a>
   </div>
   <div class="weui-tab__bd">
@@ -25,7 +25,7 @@
         <div class="not-product_img">
           <img class="notproduct" src="/static/default/mobile/img/notcoupons.png" alt="">
         </div>
-        <div class="not-product_text">您暂无相关优惠券</div>
+        <div class="not-product_text">{{_('您暂无相关优惠券')}}</div>
       </div> -->
       <div class="coupon_list">
         <div class="bg-white coupon_item weui-cell">
@@ -33,15 +33,15 @@
             <div class="wave"></div>
             <span class="symbol">￥</span>
             <span class="money_num">10</span>
-            <p class="money_text">满￥200减</p>
+            <p class="money_text">{{_('满￥200减')}}</p>
           </div>
           <div class="coupon_right weui-cell__bd">
-            <div class="all_title height25">全品类(特例商品除外)</div>
+            <div class="all_title height25">{{_('全品类(特例商品除外)')}}</div>
             <div class="all_desc height20">2018.06.01~2018.06.10</div>
-            <div class="mminentExpiry height25">即将过期</div>
+            <div class="mminentExpiry height25"></div>
           </div>
           <div class="weui-cell__ft coupon_btn">
-            <a href="{{ url_for('mobile.index.root') }}" style="color:#f33155">立即使用</a>
+            <a href="{{ url_for('mobile.index.root') }}" style="color:#f33155">{{_('立即使用')}}</a>
           </div>
         </div>
       </div>
@@ -51,15 +51,15 @@
             <div class="wave"></div>
             <span class="symbol">￥</span>
             <span class="money_num">20</span>
-            <p class="money_text">满￥200减</p>
+            <p class="money_text">{{_('满￥200减')}}</p>
           </div>
           <div class="coupon_right weui-cell__bd">
-            <div class="all_title height25">全品类(特例商品除外)</div>
+            <div class="all_title height25">{{_('全品类(特例商品除外)')}}</div>
             <div class="all_desc height20">2018.06.01~2018.06.18</div>
             <div class="mminentExpiry height25"></div>
           </div>
           <div class="weui-cell__ft coupon_btn">
-            <a href="{{ url_for('mobile.index.root') }}" style="color:#f33155">立即使用</a>
+            <a href="{{ url_for('mobile.index.root') }}" style="color:#f33155">{{_('立即使用')}}</a>
           </div>
         </div>
       </div>
@@ -69,15 +69,15 @@
             <div class="wave"></div>
             <span class="symbol">￥</span>
             <span class="money_num">10</span>
-            <p class="money_text">满￥200减</p>
+            <p class="money_text">{{_('满￥200减')}}</p>
           </div>
           <div class="coupon_right weui-cell__bd">
-            <div class="all_title height25">全品类(特例商品除外)</div>
+            <div class="all_title height25">{{_('全品类(特例商品除外)')}}</div>
             <div class="all_desc height20">2018.06.01~2018.06.18</div>
             <div class="mminentExpiry height25"></div>
           </div>
           <div class="weui-cell__ft coupon_btn">
-            <a href="{{ url_for('mobile.index.root') }}" style="color:#f33155">立即使用</a>
+            <a href="{{ url_for('mobile.index.root') }}" style="color:#f33155">{{_('立即使用')}}</a>
           </div>
         </div>
       </div>
@@ -88,7 +88,7 @@
         <div class="not-product_img">
           <img class="notproduct" src="/static/default/mobile/img/notcoupons.png" alt="">
         </div>
-        <div class="not-product_text">您暂无相关优惠券</div>
+        <div class="not-product_text">{{_('您暂无相关优惠券')}}</div>
       </div> -->
       <div class="coupon_list">
         <div class="bg-white coupon_item weui-cell">
@@ -96,14 +96,14 @@
             <div class="wave wave-on"></div>
             <span class="symbol">￥</span>
             <span class="money_num">10</span>
-            <p class="money_text">满￥200减</p>
+            <p class="money_text">{{_('满￥200减')}}</p>
           </div>
           <div class="coupon_right weui-cell__bd">
-            <div class="all_title height25 all_title-on">全品类(特例商品除外)</div>
+            <div class="all_title height25">{{_('全品类(特例商品除外)')}}</div>
             <div class="all_desc height20">2018.06.01~2018.06.18</div>
             <div class="mminentExpiry height25"></div>
           </div>
-          <div class="weui-cell__ft coupon_btn coupon_btn-on">已使用</div>
+          <div class="weui-cell__ft coupon_btn coupon_btn-on">{{_('已使用')}}</div>
         </div>
       </div>
     </div>
@@ -113,7 +113,7 @@
         <div class="not-product_img">
           <img class="notproduct" src="/static/default/mobile/img/notcoupons.png" alt="">
         </div>
-        <div class="not-product_text">您暂无相关优惠券</div>
+        <div class="not-product_text">{{_('您暂无相关优惠券')}}</div>
       </div> -->
       <div class="coupon_list">
         <div class="bg-white coupon_item weui-cell">
@@ -121,14 +121,14 @@
             <div class="wave wave-on"></div>
             <span class="symbol">￥</span>
             <span class="money_num">10</span>
-            <p class="money_text">满￥200减</p>
+            <p class="money_text">{{_('满￥200减')}}</p>
           </div>
           <div class="coupon_right weui-cell__bd">
-            <div class="all_title height25 all_title-on">全品类(特例商品除外)</div>
+            <div class="all_title height25">{{_('全品类(特例商品除外)')}}</div>
             <div class="all_desc height20">2018.06.01~2018.06.18</div>
             <div class="mminentExpiry height25"></div>
           </div>
-          <div class="weui-cell__ft coupon_btn coupon_btn-on">已失效</div>
+          <div class="weui-cell__ft coupon_btn coupon_btn-on">{{_('已失效')}}</div>
         </div>
       </div>
     </div>

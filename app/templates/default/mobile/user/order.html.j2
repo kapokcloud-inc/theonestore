@@ -9,19 +9,19 @@
 <div class="user_wrap">
   <div class="weui-navbar">
     <div class="typeStatus">
-      <a class="orderType orderType-on">全部</a>
+      <a class="orderType orderType-on">{{_('全部')}}</a>
     </div>
     <div class="typeStatus">
-      <a class="orderType">待付款</a>
+      <a class="orderType">{{_('待付款')}}</a>
     </div>
     <div class="typeStatus">
-      <a class="orderType">待收货</a>
+      <a class="orderType">{{_('待收货')}}</a>
     </div>
     <div class="typeStatus">
-      <a class="orderType">待评价</a>
+      <a class="orderType">{{_('待评价')}}</a>
     </div>
     <div class="typeStatus">
-      <a class="orderType">退款售后</a>
+      <a class="orderType">{{_('退款售后')}}</a>
     </div>
   </div>
   <!-- 订单列表没有订单时显示 -->
@@ -29,10 +29,10 @@
     <div class="not-product_img">
       <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
     </div>
-    <div class="not-product_text">您暂无相关订单</div>
+    <div class="not-product_text">{{_('您暂无相关订单')}}</div>
     <div class="reg_btn">
       <a href="{{ url_for('mobile.index.root') }}">
-        <button type="button" class="weui-btn weui-btn_red">到商城去逛逛</button>
+        <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
       </a>
     </div>
   </div> -->
@@ -42,7 +42,7 @@
         <div class="weui-cell">
           <div class="weui-cell__bd all_add">2018.06.06</div>
           <div class="weui-cell__ft">
-            <span class="trading_state">待付款</span>
+            <span class="trading_state">{{_('待付款')}}</span>
           </div>
         </div>
         <div class="weui-cell">
@@ -50,8 +50,8 @@
             <img src="" alt="">
           </div>
           <div class="weui-cell__bd">
-            <div class="all_title height25">小米蓝牙项圈耳机小米蓝牙项圈耳机小米蓝牙项圈耳机 黑色</div>
-            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机 时尚外观，挂在脖子上的好耳机</div>
+            <div class="all_title height25">{{_('小米蓝牙项圈耳机小米蓝牙项圈耳机小米蓝牙项圈耳机 黑色')}}</div>
+            <div class="all_desc height25">{{_('时尚外观，挂在脖子上的好耳机 时尚外观，挂在脖子上的好耳机')}}</div>
           </div>
           <div class="weui-cell__ft mar-left">
             <p class="all_price">￥1299</p>
@@ -61,28 +61,28 @@
         <div class="weui-cell">
           <div class="weui-cell__bd"></div>
           <div class="weui-cell__ft amount">
-            <span class="mar-right">共1件商品</span>
-            <span>合计：￥30(含运费￥0)</span>
+            <span class="mar-right">{{_('共1件商品')}}</span>
+            <span>{{_('合计：￥30(含运费￥0)')}}</span>
           </div>
         </div>
       </a>
       <div class="weui-cell">
         <div class="weui-cell__bd"></div>
         <div class="weui-cell__ft">
-          <!-- <button type="button" class="order_btn" onclick="del()">删除订单</button> -->
-          <button type="button" class="order_btn" onclick="cancelOrder()">取消订单</button>
+          <!-- <button type="button" class="order_btn" onclick="del()">{{_('删除订单')}}</button> -->
+          <button type="button" class="order_btn" onclick="cancelOrder()">{{_('取消订单')}}</button>
           <!-- <a href="{{ url_for('mobile.user.logistics') }}">
-            <button type="button" class="order_btn">查看物流</button>
+            <button type="button" class="order_btn">{{_('查看物流')}}</button>
           </a> -->
           <a href="{{ url_for('mobile.cart.checkout') }}">
-            <button type="button" class="order_btn order-state_btn">付款</button>
+            <button type="button" class="order_btn order-state_btn">{{_('付款')}}</button>
           </a>
-          <!-- <button type="button" class="order_btn order-state_btn" onclick="confirm()">确认收货</button> -->
+          <!-- <button type="button" class="order_btn order-state_btn" onclick="confirm()">{{_('确认收货')}}</button> -->
           <!-- <a href="{{ url_for('mobile.user.review') }}">
-            <button type="button" class="order_btn order-state_btn">去评价</button>
+            <button type="button" class="order_btn order-state_btn">{{_('去评价')}}</button>
           </a> -->
           <a href="{{ url_for('mobile.cart.root') }}">
-            <button type="button" class="order_btn order-state_btn">再次购买</button>
+            <button type="button" class="order_btn order-state_btn">{{_('再次购买')}}</button>
           </a>
         </div>
       </div>
@@ -92,7 +92,7 @@
         <div class="weui-cell">
           <div class="weui-cell__bd all_add">2018.06.07</div>
           <div class="weui-cell__ft">
-            <span class="trading_state">待收货</span>
+            <span class="trading_state">{{_('待收货')}}</span>
           </div>
         </div>
         <div class="weui-cell">
@@ -100,8 +100,8 @@
             <img src="" alt="">
           </div>
           <div class="weui-cell__bd">
-            <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
-            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机</div>
+            <div class="all_title height25">{{_('小米蓝牙项圈耳机 黑色')}}</div>
+            <div class="all_desc height25">{{_('时尚外观，挂在脖子上的好耳机')}}</div>
           </div>
           <div class="weui-cell__ft mar-left">
             <p class="all_price">￥159</p>
@@ -111,28 +111,28 @@
         <div class="weui-cell">
           <div class="weui-cell__bd"></div>
           <div class="weui-cell__ft amount">
-            <span class="mar-right">共3件商品</span>
-            <span>合计：￥659(含运费￥0)</span>
+            <span class="mar-right">{{_('共3件商品')}}</span>
+            <span>{{_('合计：￥659(含运费￥0)')}}</span>
           </div>
         </div>
       </a>
       <div class="weui-cell">
         <div class="weui-cell__bd"></div>
         <div class="weui-cell__ft">
-          <!-- <button type="button" class="order_btn" onclick="del()">删除订单</button> -->
-          <!-- <button type="button" class="order_btn" onclick="cancelOrder()">取消订单</button> -->
+          <!-- <button type="button" class="order_btn" onclick="del()">{{_('删除订单')}}</button> -->
+          <!-- <button type="button" class="order_btn" onclick="cancelOrder()">{{_('取消订单')}}</button> -->
           <a href="{{ url_for('mobile.user.logistics') }}">
-            <button type="button" class="order_btn">查看物流</button>
+            <button type="button" class="order_btn">{{_('查看物流')}}</button>
           </a>
           <!-- <a href="{{ url_for('mobile.cart.checkout') }}">
-            <button type="button" class="order_btn order-state_btn">付款</button>
+            <button type="button" class="order_btn order-state_btn">{{_('付款')}}</button>
           </a> -->
-          <button type="button" class="order_btn order-state_btn" onclick="confirm()">确认收货</button>
+          <button type="button" class="order_btn order-state_btn" onclick="confirm()">{{_('确认收货')}}</button>
           <!-- <a href="{{ url_for('mobile.user.review') }}">
-            <button type="button" class="order_btn order-state_btn">去评价</button>
+            <button type="button" class="order_btn order-state_btn">{{_('去评价')}}</button>
           </a> -->
           <a href="{{ url_for('mobile.cart.root') }}">
-            <button type="button" class="order_btn order-state_btn">再次购买</button>
+            <button type="button" class="order_btn order-state_btn">{{_('再次购买')}}</button>
           </a>
         </div>
       </div>
@@ -142,7 +142,7 @@
         <div class="weui-cell">
           <div class="weui-cell__bd all_add">2018.06.07</div>
           <div class="weui-cell__ft">
-            <span class="trading_state">待评价</span>
+            <span class="trading_state">{{_('待评价')}}</span>
           </div>
         </div>
         <div class="weui-cell">
@@ -150,8 +150,8 @@
             <img src="" alt="">
           </div>
           <div class="weui-cell__bd">
-            <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
-            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机</div>
+            <div class="all_title height25">{{_('小米蓝牙项圈耳机 黑色')}}</div>
+            <div class="all_desc height25">{{_('时尚外观，挂在脖子上的好耳机')}}</div>
           </div>
           <div class="weui-cell__ft mar-left">
             <p class="all_price">￥159</p>
@@ -163,8 +163,8 @@
             <img src="" alt="">
           </div>
           <div class="weui-cell__bd">
-            <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
-            <div class="all_desc height25">时尚外观，挂在脖子上的好耳机</div>
+            <div class="all_title height25">{{_('小米蓝牙项圈耳机 黑色')}}</div>
+            <div class="all_desc height25">{{_('时尚外观，挂在脖子上的好耳机')}}</div>
           </div>
           <div class="weui-cell__ft mar-left">
             <p class="all_price">￥159</p>
@@ -174,28 +174,28 @@
         <div class="weui-cell">
           <div class="weui-cell__bd"></div>
           <div class="weui-cell__ft amount">
-            <span class="mar-right">共2件商品</span>
-            <span>合计：￥359(含运费￥0)</span>
+            <span class="mar-right">{{_('共2件商品')}}</span>
+            <span>{{_('合计：￥359(含运费￥0)')}}</span>
           </div>
         </div>
       </a>
       <div class="weui-cell">
         <div class="weui-cell__bd"></div>
         <div class="weui-cell__ft">
-          <button type="button" class="order_btn" onclick="del()">删除订单</button>
-          <!-- <button type="button" class="order_btn" onclick="cancelOrder()">取消订单</button> -->
+          <button type="button" class="order_btn" onclick="del()">{{_('删除订单')}}</button>
+          <!-- <button type="button" class="order_btn" onclick="cancelOrder()">{{_('取消订单')}}</button> -->
           <a href="{{ url_for('mobile.user.logistics') }}">
-            <button type="button" class="order_btn">查看物流</button>
+            <button type="button" class="order_btn">{{_('查看物流')}}</button>
           </a>
           <!-- <a href="{{ url_for('mobile.cart.checkout') }}">
-            <button type="button" class="order_btn order-state_btn">付款</button>
+            <button type="button" class="order_btn order-state_btn">{{_('付款')}}</button>
           </a> -->
-          <!-- <button type="button" class="order_btn order-state_btn" onclick="confirm()">确认收货</button> -->
+          <!-- <button type="button" class="order_btn order-state_btn" onclick="confirm()">{{_('确认收货')}}</button> -->
           <a href="{{ url_for('mobile.user.review') }}">
-            <button type="button" class="order_btn order-state_btn">去评价</button>
+            <button type="button" class="order_btn order-state_btn">{{_('去评价')}}</button>
           </a>
           <a href="{{ url_for('mobile.cart.root') }}">
-            <button type="button" class="order_btn order-state_btn">再次购买</button>
+            <button type="button" class="order_btn order-state_btn">{{_('再次购买')}}</button>
           </a>
         </div>
       </div>

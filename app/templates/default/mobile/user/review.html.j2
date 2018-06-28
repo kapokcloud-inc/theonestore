@@ -10,12 +10,12 @@
   <div class="weui-cells weui-cells_form">
     <div class="comment_type">
       <img src="" alt="" class="product_image">
-      <button type="button" class="tag_btn tag_btn-on" rating="5">好评</button>
-      <button type="button" class="tag_btn" rating="3">中评</button>
-      <button type="button" class="tag_btn" rating="1">差评</button>
+      <button type="button" class="tag_btn tag_btn-on">{{_('好评')}}</button>
+      <button type="button" class="tag_btn">{{_('中评')}}</button>
+      <button type="button" class="tag_btn">{{_('差评')}}</button>
     </div>
     <div style="padding:15px">
-      <textarea class="review_text" name="name" rows="5" placeholder="请输入评价信息..."></textarea>
+      <textarea class="review_text" name="name" rows="5" placeholder="{{_('请输入评价信息...')}}"></textarea>
     </div>
     <div class="weui-gallery" style="display: none">
       <span class="weui-gallery__img"></span>
@@ -43,12 +43,12 @@
   <div class="weui-cells weui-cells_form">
     <div class="comment_type">
       <img src="" alt="" class="product_image">
-      <button type="button" class="tag_btn tag_btn-on" rating="5">好评</button>
-      <button type="button" class="tag_btn" rating="3">中评</button>
-      <button type="button" class="tag_btn" rating="1">差评</button>
+      <button type="button" class="tag_btn tag_btn-on">{{_('好评')}}</button>
+      <button type="button" class="tag_btn">{{_('中评')}}</button>
+      <button type="button" class="tag_btn">{{_('差评')}}</button>
     </div>
     <div style="padding:15px">
-      <textarea class="review_text" name="name" rows="5" placeholder="请输入评价信息..."></textarea>
+      <textarea class="review_text" name="name" rows="5" placeholder="{{_('请输入评价信息...')}}"></textarea>
     </div>
     <div class="weui-gallery" style="display: none">
       <span class="weui-gallery__img"></span>
@@ -74,7 +74,7 @@
     </div>
   </div>
   <div class="reg_btn">
-    <button type="button" class="weui-btn weui-btn_red" onclick="submit()">提交</button>
+    <button type="button" class="weui-btn weui-btn_red" onclick="submit()">{{_('提交')}}</button>
   </div>
 </div>
 {% endblock %} 

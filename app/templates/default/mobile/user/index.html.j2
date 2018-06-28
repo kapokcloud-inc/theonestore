@@ -13,15 +13,15 @@
       <div class="weui-cell__hd avatar mar-right">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">用户名</div>
-      <div class="weui-cell__ft">修改</div>
+      <div class="weui-cell__bd">{{_('用户名')}}</div>
+      <div class="weui-cell__ft">{{_('修改')}}</div>
     </a>
   </div>
   <div class="user_all_order_wrap">
     <div class="weui-cells weui-cells_form">
       <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.user.order') }}">
-        <div class="weui-cell__bd">我的订单</div>
-        <div class="weui-cell__ft">我的所有订单</div>
+        <div class="weui-cell__bd">{{_('我的订单')}}</div>
+        <div class="weui-cell__ft">{{_('我的所有订单')}}</div>
       </a>
       <ul class="order_status">
         <li class="flex pstR">
@@ -30,7 +30,7 @@
             <div class="icom_photo">
               <img src="/static/default/mobile/img/pay.png" alt="">
             </div>
-            <p class="foot_text">待付款</p>
+            <p class="foot_text">{{_('待付款')}}</p>
           </a>
         </li>
         <li class="flex pstR">
@@ -39,7 +39,7 @@
             <div class="icom_photo">
               <img src="/static/default/mobile/img/deliver.png" alt="">
             </div>
-            <p class="foot_text">待收货</p>
+            <p class="foot_text">{{_('待收货')}}</p>
           </a>
         </li>
         <li class="flex pstR">
@@ -48,7 +48,7 @@
             <div class="icom_photo">
               <img src="/static/default/mobile/img/comment.png" alt="">
             </div>
-            <p class="foot_text">待评价</p>
+            <p class="foot_text">{{_('待评价')}}</p>
           </a>
         </li>
         <li class="flex pstR">
@@ -57,7 +57,7 @@
             <div class="icom_photo">
               <img src="/static/default/mobile/img/aftersale.png" alt="">
             </div>
-            <p class="foot_text">退款/售后</p>
+            <p class="foot_text">{{_('退款售后')}}</p>
           </a>
         </li>
       </ul>
@@ -68,29 +68,29 @@
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">优惠券</div>
-      <div class="weui-cell__ft">3张</div>
+      <div class="weui-cell__bd">{{_('优惠券')}}</div>
+      <div class="weui-cell__ft">3{{_('张')}}</div>
     </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.wallet.root') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">钱包</div>
-      <div class="weui-cell__ft">199元</div>
+      <div class="weui-cell__bd">{{_('钱包')}}</div>
+      <div class="weui-cell__ft">199{{_('元')}}</div>
     </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.user.collect') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">收藏</div>
+      <div class="weui-cell__bd">{{_('收藏')}}</div>
       <div class="weui-cell__ft"></div>
     </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.user.messages') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">消息</div>
-      <div class="weui-cell__ft">未读1条</div>
+      <div class="weui-cell__bd">{{_('消息')}}</div>
+      <div class="weui-cell__ft">{{_('未读1条')}}</div>
     </a>
   </div>
   <div class="weui-cells weui-cells_form">
@@ -98,27 +98,20 @@
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">邀请好友</div>
-      <div class="weui-cell__ft">邀请新用户送50元</div>
-    </a>
-    <a class="weui-cell weui-cell_access" href="">
-      <div class="weui-cell__hd">
-        <img src="" alt="">
-      </div>
-      <div class="weui-cell__bd">关于一店</div>
+      <div class="weui-cell__bd">{{_('关于一店')}}</div>
       <div class="weui-cell__ft"></div>
     </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.user.address') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
-      <div class="weui-cell__bd">地址管理</div>
+      <div class="weui-cell__bd">{{_('地址管理')}}</div>
       <div class="weui-cell__ft"></div>
     </a>
   </div>
   <div class="reg_btn">
     <a href="">
-      <button type="button" class="weui-btn weui-btn_red">退出登录</button>
+      <button type="button" class="weui-btn weui-btn_red">{{_('退出登录')}}</button>
     </a>
   </div>
 
