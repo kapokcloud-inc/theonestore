@@ -7,6 +7,8 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import json
+
 from flask import (
     Blueprint,
     request,
@@ -164,28 +166,37 @@ def checked():
     uid        = get_uid()
     session_id = get_session_id()
 
-    args         = request.args
-    cart_id      = toint(args.get('cart_id', 0))
-    is_checked   = toint(args.get('is_checked', -1))
+    carts        = request.args.get('carts', '[]').strip()
     current_time = current_timestamp()
 
-    # 检查
-    if cart_id <= 0 or is_checked not in [0,1]:
+    try:
+        carts = json.loads(carts)
+    except Exception, e:
         return resjson.print_json(resjson.PARAM_ERROR)
 
-    # 获取购物车商品
-    q = Cart.query.filter(Cart.cart_id == cart_id)
-    if uid:
-        q = q.filter(Cart.uid == uid)
-    else:
-        q = q.filter(Cart.session_id == session_id)
-    cart = q.first()
-    if cart is None:
-        return resjson.print_json(10, _(u'购物车里找不到商品'))
+    for cart in carts:
+        cart_id    = toint(cart.get('cart_id', 0))
+        is_checked = toint(cart.get('is_checked', -1))
 
-    # 更新购物车商品
-    data = {'is_checked':is_checked, 'update_time':current_time}
-    model_update(cart, data, commit=True)
+        # 检查
+        if cart_id <= 0 or is_checked not in [0,1]:
+            return resjson.print_json(resjson.PARAM_ERROR)
+
+        # 获取购物车商品
+        q = Cart.query.filter(Cart.cart_id == cart_id)
+        if uid:
+            q = q.filter(Cart.uid == uid)
+        else:
+            q = q.filter(Cart.session_id == session_id)
+        cart = q.first()
+        if cart is None:
+            return resjson.print_json(10, _(u'购物车里找不到商品'))
+
+        # 更新购物车商品
+        data = {'is_checked':is_checked, 'update_time':current_time}
+        model_update(cart, data)
+
+    db.session.commit()
 
     cs = CartService(uid, session_id)
     cs.check()
