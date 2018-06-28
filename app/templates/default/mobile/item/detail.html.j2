@@ -48,10 +48,10 @@
     <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="javascript:;" onclick="choice()">
         <div class="weui-cell__hd">
-          <label class="weui-label greykGap">规格</label>
+          <label class="weui-label greykGap">{{_('规格')}}</label>
         </div>
         <div class="weui-cell__bd">
-          <span class="blackGap">米家扫地机器人</span>
+          <span class="blackGap">{{_('米家扫地机器人')}}</span>
           <span class="mar-left">x 1</span>
         </div>
         <div class="weui-cell__ft"></div>
@@ -62,7 +62,7 @@
           <div class="weui-actionsheet__menu bg-white">
             <input type="hidden" name="" id="" value="">
             <div class="weui-actionsheet__cell not-product_text">
-              <span>选择商品规格</span>
+              <span>{{_('选择商品规格')}}</span>
             </div>
             <div class="weui-cell">
               <div class="weui-cell__hd height50">
@@ -71,14 +71,14 @@
                 </div>
               </div>
               <div class="weui-cell__bd">
-                <p class="all_title mar-bottom">小米短袖POLO衫 深蓝</p>
+                <p class="all_title mar-bottom">{{_('小米短袖POLO衫 深蓝')}}</p>
               </div>
               <div class="weui-cell__ft mar-left width46">
                 <span class="all_price">￥1299</span>
               </div>
             </div>
             <div class="weui-cell">
-              <div class="weui-cell__bd blackGap">购买数量</div>
+              <div class="weui-cell__bd blackGap">{{_('购买数量')}}</div>
               <div class="weui-cell__ft mar-left">
                 <div class="apply-service_num">
                   <i class="num_minus"></i>
@@ -88,7 +88,7 @@
               </div>
             </div>
             <div class="reg_btn">
-              <button type="button" class="weui-btn weui-btn_red" onClick="determine()">确定</button>
+              <button type="button" class="weui-btn weui-btn_red" onClick="determine()">{{_('确定')}}</button>
             </div>
           </div>
         </div>
@@ -97,15 +97,15 @@
         <ul class="detail_serve weui-cell__bd">
           <li class="detail_serve_item">
             <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
-            <span class="tagText">7天无理由退货</span>
+            <span class="tagText">{{_('7天无理由退货')}}</span>
           </li>
           <li class="detail_serve_item">
             <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
-            <span class="tagText">运费险</span>
+            <span class="tagText">{{_('运费险')}}</span>
           </li>
           <li class="detail_serve_item">
             <img class="tagImg" src="/static/default/mobile/img/like.png" alt="">
-            <span class="tagText">48小时内发货</span>
+            <span class="tagText">{{_('48小时内发货')}}</span>
           </li>
         </ul>
         <div class="weui-cell__ft mar-left" onclick="tips()">
@@ -117,28 +117,28 @@
             <div class="weui-actionsheet__menu bg-white">
               <input type="hidden" name="" id="" value="">
               <div class="weui-actionsheet__cell not-product_text">
-                <span>服务说明</span>
+                <span>{{_('服务说明')}}</span>
               </div>
               <div class="weui-cell">
                 <div class="weui-cell__bd">
-                  <p class="blackGap">7天无理由退货</p>
-                  <p class="greykGap mar-top">此商品支持7天无理由退货，换货</p>
+                  <p class="blackGap">{{_('7天无理由退货')}}</p>
+                  <p class="greykGap mar-top">{{_('此商品支持7天无理由退货，换货')}}</p>
                 </div>
               </div>
               <div class="weui-cell">
                 <div class="weui-cell__bd">
-                  <p class="blackGap">运费险</p>
-                  <p class="greykGap  mar-top">购买此商品赠送运费险</p>
+                  <p class="blackGap">{{_('运费险')}}</p>
+                  <p class="greykGap  mar-top">{{_('购买此商品赠送运费险')}}</p>
                 </div>
               </div>
               <div class="weui-cell">
                 <div class="weui-cell__bd">
-                  <p class="blackGap">48小时内发货</p>
-                  <p class="greykGap mar-top">商家承诺下单成功48小时内发货</p>
+                  <p class="blackGap">{{_('48小时内发货')}}</p>
+                  <p class="greykGap mar-top">{{_('商家承诺下单成功48小时内发货')}}</p>
                 </div>
               </div>
               <div class="reg_btn">
-                <button type="button" class="weui-btn weui-btn_red" onClick="know()">知道了</button>
+                <button type="button" class="weui-btn weui-btn_red" onClick="know()">{{_('知道了')}}</button>
               </div>
             </div>
           </div>
@@ -150,11 +150,11 @@
     <div class="weui-cells">
       <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.comment.goods', goods_id=99) }}">
         <div class="weui-cell__bd">
-          <span class="blackGap">评价</span>
-          <span class="mar-left praise_rate">好评99%</span>
+          <span class="blackGap">{{_('评价')}}</span>
+          <span class="mar-left praise_rate">{{_('好评99')}}%</span>
         </div>
         <div class="weui-cell__ft">
-          <span>共计3487条</span>
+          <span>{{_('共计3487条')}}</span>
         </div>
       </a>
       <div class="weui-media-box weui-media-box_appmsg">
@@ -163,11 +163,11 @@
         </div>
         <div class="weui-media-box__bd">
           <div class="all_title">
-            大头ssss
-            <span class="typeText">中评</span>
+            大头ssss{{_('知道了')}}
+            <span class="typeText">{{_('中评')}}</span>
           </div>
           <div class="all_add" style="margin-top:5px">2018-06-20 21:48:43</div>
-          <div class="review_cnt">评论大头ssss好评中评差评有图</div>
+          <div class="review_cnt">{{_('评论大头ssss好评中评差评有图')}}</div>
           <div class="review_att">
             <span class="review_img">
               <img src="" alt="">
@@ -193,11 +193,11 @@
         </div>
         <div class="weui-media-box__bd">
           <div class="all_title">
-            大头ssss
-            <span class="typeText">好评</span>
+            {{_('大头aaaa')}}
+            <span class="typeText">{{_('好评')}}</span>
           </div>
           <div class="all_add" style="margin-top:5px">2018-06-20 21:48:43</div>
-          <div class="review_cnt">评论大头ssss好评中评差评有图评论大头ssss好评中评差评有图评论大头ssss好评中评差评有图</div>
+          <div class="review_cnt">{{_('评论大头ssss好评中评差评有图评论大头ssss好评中评差评有图评论大头ssss好评中评差评有图')}}</div>
           <div class="review_att">
             <span class="review_img">
               <img src="" alt="">
@@ -221,7 +221,7 @@
   </div>
   <div id="nav3">
     <div class="weui-cells">
-      <div class="pro-detail_tit">商品详情</div>
+      <div class="pro-detail_tit">{{_('商品详情')}}</div>
       <ul class="">
         <li style="width: 100%;overflow: hidden;line-height: 0">
           <img style="width:100%;" src="/static/default/mobile/img/buy.png" alt="">
@@ -248,19 +248,19 @@
       <img src="/static/default/mobile/img/cart.png" alt="">
     </div>
     <!-- <div style="flex:3" onclick="cartTo()">
-      <button type="button" class="cartTo">加入购物车</button>
+      <button type="button" class="cartTo">{{_('加入购物车')}}</button>
     </div>
     <a href="{{ url_for('mobile.cart.checkout') }}" style="flex:3">
-      <button type="button" class="buyTo">立即购买</button>
+      <button type="button" class="buyTo">{{_('立即购买')}}</button>
     </a> -->
     <!-- 商品缺货时显示 -->
     <!-- <div style="flex:3">
-      <button type="button" class="buyTo">缺货</button>
+      <button type="button" class="buyTo">{{_('缺货')}}</button>
     </div> -->
 
     <!-- 商品下架时显示 -->
     <div style="flex:6">
-      <button type="button" class="downOut">商品已下架</button>
+      <button type="button" class="downOut">{{_('商品已下架')}}</button>
     </div>
   </div>
 </div>

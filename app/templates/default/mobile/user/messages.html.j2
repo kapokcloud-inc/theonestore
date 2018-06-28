@@ -12,8 +12,10 @@
       <div class="weui-cell__bd">
         <div class="all_add height25">2018-06-07 21:06:46</div>
         <div class="nicktitle">
-          您的订单已经发货了，请点击
-          <a href="{{ url_for('mobile.user.order_detail') }}" style="color:#2a6496">查看详情>></a>
+          {{_('您的订单已经发货了，请点击')}}
+          <a href="{{ url_for('mobile.user.order_detail') }}" style="color:#2a6496">
+            {{_('查看详情>>')}}
+          </a>
         </div>
       </div>
     </div>
@@ -23,8 +25,10 @@
       <div class="weui-cell__bd">
         <div class="all_add height25">2018-06-07 21:27:46</div>
         <div class="nicktitle">
-          您的快递已经在派件了，请注意查收！收货评价10字以上截图联系客服，可领2元现金券。请点击
-          <a href="{{ url_for('mobile.user.order_detail') }}" style="color:#2a6496">查看详情>></a>
+          {{_('您的快递已经在派件了，请注意查收！收货评价10字以上截图联系客服，可领2元现金券。请点击')}}
+          <a href="{{ url_for('mobile.user.order_detail') }}" style="color:#2a6496">
+            {{_('查看详情>>')}}
+          </a>
         </div>
       </div>
     </div>

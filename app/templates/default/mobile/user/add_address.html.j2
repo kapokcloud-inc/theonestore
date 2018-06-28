@@ -10,40 +10,35 @@
   <div class="weui-cells weui-cells_form">
     <div class="weui-cell">
       <div class="weui-cell__bd">
-        <input class="weui-input greykGap" type="text" placeholder="请填写收件人姓名" value="">
+        <input class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人姓名')}}" value="">
       </div>
     </div>
     <div class="weui-cell">
       <div class="weui-cell__bd">
-        <input class="weui-input greykGap" type="text" placeholder="请填写收件人手机号码" value="">
+        <input class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人手机号码')}}" value="">
       </div>
     </div>
     <div class="weui-cell weui-cell_select weui-cell_select-after">
       <div class="weui-cell__bd">
-        <input class="weui-input greykGap" type="text" placeholder="请选择收件地区" value="" id='city-picker'>
+        <input class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="" id='city-picker'>
       </div>
     </div>
     <div class="weui-cell">
       <div class="weui-cell__bd">
-        <input class="weui-input greykGap" type="text" placeholder="请填写详细地址：如街道、道路、门牌号等" value="">
-      </div>
-    </div>
-    <div class="weui-cell">
-      <div class="weui-cell__bd">
-        <input class="weui-input greykGap" type="text" placeholder="请填写邮政编码" value="">
+        <input class="weui-input greykGap" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}" value="">
       </div>
     </div>
   </div>
   <div class="weui-cells weui-cells_form">
     <div class="weui-cell weui-cell_access">
-      <div class="weui-cell__hd blackGap">地址类型</div>
+      <div class="weui-cell__hd blackGap">{{_('地址类型')}}</div>
       <div class="weui-cell__bd greykGap">
-        <input type="text" class="weui-input align_right" placeholder="请选择地址类型" id="add_type" value="" data-values="">
+        <input type="text" class="weui-input align_right" placeholder="{{_('请选择地址类型')}}" id="add_type" value="" data-values="">
       </div>
       <div class="weui-cell__ft mar-left"></div>
     </div>
     <div class="weui-cell weui-cell_switch">
-      <div class="weui-cell__bd">设为默认地址</div>
+      <div class="weui-cell__bd">{{_('设为默认地址')}}</div>
       <div class="weui-cell__ft">
         <label for="switchCP" class="weui-switch-cp">
           <input id="switchCP" class="weui-switch-cp__input" type="checkbox" checked="checked">
@@ -53,10 +48,10 @@
     </div>
   </div>
   <div class="reg_btn">
-    <button type="button" class="weui-btn weui-btn_red" onClick="save()">保存</button>
+    <button type="button" class="weui-btn weui-btn_red" onClick="save()">{{_('保存')}}</button>
   </div>
   <div class="reg_btn">
-    <button type="button" class="weui-btn weui-btn_c" onClick="del()">删除</button>
+    <button type="button" class="weui-btn weui-btn_c" onClick="del()">{{_('删除')}}</button>
   </div>
 </div>
 {% endblock %} 

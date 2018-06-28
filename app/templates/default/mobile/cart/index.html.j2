@@ -46,22 +46,22 @@
       </div>
     {% endfor %}
     <div class="settlement_wrap">
-      <div class="weui-cells weui-cells_checkbox">
-        <label class="flex_wrap cart_bar weui-check__label" for="s1">
+      <div class="weui-cells weui-cells_checkbox cart_bar">
+        <label class="weui-check__label" for="s1">
           <div class="col-check">
             {% set checked = 'checked' if total_quantity == items_quantity else '' %}
             <input type="checkbox" class="weui-check" name="checkbox1" id="s1" {{ checked }}>
             <i class="weui-icon-checked" style="margin-left:10px !important"></i>
             <p class="all_check">全选</p>
           </div>
-          <div class="total">
-            <div class="total-price">
-              <span>合计：</span>
-              <span class="all_price" style="font-size:18px">￥{{ items_amount }}</span>
-            </div>
-            <a href="{{ url_for('mobile.cart.checkout') }}" class="btn_primary">{{_('结算(%s)' % items_quantity)}}</a>
-          </div>
         </label>
+        <div class="total">
+          <div class="total-price">
+            <span>合计：</span>
+            <span class="all_price" style="font-size:18px">￥{{ items_amount }}</span>
+          </div>
+          <a href="{{ url_for('mobile.cart.checkout') }}" class="btn_primary">{{_('结算(%s)' % items_quantity)}}</a>
+        </div>
       </div>
     </div>
   </div>
@@ -70,10 +70,10 @@
     <div class="not-product_img">
       <img class="notproduct" src="/static/default/mobile/img/notcart.png" alt="">
     </div>
-    <div class="not-product_text">您的购物车空空如也</div>
+    <div class="not-product_text">{{_('您的购物车空空如也')}}</div>
     <div class="reg_btn">
       <a href="{{ url_for('mobile.index.root') }}">
-        <button type="button" class="weui-btn weui-btn_red">到商城去逛逛</button>
+        <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
       </a>
     </div>
   </div> -->

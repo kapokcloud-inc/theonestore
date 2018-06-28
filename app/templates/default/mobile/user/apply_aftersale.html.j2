@@ -10,13 +10,13 @@
  <div class="weui-cells weui-cells_form">
     <div class="weui-cell">
       <div class="weui-cell__bd">
-        <div class="blackGap mar-bottom">服务类型</div>
-        <button type="button" class="tag_btn tag_btn-on">仅退款</button>
-        <button type="button" class="tag_btn">退货退款</button>
-        <button type="button" class="tag_btn">仅换货</button>
-        <p class="all_desc mar-top">仅退款：未收到货(包含未签收)，或卖家协商同意前提下</p>
-        <!-- <p class="all_desc mar-top">退货退款：已收到货，需要退换已收到的货物</p>
-        <p class="all_desc mar-top">仅换货：已收到货，货物拍错或是损坏，可跟卖家协商换货</p> -->
+        <div class="blackGap mar-bottom">{{_('服务类型')}}</div>
+        <button type="button" class="tag_btn tag_btn-on">{{_('仅退款')}}</button>
+        <button type="button" class="tag_btn">{{_('退货退款')}}</button>
+        <button type="button" class="tag_btn">{{_('仅换货')}}</button>
+        <p class="all_desc mar-top">{{_('仅退款：未收到货(包含未签收)，或卖家协商同意前提下')}}</p>
+        <!-- <p class="all_desc mar-top">{{_('退货退款：已收到货，需要退换已收到的货物')}}</p> -->
+        <!-- <p class="all_desc mar-top">{{_('仅换货：已收到货，货物拍错或是损坏，可跟卖家协商换货')}}</p> -->
       </div>
     </div>
   </div>
@@ -26,10 +26,10 @@
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">
-        <div class="all_title height25">小米蓝牙项圈耳机 黑色</div>
+        <div class="all_title height25">{{_('小米蓝牙项圈耳机 黑色')}}</div>
         <div class="all_desc height25">
           <span class="mar-right all_price">￥1299</span>
-          <span>x 3</span>
+          <span>x 1</span>
         </div>
       </div>
       <div class="weui-cell__ft mar-left">
@@ -42,27 +42,27 @@
     </div>
     <a class="weui-cell weui-cell_access" href="javascript:;" id="goods_state">
       <div class="weui-cell__bd blackGap">
-        <p class="blackGap">货物状态</p>
+        <p class="blackGap">{{_('货物状态')}}</p>
       </div>
       <div class="weui-cell__ft mar-left">
-        <input type="text" class="weui-input align_right" placeholder="请选择" value="" data-values="">
+        <input type="text" class="weui-input align_right" placeholder="{{_('请选择')}}" value="" data-values="">
       </div>
     </a>
     <div class="weui-cell">
       <div class="weui-cell__bd">
-        <p class="blackGap mar-bottom">退款说明</p>
+        <p class="blackGap mar-bottom">{{_('退款说明')}}</p>
         <div class="weui-cell" style="background:#f3f4f5;border-radius:5px;">
-          <textarea class="review_text" name="name" rows="5" placeholder="请输入退款说明..." style="background:#f3f4f5"></textarea>
+          <textarea class="review_text" name="name" rows="5" placeholder="{{_('请输入退款说明...')}}" style="background:#f3f4f5"></textarea>
         </div>
       </div>
     </div>
     <div class="weui-cell">
       <div class="weui-cell__bd">
         <p class="blackGap">
-          退款金额：
+          {{_('退款金额：')}}
           <span class="all_price">￥22</span>
         </p>
-        <p class="all_desc mar-top">注：退款金额将返回到您原支付账户</p>
+        <p class="all_desc mar-top">{{_('注：退款金额将返回到您原支付账户')}}</p>
       </div>
     </div>
   </div>
@@ -77,7 +77,7 @@
   <div class="weui-cells weui-cells_form">
     <div class="weui-cell uploader_wrap">
       <div class="weui-cell__bd">
-        <div class="blackGap mar-bottom">上传凭证</div>
+        <div class="blackGap mar-bottom">{{_('上传凭证')}}</div>
         <div class="weui-uploader">
           <div class="weui-uploader__bd">
             <ul class="weui-uploader__files" id="uploaderFiles"></ul>

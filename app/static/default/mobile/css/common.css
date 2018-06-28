@@ -395,6 +395,7 @@ ul li {
   z-index: 10;
 }
 .cart_bar {
+  display: flex;
   background: #fff;
   height: 45px;
   line-height: 45px;
@@ -528,4 +529,8 @@ ul li {
   top: 0;
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
+}
+.weui-cell_access,
+.weui-check__label {
+  background-color: #fff !important;
 }
