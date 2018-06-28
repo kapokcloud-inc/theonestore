@@ -82,12 +82,6 @@ def review():
     return render_template('mobile/user/review.html.j2')
 
 
-@user.route('/settlement')
-def settlement():
-    """手机站 - 提交订单"""
-    return render_template('mobile/user/settlement.html.j2')
-
-
 @user.route('/logistics')
 def logistics():
     """手机站 - 物流详情"""

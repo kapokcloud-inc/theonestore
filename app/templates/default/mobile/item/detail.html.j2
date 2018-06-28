@@ -2,9 +2,9 @@
 
 {% block head %}
 <title>{{_('商品详情 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/mobile/css/item.css">
-<link rel="stylesheet" href="/static/default/mobile/css/index.css">
-<link rel="stylesheet" href="/static/default/mobile/css/cart.css">
+<link rel="stylesheet" href="{{'/static/default/mobile/css/item.css'|static_uri}}">
+<link rel="stylesheet" href="{{'/static/default/mobile/css/index.css'|static_uri}}">
+<link rel="stylesheet" href="{{'/static/default/mobile/css/cart.css'|static_uri}}">
 {% endblock %} 
 
 {% block body %}
@@ -247,12 +247,21 @@
       <span class="weui-badge msg_badge">3</span>
       <img src="/static/default/mobile/img/cart.png" alt="">
     </div>
-    <div style="flex:3" onclick="cartTo()">
+    <!-- <div style="flex:3" onclick="cartTo()">
       <button type="button" class="cartTo">加入购物车</button>
     </div>
-    <a href="{{ url_for('mobile.user.settlement') }}" style="flex:3">
+    <a href="{{ url_for('mobile.cart.checkout') }}" style="flex:3">
       <button type="button" class="buyTo">立即购买</button>
-    </a>
+    </a> -->
+    <!-- 商品缺货时显示 -->
+    <!-- <div style="flex:3">
+      <button type="button" class="buyTo">缺货</button>
+    </div> -->
+
+    <!-- 商品下架时显示 -->
+    <div style="flex:6">
+      <button type="button" class="downOut">商品已下架</button>
+    </div>
   </div>
 </div>
 {% endblock %} 
