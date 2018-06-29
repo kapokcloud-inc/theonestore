@@ -122,7 +122,7 @@ class CheckoutService(object):
             if cart.uid != self.uid:
                 self.msg = _(u'非法的购物车商品项')
                 return False
-
+            
             # 检查 - 商品
             item = Goods.query.get(cart.goods_id)
             if not item:

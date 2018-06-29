@@ -29,6 +29,8 @@ from app.helpers.date_time import (
 
 from app.services.api.cart import CheckoutService
 
+from app.models.coupon import Coupon
+from app.models.shipping import Shipping
 from app.models.user import UserAddress
 from app.models.item import Goods
 from app.models.cart import Cart
@@ -43,9 +45,9 @@ from app.models.order import (
 
 
 class OrderCreateService(object):
-    """ 创建订单Service """
+    """创建订单Service"""
 
-    def __init__(self, uid, carts_id, ua_id, shipping_id=0, coupon_id='', user_remark=''):
+    def __init__(self, uid, carts_id, ua_id, shipping_id=0, coupon_id=0, user_remark=''):
         self.msg               = ''
         self.uid               = uid                    # 购买人
         self.carts_id          = carts_id               # 购物车商品项ID列表
@@ -127,6 +129,13 @@ class OrderCreateService(object):
         # 创建订单编号
         order_sn = OrderStaticMethodsService.create_order_sn(self.current_time)
 
+        # 创建订单地址
+        data = {'order_id':order_id, 'name':self.shipping_address.name, 'mobile':self.shipping_address.mobile,
+                'province':self.shipping_address.province, 'city':self.shipping_address.city,
+                'district':self.shipping_address.district, 'address':self.shipping_address.address,
+                'zip':self.shipping_address.zip, 'add_time':self.current_time, 'update_time':self.current_time}
+        model_create(OrderAddress, data)
+
         # 使用优惠券
         if self.coupon:
             data = {'is_valid':0 , 'order_id':order_id, 'use_time':self.current_time}
@@ -136,13 +145,6 @@ class OrderCreateService(object):
 
         # 更新订单金额
         self.order_amount = self.items_amount + self.shipping_amount
-
-        # 创建收货地址
-        data = {'order_id':order_id, 'name':self.shipping_address.name, 'mobile':self.shipping_address.mobile,
-                'province':self.shipping_address.province, 'city':self.shipping_address.city,
-                'district':self.shipping_address.district, 'address':self.shipping_address.address,
-                'zip':self.shipping_address.zip, 'add_time':self.current_time, 'update_time':self.current_time}
-        model_create(OrderAddress, data)
 
         # 创建订单商品等
         for _cart in self.carts:
@@ -183,6 +185,156 @@ class OrderCreateService(object):
         return True
 
 
+class OrderUpdateService(object):
+    """更新订单Service"""
+
+    def __init__(self, uid, order_id, ua_id, shipping_id=0, coupon_id=0):
+        self.msg              = ''
+        self.uid              = uid                    # 购买人
+        self.order_id         = order_id               # 订单ID
+        self.ua_id            = ua_id                  # 收货地址ID
+        self.shipping_id      = shipping_id            # 配送方式ID
+        self.coupon_id        = coupon_id              # 优惠券ID
+        self.current_time     = current_timestamp()    # 当前时间
+
+        self.order            = None                   # 订单实例
+        self.shipping_address = None                   # 收货地址实例
+        self.order_address    = None                   # 已用订单地址实例
+        self.shipping         = None                   # 配送方式实例
+        self.coupon           = None                   # 优惠券实例
+        self._coupon          = None                   # 已用优惠券实例
+        self.items_amount     = Decimal('0.00')        # 订单商品总金额
+        self.shipping_amount  = Decimal('0.00')        # 快递费用
+        self.order_amount     = Decimal('0.00')        # 订单金额: items_amount + shipping_amount
+        self.discount_amount  = Decimal('0.00')        # 订单优惠金额: 使用优惠券等优惠金额
+        self.pay_amount       = Decimal('0.00')        # 订单应付金额: order_amount - discount_amount
+    
+    def _check_order(self):
+        """检查 - 订单"""
+
+        self.order = Order.query.filter(Order.order_id == self.order_id).filter(Order.uid == self.uid).first()
+        if not self.order:
+            self.msg = _(u'订单不存在')
+            return False
+
+        if self.order.pay_status != 1:
+            self.msg = _(u'不能修改已支付的订单')
+            return False
+        
+        self.items_amount = Decimal(self.order.goods_amount)
+
+        return True
+
+    def _check_shipping_address(self):
+        """检查 - 收货地址"""
+
+        self.order_address = OrderAddress.query.filter(OrderAddress.order_id == self.order_id).first()
+
+        self.shipping_address = UserAddress.query.filter(UserAddress.ua_id == self.ua_id).\
+                                    filter(UserAddress.uid == self.uid).first()
+        if not self.shipping_address:
+            self.msg = _(u'收货地址不存在')
+            return False
+
+        return True
+
+    def _check_shipping(self):
+        """检查 - 快递"""
+
+        self.shipping = Shipping.query.get(self.shipping_id)
+        if not self.shipping:
+            self.msg = _(u'快递不存在')
+            return False
+
+        self.shipping_amount = Decimal(self.shipping.shipping_amount)
+
+        return True
+    
+    def _check_coupon(self):
+        """检查 - 优惠券"""
+
+        self._coupon = Coupon.query.filter(Coupon.order_id == self.order_id).first()
+
+        if self.coupon_id > 0 and self._coupon.coupon_id != self.coupon_id:
+            # 检查 - 优惠券
+            self.coupon = Coupon.query.filter(Coupon.coupon_id == self.coupon_id).filter(Coupon.uid == self.uid).first()
+            if not self.coupon:
+                self.msg = _(u'优惠券不存在')
+                return False
+
+            # 优惠券金额
+            if (self.coupon.is_valid == 1 and
+                self.coupon.begin_time <= self.current_time and
+                self.coupon.end_time >= self.current_time and
+                self.coupon.limit_amount <= self.items_amount):
+                self.coupon_amount   = Decimal(self.coupon.coupon_amount)
+                self.discount_amount = self.coupon_amount
+
+        return True
+
+    def check(self):
+        """检查"""
+
+        if not self._check_order():
+            return False
+
+        if not self._check_shipping_address():
+            return False
+
+        if not self._check_shipping():
+            return False
+
+        if not self._check_coupon():
+            return False
+
+        return True
+
+    def update(self):
+        """更新订单"""
+
+        # 删除已用订单地址
+        model_delete(self.order_address)
+
+        # 创建订单地址
+        data = {'order_id':self.order_id, 'name':self.shipping_address.name, 'mobile':self.shipping_address.mobile,
+                'province':self.shipping_address.province, 'city':self.shipping_address.city,
+                'district':self.shipping_address.district, 'address':self.shipping_address.address,
+                'zip':self.shipping_address.zip, 'add_time':self.current_time, 'update_time':self.current_time}
+        model_create(OrderAddress, data)
+        
+        # 还原已用优惠券
+        if self._coupon != self.coupon:
+            data = {'is_valid':1 , 'order_id':0, 'use_time':0}
+            model_update(self._coupon, data)
+
+            self.discount_desc = ''
+
+        # 使用优惠券
+        if self.coupon:
+            data = {'is_valid':0 , 'order_id':self.order_id, 'use_time':self.current_time}
+            model_update(self.coupon, data)
+
+            self.discount_desc = _(u'使用优惠券%s: %s' % (self.coupon.coupon_id, self.coupon.coupon_name))
+
+        # 更新订单金额
+        self.order_amount = self.items_amount + self.shipping_amount
+
+        # 更新应付金额
+        self.pay_amount = self.order_amount - self.discount_amount
+
+        # 更新订单
+        data = {'goods_amount':self.items_amount, 'order_amount':self.order_amount,
+                'discount_amount':self.discount_amount, 'discount_desc':self.discount_desc,
+                'pay_amount':self.pay_amount, 'shipping_id':self.shipping_id,
+                'shipping_name':self.shipping.shipping_name, 'shipping_code':self.shipping.shipping_code,
+                'shipping_amount':self.shipping_amount, 'update_time':self.current_time}
+        model_update(self.order, data)
+
+        db.session.commit()
+
+        return True
+
+
 class OrderStaticMethodsService(object):
     """订单静态方法Service"""
 
@@ -190,7 +342,7 @@ class OrderStaticMethodsService(object):
     def create_order_sn(current_time):
         """创建订单编号"""
 
-        current_time = timestamp2str(current_time, 'YYYYMMDDHH:mm:ss')
+        current_time = timestamp2str(current_time, 'YYYYMMDDHHmmss')
         randint      = random.randint(1000, 9999)
         order_sn     = '%s%s' % (current_time, randint)
 

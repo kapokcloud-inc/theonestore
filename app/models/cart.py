@@ -20,6 +20,7 @@ class Cart(BaseModel, db.Model):
     goods_id = db.Column(db.Integer, default=0)
     quantity = db.Column(db.Integer, default=0)
     is_checked = db.Column(db.Integer, default=1)
+    checkout_type = db.Column(db.Integer, default=1)
     add_time = db.Column(db.Integer, default=0)
     update_time = db.Column(db.Integer, default=0)
 

@@ -67,7 +67,7 @@ def add():
         return resjson.print_json(10, _(u'找不到商品'))
 
     # 获取购物车商品
-    q = Cart.query.filter(Cart.goods_id == goods_id)
+    q = Cart.query.filter(Cart.goods_id == goods_id).filter(Cart.checkout_type == 1)
     if uid:
         q = q.filter(Cart.uid == uid)
     else:
@@ -77,7 +77,7 @@ def add():
     # 是否创建购物车商品
     if not cart:
         data = {'uid':uid, 'session_id':session_id, 'goods_id':goods_id, 'quantity':0,
-                'is_checked':1, 'add_time':current_time}
+                'is_checked':1, 'checkout_type':1, 'add_time':current_time}
         cart = model_create(Cart, data)
 
     # 更新购物车商品
@@ -108,7 +108,7 @@ def update():
         return resjson.print_json(resjson.PARAM_ERROR)
 
     # 获取购物车商品
-    q = Cart.query.filter(Cart.cart_id == cart_id)
+    q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
     if uid:
         q = q.filter(Cart.uid == uid)
     else:
@@ -141,7 +141,7 @@ def remove():
 
     for cart_id in carts_id:
         # 获取购物车商品
-        q = Cart.query.filter(Cart.cart_id == cart_id)
+        q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
         if uid:
             q = q.filter(Cart.uid == uid)
         else:
@@ -183,7 +183,7 @@ def checked():
             return resjson.print_json(resjson.PARAM_ERROR)
 
         # 获取购物车商品
-        q = Cart.query.filter(Cart.cart_id == cart_id)
+        q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
         if uid:
             q = q.filter(Cart.uid == uid)
         else:
@@ -216,11 +216,15 @@ def checkout_amounts():
     uid = 1
 
     args = request.args
+    carts_id    = args.get('carts_id', '[]').strip()
     shipping_id = toint(args.get('shipping_id', '0'))
     coupon_id   = toint(args.get('coupon_id', '0'))
 
-    carts    = db.session.query(Cart.cart_id).filter(Cart.uid == uid).filter(Cart.is_checked).all()
-    carts_id = [cart.cart_id for cart in carts]
+    try:
+        carts_id = json.loads(carts_id)
+        carts_id = [toint(cart_id) for cart_id in carts_id]
+    except Exception, e:
+        return resjson.print_json(resjson.PARAM_ERROR)
 
     cs = CheckoutService(uid, carts_id, shipping_id, coupon_id)
     if not cs.check():

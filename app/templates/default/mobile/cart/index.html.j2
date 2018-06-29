@@ -14,7 +14,7 @@
         <label class="weui-check__label" for="cart{{cart.cart.cart_id}}">
           <div class="col-check">
             {% set checked = 'checked' if cart.cart.is_checked == 1 else '' %}
-            {% set checked = checked if cart.is_valid == 1 else '' %}
+            {% set checked = checked if cart.is_valid == 1 else 'disabled' %}
             {% set is_valid = 'is_valid' if cart.is_valid == 1 else '' %}
             <input type="checkbox" class="weui-check {{ is_valid }}" name="checkbox1" 
               id="cart{{cart.cart.cart_id}}" value="{{ cart.cart.cart_id }}" {{ checked }}  
@@ -25,7 +25,7 @@
         </label>
         <a class="weui-cell" style="overflow:hidden;width:100%" href="{{ url_for('mobile.cart.edit', cart_id=cart.cart.cart_id) }}">
           <div class="weui-cell__hd cart_phone">
-            <img alt="" src="">
+            <img alt="" src="{{ cart.item.goods_img }}">
           </div>
           {% if cart.is_valid == 1 %}
             <div class="weui-cell__bd">
@@ -54,20 +54,20 @@
     {% endfor %}
     <div class="settlement_wrap">
       <div class="weui-cells weui-cells_checkbox cart_bar">
-        <label class="weui-check__label" for="s1">
+        <label class="weui-check__label" for="all">
           <div class="col-check">
             {% set checked = 'checked' if total_quantity == items_quantity else '' %}
-            <input type="checkbox" class="weui-check" name="checkbox1" id="s1" {{ checked }}>
+            <input type="checkbox" class="weui-check" name="checkbox1" id="all" {{ checked }}>
             <i class="weui-icon-checked" style="margin-left:10px !important"></i>
-            <p class="all_check">全选</p>
+            <p class="all_check">{{_('全选')}}</p>
           </div>
         </label>
         <div class="total">
           <div class="total-price">
-            <span>合计：</span>
-            <span class="all_price" style="font-size:18px">￥{{ items_amount }}</span>
+            <span>{{_('合计')}}：</span>
+            <span id="items_amount" class="all_price" style="font-size:18px">￥{{ items_amount }}</span>
           </div>
-          <a href="{{ url_for('mobile.cart.checkout') }}" class="btn_primary">{{_('结算(%s)' % items_quantity)}}</a>
+          <a id="checkout" href="javascript:void(0);" class="btn_primary" onclick="checkout()">{{_('结算(%s)' % items_quantity)}}</a>
         </div>
       </div>
     </div>
@@ -91,38 +91,60 @@
 
 {% block script %}
 <script  type="text/javascript">
+function get_carts() {
+  var carts = [];
+
+  $(".is_valid").each(function(){
+    var cart = {};
+    cart.cart_id = $(this).val();
+    cart.is_checked = $(this).is(':checked') ? 1 : 0;
+
+    carts.push(cart);
+  });
+
+  return JSON.stringify(carts);
+}
+
+
+function checked(carts) {
+  $.get("{{ url_for('api.cart.checked') }}", {'carts':carts}, function(json) {
+    if (json.ret != 0) {
+      $.toast(json.msg, "text");
+      return false;
+    }
+
+    $("#items_amount").text("￥"+json.data.items_amount);
+    $("#checkout").text("{{_('结算')}}("+json.data.items_quantity+")");
+    return true;
+  });
+}
+
+
+function checkout() {
+  var carts_id = [];
+
+  $(".is_valid").each(function(){
+    var cart_id = parseInt($(this).val());
+    carts_id.push(cart_id);
+  });
+
+  if (carts_id.length == 0) {
+    $.toast("{{_('请选择结算商品')}}", "text");
+    return false;
+  }
+
+  var carts_id_json = JSON.stringify(carts_id);
+  window.location.href="{{ url_for('mobile.cart.checkout') }}?carts_id="+carts_id_json;
+}
+
+
 $(document).ready(function () {
-  function get_carts() {
-    var carts = [];
-
-    $(".is_valid").each(function(){
-      var cart = {};
-      cart.cart_id = $(this).val();
-      cart.is_checked = $(this).is(':checked') ? 1 : 0;
-
-      carts.push(cart);
-    });
-    console.log(carts);
-
-    return JSON.stringify(carts);
+  var msg = '{{ msg }}';
+  if (msg != '') {
+    $.toast(msg, "text");
   }
 
-  function checked(carts) {
-    console.log(carts);
-    $.get("{{ url_for('api.cart.checked') }}", {'carts':carts}, function(json) {
-      if (json.ret != 0) {
-        $.toast(json.msg, "text");
-        return false;
-      }
-
-      console.log(json.data.items_amount);
-      console.log(json.data.items_quantity);
-      return true;
-    });
-  }
-
-  //$("#all").click(function(){
-  $("#s1").click(function(){
+  $("#all").click(function(){
     if ($(this).is(':checked')) {
       $(".is_valid").prop('checked', true);
     } else {
@@ -133,6 +155,7 @@ $(document).ready(function () {
     checked(carts);
   });
 
+
   $(".is_valid").click(function(){
     var is_all = 1;
   
@@ -142,7 +165,10 @@ $(document).ready(function () {
       }
     });
 
-    (is_all == 1) ? $("#s1").prop('checked', true) : $("#s1").prop('checked', false);
+    (is_all == 1) ? $("#all").prop('checked', true) : $("#all").prop('checked', false);
+
+    var carts = get_carts();
+    checked(carts);
   });
 });
 </script>

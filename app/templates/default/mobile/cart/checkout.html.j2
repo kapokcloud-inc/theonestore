@@ -134,7 +134,7 @@
       {% set not_before = 'not_before' if loop.first else '' %}
       <div class="weui-cell {{ not_before }}">
         <div class="weui-cell__hd avatar mar-right">
-          <img src="" alt="">
+          <img src="{{ cart.item.goods_img }}" alt="">
         </div>
         <div class="weui-cell__bd">
           <div class="all_title height25">{{ cart.item.goods_name }}</div>
@@ -292,10 +292,25 @@ $.ajaxSetup({
 
 //结算金额
 function checkout_amounts() {
+  var carts_id = $("#carts_id").val();
   var shipping_id = $("#shipping_selected").attr('data-values');
   var coupon_id = $("#coupon_id").val();
 
-  $.get("{{ url_for('api.cart.checkout_amounts') }}", {'shipping_id':shipping_id, 'coupon_id':coupon_id}, function(json) {
+  if (carts_id == '') {
+    $.toast("{{_('请先选购商品')}}", "text");
+    return false;
+  }
+
+  if (shipping_id == 0) {
+    $.toast("{{_('请先选择快递')}}", "text");
+    return false;
+  }
+
+  carts_id = carts_id.split(',');
+  carts_id = JSON.stringify(carts_id);
+
+  params = {'carts_id':carts_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id};
+  $.get("{{ url_for('api.cart.checkout_amounts') }}", params, function(json) {
     if (json.ret != 0) {
       $.toast(json.msg, "text");
       return false;
@@ -308,18 +323,6 @@ function checkout_amounts() {
     return true;
   });
 }
-
-$(document).ready(function () {
-  $("#shipping_selected").select({
-    title: "选择配送方式",
-    items: {{ shipping_list }},
-    input: "{{ shipping_title }}"
-  });
-
-  $("#shipping_selected").change(function(){
-    checkout_amounts();
-  });
-});
 
 //选择收货地址
 function choiceAdd(){
@@ -353,16 +356,6 @@ function selected_address(ua_id) {
     $addressList.addClass('hide');
   }
 };
-
-//取消选择地址弹窗
-$('#choiceCancel').click(function (event) {            //event:事件对象
-  event.stopPropagation();                        //停止事件冒泡
-
-  $addressList.removeClass('show');
-  if (!$addressList.hasClass('hide')) {
-    $addressList.addClass('hide');
-  }
-});
 
 //新建收货地址
 function newAddress() {
@@ -498,39 +491,6 @@ function choiceCoupon() {
   }
 }
 
-//选中优惠券
-$('.coupon_item').click(function (event) {        //event:事件对象
-  event.stopPropagation();                        //停止事件冒泡
-
-  var coupon_id = $(this).attr('data-coupon-id');
-  var coupon_title = $(this).attr('data-coupon-title');
-  var is_valid = $(this).attr('data-is-valid');
-  var _coupon_id = $("#coupon_id").val();
-
-  if (is_valid != 1) {
-    return false;
-  }
-
-  if (_coupon_id == coupon_id) {
-    coupon_id = 0;
-    coupon_title = "{{_('使用优惠券')}}";
-    $(this).find('.weui-cell__ft').hide();
-  } else {
-    $(".coupon_item").find('.weui-cell__ft').hide();
-    $(this).find('.weui-cell__ft').show();
-  }
-
-  $("#coupon_id").val(coupon_id);
-  $("#coupon_text").text(coupon_title);
-
-  checkout_amounts();
-
-  $couponList.removeClass('show');
-  if (!$couponList.hasClass('hide')) {
-    $couponList.addClass('hide');
-  }
-});
-
 //关闭优惠券弹窗
 function closeCoupon(){
   $couponList.removeClass('show');
@@ -542,27 +502,30 @@ function closeCoupon(){
 //选择支付方式
 function submit() {
   var order_id = parseInt($("#order_id").val());
+  var ua_id = parseInt($("#current_address_ua_id").val());
+  var shipping_id = parseInt($("#shipping_selected").attr('data-values'));
+  var coupon_id = $("#coupon_id").val();
+  
+  if (ua_id == 0) {
+    $.toast("{{_('请先设置收货地址')}}", "text");
+    return false;
+  }
+
+  if (shipping_id == 0) {
+    $.toast("{{_('请先选择快递')}}", "text");
+    return false;
+  }
 
   if (order_id == 0) {
     var carts_id = $("#carts_id").val();
-    var ua_id = parseInt($("#current_address_ua_id").val());
-    var shipping_id = parseInt($("#shipping_selected").attr('data-values'));
-    var coupon_id = $("#coupon_id").val();
 
     if (carts_id == '') {
       $.toast("{{_('请先选购商品')}}", "text");
       return false;
     }
 
-    if (ua_id == 0) {
-      $.toast("{{_('请先设置收货地址')}}", "text");
-      return false;
-    }
-
-    if (shipping_id == 0) {
-      $.toast("{{_('请先选择快递')}}", "text");
-      return false;
-    }
+    carts_id = carts_id.split(',');
+    carts_id = JSON.stringify(carts_id);
 
     var params = {'carts_id':carts_id, 'ua_id':ua_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id}
     $.post("{{ url_for('api.order.create') }}", params, function(json) {
@@ -570,6 +533,14 @@ function submit() {
         var order = json.data.order;
         $("#order_id").val(order.order_id);
       } else {
+        $.toast(json.msg, "text");
+        return false;
+      }
+    });
+  } else {
+    var params = {'order_id':order_id, 'ua_id':ua_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id}
+    $.post("{{ url_for('api.order.update') }}", params, function(json) {
+      if (json.ret != 0) {
         $.toast(json.msg, "text");
         return false;
       }
@@ -594,13 +565,68 @@ function closePay() {
   }
 }
 
-//选中支付方式
-$('.weui-check__label').click(function (event) {  //event:事件对象
-  event.stopPropagation();                        //停止事件冒泡
-  $payList.removeClass('show');
-  if (!$payList.hasClass('hide')) {
-    $payList.addClass('hide');
-  }
+$(document).ready(function () {
+  $("#shipping_selected").select({
+    title: "选择配送方式",
+    items: {{ shipping_list }},
+    input: "{{ shipping_title }}"
+  });
+
+  $("#shipping_selected").change(function(){
+    checkout_amounts();
+  });
+
+  //选中优惠券
+  $('.coupon_item').click(function (event) {        //event:事件对象
+    event.stopPropagation();                        //停止事件冒泡
+
+    var coupon_id = $(this).attr('data-coupon-id');
+    var coupon_title = $(this).attr('data-coupon-title');
+    var is_valid = $(this).attr('data-is-valid');
+    var _coupon_id = $("#coupon_id").val();
+
+    if (is_valid != 1) {
+      return false;
+    }
+
+    if (_coupon_id == coupon_id) {
+      coupon_id = 0;
+      coupon_title = "{{_('使用优惠券')}}";
+      $(this).find('.weui-cell__ft').hide();
+    } else {
+      $(".coupon_item").find('.weui-cell__ft').hide();
+      $(this).find('.weui-cell__ft').show();
+    }
+
+    $("#coupon_id").val(coupon_id);
+    $("#coupon_text").text(coupon_title);
+
+    checkout_amounts();
+
+    $couponList.removeClass('show');
+    if (!$couponList.hasClass('hide')) {
+      $couponList.addClass('hide');
+    }
+  });
+
+  //选中支付方式
+  $('.weui-check__label').click(function (event) {  //event:事件对象
+    event.stopPropagation();                        //停止事件冒泡
+    $payList.removeClass('show');
+    if (!$payList.hasClass('hide')) {
+      $payList.addClass('hide');
+    }
+  });
+
+  //取消选择地址弹窗
+  $('#choiceCancel').click(function (event) {            //event:事件对象
+    event.stopPropagation();                        //停止事件冒泡
+
+    $addressList.removeClass('show');
+    if (!$addressList.hasClass('hide')) {
+      $addressList.addClass('hide');
+    }
+  });
 });
 </script> 
 {% endblock %}

@@ -7,6 +7,7 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import json
 
 from flask import (
     request,
@@ -21,6 +22,9 @@ from app.database import db
 
 from app.helpers import render_template
 from app.helpers import (
+    model_create,
+    model_update,
+    model_delete,
     log_info,
     toint
 )
@@ -51,10 +55,12 @@ def root():
     uid        = get_uid()
     session_id = get_session_id()
 
+    msg = request.args.get('msg', '').strip()
+
     cs = CartService(uid, session_id)
     cs.check()
 
-    return render_template('mobile/cart/index.html.j2', carts=cs.carts,
+    return render_template('mobile/cart/index.html.j2', msg=msg, carts=cs.carts,
         items_amount=cs.items_amount, items_quantity=cs.items_quantity, total_quantity=cs.total_quantity)
 
 
@@ -65,7 +71,7 @@ def edit(cart_id):
     uid        = get_uid()
     session_id = get_session_id()
 
-    q = Cart.query.filter(Cart.cart_id == cart_id)
+    q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
 
     if uid:
         q = q.filter(Cart.uid == uid)
@@ -90,17 +96,50 @@ def checkout():
     #    return redirect(url_for('api.weixin.login'))
     #uid = get_uid()
     uid = 1
+
+    args         = request.args
+    buy_now      = toint(args.get('buy_now', '0'))
     current_time = current_timestamp()
 
-    carts    = db.session.query(Cart.cart_id).filter(Cart.uid == uid).filter(Cart.is_checked).all()
-    carts_id = [cart.cart_id for cart in carts]
+    if buy_now == 1:
+        goods_id = toint(args.get('goods_id', '0'))
+
+        # 检查
+        if goods_id <= 0:
+            return redirect(request.headers['Referer'])
+
+        # 检查
+        goods = Goods.query.get(goods_id)
+        if not goods:
+            return redirect(request.headers['Referer'])
+
+        # 删除
+        _cart = Cart.query.\
+                        filter(Cart.uid == uid).\
+                        filter(Cart.goods_id == goods_id).\
+                        filter(Cart.checkout_type == 2).first()
+        if _cart:
+            model_delete(_cart, commit=True)
+        
+        data = {'uid':uid, 'goods_id':goods_id, 'quantity':1, 'is_checked':1, 'checkout_type':2,
+                'add_time':current_time, 'update_time':current_time}
+        cart = model_create(Cart, data, commit=True)
+
+        carts_id = [cart.cart_id]
+    else:
+        carts_id = args.get('carts_id', '[]').strip()
+        try:
+            carts_id = json.loads(carts_id)
+            carts_id = [toint(cart_id) for cart_id in carts_id]
+        except Exception, e:
+            return redirect(url_for('mobile.cart.root', msg=_(u'系统错误:参数错误')))
 
     # 快递列表
     _shipping_list = Shipping.query.\
                         filter(Shipping.is_enable == 1).\
                         order_by(Shipping.sorting.desc(), Shipping.shipping_amount.asc()).all()
     if len(_shipping_list) <= 0:
-        return render_template('mobile/cart/checkout.html.j2', msg=_(u'系统末配置快递'))
+        return redirect(url_for('mobile.cart.root', msg=_(u'系统末配置快递')))
 
     # 默认快递
     default_shipping = Shipping.query.filter(Shipping.is_enable == 1).filter(Shipping.is_default == 1).first()
@@ -108,7 +147,7 @@ def checkout():
 
     cs = CheckoutService(uid, carts_id, default_shipping.shipping_id)
     if not cs.check():
-        return render_template('mobile/cart/checkout.html.j2', msg=cs.msg)
+        return redirect(url_for('mobile.cart.root', msg=cs.msg))
 
     # 收货地址
     addresses       = UserAddress.query.filter(UserAddress.uid == uid).order_by(UserAddress.is_default.desc()).all()
