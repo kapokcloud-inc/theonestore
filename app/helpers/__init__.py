@@ -27,6 +27,7 @@ from flask_uploads import (
     DEFAULTS,
     patch_request_class
 )
+from sqlalchemy import func
 
 from app.database import db
 
@@ -202,3 +203,10 @@ def model_delete(record, commit=False):
 
     if commit:
         db.session.commit()
+
+
+def get_count(q):
+    count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+    count   = q.session.execute(count_q).scalar()
+
+    return count

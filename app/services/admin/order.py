@@ -14,14 +14,11 @@ from hashlib import sha256
 from flask_babel import gettext as _
 
 from app.helpers import log_info
-from app.helpers.date_time import (
-    current_timestamp,
-    before_after_timestamp
-)
+from app.helpers.date_time import current_timestamp
 from app.models.order import Order
 
 
-class OderStaticMethodsService(object):
+class OrderStaticMethodsService(object):
     """ 订单静态方法Service """
 
     @staticmethod
@@ -66,7 +63,7 @@ class OderStaticMethodsService(object):
     
 
     @staticmethod
-    def express(com, code):
+    def track(com, code):
         """查询物流"""
 
         # 查询

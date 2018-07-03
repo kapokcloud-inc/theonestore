@@ -31,7 +31,7 @@ from app.helpers.date_time import (
     current_timestamp,
     date_range
 )
-from app.services.admin.order import OderStaticMethodsService
+from app.services.admin.order import OrderStaticMethodsService
 from app.services.response import ResponseJson
 from app.models.order import (
     Order,
@@ -119,7 +119,7 @@ def index(page=1, page_size=20):
 
     orders = []
     for _order in _orders:
-        status_text, action_code = OderStaticMethodsService.order_status_text_and_action_code(_order)
+        status_text, action_code = OrderStaticMethodsService.order_status_text_and_action_code(_order)
         _order                   = kt_to_dict(_order)
         _order['status_text']    = status_text
         orders.append(_order)
@@ -135,12 +135,12 @@ def detail(order_id):
     order                    = Order.query.get_or_404(order_id)
     order_goods              = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
     order_address            = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
-    status_text, action_code = OderStaticMethodsService.order_status_text_and_action_code(order)
+    status_text, action_code = OrderStaticMethodsService.order_status_text_and_action_code(order)
 
     express_msg  = ''
     express_data = []
     if order.shipping_status == 2:
-        express_msg, express_data = OderStaticMethodsService.express(order.shipping_code, order.shipping_sn)
+        express_msg, express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
 
     return render_template('admin/order/detail.html.j2',
         order=order,
@@ -211,4 +211,3 @@ def cancel():
     db.session.commit()
 
     return resjson.print_json(0, u'ok')
-

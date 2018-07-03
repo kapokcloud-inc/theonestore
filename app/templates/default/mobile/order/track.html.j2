@@ -1,0 +1,54 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>{{_('物流详情- 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+{% endblock %} 
+
+{% block body %}
+<div class="user_wrap">
+  <div class="weui-form-preview">
+    <div class="weui-form-preview__bd" style="text-align: left;">
+      <div class="weui-form-preview__item">
+        <label class="weui-form-preview__label">{{_('物流公司：')}}</label>
+        <span class="weui-form-preview__value">{{ order.shipping_name }}</span>
+      </div>
+      <div class="weui-form-preview__item">
+        <label class="weui-form-preview__label">{{_('物流单号：')}}</label>
+        <span class="weui-form-preview__value">{{ order.shipping_sn }}</span>
+      </div>
+      <!--
+      <div class="weui-form-preview__item">
+        <label class="weui-form-preview__label">{{_('物流电话：')}}</label>
+        <span class="weui-form-preview__value">
+          <a class="telNum" href="tel:95554">95554</a>
+        </span>
+      </div>
+      -->
+    </div>
+  </div>
+  <ul class="weui-cells weui-cells_form">
+    <div class="logistics_state">{{_('物流状态')}}</div>
+    {% for express in express_data %}
+      {% set current = 'cur' if loop.first else '' %}
+      <li class="track_shipflow {{ current }}">
+        <div class="logistics_step">
+          <i class="type_dot"></i>
+        </div>
+        <div class="flex">
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+              <p class="balckGap">{{ express['context'] }}</p>
+              <p class="all_time">{{ express['ftime'] }}</p>
+            </div>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %} 
+
+{% block script %}
+<script type="text/javascript"></script> 
+{% endblock %}

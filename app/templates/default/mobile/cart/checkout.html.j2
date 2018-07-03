@@ -224,7 +224,7 @@
       <div class="total">
         <div class="total-price">
           <span>{{_('支付金额')}}：</span>
-          <span id="pay_amount" class="all_price" style="font-size:18px">￥{{ pay_amount }}</span>
+          <span id="pay_amount" class="all_price" style="font-size:18px" data-value="{{ pay_amount }}">￥{{ pay_amount }}</span>
         </div>
         <input id="carts_id" type="hidden" value="{{ carts_id }}" />
         <input id="order_id" type="hidden" value="0" />
@@ -247,12 +247,10 @@
               </div>
               <div class="weui-cell__bd blackGap">
                 余额支付
-                <span id="" name="" class="funds mar-left" data-value="">
-                  可用余额：￥199
-                </span>
+                <span id="funds" name="" class="funds mar-left" data-value="{{ funds }}">可用余额：￥{{ funds }}</span>
               </div>
               <div class="weui-cell__ft">
-                <input class="weui-check" type="radio" name="pay_type" value="wallet">
+                <input id="funds_pay" class="weui-check" type="radio" name="funds_pay" value="funds_pay" onclick="choose_pay(this)">
                 <span class="weui-icon-checked"></span>
               </div>
             </label>
@@ -262,7 +260,7 @@
               </div>
               <div class="weui-cell__bd blackGap">微信支付</div>
               <div class="weui-cell__ft">
-                <input class="weui-check" type="radio" name="pay_type" value="weixin" checked="">
+                <input id="weixin_pay" class="weui-check" type="radio" name="weixin_pay" value="weixin_pay" checked="" onclick="choose_pay(this)">
                 <span class="weui-icon-checked"></span>
               </div>
             </label>
@@ -319,6 +317,7 @@ function checkout_amounts() {
     $("#items_amount").text('￥'+json.data.items_amount);
     $("#shipping_amount").text('+￥'+json.data.shipping_amount);
     $("#discount_amount").text('-￥'+json.data.discount_amount);
+    $("#pay_amount").attr('data-value', json.data.pay_amount);
     $("#pay_amount").text('￥'+json.data.pay_amount);
     return true;
   });
@@ -499,7 +498,7 @@ function closeCoupon(){
   }
 }
 
-//选择支付方式
+//提交订单
 function submit() {
   var order_id = parseInt($("#order_id").val());
   var ua_id = parseInt($("#current_address_ua_id").val());
@@ -547,6 +546,14 @@ function submit() {
     });
   }
 
+  var pay_amount = $("#pay_amount").attr('data-value');
+  var funds = $("#funds").attr('data-value');
+  if (parseFloat(pay_amount) > parseFloat(funds)) {
+    $("#funds_pay").prop('disabled', true);
+  } else {
+    $("#funds_pay").prop('disabled', false);
+  }
+
   // 显示选择地址弹窗
   if ($payList.hasClass('hide')) {
     $payList.removeClass('hide').addClass('show');
@@ -562,6 +569,55 @@ function closePay() {
   $payList.removeClass('show');
   if (!$payList.hasClass('hide')) {
     $payList.addClass('hide');
+  }
+}
+
+//余额支付
+function funds_pay(order_id) {
+  // 检查
+  if ( !order_id ) {
+    $.toast("{{_('创建订单失败，请刷新页面重试。')}}", "text");
+    return false;
+  }
+
+  var order_id_list = '[' + order_id + ']';
+  $.get("{{ url_for('api.pay.fundspay_req') }}", {'order_id_list':order_id_list}, function(res) {
+    if (res.ret != 0) {
+      $.toast(res.msg, "text");
+      return false;
+    }
+
+    window.location.href = "/mobile/pay/success/"+order_id;
+    return true;
+  });
+}
+
+
+//微信支付 ??
+function weixin_pay(order_id) {
+  return true;
+}
+
+//选择支付
+function choose_pay(dom) {
+  var $dom = $(dom);
+
+  if (!($dom.is(':disabled'))) {
+    var order_id = parseInt($("#order_id").val());
+    var pay_type = $dom.attr('value');
+
+    if (pay_type == 'funds_pay') {
+      $("#weixin_pay").prop('checked', false);
+      funds_pay(order_id);
+    } else if (pay_type == 'weixin_pay') {
+      $("#funds_pay").prop('checked', false);
+      weixin_pay(order_id);
+    }
+
+    $payList.removeClass('show');
+    if (!$payList.hasClass('hide')) {
+      $payList.addClass('hide');
+    }
   }
 }
 
@@ -606,15 +662,6 @@ $(document).ready(function () {
     $couponList.removeClass('show');
     if (!$couponList.hasClass('hide')) {
       $couponList.addClass('hide');
-    }
-  });
-
-  //选中支付方式
-  $('.weui-check__label').click(function (event) {  //event:事件对象
-    event.stopPropagation();                        //停止事件冒泡
-    $payList.removeClass('show');
-    if (!$payList.hasClass('hide')) {
-      $payList.addClass('hide');
     }
   });
 

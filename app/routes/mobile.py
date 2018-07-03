@@ -18,4 +18,5 @@ MOBILE_ROUTES = (
     (mobile.comment,        '/mobile/comment'),
     (mobile.pay,            '/mobile/pay'),
     (mobile.wallet,         '/mobile/wallet'),
+    (mobile.order,          '/mobile/order')
 )

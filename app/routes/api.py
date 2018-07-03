@@ -15,5 +15,6 @@ API_ROUTES = (
     (api.weixin,    '/api/weixin'),
     (api.cart,      '/api/cart'),
     (api.me,        '/api/me'),
-    (api.order,     '/api/order')
+    (api.order,     '/api/order'),
+    (api.pay,       '/api/pay')
 )

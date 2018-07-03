@@ -49,7 +49,7 @@ def some_day_timestamp(timestamp, days):
     return a_loc.timestamp
 
 
-def before_after_timestamp(timestamp, **kwargs):
+def before_after_timestamp(timestamp, kwargs):
     """"""
 
     a_utc = arrow.get(timestamp)

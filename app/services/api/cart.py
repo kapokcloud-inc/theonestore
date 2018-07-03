@@ -163,7 +163,7 @@ class CheckoutService(object):
             self.shipping_amount = Decimal(self.shipping.shipping_amount)
 
         if self.coupon_id:
-            # 检查 - 优惠券
+            # 检查 - 优惠券 ??
             self.coupon = Coupon.query.filter(Coupon.coupon_id == self.coupon_id).filter(Coupon.uid == self.uid).first()
             if not self.coupon:
                 self.msg = _(u'优惠券不存在')

@@ -20,8 +20,8 @@ from flask_babel import gettext as _
 
 from app.database import db
 
-from app.helpers import render_template
 from app.helpers import (
+    render_template,
     model_create,
     model_update,
     model_delete,
@@ -39,6 +39,11 @@ from app.services.api.cart import CartService, CheckoutService
 
 from app.forms.api.me import AddressForm
 
+from app.models.order import (
+    Order,
+    OrderAddress
+)
+from app.models.funds import Funds
 from app.models.item import Goods
 from app.models.coupon import Coupon
 from app.models.shipping import Shipping
@@ -98,9 +103,36 @@ def checkout():
     uid = 1
 
     args         = request.args
-    buy_now      = toint(args.get('buy_now', '0'))
+    order_id     = args.get('order_id', None)
     current_time = current_timestamp()
 
+    # 钱包
+    funds = Funds.query.filter(Funds.uid == uid).first()
+
+    # 订单付款
+    if order_id is not None:
+        order_id = toint(order_id)
+
+        # 检查
+        if order_id <= 0:
+            return redirect(request.headers['Referer'])
+
+        # 检查
+        order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
+        if not order:
+            return redirect(request.headers['Referer'])
+        
+        order_address = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
+        coupon        = Coupon.query.filter(Coupon.order_id == order_id).first()
+
+        shipping_title = _(u'%s  ￥%s(满￥%s免运费)' % (order.shipping_name, order.shipping_amount, order.free_limit_amount))
+
+        data = {'order':order, 'order_address':order_address, 'coupon':coupon,
+                'shipping_title':shipping_title, 'funds':funds.funds}
+        return render_template('mobile/cart/pay.html.j2', **data)
+
+    # 立即购买或结算
+    buy_now = toint(args.get('buy_now', '0'))
     if buy_now == 1:
         goods_id = toint(args.get('goods_id', '0'))
 
@@ -120,7 +152,7 @@ def checkout():
                         filter(Cart.checkout_type == 2).first()
         if _cart:
             model_delete(_cart, commit=True)
-        
+
         data = {'uid':uid, 'goods_id':goods_id, 'quantity':1, 'is_checked':1, 'checkout_type':2,
                 'add_time':current_time, 'update_time':current_time}
         cart = model_create(Cart, data, commit=True)
@@ -182,6 +214,6 @@ def checkout():
             'shipping_amount':cs.shipping_amount, 'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount,
             'addresses':addresses, 'default_address':default_address,
             'shipping_list':shipping_list, 'default_shipping':default_shipping, 'shipping_title':shipping_title,
-            'coupons':coupons, 'wtf_form':wtf_form}
+            'coupons':coupons, 'funds':funds.funds, 'wtf_form':wtf_form}
 
     return render_template('mobile/cart/checkout.html.j2', **data)
