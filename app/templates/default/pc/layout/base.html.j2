@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/static/default/pc/css/common.css">
+ 
+  {% block head %} {% endblock %}
+</head>
+
+<body>
+  <div class="wrapper">
+    <header class="header clearfix">
+      <nav class="top-nav">
+        <div class="head-inner" style="height:28px;">
+          <ul class="top-nav-tool">
+            <li class="top-nav_item">
+              <a href="" class="mouseon" target="_blank">{{_('请登录')}}</a>
+            </li>
+            <li class="top-nav_item">
+              <a href="" class="mouseon" target="_blank">{{_('注册')}}</a>
+            </li>
+            <li class="top-nav_item">
+              <a href="" class="mouseon" target="_blank">{{_('我的订单')}}</a>
+            </li>
+            <li class="top-nav_item">
+              <a href="" class="mouseon" target="_blank">{{_('优惠券')}}</a>
+            </li>
+            <li class="top-nav_item">
+              <a href="" class="mouseon" target="_blank">{{_('收藏')}}</a>
+            </li>
+            <li class="top-nav_item">
+              <a href="" class="mouseon" target="_blank">{{_('消息')}}</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="head-logo">
+        <div class="head-inner clearfix">
+          <div class="one-logo">
+            <a href="" target="_blank">
+              <img class="logoImg" src="/static/default/pc/img/logo.png" alt="">
+            </a>
+          </div>
+          <div class="one-service">
+            <img class="serviceImg" src="/static/default/pc/img/service.png" alt="">
+          </div>
+          <div class="head-cart">
+            <div class="tool">
+              <a href="" target="_blank">
+                <img class="cart-bag" src="/static/default/pc/img/cart.png" alt="">
+                <span class="cart-text">{{_('购物车')}}</span>
+                <span class="cart-badge">0</span>
+              </a>
+            </div>
+          </div>
+          <div class="one-search">
+            <div class="one-search_form">
+              <input type="text" class="one-search_input" placeholder="{{_('请输入搜索内容')}}" autocomplete="off" max-length="15">
+              <a href="" class="one-search_button">
+                <img class="one-search_image" src="/static/default/pc/img/search.png" alt="">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="top-main_nav">
+        <div class="head-inner">
+          <ul class="top-main_list clearfix">
+            <li class="top-main_item">
+              <a class="top-main_atag atag_on" href="">{{_('首页')}}</a>
+            </li>
+            <li class="top-main_item">
+              <a class="top-main_atag" href="">{{_('分类一分类一')}}</a>
+            </li>
+            <li class="top-main_item">
+              <a class="top-main_atag" href="">{{_('分类二')}}</a>
+            </li>
+            <li class="top-main_item">
+              <a class="top-main_atag" href="">{{_('分类三')}}</a>
+            </li>
+            <li class="top-main_item">
+              <a class="top-main_atag" href="">{{_('分类四')}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    {% block body %} {% endblock %}
+  </div>
+
+  {% block script %} {% endblock %}
+</body>
+
+</html>
