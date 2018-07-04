@@ -47,7 +47,6 @@ class Order(BaseModel, db.Model):
     is_remove = db.Column(db.Integer, default=0)
     order_desc = db.Column(db.String(255), default='')
     user_remark = db.Column(db.Text, default=None)
-    is_comment = db.Column(db.Integer, default=0)
     goods_quantity = db.Column(db.Integer, default=0)
     goods_data = db.Column(db.Text, default=None)
     add_time = db.Column(db.Integer, default=0)

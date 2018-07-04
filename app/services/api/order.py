@@ -726,7 +726,7 @@ class OrderStaticMethodsService(object):
 
         q = db.session.query(Order.order_id, Order.order_status, Order.order_amount, Order.pay_status,
                             Order.shipping_amount, Order.shipping_status, Order.deliver_status,
-                            Order.is_comment, Order.goods_quantity, Order.goods_data, Order.add_time).\
+                            Order.goods_quantity, Order.goods_data, Order.add_time).\
                 filter(Order.uid == uid).\
                 filter(Order.is_remove == 0)
 
@@ -748,7 +748,7 @@ class OrderStaticMethodsService(object):
     def order_status_text_and_action_code(order, min_pay_time=0):
         """ 获取订单状态和订单指令 """
         status_text = u''   # 订单状态: 已取消; 待付款; 待收货; 待评价; 已完成;
-        action_code = []    # 订单指令: 0.无指令; 1.付款; 2.取消订单; 3.查看物流; 4.确认收货; 5.评价; 6.再次购买; 7.删除订单;
+        action_code = []    # 订单指令: 0.无指令; 1.付款; 2.取消订单; 3.查看物流; 4.确认收货; 5.再次购买; 6.删除订单;
 
         current_time = current_timestamp()
         min_pay_time = min_pay_time if min_pay_time else before_after_timestamp(current_time, {'days':1})
@@ -757,44 +757,38 @@ class OrderStaticMethodsService(object):
             if order.pay_status == 1:
                 if order.add_time < min_pay_time:
                     status_text = _(u'待付款')
-                    action_code = [1,2,6]
+                    action_code = [1,2,5]
 
                     return (status_text, action_code)
 
                 if order.add_time >= min_pay_time:
                     status_text = _(u'已取消')
-                    action_code = [6,7]
+                    action_code = [5,6]
 
                     return (status_text, action_code)
 
             if order.pay_status == 2:
                 if order.shipping_status == 1:
                     status_text = _(u'待收货')
-                    action_code = [6]
+                    action_code = [5]
 
                     return (status_text, action_code)
 
                 if order.shipping_status == 2 and order.deliver_status == 1:
                     status_text = _(u'待收货')
-                    action_code = [3,4,6]
+                    action_code = [3,4,5]
 
                     return (status_text, action_code)
 
         if order.order_status == 2:
-            if order.is_comment == 0:
-                status_text = _(u'待评价')
-                action_code = [3,5,6]
-
-                return (status_text, action_code)
-
             status_text = _(u'已完成')
-            action_code = [3,6,7]
+            action_code = [3,5,6]
 
             return (status_text, action_code)
 
         if order.order_status == 3:
             status_text = _(u'已取消')
-            action_code = [6,7]
+            action_code = [5,6]
 
             return (status_text, action_code)
 

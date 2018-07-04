@@ -39,31 +39,22 @@
         </a>
       {% endif %}
       {% if _code == 2 %}
-        <!-- ?? -->
         <button type="button" class="order_btn" onclick="cancelOrder({{ order.order_id }})">{{_('取消订单')}}</button>
       {% endif %}
       {% if _code == 3 %}
-        <!-- ?? -->
         <a href="{{ url_for('mobile.user.logistics') }}">
           <button type="button" class="order_btn">{{_('查看物流')}}</button>
         </a>
       {% endif %}
       {% if _code == 4 %}
-        <!-- ?? -->
         <button type="button" class="order_btn order-state_btn" onclick="confirm({{ order.order_id }})">{{_('确认收货')}}</button>
       {% endif %}
       {% if _code == 5 %}
-        <!-- ?? -->
-        <a href="{{ url_for('mobile.user.review') }}">
-          <button type="button" class="order_btn order-state_btn">{{_('去评价')}}</button>
-        </a>
-      {% endif %}
-      {% if _code == 6 %}
         <a href="javascript:void(0);" onclick="add_to_cart({{ order.order_id }})">
           <button type="button" class="order_btn order-state_btn">{{_('再次购买')}}</button>
         </a>
       {% endif %}
-      {% if _code == 7 %}
+      {% if _code == 6 %}
         <button type="button" class="order_btn" onclick="del({{ order.order_id }})">{{_('删除订单')}}</button>
       {% endif %}
     {% endfor %}
