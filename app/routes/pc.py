@@ -7,15 +7,8 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+from app.views import pc
 
-from flask import Blueprint
-
-
-index = Blueprint('index', __name__)
-
-
-@index.route('/hello')
-def hello():
-    """网站首页"""
-    return "Hello,world!"
-    
+PC_ROUTES = (
+    (pc.index,          ''),
+)

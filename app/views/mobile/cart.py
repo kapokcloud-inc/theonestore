@@ -171,7 +171,7 @@ def checkout():
         try:
             carts_id = json.loads(carts_id)
             carts_id = [toint(cart_id) for cart_id in carts_id]
-        except Exception, e:
+        except Exception as e:
             return redirect(url_for('mobile.cart.root', msg=_(u'系统错误:参数错误')))
 
     # 快递列表

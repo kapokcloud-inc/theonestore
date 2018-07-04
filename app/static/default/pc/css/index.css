@@ -1,0 +1,16 @@
+@charset "UTF-8";
+.one-swiper {
+  position: relative;
+  height: 400px;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  background-color: #fff;
+}
+.swiper-slide {
+  line-height: 0;
+}
+.swiper-img {
+  display: inline-block;
+  width: 1170px;
+  height: 400px;
+}

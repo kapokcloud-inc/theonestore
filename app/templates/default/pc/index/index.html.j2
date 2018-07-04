@@ -1,0 +1,48 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+
+{% block head %}
+<title>{{_('首页 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/index.css">
+<link rel="stylesheet" href="/static/default/pc/css/swiper.min.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap">
+  <div class="one-swiper">
+    <div class="head-inner">
+      <div class="swiper-container">
+        <ul class="swiper-wrapper">
+          <li class="swiper-slide">
+            <a href="">
+              <img class="swiper-img" src="/static/default/pc/img/banner1.jpg" alt="">
+            </a>
+          </li>
+          <li class="swiper-slide">
+            <a href="">
+              <img class="swiper-img" src="/static/default/pc/img/banner2.jpg" alt="">
+            </a>
+          </li>
+          <li class="swiper-slide">
+            <a href="">
+              <img class="swiper-img" src="/static/default/pc/img/banner3.jpg" alt="">
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+  <div></div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/static/default/pc/js/swiper.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+  var mySwiper = new Swiper('.swiper-container', {
+    loop: true,
+    autoplay: true,
+    speed: 300,
+  })
+</script>
+{% endblock%}

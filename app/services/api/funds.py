@@ -53,7 +53,7 @@ class FundsService(object):
         # 变更资金
         try:
             self.funds_change = Decimal(self.funds_change)
-        except Exception, e:
+        except Exception as e:
             self.msg = _(u'金额错误')
             return False
 

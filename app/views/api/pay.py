@@ -52,7 +52,7 @@ def fundspay_req():
     order_id_list = args.get('order_id_list', '[]').strip()
     try:
         order_id_list = json.loads(order_id_list)
-    except Exception, e:
+    except Exception as e:
         return resjson.print_json(10, _(u'支付订单ID列表数据格式错误'))
 
     ps = PayService(uid, order_id_list)
