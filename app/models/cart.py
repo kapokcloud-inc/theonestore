@@ -23,4 +23,3 @@ class Cart(BaseModel, db.Model):
     checkout_type = db.Column(db.Integer, default=1)
     add_time = db.Column(db.Integer, default=0)
     update_time = db.Column(db.Integer, default=0)
-

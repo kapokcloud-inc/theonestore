@@ -26,7 +26,8 @@
       </li>
       <li class="flex pstR">
         <a href="{{ url_for('mobile.cart.root') }}">
-          <span class="weui-badge msg_badge">3</span>
+          {% set cart_total = session.get('cart_total', 0) %}
+          <span id="cart_total" class="weui-badge msg_badge">{{ cart_total }}</span>
           <div class="icom_photo">
             {% set _src = '/static/default/mobile/img/cartOn.png' if _view == 'cart' else '/static/default/mobile/img/cart.png' %}
             {% set _on = 'on' if _view == 'cart' else '' %}
@@ -73,7 +74,7 @@
         paging_page += 1;
 
         $.get('{{ url }}', {'ps':{{ ps }}, 'p':paging_page}, function(res){
-          if (res == '') {
+          if (res.trim() == '') {
             $('#paging_load_status > span').text('没有了');
             $(document.body).destroyInfinite();
             return;

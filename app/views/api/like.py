@@ -9,7 +9,8 @@
 """
 from flask import (
     Blueprint,
-    request
+    request,
+    session
 )
 from flask_babel import gettext as _
 
@@ -38,7 +39,8 @@ def action():
     resjson.action_code = 10
 
     # ??
-    #check_login()
+    #if not check_login():
+    #    return resjson.print_json(10, _(u'未登陆'))
 
     args      = request.args
     like_type = toint(args.get('like_type', 0))
@@ -47,7 +49,7 @@ def action():
     
     ls = LikeService(like_type, ttype, tid)
     if not ls.check():
-        return resjson.print_json(10, ls.msg)
+        return resjson.print_json(11, ls.msg)
 
     ls.action()
     ls.commit()

@@ -53,4 +53,3 @@ class CouponBatch(BaseModel, db.Model):
     valid_days = db.Column(db.Integer, default=0)
     add_time = db.Column(db.Integer, default=0)
     update_time = db.Column(db.Integer, default=0)
-

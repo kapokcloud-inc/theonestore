@@ -31,6 +31,8 @@ class Goods(BaseModel, db.Model):
     view_count = db.Column(db.Integer, default=0)
     fav_count = db.Column(db.Integer, default=0)
     sale_count = db.Column(db.Integer, default=0)
+    comment_count = db.Column(db.Integer, default=0)
+    comment_good_rate = db.Column(db.Integer, default=100)
     add_time = db.Column(db.Integer, default=0)
     update_time = db.Column(db.Integer, default=None)
 

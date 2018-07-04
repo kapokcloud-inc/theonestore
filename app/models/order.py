@@ -117,4 +117,3 @@ class OrderTranIndex(BaseModel, db.Model):
     __tablename__ = 'order_tran_index'
 
     tran_id = db.Column(db.Integer, primary_key=True)
-

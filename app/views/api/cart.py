@@ -33,7 +33,11 @@ from app.helpers.user import (
 )
 
 from app.services.response import ResponseJson
-from app.services.api.cart import CartService, CheckoutService
+from app.services.api.cart import (
+    CartService,
+    CheckoutService,
+    CartStaticMethodsService
+)
 
 from app.models.order import (
     Order,
@@ -110,7 +114,10 @@ def add():
 
     db.session.commit()
 
-    return resjson.print_json(0, u'ok')
+    cart_total            = CartStaticMethodsService.cart_total(uid, session_id)
+    session['cart_total'] = cart_total
+
+    return resjson.print_json(0, u'ok', {'cart_total':cart_total})
 
 
 @cart.route('/update')
@@ -118,7 +125,9 @@ def update():
     """更新购物车"""
     resjson.action_code = 11
 
-    uid        = get_uid()
+    # ??
+    #uid        = get_uid()
+    uid        = 1
     session_id = get_session_id()
 
     args         = request.args
@@ -144,6 +153,9 @@ def update():
     data = {'quantity':quantity, 'update_time':current_time}
     model_update(cart, data, commit=True)
 
+    cart_total            = CartStaticMethodsService.cart_total(uid, session_id)
+    session['cart_total'] = cart_total
+
     return resjson.print_json(0, u'ok')
 
 
@@ -152,7 +164,9 @@ def remove():
     """删除购物车商品"""
     resjson.action_code = 12
 
-    uid        = get_uid()
+    # ??
+    #uid        = get_uid()
+    uid        = 1
     session_id = get_session_id()
 
     carts_id = request.args.get('carts_id', '').strip()
@@ -178,6 +192,9 @@ def remove():
 
     db.session.commit()
 
+    cart_total            = CartStaticMethodsService.cart_total(uid, session_id)
+    session['cart_total'] = cart_total
+
     return resjson.print_json(0, u'ok')
 
 
@@ -186,7 +203,9 @@ def checked():
     """选中"""
     resjson.action_code = 13
 
-    uid        = get_uid()
+    # ??
+    #uid        = get_uid()
+    uid        = 1
     session_id = get_session_id()
 
     carts        = request.args.get('carts', '[]').strip()

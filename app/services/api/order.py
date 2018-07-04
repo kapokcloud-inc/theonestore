@@ -783,12 +783,12 @@ class OrderStaticMethodsService(object):
         if order.order_status == 2:
             if order.is_comment == 0:
                 status_text = _(u'待评价')
-                action_code = [5,6]
+                action_code = [3,5,6]
 
                 return (status_text, action_code)
 
             status_text = _(u'已完成')
-            action_code = [6,7]
+            action_code = [3,6,7]
 
             return (status_text, action_code)
 

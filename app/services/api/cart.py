@@ -11,6 +11,8 @@ from decimal import Decimal
 
 from flask_babel import gettext as _
 
+from sqlalchemy import func
+
 from app.database import db
 
 from app.helpers import (
@@ -41,7 +43,7 @@ class CartService(object):
         """检查"""
 
         # 购物车商品项
-        q = Cart.query
+        q = Cart.query.filter(Cart.checkout_type == 1)
         if self.uid:
             q = q.filter(Cart.uid == self.uid)
         else:
@@ -181,3 +183,20 @@ class CheckoutService(object):
         self.pay_amount = self.items_amount + self.shipping_amount - self.discount_amount
 
         return True
+
+
+class CartStaticMethodsService(object):
+    """购物车静态方法Service"""
+
+    @staticmethod
+    def cart_total(uid, session_id):
+        """获取购物车商品数量"""
+
+        q = db.session.query(func.sum(Cart.quantity).label('total')).filter(Cart.checkout_type == 1)
+        if uid:
+            q = q.filter(Cart.uid == uid)
+        else:
+            q = q.filter(Cart.session_id == session_id)
+        record = q.first()
+
+        return toint(record.total)
