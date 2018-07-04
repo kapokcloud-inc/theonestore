@@ -1,4 +1,4 @@
-<a href="{{ url_for('mobile.user.order_detail') }}">
+<a href="{{ url_for('mobile.order.detail', order_id=order.order_id) }}">
   <div class="weui-cell">
     <div class="weui-cell__bd all_add">{{ order.add_time|timestamp2str('YYYY.MM.DD') }}</div>
     <div class="weui-cell__ft">
@@ -44,7 +44,7 @@
       {% endif %}
       {% if _code == 3 %}
         <!-- ?? -->
-        <a href="{{ url_for('mobile.user.logistics') }}">
+        <a href="{{ url_for('mobile.order.track') }}">
           <button type="button" class="order_btn">{{_('查看物流')}}</button>
         </a>
       {% endif %}

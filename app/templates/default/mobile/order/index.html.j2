@@ -25,9 +25,6 @@
       {% set on = 'orderType-on' if tab_status == 3 else '' %}
       <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=3) }}">{{_('待评价')}}</a>
     </div>
-    <div class="typeStatus">
-      <a class="orderType">{{_('退款售后')}}</a>
-    </div>
   </div>
   {% if not orders %}
     <div class="not-product">
@@ -116,7 +113,6 @@
           </div>
         </div>
       {% endfor %}
-
       <div class="hide ranpo" id="confirmReceipt">
         <div class="hide-mask"></div>
         <div class="weui-actionsheet weui-actionsheet_toggle">

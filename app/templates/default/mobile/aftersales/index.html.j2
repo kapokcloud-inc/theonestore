@@ -1,0 +1,65 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+{% import '/default/mobile/libs/libs.html.j2' as libs %} 
+
+{% block head%}
+<title>{{_('售后服务列表- 一店')}}</title>
+<link rel="stylesheet" href="{{'/static/default/mobile/css/user.css'|static_uri}}">
+{% endblock %}
+
+{% block body %}
+<div class="user_wrap">
+  <!-- 没有退款售后列表时显示 -->
+  <!-- <div class="not-product">
+    <div class="not-product_img">
+      <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
+    </div>
+    <div class="not-product_text">{{_('您暂无相关订单')}}</div>
+    <div class="reg_btn">
+      <a href="{{ url_for('mobile.index.root') }}">
+        <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
+      </a>
+    </div>
+  </div> -->
+  <div id="paging-data-list">
+    <div id="" class="weui-cells weui-cells_form">
+      <div class="weui-cell">
+        <div class="weui-cell__bd all_add">2018.07.04</div>
+        <div class="weui-cell__ft">
+          <span class="trading_state">退款失败</span>
+        </div>
+      </div>
+      <div class="weui-cell">
+        <div class="weui-cell__hd avatar mar-right">
+          <img src="" alt="">
+        </div>
+        <div class="weui-cell__bd">
+          <div class="all_title height25">测试商品99</div>
+          <div class="all_desc height25">商品特点</div>
+        </div>
+        <div class="weui-cell__ft mar-left">
+          <p class="all_price">￥100.0</p>
+          <p>x 1</p>
+        </div>
+      </div>
+      <div class="weui-cell">
+        <div class="weui-cell__bd blackGap">退货退款，退款关闭</div>
+      </div>
+      <div class="weui-cell">
+        <div class="weui-cell__bd"></div>
+        <div class="weui-cell__ft">
+          <a href="{{ url_for('mobile.aftersales.detail', afs_id=123) }}">
+            <button type="button" class="order_btn order-state_btn">{{_('查看详情')}}</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %} 
+
+{{ libs.paging_js(paging_url, 0) }}
+
+<script type="text/javascript"></script> 
+{% endblock %}
