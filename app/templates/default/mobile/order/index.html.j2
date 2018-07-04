@@ -1,0 +1,245 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
+
+{% block head %}
+<title>{{_('我的订单- 一店')}}</title>
+<link rel="stylesheet" href="{{'/static/default/mobile/css/user.css'|static_uri}}"> 
+{% endblock %} 
+
+{% block body %}
+<div class="user_wrap">
+  <div class="weui-navbar">
+    <div class="typeStatus">
+      {% set on = 'orderType-on' if tab_status == 0 else '' %}
+      <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=0) }}">{{_('全部')}}</a>
+    </div>
+    <div class="typeStatus">
+      {% set on = 'orderType-on' if tab_status == 1 else '' %}
+      <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=1) }}">{{_('待付款')}}</a>
+    </div>
+    <div class="typeStatus">
+      {% set on = 'orderType-on' if tab_status == 2 else '' %}
+      <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=2) }}">{{_('待收货')}}</a>
+    </div>
+    <div class="typeStatus">
+      {% set on = 'orderType-on' if tab_status == 3 else '' %}
+      <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=3) }}">{{_('待评价')}}</a>
+    </div>
+    <div class="typeStatus">
+      <a class="orderType">{{_('退款售后')}}</a>
+    </div>
+  </div>
+  {% if not orders %}
+    <div class="not-product">
+      <div class="not-product_img">
+        <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
+      </div>
+      <div class="not-product_text">{{_('您暂无相关订单')}}</div>
+      <div class="reg_btn">
+        <a href="{{ url_for('mobile.index.root') }}">
+          <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
+        </a>
+      </div>
+    </div>
+  {% else %}
+    <div id="paging-data-list" class="order_list">
+      {% for order in orders %}
+        <div id="order_{{ order.order_id }}" class="weui-cells weui-cells_form">
+          <a href="{{ url_for('mobile.order.detail', order_id=order.order_id) }}">
+            <div class="weui-cell">
+              <div class="weui-cell__bd all_add">{{ order.add_time|timestamp2str('YYYY.MM.DD') }}</div>
+              <div class="weui-cell__ft">
+                <span class="trading_state">{{ texts.get(order.order_id) }}</span>
+              </div>
+            </div>
+            {% set items = order.goods_data|json_loads %}
+            {% for item in items %}
+              <div class="weui-cell">
+                <div class="weui-cell__hd avatar mar-right">
+                  <img src="{{ item['goods_img'] }}" alt="">
+                </div>
+                <div class="weui-cell__bd">
+                  <div class="all_title height25">{{ item['goods_name'] }}</div>
+                  <div class="all_desc height25">{{ item['goods_desc'] }}</div>
+                </div>
+                <div class="weui-cell__ft mar-left">
+                  <p class="all_price">￥{{ item['goods_price'] }}</p>
+                  <p>x {{ item['quantity'] }}</p>
+                </div>
+              </div>
+            {% endfor %}
+            <div class="weui-cell">
+              <div class="weui-cell__bd"></div>
+              <div class="weui-cell__ft amount">
+                <span class="mar-right">{{_('共%s件商品' % order.goods_quantity)}}</span>
+                <span>{{_('合计：￥%s(含运费￥%s)' % (order.order_amount, order.shipping_amount))}}</span>
+              </div>
+            </div>
+          </a>
+          <div class="weui-cell">
+            <div class="weui-cell__bd"></div>
+            <div class="weui-cell__ft">
+              {% set code = codes.get(order.order_id) %}
+              {% for _code in code %}
+                {% if _code == 1 %}
+                  <a href="{{ url_for('mobile.cart.checkout', order_id=order.order_id) }}">
+                    <button type="button" class="order_btn order-state_btn">{{_('付款')}}</button>
+                  </a>
+                {% endif %}
+                {% if _code == 2 %}
+                  <button type="button" class="order_btn" onclick="cancelOrder({{ order.order_id }})">{{_('取消订单')}}</button>
+                {% endif %}
+                {% if _code == 3 %}
+                  <a href="{{ url_for('mobile.order.track', order_id=order.order_id) }}">
+                    <button type="button" class="order_btn">{{_('查看物流')}}</button>
+                  </a>
+                {% endif %}
+                {% if _code == 4 %}
+                  <button type="button" class="order_btn order-state_btn" onclick="confirm({{ order.order_id }})">{{_('确认收货')}}</button>
+                {% endif %}
+                {% if _code == 5 %}
+                  <!-- ?? -->
+                  <a href="{{ url_for('mobile.user.review') }}">
+                    <button type="button" class="order_btn order-state_btn">{{_('去评价')}}</button>
+                  </a>
+                {% endif %}
+                {% if _code == 6 %}
+                  <a href="javascript:void(0);" onclick="add_to_cart({{ order.order_id }})">
+                    <button type="button" class="order_btn order-state_btn">{{_('再次购买')}}</button>
+                  </a>
+                {% endif %}
+                {% if _code == 7 %}
+                  <button type="button" class="order_btn" onclick="del({{ order.order_id }})">{{_('删除订单')}}</button>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+      <div class="hide ranpo" id="confirmReceipt">
+        <div class="hide-mask"></div>
+        <div class="weui-actionsheet weui-actionsheet_toggle">
+          <div class="weui-actionsheet__menu">
+            <input type="hidden" name="" id="" value="">
+            <div class="weui-actionsheet__cell not-product_text">
+              <span>确认收货</span>
+              <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="cancel()">
+            </div>
+            <div class="not-product">
+              <div class="not-product_img">
+                <img class="notproduct" src="/static/default/mobile/img/orderK.png" alt="">
+              </div>
+              <div class="not-product_text">您的订单已确认收货成功</div>
+              <div class="reg_btn">
+                <button type="button" class="weui-btn weui-btn_red" onClick="review()">去评价</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %} 
+
+{% block script %}
+{{ libs.paging_js(paging_url, 0) }}
+
+<script type="text/javascript">
+var $confirmReceipt = $('#confirmReceipt');
+
+//确认收货弹窗
+function confirm(order_id) {
+  $.confirm({
+    title: "{{_('确认收货')}}",
+    text: "{{_('确认收到此订单的商品了么？')}}",
+    onOK: function () {
+      $.get("{{ url_for('mobile.order.deliver') }}", {'order_id':order_id}, function(res) {
+        if (res == '') {
+          $.toast("{{_('出错啦')}}", "text");
+          return false;
+        }
+
+        $('#order_'+order_id).empty().append(res);
+
+        $confirmReceipt.removeClass('hide');
+        if (!$confirmReceipt.hasClass('show')) {
+          $confirmReceipt.addClass('show');
+        }
+      });
+    },
+    onCancel: function () {}
+  });
+}
+
+//关闭确认收货弹窗
+function cancel() {
+  $confirmReceipt.removeClass('show');
+  if (!$confirmReceipt.hasClass('hide')) {
+    $confirmReceipt.addClass('hide');
+  }
+}
+
+//点击去评价商品，关闭确认收货弹窗
+function review() {
+  $confirmReceipt.removeClass('show');
+  if (!$confirmReceipt.hasClass('hide')) {
+    $confirmReceipt.addClass('hide');
+  }
+  
+  var url = "/mobile/user/review";
+  window.location.href = url;
+}
+
+//取消订单弹窗
+function cancelOrder(order_id) {
+  $.confirm({
+    title: "{{_('取消订单')}}",
+    text: "{{_('确定取消该订单？')}}",
+    onOK: function () {
+      $.get("{{ url_for('mobile.order.cancel') }}", {'order_id':order_id}, function(res) {
+        if (res == '') {
+          $.toast("{{_('出错啦')}}", "text");
+          return false;
+        }
+
+        $('#order_'+order_id).empty().append(res);
+      });
+    },
+    onCancel: function () {}
+  });
+}
+
+//删除订单弹窗
+function del(order_id) {
+  $.confirm({
+    title: '删除订单',
+    text: '确定删除该订单？',
+    onOK: function () {
+      $.get("{{ url_for('api.order.remove') }}", {'order_id':order_id}, function(json) {
+        if (json.ret != 0) {
+          $.toast(json.msg, "text");
+          return false;
+        }
+
+        $("#order_"+order_id).remove();
+      });
+    },
+    onCancel: function () { }
+  });
+}
+
+//再次购买
+function add_to_cart(order_id) {
+  $.get("{{ url_for('api.cart.add') }}", {'order_id':order_id}, function(json) {
+    if (json.ret != 0) {
+      $.toast(json.msg, "text");
+      return false;
+    }
+
+    window.location.href = "/mobile/cart/";
+  });
+}
+</script> 
+{% endblock %}

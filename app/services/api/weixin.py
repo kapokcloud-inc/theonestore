@@ -9,7 +9,10 @@
 """
 import json
 import requests
-from urllib import urlencode
+try:
+    from urllib.parse import urlencode
+except ImportError as identifier:
+    from urllib import urlencode
 
 from flask import (
     request,

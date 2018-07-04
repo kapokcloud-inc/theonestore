@@ -19,8 +19,8 @@ from flask_babel import gettext as _
 
 from app.helpers import render_template
 
-comment = Blueprint('mobile.comment', __name__)
 
+comment = Blueprint('mobile.comment', __name__)
 
 @comment.route('/<int:goods_id>')
 def goods(goods_id):

@@ -35,6 +35,10 @@ from app.helpers.user import (
 from app.services.response import ResponseJson
 from app.services.api.cart import CartService, CheckoutService
 
+from app.models.order import (
+    Order,
+    OrderGoods
+)
 from app.models.item import Goods
 from app.models.cart import Cart
 
@@ -49,41 +53,60 @@ def add():
     """加入购物车"""
     resjson.action_code = 10
 
-    uid        = get_uid()
+    # ??
+    #uid        = get_uid()
+    uid        = 1
     session_id = get_session_id()
 
     args         = request.args
-    goods_id     = toint(args.get('goods_id', 0))
-    quantity     = toint(args.get('quantity', 1))
+    order_id     = toint(args.get('order_id', '0'))
+    goods_id     = toint(args.get('goods_id', '0'))
+    quantity     = toint(args.get('quantity', '1'))
     current_time = current_timestamp()
+    items_data   = []
 
-    # 检查
-    if goods_id <= 0 or quantity < 1:
-        return resjson.print_json(resjson.PARAM_ERROR)
-
-    # 检查
-    goods = Goods.query.get(goods_id)
-    if not goods:
-        return resjson.print_json(10, _(u'找不到商品'))
-
-    # 获取购物车商品
-    q = Cart.query.filter(Cart.goods_id == goods_id).filter(Cart.checkout_type == 1)
-    if uid:
-        q = q.filter(Cart.uid == uid)
+    if order_id > 0:
+        order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
+        if not order:
+            return resjson.print_json(resjson.PARAM_ERROR)
+        
+        order_goods = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
+        for _order_goods in order_goods:
+            items_data.append({'goods_id':_order_goods.goods_id, 'quantity':_order_goods.goods_quantity})
     else:
-        q = q.filter(Cart.session_id == session_id)
-    cart = q.first()
+        # 检查
+        if goods_id <= 0 or quantity < 1:
+            return resjson.print_json(resjson.PARAM_ERROR)
+        
+        items_data.append({'goods_id':goods_id, 'quantity':quantity})
 
-    # 是否创建购物车商品
-    if not cart:
-        data = {'uid':uid, 'session_id':session_id, 'goods_id':goods_id, 'quantity':0,
-                'is_checked':1, 'checkout_type':1, 'add_time':current_time}
-        cart = model_create(Cart, data)
+    for item_data in items_data:
+        goods_id = item_data.get('goods_id')
+        quantity = item_data.get('quantity')
 
-    # 更新购物车商品
-    quantity += cart.quantity
-    data      = {'quantity':quantity, 'update_time':current_time}
-    cart = model_update(cart, data)
+        # 检查
+        goods = Goods.query.get(goods_id)
+        if not goods:
+            return resjson.print_json(10, _(u'找不到商品'))
+
+        # 获取购物车商品
+        q = Cart.query.filter(Cart.goods_id == goods_id).filter(Cart.checkout_type == 1)
+        if uid:
+            q = q.filter(Cart.uid == uid)
+        else:
+            q = q.filter(Cart.session_id == session_id)
+        cart = q.first()
+
+        # 是否创建购物车商品
+        if not cart:
+            data = {'uid':uid, 'session_id':session_id, 'goods_id':goods_id, 'quantity':0,
+                    'is_checked':1, 'checkout_type':1, 'add_time':current_time}
+            cart = model_create(Cart, data)
+
+        # 更新购物车商品
+        quantity += cart.quantity
+        data      = {'quantity':quantity, 'update_time':current_time}
+        cart = model_update(cart, data)
 
     db.session.commit()
 
@@ -171,7 +194,7 @@ def checked():
 
     try:
         carts = json.loads(carts)
-    except Exception, e:
+    except Exception as e:
         return resjson.print_json(resjson.PARAM_ERROR)
 
     for cart in carts:
@@ -223,7 +246,7 @@ def checkout_amounts():
     try:
         carts_id = json.loads(carts_id)
         carts_id = [toint(cart_id) for cart_id in carts_id]
-    except Exception, e:
+    except Exception as e:
         return resjson.print_json(resjson.PARAM_ERROR)
 
     cs = CheckoutService(uid, carts_id, shipping_id, coupon_id)

@@ -22,7 +22,8 @@ from app.helpers import render_template
 pay = Blueprint('mobile.pay', __name__)
 
 
-@pay.route('/success')
-def success():
+@pay.route('/success/<int:order_id>')
+def success(order_id):
     """手机站 - 完成支付"""
-    return render_template('mobile/pay/success.html.j2')
+
+    return render_template('mobile/pay/success.html.j2', order_id=order_id)

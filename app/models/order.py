@@ -35,6 +35,7 @@ class Order(BaseModel, db.Model):
     shipping_name = db.Column(db.String(32), default='')
     shipping_code = db.Column(db.String(20), default='')
     shipping_amount = db.Column(db.Float, default=0.00)
+    free_limit_amount = db.Column(db.Float, default=0.00)
     shipping_sn = db.Column(db.String(32), default='')
     shipping_status = db.Column(db.Integer, default=0)
     shipping_time = db.Column(db.Integer, default=0)

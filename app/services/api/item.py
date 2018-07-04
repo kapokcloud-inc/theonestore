@@ -54,4 +54,3 @@ class ItemStaticMethodsService(object):
         items = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
 
         return items
-
