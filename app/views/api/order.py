@@ -63,7 +63,7 @@ def create():
 
     try:
         carts_id = json.loads(carts_id)
-    except Exception, e:
+    except Exception as e:
         return resjson.print_json(resjson.PARAM_ERROR)
 
     ocs = OrderCreateService(uid, carts_id, ua_id, shipping_id, coupon_id)

@@ -194,7 +194,7 @@ def checked():
 
     try:
         carts = json.loads(carts)
-    except Exception, e:
+    except Exception as e:
         return resjson.print_json(resjson.PARAM_ERROR)
 
     for cart in carts:
@@ -246,7 +246,7 @@ def checkout_amounts():
     try:
         carts_id = json.loads(carts_id)
         carts_id = [toint(cart_id) for cart_id in carts_id]
-    except Exception, e:
+    except Exception as e:
         return resjson.print_json(resjson.PARAM_ERROR)
 
     cs = CheckoutService(uid, carts_id, shipping_id, coupon_id)
