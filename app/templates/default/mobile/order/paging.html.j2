@@ -1,6 +1,6 @@
 {% for order in orders %}
 <div id="order_{{ order.order_id }}" class="weui-cells weui-cells_form">
-  <a href="{{ url_for('mobile.user.order_detail') }}">
+  <a href="{{ url_for('mobile.order.detail', order_id=order.order_id) }}">
     <div class="weui-cell">
       <div class="weui-cell__bd all_add">{{ order.add_time|timestamp2str('YYYY.MM.DD') }}</div>
       <div class="weui-cell__ft">
@@ -45,7 +45,7 @@
           <button type="button" class="order_btn" onclick="cancelOrder({{ order.order_id }})">{{_('取消订单')}}</button>
         {% endif %}
         {% if _code == 3 %}
-          <a href="{{ url_for('mobile.user.logistics') }}">
+          <a href="{{ url_for('mobile.order.track', order_id=order.order_id) }}">
             <button type="button" class="order_btn">{{_('查看物流')}}</button>
           </a>
         {% endif %}

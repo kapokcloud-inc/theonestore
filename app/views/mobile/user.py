@@ -58,18 +58,6 @@ def coupon():
     return render_template('mobile/user/coupon.html.j2')
 
 
-@user.route('/order')
-def order():
-    """手机站 - 我的订单"""
-    return render_template('mobile/user/order.html.j2')
-
-
-@user.route('/order/detail')
-def order_detail():
-    """手机站 - 订单详情"""
-    return render_template('mobile/user/order_detail.html.j2')
-
-
 @user.route('/messages')
 def messages():
     """手机站 - 消息"""
@@ -80,15 +68,3 @@ def messages():
 def review():
     """手机站 - 发表评价"""
     return render_template('mobile/user/review.html.j2')
-
-
-@user.route('/logistics')
-def logistics():
-    """手机站 - 物流详情"""
-    return render_template('mobile/user/logistics.html.j2')
-
-
-@user.route('/apply/aftersale')
-def apply_aftersale():
-    """手机站 - 申请售后服务"""
-    return render_template('mobile/user/apply_aftersale.html.j2')

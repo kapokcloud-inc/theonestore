@@ -91,6 +91,7 @@
 .weui-navbar {
   position: fixed;
   background: #fff;
+  border-bottom: 1px solid #e5e5e5;
 }
 .weui-navbar__item.weui-bar__item--on {
   color: #f33155;
@@ -186,6 +187,7 @@
   border-bottom: 1px solid #f3f4f5;
 }
 .product_image {
+  display: inline-block;
   width: 45px;
   height: 45px;
   vertical-align: middle;

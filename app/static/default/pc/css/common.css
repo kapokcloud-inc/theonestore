@@ -239,6 +239,8 @@ header img {
 .top-main_item {
   position: relative;
   float: left;
+  height: 40px;
+  line-height: 40px;
 }
 .top-main_atag {
   display: block;

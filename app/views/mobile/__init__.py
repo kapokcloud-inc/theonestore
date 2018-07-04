@@ -17,3 +17,4 @@ from .comment import comment
 from .pay import pay
 from .wallet import wallet
 from .order import order
+from .aftersales import aftersales
