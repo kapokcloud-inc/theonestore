@@ -24,8 +24,10 @@ from app.helpers import (
     log_info
 )
 
+from app.services.api.comment import CommentStaticMethodsService
 from app.services.api.item import ItemStaticMethodsService
 
+from app.models.like import Like
 from app.models.item import (
     Goods,
     GoodsCategories,
@@ -58,10 +60,27 @@ def paging():
 def detail(goods_id):
     """ 商品详情页 """
 
+    # ??
+    #uid = get_uid()
+    uid = 1
+    if not uid:
+        session['weixin_login_url'] = request.url
+
     item      = Goods.query.get_or_404(goods_id)
     galleries = db.session.query(GoodsGalleries.img).filter(GoodsGalleries.goods_id == goods_id).all()
 
-    return render_template('mobile/item/detail.html.j2', item=item, galleries=galleries)
+    is_fav = db.session.query(Like.like_id).\
+                filter(Like.like_type == 2).\
+                filter(Like.ttype == 1).\
+                filter(Like.tid == goods_id).\
+                filter(Like.uid == uid).first()
+    is_fav = 1 if is_fav else 0
+
+    comments = []
+    if item.comment_count > 0:
+        comments = CommentStaticMethodsService.comments({'p':1, 'ps':2, 'ttype':1, 'tid':goods_id})
+
+    return render_template('mobile/item/detail.html.j2', item=item, galleries=galleries, is_fav=is_fav, comments=comments)
 
 
 @item.route('/recommend')

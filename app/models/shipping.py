@@ -23,4 +23,3 @@ class Shipping(BaseModel, db.Model):
     is_enable = db.Column(db.Integer, default=0)
     is_default = db.Column(db.Integer, default=0)
     sorting = db.Column(db.Integer, default=0)
-

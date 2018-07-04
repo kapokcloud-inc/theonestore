@@ -35,7 +35,10 @@ from app.helpers.user import (
     get_session_id
 )
 
-from app.services.api.cart import CartService, CheckoutService
+from app.services.api.cart import (
+    CartService,
+    CheckoutService
+)
 
 from app.forms.api.me import AddressForm
 
@@ -57,7 +60,9 @@ cart = Blueprint('mobile.cart', __name__)
 def root():
     """手机站 - 我的购物车"""
 
-    uid        = get_uid()
+    # ??
+    #uid        = get_uid()
+    uid        = 1
     session_id = get_session_id()
 
     msg = request.args.get('msg', '').strip()
@@ -65,15 +70,18 @@ def root():
     cs = CartService(uid, session_id)
     cs.check()
 
-    return render_template('mobile/cart/index.html.j2', msg=msg, carts=cs.carts,
-        items_amount=cs.items_amount, items_quantity=cs.items_quantity, total_quantity=cs.total_quantity)
+    data = {'msg':msg, 'carts':cs.carts, 'items_amount':cs.items_amount, 'items_quantity':cs.items_quantity,
+            'total_quantity':cs.total_quantity}
+    return render_template('mobile/cart/index.html.j2', **data)
 
 
 @cart.route('/edit/<int:cart_id>')
 def edit(cart_id):
     """手机站 - 购物车编辑"""
 
-    uid        = get_uid()
+    # ??
+    #uid        = get_uid()
+    uid        = 1
     session_id = get_session_id()
 
     q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)

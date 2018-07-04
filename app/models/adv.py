@@ -24,4 +24,3 @@ class Adv(BaseModel, db.Model):
     sorting = db.Column(db.Integer, default=0)
     is_show = db.Column(db.Integer, default=0)
     add_time = db.Column(db.Integer, default=0)
-

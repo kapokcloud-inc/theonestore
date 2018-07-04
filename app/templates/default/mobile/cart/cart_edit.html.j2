@@ -47,23 +47,31 @@
 {% block script %}
 <script type="text/javascript">
   //计数器
-  var MAX = 10, MIN = 1;
+  var MIN = 1;
+
   $('.num_minus').click(function (e) {
     var $input = $(e.currentTarget).parent().find('#quantity');
-    var number = parseInt($input.val() || "0") - 1
+    var number = parseInt($input.val() || "0") - 1;
+
     if (number < MIN) number = MIN;
-    $input.val(number)
+    $input.val(number);
   })
+
   $('.num_add').click(function (e) {
     var $input = $(e.currentTarget).parent().find('#quantity');
-    var number = parseInt($input.val() || "0") + 1
-    if (number > MAX) number = MAX;
-    $input.val(number)
+    var number = parseInt($input.val() || "0") + 1;
+
+    $input.val(number);
   })
 
   function submit() {
     var cart_id = $("#cart_id").val();
-    var quantity = $("#quantity").val();
+    var quantity = parseInt($("#quantity").val());
+
+    if (quantity <= 0) {
+      $.toast("{{_('购买数量不能小于0')}}", "text");
+      return false;
+    }
 
     $.get("{{ url_for('api.cart.update') }}", {'cart_id':cart_id, 'quantity':quantity}, function(json) {
       if (json.ret == 0) {

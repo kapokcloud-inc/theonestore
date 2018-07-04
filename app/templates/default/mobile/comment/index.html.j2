@@ -1,0 +1,52 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
+{% import '/default/mobile/libs/const.html.j2' as const %}
+
+{% block head %}
+<title>{{_('商品评论 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/item.css">
+{% endblock %} 
+
+{% block body %}
+<div class="index_wrap">
+  <div id="paging-data-list" class="bg-white">
+    <div class="weui-cell">
+      {% set btnOn = 'btnOn' if is_img == 0 and rating == 3 else '' %}
+      <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, rating=3) }}">{{_('好评')}} {{ rating_3_count }}</a>
+      {% set btnOn = 'btnOn' if is_img == 0 and rating == 2 else '' %}
+      <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, rating=2) }}">{{_('中评')}} {{ rating_2_count }}</a>
+      {% set btnOn = 'btnOn' if is_img == 0 and rating == 1 else '' %}
+      <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, rating=1) }}">{{_('差评')}} {{ rating_1_count }}</a>
+      {% set btnOn = 'btnOn' if is_img == 1 else '' %}
+      <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, is_img=1) }}">{{_('有图')}} {{ img_count }}</a>
+    </div>
+    {% for comment in comments %}
+      <div class="weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__hd">
+          <img class="weui-media-box__thumb ava" src="{{ comment.avatar }}" alt="">
+        </div>
+        <div class="weui-media-box__bd">
+          <div class="all_title">
+            {{ comment.nickname }}
+            <span class="typeText">{{ const.RATING_TEXT.get(comment.rating) }}</span>
+          </div>
+          <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
+          <div class="review_cnt">{{ comment.content }}</div>
+          <div class="review_att">
+            {% set imgs = comment.img_data|json_loads %}
+            {% for img in imgs %}
+              <span class="review_img">
+                <img src="{{ img }}" alt="">
+              </span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+{{ libs.paging_js(paging_url, 0) }}
+{% endblock %}

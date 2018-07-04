@@ -1,0 +1,25 @@
+{% import '/default/mobile/libs/const.html.j2' as const %}
+
+{% for comment in comments %}
+  <div class="weui-media-box weui-media-box_appmsg">
+    <div class="weui-media-box__hd">
+      <img class="weui-media-box__thumb ava" src="{{ comment.avatar }}" alt="">
+    </div>
+    <div class="weui-media-box__bd">
+      <div class="all_title">
+        {{ comment.nickname }}
+        <span class="typeText">{{ const.RATING_TEXT.get(comment.rating) }}</span>
+      </div>
+      <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
+      <div class="review_cnt">{{ comment.content }}</div>
+      <div class="review_att">
+        {% set imgs = comment.img_data|json_loads %}
+        {% for img in imgs %}
+          <span class="review_img">
+            <img src="{{ img }}" alt="">
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endfor %}
