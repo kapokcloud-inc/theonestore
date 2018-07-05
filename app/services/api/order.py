@@ -13,6 +13,7 @@ import random
 from decimal import Decimal
 
 from flask_babel import gettext as _
+from sqlalchemy import or_
 
 from app.database import db
 
@@ -722,7 +723,7 @@ class OrderStaticMethodsService(object):
 
         p            = toint(params.get('p', '1'))
         ps           = toint(params.get('ps', '10'))
-        tab_status   = toint(params.get('tab_status', '0'))     # 标签状态: 0.全部; 1.待付款; 2.待收货; 3.待评价;
+        tab_status   = toint(params.get('tab_status', '0'))     # 标签状态: 0.全部; 1.待付款; 2.待收货; 3.已完成; 4.已取消;
 
         q = db.session.query(Order.order_id, Order.order_status, Order.order_amount, Order.pay_status,
                             Order.shipping_amount, Order.shipping_status, Order.deliver_status,
@@ -738,6 +739,12 @@ class OrderStaticMethodsService(object):
 
         if tab_status == 3:
             q = q.filter(Order.order_status == 2).filter(Order.pay_status == 2).filter(Order.deliver_status == 2)
+
+        if tab_status == 4:
+            current_time = current_timestamp()
+            min_pay_time = before_after_timestamp(current_time, {'days':1})
+
+            q = q.filter(or_((Order.add_time >= min_pay_time), (Order.order_status == 3)))
 
         orders = q.order_by(Order.order_id.desc()).offset((p-1)*ps).limit(ps).all()
 

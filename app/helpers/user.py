@@ -45,6 +45,18 @@ def get_uid():
     return toint(session.get('uid', 0))
 
 
+def get_nickname():
+    """获取用户昵称"""
+
+    return session.get('nickname', '')
+
+
+def get_avatar():
+    """获取用户头像"""
+
+    return session.get('avatar', '')
+
+
 def get_session_id():
     """获取用户session_id"""
 

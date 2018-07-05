@@ -60,9 +60,7 @@ cart = Blueprint('mobile.cart', __name__)
 def root():
     """手机站 - 我的购物车"""
 
-    # ??
-    #uid        = get_uid()
-    uid        = 1
+    uid        = get_uid()
     session_id = get_session_id()
 
     msg = request.args.get('msg', '').strip()
@@ -79,9 +77,7 @@ def root():
 def edit(cart_id):
     """手机站 - 购物车编辑"""
 
-    # ??
-    #uid        = get_uid()
-    uid        = 1
+    uid        = get_uid()
     session_id = get_session_id()
 
     q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
@@ -104,11 +100,10 @@ def edit(cart_id):
 def checkout():
     """结算"""
 
-    #if not check_login():
-    #    session['weixin_login_url'] = request.headers['Referer']
-    #    return redirect(url_for('api.weixin.login'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
 
     args         = request.args
     order_id     = args.get('order_id', None)

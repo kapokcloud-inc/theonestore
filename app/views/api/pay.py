@@ -23,6 +23,10 @@ from app.helpers import (
     toint
 )
 from app.helpers.date_time import current_timestamp
+from app.helpers.user import (
+    check_login,
+    get_uid
+)
 
 from app.services.response import ResponseJson
 from app.services.api.order import PayService, PaidService
@@ -39,11 +43,9 @@ def fundspay_req():
     """ 余额支付请求 """
     resjson.action_code = 10
 
-    # ??
-    #if not check_login():
-    #    return resjson.print_json(10, _(u'未登陆'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
 
     paid_time  = current_timestamp()
     pay_amount = Decimal('0.00')

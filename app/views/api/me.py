@@ -45,18 +45,14 @@ def address_save():
     """保存地址"""
     resjson.action_code = 10
 
-    # ??
-    #if not check_login():
-    #    return resjson.print_json(10, _(u'未登陆'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
 
     wtf_form     = AddressForm()
     current_time = current_timestamp()
 
     if not wtf_form.validate_on_submit():
-        log_info(dir(wtf_form.errors))
-        log_info(wtf_form.errors)
         for key,value in wtf_form.errors.items():
             msg = value[0]
         return resjson.print_json(11, msg)

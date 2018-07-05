@@ -23,6 +23,7 @@ from app.helpers import (
     render_template,
     log_info
 )
+from app.helpers.user import get_uid
 
 from app.services.api.comment import CommentStaticMethodsService
 from app.services.api.item import ItemStaticMethodsService
@@ -60,9 +61,7 @@ def paging():
 def detail(goods_id):
     """ 商品详情页 """
 
-    # ??
-    #uid = get_uid()
-    uid = 1
+    uid = get_uid()
     if not uid:
         session['weixin_login_url'] = request.url
 

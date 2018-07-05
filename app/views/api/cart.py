@@ -57,9 +57,7 @@ def add():
     """加入购物车"""
     resjson.action_code = 10
 
-    # ??
-    #uid        = get_uid()
-    uid        = 1
+    uid        = get_uid()
     session_id = get_session_id()
 
     args         = request.args
@@ -125,9 +123,7 @@ def update():
     """更新购物车"""
     resjson.action_code = 11
 
-    # ??
-    #uid        = get_uid()
-    uid        = 1
+    uid        = get_uid()
     session_id = get_session_id()
 
     args         = request.args
@@ -164,9 +160,7 @@ def remove():
     """删除购物车商品"""
     resjson.action_code = 12
 
-    # ??
-    #uid        = get_uid()
-    uid        = 1
+    uid        = get_uid()
     session_id = get_session_id()
 
     carts_id = request.args.get('carts_id', '').strip()
@@ -203,9 +197,7 @@ def checked():
     """选中"""
     resjson.action_code = 13
 
-    # ??
-    #uid        = get_uid()
-    uid        = 1
+    uid        = get_uid()
     session_id = get_session_id()
 
     carts        = request.args.get('carts', '[]').strip()
@@ -251,11 +243,10 @@ def checkout_amounts():
     """结算金额"""
     resjson.action_code = 13
 
-    #if not check_login():
-    #    session['weixin_login_url'] = request.headers['Referer']
-    #    return resjson.print_json(10, _(u'未登陆'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
 
     args = request.args
     carts_id    = args.get('carts_id', '[]').strip()
