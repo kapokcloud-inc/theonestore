@@ -38,3 +38,9 @@ class AddressForm(FlaskForm):
     district   = StringField(validators=[Required(message=_(u'请填写行政区'))])
     address    = StringField(validators=[Required(message=_(u'请填写详细地址'))])
     is_default = IntegerField()
+
+
+class ProfileForm(FlaskForm):
+    """个人信息form"""
+    nickname = StringField(validators=[Required(message=_(u'请填写昵称'))])
+    gender   = IntegerField(validators=[NumberRange(min=1, max=2, message=_(u'请选择性别'))])

@@ -30,9 +30,15 @@ from app.helpers.user import (
 
 from app.services.response import ResponseJson
 
-from app.forms.api.me import AddressForm
+from app.forms.api.me import (
+    ProfileForm,
+    AddressForm
+)
 
-from app.models.user import UserAddress
+from app.models.user import (
+    User,
+    UserAddress
+)
 
 
 me = Blueprint('api.me', __name__)
@@ -40,10 +46,41 @@ me = Blueprint('api.me', __name__)
 resjson = ResponseJson()
 resjson.module_code = 13
 
+@me.route('/update', methods=["POST"])
+def update():
+    """更新个人资料"""
+    resjson.action_code = 10
+
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
+
+    wtf_form     = ProfileForm()
+    current_time = current_timestamp()
+
+    if not wtf_form.validate_on_submit():
+        for key,value in wtf_form.errors.items():
+            msg = value[0]
+        return resjson.print_json(11, msg)
+
+    data = {'nickname':wtf_form.nickname.data, 'gender':wtf_form.gender.data, 'update_time':current_time}
+
+    avatar = request.form.get('avatar', '').strip()
+    if avatar:
+        # 检测图片合法性 ??
+
+        data['avatar'] = avatar
+
+    user = User.query.get(uid)
+    model_update(user, data, commit=True)
+
+    return resjson.print_json(0, u'ok')
+
+
 @me.route('/address/save', methods=["POST"])
 def address_save():
     """保存地址"""
-    resjson.action_code = 10
+    resjson.action_code = 11
 
     if not check_login():
         return resjson.print_json(10, _(u'未登陆'))

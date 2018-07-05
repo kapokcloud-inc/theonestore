@@ -9,11 +9,11 @@
 {% block body %}
 <div class="user_wrap">
   <div class="weui-cells weui-cells_form">
-    <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.me.info') }}">
+    <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.me.profile') }}">
       <div class="weui-cell__hd avatar mar-right">
-        <img src="" alt="">
+        <img src="{{ avatar }}" alt="">
       </div>
-      <div class="weui-cell__bd">{{_('用户名')}}</div>
+      <div class="weui-cell__bd">{{ nickname }}</div>
       <div class="weui-cell__ft">{{_('修改')}}</div>
     </a>
   </div>
@@ -43,7 +43,7 @@
           </a>
         </li>
         <li class="flex pstR">
-          <a href="{{ url_for('mobile.order.comment') }}">
+          <a href="{{ url_for('mobile.order.index', tab_status=3) }}">
             <span class="weui-badge">3</span>
             <div class="icom_photo">
               <img src="/static/default/mobile/img/comment.png" alt="">
@@ -69,14 +69,16 @@
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">{{_('优惠券')}}</div>
-      <div class="weui-cell__ft">3{{_('张')}}</div>
+      {% if coupon_count > 0 %}
+        <div class="weui-cell__ft">{{ coupon_count }}{{_('张')}}</div>
+      {% endif %}
     </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.wallet.root') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">{{_('钱包')}}</div>
-      <div class="weui-cell__ft">199{{_('元')}}</div>
+      <div class="weui-cell__ft">{{ funds.funds }}{{_('元')}}</div>
     </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.me.collect') }}">
       <div class="weui-cell__hd">

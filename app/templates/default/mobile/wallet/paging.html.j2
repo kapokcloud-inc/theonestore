@@ -1,0 +1,16 @@
+{% import '/default/mobile/libs/const.html.j2' as const %}
+
+{% for detail in details %}
+  <a class="weui-cell" href="{{ url_for('mobile.wallet.detail', fd_id=detail.fd_id) }}">
+    <div class="weui-cell__bd">
+      {% set event = const.FUNDS_EVENT.get(detail.event) %}
+      <p class="remark_user">{{ event }}</p>
+      <p class="all_add">{{ detail.add_time|timestamp2str }}</p>
+    </div>
+    <div class="weui-cell__ft mar-left">
+      {% set color = 'changeRu' if detail.funds_change > 0 else 'changeChu' %}
+      {% set symbol = '+' if detail.funds_change > 0 else '' %}
+      <p class="funds changeChu">{{ symbol }}{{ detail.funds_change }}</p>
+    </div>
+  </a>
+  {% endfor %}

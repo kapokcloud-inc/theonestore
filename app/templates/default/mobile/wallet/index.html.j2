@@ -1,4 +1,6 @@
 {% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
+{% import '/default/mobile/libs/const.html.j2' as const %}
 
 {% block head %}
 <title>{{_('我的钱包 - 一店')}}</title>
@@ -10,7 +12,7 @@
   <div class="top_item">
     <div class="title-wrap">
       <p class="wallet">{{_('钱包余额（元）')}}</p>
-      <p class="money">{{_('1314.00')}}</p>
+      <p class="money">{{ funds.funds }}</p>
     </div>
   </div>
   <div class="flex-wrap">
@@ -22,32 +24,30 @@
     </a>
   </div>
 </div>
-<div class="weui-cells weui-cells_form">
+<div id="paging-data-list" class="weui-cells weui-cells_form">
   <div class="weui-cell">
     <div class="weui-cell__hd">
       <img src="/static/default/mobile/img/transaction.png" alt="">
     </div>
     <div class="weui-cell__bd all_title">{{_('交易明细')}}</div>
   </div>
-  <a class="weui-cell" href="{{ url_for('mobile.wallet.detail') }}">
+  {% for detail in details %}
+  <a class="weui-cell" href="{{ url_for('mobile.wallet.detail', fd_id=detail.fd_id) }}">
     <div class="weui-cell__bd">
-      <p class="remark_user">{{_('订单支付')}}</p>
-      <p class="all_add">{{_('2018-06-25 17:49:41')}}</p>
+      {% set event = const.FUNDS_EVENT.get(detail.event) %}
+      <p class="remark_user">{{ event }}</p>
+      <p class="all_add">{{ detail.add_time|timestamp2str }}</p>
     </div>
     <div class="weui-cell__ft mar-left">
-      <p class="funds changeChu">{{_('-120.00')}}</p>
+      {% set color = 'changeRu' if detail.funds_change > 0 else 'changeChu' %}
+      {% set symbol = '+' if detail.funds_change > 0 else '' %}
+      <p class="funds changeChu">{{ symbol }}{{ detail.funds_change }}</p>
     </div>
   </a>
-  <a class="weui-cell" href="{{ url_for('mobile.wallet.detail') }}">
-    <div class="weui-cell__bd">
-      <p class="remark_user">{{_('订单收入')}}</p>
-      <p class="all_add">{{_('2018-06-27 15:39:41')}}</p>
-    </div>
-    <div class="weui-cell__ft mar-left">
-      <p class="funds changeRu">{{_('+90.00')}}</p>
-    </div>
-  </a>
+  {% endfor %}
 </div>
 {% endblock %}
 
-{% block script %} {% endblock %}
+{% block script %}
+{{ libs.paging_js(paging_url, 0) }}
+{% endblock %}
