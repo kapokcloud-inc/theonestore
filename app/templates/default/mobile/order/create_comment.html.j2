@@ -7,9 +7,20 @@
 
 {% block body %}
 <div class="user_wrap">
+  <a class="weui-cell bg-white" href="{{ url_for('mobile.item.detail', goods_id=9) }}">
+    <div class="weui-cell__hd avatar mar-right">
+      <img src="" alt="">
+    </div>
+    <div class="weui-cell__bd">
+      <div class="all_title height25">测试商品09</div>
+      <div class="all_desc height25">商品详情</div>
+    </div>
+    <div class="weui-cell__ft mar-left">
+      <p class="all_price">￥12</p>
+    </div>
+  </a>
   <div class="weui-cells weui-cells_form">
     <div class="comment_type">
-      <img src="" alt="" class="product_image">
       <button type="button" class="tag_btn tag_btn-on">{{_('好评')}}</button>
       <button type="button" class="tag_btn">{{_('中评')}}</button>
       <button type="button" class="tag_btn">{{_('差评')}}</button>
@@ -17,41 +28,8 @@
     <div style="padding:15px">
       <textarea class="review_text" name="name" rows="5" placeholder="{{_('请输入评价信息...')}}"></textarea>
     </div>
-    <div class="weui-gallery" style="display: none">
-      <span class="weui-gallery__img"></span>
-      <div class="weui-gallery__opr">
-        <a href="javascript:" class="weui-gallery__del">
-          <i class="weui-icon-delete weui-icon_gallery-delete"></i>
-        </a>
-      </div>
-    </div>
-    <div class="weui-cell uploader_wrap">
-      <div class="weui-cell__bd">
-        <div class="weui-uploader">
-          <div class="weui-uploader__bd">
-            <ul class="weui-uploader__files" id="uploaderFiles">
-              <li class="weui-uploader__file"></li>
-            </ul>
-            <div class="weui-uploader__input-box">
-              <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="weui-cells weui-cells_form">
-    <div class="comment_type">
-      <img src="" alt="" class="product_image">
-      <button type="button" class="tag_btn tag_btn-on">{{_('好评')}}</button>
-      <button type="button" class="tag_btn">{{_('中评')}}</button>
-      <button type="button" class="tag_btn">{{_('差评')}}</button>
-    </div>
-    <div style="padding:15px">
-      <textarea class="review_text" name="name" rows="5" placeholder="{{_('请输入评价信息...')}}"></textarea>
-    </div>
-    <div class="weui-gallery" style="display: none">
-      <span class="weui-gallery__img"></span>
+    <div class="weui-gallery" id="gallery">
+      <span class="weui-gallery__img" id="galleryImg"></span>
       <div class="weui-gallery__opr">
         <a href="javascript:" class="weui-gallery__del">
           <i class="weui-icon-delete weui-icon_gallery-delete"></i>
@@ -80,5 +58,26 @@
 {% endblock %} 
 
 {% block script %}
-<script type="text/javascript"></script> 
+<script type="text/javascript">
+  //点击图片淡入放大
+  $('#uploaderFiles').on("click", "li", function () {
+    index = $(this).index();
+    var style = this.getAttribute("style");
+    //style = style.replace('?imageView2/1/w/200/h/200', '');
+    $('#galleryImg').attr("style", style);
+    $('#gallery').fadeIn(100);
+  });
+
+  //点击图片淡出消失
+  $('#gallery').on("click", function () {
+    $('#gallery').fadeOut(100);
+  });
+
+  //删除图片
+  $(".weui-gallery__del").click(function (event) {
+    event.stopPropagation();        //冒泡事件
+    $('#uploaderFiles').find("li").eq(index).remove();
+    $('#gallery').fadeOut(100);
+  });
+</script> 
 {% endblock %}

@@ -23,7 +23,11 @@
     </div>
     <div class="typeStatus">
       {% set on = 'orderType-on' if tab_status == 3 else '' %}
-      <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=3) }}">{{_('待评价')}}</a>
+      <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=3) }}">{{_('已完成')}}</a>
+    </div>
+    <div class="typeStatus">
+      {% set on = 'orderType-on' if tab_status == 4 else '' %}
+      <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=3) }}">{{_('已取消')}}</a>
     </div>
   </div>
   {% if not orders %}
@@ -178,7 +182,7 @@ function review() {
     $confirmReceipt.addClass('hide');
   }
   
-  var url = "/mobile/user/review";
+  var url = "/mobile/order/create-comment";
   window.location.href = url;
 }
 

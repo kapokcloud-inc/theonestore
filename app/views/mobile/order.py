@@ -199,3 +199,22 @@ def track():
 
     data = {'express_msg':express_msg, 'express_data':express_data, 'order':order, 'shipping':shipping}
     return render_template('mobile/order/track.html.j2', **data)
+
+
+@order.route('/create-comment')
+def create_comment():
+    """手机站 - 发表评价"""
+    return render_template('mobile/order/create_comment.html.j2')
+
+
+@order.route('/comment')
+def comment():
+    """手机站 - 评价中心"""
+    return render_template('mobile/order/comment.html.j2')
+
+
+@order.route('/comment/<int:comment_id>')
+def comment_detail(comment_id):
+    """手机站 - 查看评价"""
+    return render_template('mobile/order/comment_detail.html.j2')
+

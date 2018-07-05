@@ -1,0 +1,85 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+
+{% block head %}
+<title>{{_('评价中心- 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css">
+{% endblock %}
+
+{% block body %}
+<div class="user_wrap">
+  <div class="weui-navbar">
+    <div class="typeStatus">
+      <a style="width:70px !important" class="orderType orderType-on" href="{{ url_for('mobile.order.comment') }}">{{_('待评价')}} (1)</a>
+    </div>
+    <div class="typeStatus">
+      <a style="width:70px !important" class="orderType" href="{{ url_for('mobile.order.comment') }}">{{_('已评价')}} (1)</a>
+    </div>
+  </div>
+  <div class="order_list">
+    <!-- 没有商品评价时显示 -->
+    <!-- <div class="not-product">
+      <div class="not-product_img">
+        <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
+      </div>
+      <div class="not-product_text">{{_('您暂无相关商品需要评价')}}</div>
+      <div class="reg_btn">
+        <a href="{{ url_for('mobile.index.root') }}">
+          <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
+        </a>
+      </div>
+    </div> -->
+    <div class="weui-cells weui-cells_form">
+      <div class="weui-cell" onclick="enter(9)">
+        <div class="weui-cell__hd avatar mar-right">
+          <img src="" alt="">
+        </div>
+        <div class="weui-cell__bd">
+          <div class="all_title height25">测试商品09</div>
+          <div class="all_desc height25">商品详情</div>
+        </div>
+        <div class="weui-cell__ft review">
+          <button type="button" class="order_btn order-state_btn">{{_('去评价')}}</button>
+        </div>
+      </div>
+      <div class="weui-cell" onclick="enter(9)">
+        <div class="weui-cell__hd avatar mar-right">
+          <img src="" alt="">
+        </div>
+        <div class="weui-cell__bd">
+          <div class="all_title height25">测试商品09</div>
+          <div class="all_desc height25">商品详情</div>
+        </div>
+        <div class="weui-cell__ft view">
+          <button type="button" class="order_btn">{{_('查看评价')}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+  //点击进入商品详情
+  function enter(goods_id) {
+    var url = "/mobile/item/9";
+    window.location.href = url;
+  }
+
+  //点击进入发表评价页面
+  $('.review').click(function (event) {       //event:事件对象
+    event.stopPropagation();                        //停止事件冒泡
+
+    var url = "/mobile/order/create-comment";
+    window.location.href = url;
+  });
+
+  //点击进入发表评价页面
+  $('.view').click(function (event) {       //event:事件对象
+    event.stopPropagation();                        //停止事件冒泡
+
+    var url = "/mobile/order/comment/9";
+    window.location.href = url;
+  });
+</script>
+{% endblock %}

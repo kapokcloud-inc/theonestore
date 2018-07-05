@@ -496,7 +496,9 @@ ul li {
   font-size: 12px;
   border: 1px solid #d8d8d8;
 }
-.applySale {
+.applySale,
+.review,
+.view {
   height: 50px;
   line-height: 50px;
 }

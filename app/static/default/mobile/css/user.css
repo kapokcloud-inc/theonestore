@@ -186,13 +186,6 @@
   padding: 15px;
   border-bottom: 1px solid #f3f4f5;
 }
-.product_image {
-  display: inline-block;
-  width: 45px;
-  height: 45px;
-  vertical-align: middle;
-  margin-right: 10px;
-}
 .uploader_wrap::before {
   border: 0;
 }
@@ -286,4 +279,21 @@
   height: 18px;
   border-radius: 9px;
   border: 1px solid #f33155;
+}
+.applyImg {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  border: 0 none;
+}
+.reviewImg {
+  max-width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  text-align: center;
+  line-height: 0;
+}
+.reviewImg img {
+  width: 100%;
+  display: inline-block;
 }

@@ -62,9 +62,3 @@ def coupon():
 def messages():
     """手机站 - 消息"""
     return render_template('mobile/user/messages.html.j2')
-
-
-@user.route('/review')
-def review():
-    """手机站 - 发表评价"""
-    return render_template('mobile/user/review.html.j2')
