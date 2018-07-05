@@ -22,6 +22,10 @@ from app.helpers import (
     log_info,
     toint
 )
+from app.helpers.user import (
+    check_login,
+    get_uid
+)
 
 from app.services.api.order import (
     OrderStaticMethodsService,
@@ -42,11 +46,10 @@ order = Blueprint('mobile.order', __name__)
 def index():
     """订单列表页"""
 
-    #if not check_login():
-    #    session['weixin_login_url'] = request.headers['Referer']
-    #    return redirect(url_for('api.weixin.login'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
 
     orders     = OrderStaticMethodsService.orders(uid, request.args.to_dict())
     paging_url = url_for('mobile.order.paging', **request.args)
@@ -68,11 +71,10 @@ def index():
 def paging():
     """加载分页"""
 
-    #if not check_login():
-    #    session['weixin_login_url'] = request.headers['Referer']
-    #    return redirect(url_for('api.weixin.login'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
 
     orders = OrderStaticMethodsService.orders(uid, request.args.to_dict())
 
@@ -90,11 +92,10 @@ def paging():
 def detail(order_id):
     """订单详情"""
 
-    #if not check_login():
-    #    session['weixin_login_url'] = request.headers['Referer']
-    #    return redirect(url_for('api.weixin.login'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
 
     order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
     if not order:
@@ -118,11 +119,10 @@ def detail(order_id):
 def cancel():
     """取消订单"""
 
-    #if not check_login():
-    #    session['weixin_login_url'] = request.headers['Referer']
-    #    return redirect(url_for('api.weixin.login'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
 
     args        = request.args
     order_id    = toint(args.get('order_id', 0))
@@ -148,11 +148,10 @@ def cancel():
 def deliver():
     """确认收货"""
 
-    #if not check_login():
-    #    session['weixin_login_url'] = request.headers['Referer']
-    #    return redirect(url_for('api.weixin.login'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
 
     args     = request.args
     order_id = toint(args.get('order_id', 0))
@@ -176,11 +175,10 @@ def deliver():
 def track():
     """查询物流"""
 
-    #if not check_login():
-    #    session['weixin_login_url'] = request.headers['Referer']
-    #    return redirect(url_for('api.weixin.login'))
-    #uid = get_uid()
-    uid = 1
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
 
     args     = request.args
     order_id = toint(args.get('order_id', 0))
