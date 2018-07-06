@@ -20,4 +20,5 @@ MOBILE_ROUTES = (
     (mobile.wallet,         '/mobile/wallet'),
     (mobile.order,          '/mobile/order'),
     (mobile.aftersales,     '/mobile/aftersales'),
+    (mobile.me,             '/mobile/me')
 )

@@ -1,4 +1,5 @@
 {% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/const.html.j2' as const %}
 
 {% block head %}
 <title>{{_('交易明细详情 - 一店')}}</title>
@@ -9,25 +10,19 @@
 <div class="weui-cells weui-cells_form">
   <div class="weui-form-preview">
     <div class="weui-form-preview__hd">
-      <label class="weui-form-preview__label">{{_('出账金额')}}</label>
-      <em class="weui-form-preview__value changeChu">{{_('120.00')}}</em>
-    </div>
-    <div class="weui-form-preview__hd">
-      <label class="weui-form-preview__label">{{_('入账金额')}}</label>
-      <em class="weui-form-preview__value changeRu">{{_('90.00')}}</em>
+      {% set type = _('入账金额') if detail.funds_change > 0 else _('出账金额') %}
+      <label class="weui-form-preview__label">{{ type }}</label>
+      <em class="weui-form-preview__value changeChu">{{ detail.funds_change }}</em>
     </div>
     <div class="weui-form-preview__bd">
       <div class="weui-form-preview__item">
         <label class="weui-form-preview__label">{{_('类型')}}</label>
-        <span class="weui-form-preview__value">{{_('订单支付')}}</span>
+        {% set event = const.FUNDS_EVENT.get(detail.event) %}
+        <span class="weui-form-preview__value">{{ event }}</span>
       </div>
       <div class="weui-form-preview__item">
         <label class="weui-form-preview__label">{{_('时间')}}</label>
-        <span class="weui-form-preview__value">{{_('2018-06-25 17:49:41')}}</span>
-      </div>
-      <div class="weui-form-preview__item">
-        <label class="weui-form-preview__label">{{_('交易单号')}}</label>
-        <span class="weui-form-preview__value">{{_('20180627174941118')}}</span>
+        <span class="weui-form-preview__value">{{ detail.add_time|timestamp2str }}</span>
       </div>
     </div>
   </div>

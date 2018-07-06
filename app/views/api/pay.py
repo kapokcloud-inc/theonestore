@@ -71,7 +71,7 @@ def fundspay_req():
     # 更新资金 - 使用资金支付 - 检查
     remark_user = _(u'支付订单')
     remark_sys  = _(u'支付订单，交易ID:%s 支付金额:%s' % (tran_id, pay_amount))
-    fs = FundsService(uid, pay_amount, 1, 1, tran_id, remark_user, remark_sys, paid_time)
+    fs = FundsService(uid, pay_amount, 2, 1, tran_id, remark_user, remark_sys, paid_time)
     if not fs.check():
         return resjson.print_json(12, fs.msg)
 

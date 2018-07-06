@@ -31,7 +31,7 @@ class FundsService(object):
         self.msg          = u''
         self.uid          = uid
         self.funds_change = funds_change    # 变更资金: 收入即值大于0, 支出即值小于或等于0
-        self.event        = event           # 事件: 0.默认; 1.充值; 2.订单支付;
+        self.event        = event           # 事件: 0.默认; 1.充值; 2.支付; 3.退款;
         self.ttype        = ttype           # 第三方类型: 0.默认; 1.tran; 2.order; 3.transfers;
         self.tid          = tid             # 第三方ID
         self.remark_user  = remark_user
@@ -87,3 +87,21 @@ class FundsService(object):
         self.funds_detail = model_create(FundsDetail, data)
 
         return True
+
+
+class FundsStaticMethodsService(object):
+    """资金静态方法Service"""
+
+    @staticmethod
+    def details(params):
+        """获取资金流水列表"""
+
+        p      = toint(params.get('p', '1'))
+        ps     = toint(params.get('ps', '10'))
+        uid    = toint(params.get('uid', '0'))
+
+        details = db.session.query(FundsDetail.fd_id, FundsDetail.funds_change, FundsDetail.event, FundsDetail.add_time).\
+                        filter(FundsDetail.uid == uid).\
+                        order_by(FundsDetail.fd_id.desc()).offset((p-1)*ps).limit(ps).all()
+
+        return details
