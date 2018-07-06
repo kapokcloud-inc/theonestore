@@ -286,14 +286,7 @@
   height: 70px;
   border: 0 none;
 }
-.reviewImg {
-  max-width: 100%;
-  display: inline-block;
-  overflow: hidden;
-  text-align: center;
+.create_wrap {
+  padding: 15px;
   line-height: 0;
-}
-.reviewImg img {
-  width: 100%;
-  display: inline-block;
 }

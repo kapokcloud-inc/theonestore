@@ -139,23 +139,6 @@
   margin-top: 10px;
   word-break: break-all;
 }
-.review_att {
-  margin-top: 10px;
-}
-.review_img {
-  width: 60px;
-  height: 60px;
-  display: inline-block;
-  overflow: hidden;
-  text-align: center;
-}
-.review_img img {
-  width: auto;
-  display: inline-block;
-  height: auto;
-  width: 60px;
-  height: 60px;
-}
 @media screen and (min-width: 320px) {
   .swiper-container {
     height: 320px !important;

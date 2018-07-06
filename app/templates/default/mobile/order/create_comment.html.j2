@@ -25,7 +25,7 @@
       <button type="button" class="tag_btn">{{_('中评')}}</button>
       <button type="button" class="tag_btn">{{_('差评')}}</button>
     </div>
-    <div style="padding:15px">
+    <div class="create_wrap">
       <textarea class="review_text" name="name" rows="5" placeholder="{{_('请输入评价信息...')}}"></textarea>
     </div>
     <div class="weui-gallery" id="gallery">
@@ -41,7 +41,8 @@
         <div class="weui-uploader">
           <div class="weui-uploader__bd">
             <ul class="weui-uploader__files" id="uploaderFiles">
-              <li class="weui-uploader__file"></li>
+              <li class="weui-uploader__file" style="background-image:url('http://i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg')"></li>
+              <li class="weui-uploader__file" style="background-image:url('https://i8.mifile.cn/b2c-mimall-media/10c6f6ede2fcfa2ad162d2869a716c14.jpg')"></li>
             </ul>
             <div class="weui-uploader__input-box">
               <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">
@@ -63,7 +64,6 @@
   $('#uploaderFiles').on("click", "li", function () {
     index = $(this).index();
     var style = this.getAttribute("style");
-    //style = style.replace('?imageView2/1/w/200/h/200', '');
     $('#galleryImg').attr("style", style);
     $('#gallery').fadeIn(100);
   });

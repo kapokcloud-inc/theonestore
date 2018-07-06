@@ -20,16 +20,15 @@
       {% set btnOn = 'btnOn' if is_img == 1 else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, is_img=1) }}">{{_('有图')}} {{ img_count }}</a>
     </div>
-    {% for comment in comments %}
     <div class="weui-gallery" id="gallery">
-      <span class="weui-gallery__img" id="galleryImg">
-      </span>
+      <span class="weui-gallery__img" id="galleryImg"></span>
       <div class="weui-gallery__opr">
         <!-- <a href="javascript:" class="weui-gallery__del">
           <i class="weui-icon-delete weui-icon_gallery-delete"></i>
         </a> -->
       </div>
     </div>
+    {% for comment in comments %}
       <div class="weui-media-box weui-media-box_appmsg">
         <div class="weui-media-box__hd">
           <img class="weui-media-box__thumb ava" src="{{ comment.avatar }}" alt="">
@@ -41,12 +40,10 @@
           </div>
           <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
           <div class="review_cnt">{{ comment.content }}</div>
-          <ul class="review_att">
+          <ul class="weui-uploader__files mar-top" id="uploaderFiles">
             {% set imgs = comment.img_data|json_loads %}
             {% for img in imgs %}
-              <li class="review_img" id="uploaderFiles">
-                <img src="{{ img }}" alt="">
-              </li>
+              <li class="weui-uploader__file" style="background-image:url('{{ img }}')"></li>
             {% endfor %}
           </ul>
         </div>
@@ -59,17 +56,17 @@
 {% block script %}
 {{ libs.paging_js(paging_url, 0) }}
 <script type="text/javascript">
-  //点击图片淡入放大
-    $('#uploaderFiles').on("click", "img", function () {
-      index = $(this).index();
-      var style = this.getAttribute("src");
-      $('#galleryImg').attr("src", style);
-      $('#gallery').fadeIn(100);
-    });
+//点击图片淡入放大
+$('#uploaderFiles').on("click", "li", function () {
+  index = $(this).index();
+  var style = this.getAttribute("style");
+  $('#galleryImg').attr("style", style);
+  $('#gallery').fadeIn(100);
+});
 
-    //点击图片淡出消失
-    $('#gallery').on("click", function () {
-      $('#gallery').fadeOut(100);
-    });
+//点击图片淡出消失
+$('#gallery').on("click", function () {
+  $('#gallery').fadeOut(100);
+});
 </script>
 {% endblock %}

@@ -21,6 +21,14 @@
     </div>
   </a>
   <div class="weui-cells weui-cells_form">
+    <div class="weui-gallery" id="gallery">
+      <span class="weui-gallery__img"  id="galleryImg"></span>
+      <div class="weui-gallery__opr">
+        <!-- <a href="javascript:" class="weui-gallery__del">
+          <i class="weui-icon-delete weui-icon_gallery-delete"></i>
+        </a> -->
+      </div>
+    </div>
     <div class="weui-media-box weui-media-box_appmsg">
       <div class="weui-media-box__hd">
         <img class="weui-media-box__thumb ava" src="" alt="">
@@ -32,18 +40,9 @@
         </div>
         <div class="all_add" style="margin-top:5px">2018.07.05 15:31</div>
         <div class="review_cnt">这是好评这是好评这是好评</div>
-        <div class="weui-gallery" id="gallery">
-          <span class="weui-gallery__img" id="galleryImg"></span>
-          <div class="weui-gallery__opr">
-            <a href="javascript:" class="weui-gallery__del">
-              <i class="weui-icon-delete weui-icon_gallery-delete"></i>
-            </a>
-          </div>
-        </div>
-        <ul class="review_att" id="uploaderFiles">
-          <li class="review_img">
-            <img src="" alt="">
-          </li>
+        <ul class="weui-uploader__files mar-top" id="uploaderFiles">
+          <li class="weui-uploader__file" style="background-image:url('http://i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg')"></li>
+          <li class="weui-uploader__file" style="background-image:url('https://i8.mifile.cn/b2c-mimall-media/10c6f6ede2fcfa2ad162d2869a716c14.jpg')"></li>
         </ul>
       </div>
     </div>
@@ -57,20 +56,12 @@
 $('#uploaderFiles').on("click", "li", function () {
   index = $(this).index();
   var style = this.getAttribute("style");
-  //style = style.replace('?imageView2/1/w/200/h/200', '');
   $('#galleryImg').attr("style", style);
   $('#gallery').fadeIn(100);
 });
 
 //点击图片淡出消失
 $('#gallery').on("click", function () {
-  $('#gallery').fadeOut(100);
-});
-
-//删除图片
-$(".weui-gallery__del").click(function (event) {
-  event.stopPropagation();        //冒泡事件
-  $('#uploaderFiles').find("li").eq(index).remove();
   $('#gallery').fadeOut(100);
 });
 </script>
