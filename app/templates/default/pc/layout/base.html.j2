@@ -11,86 +11,119 @@
 </head>
 
 <body>
-  <div class="wrapper">
-    <header class="header clearfix">
-      <nav class="top-nav">
-        <div class="head-inner" style="height:28px;">
-          <ul class="top-nav-tool">
-            <li class="top-nav_item">
-              <a href="" class="mouseon" target="_blank">{{_('请登录')}}</a>
-            </li>
-            <li class="top-nav_item">
-              <a href="" class="mouseon" target="_blank">{{_('注册')}}</a>
-            </li>
-            <li class="top-nav_item">
-              <a href="" class="mouseon" target="_blank">{{_('我的订单')}}</a>
-            </li>
-            <li class="top-nav_item">
-              <a href="" class="mouseon" target="_blank">{{_('优惠券')}}</a>
-            </li>
-            <li class="top-nav_item">
-              <a href="" class="mouseon" target="_blank">{{_('收藏')}}</a>
-            </li>
-            <li class="top-nav_item">
-              <a href="" class="mouseon" target="_blank">{{_('消息')}}</a>
-            </li>
-          </ul>
+  <!-- 顶部 -->
+  <header class="header clearfix">
+    <!-- nav -->
+    <nav class="top-nav">
+      <div class="head-inner" style="height:28px;">
+        <ul class="top-nav-tool">
+          <!-- 用户未登录时显示 -->
+          <!-- <li class="top-nav_item">
+            <a href="" class="mouseon" target="_blank">{{_('请登录')}}</a>
+          </li>
+          <li class="top-nav_item">
+            <a href="" class="mouseon" target="_blank">{{_('注册')}}</a>
+          </li> -->
+          <!-- 用户未登录时显示 end -->
+
+          <!-- 用户登录时显示 -->
+          <li class="top-nav_me">
+            <a href="" target="_blank">135****229</a>
+            <div class="">
+              <div class="">
+            
+              </div>
+              <p>
+                <a href="">我的订单</a>
+                <a href="">优惠券</a>
+                <a href="">收藏</a>
+                <a href="">信息</a>
+              </p>
+            </div>
+          </li>
+          <!-- 用户登录时显示 end -->
+          <li class="top-nav_item">
+            <a href="" class="mouseon" target="_blank">{{_('我的订单')}}</a>
+          </li>
+          <li class="top-nav_item">
+            <a href="" class="mouseon" target="_blank">{{_('优惠券')}}</a>
+          </li>
+          <li class="top-nav_item">
+            <a href="" class="mouseon" target="_blank">{{_('收藏')}}</a>
+          </li>
+          <li class="top-nav_item">
+            <a href="" class="mouseon" target="_blank">{{_('消息')}}</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- nav end -->
+
+    <!-- logo search -->
+    <div class="head-logo">
+      <div class="head-inner clearfix" style="background-color:#fff">
+        <div class="one-logo">
+          <a href="" target="_blank">
+            <img class="logoImg" src="http://b.appsimg.com/2017/08/31/540/1504164551874.png" alt="">
+          </a>
         </div>
-      </nav>
-      <div class="head-logo">
-        <div class="head-inner clearfix">
-          <div class="one-logo">
+        <div class="one-service">
+          <img class="serviceImg" src="http://b.appsimg.com/2017/08/31/104/1504179372347.png" alt="">
+        </div>
+        <div class="head-cart">
+          <div class="tool">
             <a href="" target="_blank">
-              <img class="logoImg" src="/static/default/pc/img/logo.png" alt="">
+              <img class="cart-bag" src="/static/default/pc/img/cart.png" alt="">
+              <span class="cart-text">{{_('购物车')}}</span>
+              <span class="cart-badge">0</span>
             </a>
           </div>
-          <div class="one-service">
-            <img class="serviceImg" src="/static/default/pc/img/service.png" alt="">
-          </div>
-          <div class="head-cart">
-            <div class="tool">
-              <a href="" target="_blank">
-                <img class="cart-bag" src="/static/default/pc/img/cart.png" alt="">
-                <span class="cart-text">{{_('购物车')}}</span>
-                <span class="cart-badge">0</span>
-              </a>
-            </div>
-          </div>
-          <div class="one-search">
-            <div class="one-search_form">
-              <input type="text" class="one-search_input" placeholder="{{_('请输入搜索内容')}}" autocomplete="off" max-length="15">
-              <a href="" class="one-search_button">
-                <img class="one-search_image" src="/static/default/pc/img/search.png" alt="">
-              </a>
-            </div>
+        </div>
+        <div class="one-search">
+          <div class="one-search_form">
+            <input type="text" class="one-search_input" placeholder="{{_('请输入搜索内容')}}" autocomplete="off" max-length="15">
+            <a href="" class="one-search_button">
+              <img class="one-search_image" src="/static/default/pc/img/search.png" alt="">
+            </a>
           </div>
         </div>
       </div>
-      <div class="top-main_nav">
-        <div class="head-inner">
-          <ul class="top-main_list clearfix">
-            <li class="top-main_item">
-              <a class="top-main_atag atag_on" href="">{{_('首页')}}</a>
-            </li>
-            <li class="top-main_item">
-              <a class="top-main_atag" href="">{{_('分类一分类一')}}</a>
-            </li>
-            <li class="top-main_item">
-              <a class="top-main_atag" href="">{{_('分类二')}}</a>
-            </li>
-            <li class="top-main_item">
-              <a class="top-main_atag" href="">{{_('分类三')}}</a>
-            </li>
-            <li class="top-main_item">
-              <a class="top-main_atag" href="">{{_('分类四')}}</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </header>
+    </div>
+    <!-- logo search end -->
 
-    {% block body %} {% endblock %}
-  </div>
+    <!-- main-nav -->
+    <div class="top-main_nav">
+      <div class="head-inner" style="background-color:#f33155">
+        <ul class="top-main_list clearfix">
+          <li class="top-main_item">
+            <a class="top-main_atag atag_on" href="">{{_('首页')}}</a>
+          </li>
+          <li class="top-main_item">
+            <a class="top-main_atag" href="">{{_('分类一分类一')}}</a>
+          </li>
+          <li class="top-main_item">
+            <a class="top-main_atag" href="">{{_('分类二')}}</a>
+          </li>
+          <li class="top-main_item">
+            <a class="top-main_atag" href="">{{_('分类三')}}</a>
+          </li>
+          <li class="top-main_item">
+            <a class="top-main_atag" href="">{{_('分类四')}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- main-nav end -->
+  </header>
+  
+  <!-- 返回顶部 -->
+  <!-- <div class="back-top">
+    <div class="back-top_img">
+      <img src="https://i1.mifile.cn/f/i/2018/home/totop.png" alt="">
+    </div>
+  </div> -->
+  
+  {% block body %} {% endblock %}
 
   {% block script %} {% endblock %}
 </body>
