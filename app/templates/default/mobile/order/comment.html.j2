@@ -9,51 +9,51 @@
 <div class="user_wrap">
   <div class="weui-navbar">
     <div class="typeStatus">
-      <a style="width:70px !important" class="orderType orderType-on" href="{{ url_for('mobile.order.comment') }}">{{_('待评价')}} (1)</a>
+      {% set orderType_on = 'orderType-on' if is_pending == 1 else '' %}
+      <a style="width:70px !important" class="orderType {{ orderType_on }}" href="{{ url_for('mobile.order.comment', is_pending=1) }}">{{_('待评价')}} ({{ pending_count }})</a>
     </div>
     <div class="typeStatus">
-      <a style="width:70px !important" class="orderType" href="{{ url_for('mobile.order.comment') }}">{{_('已评价')}} (1)</a>
+      {% set orderType_on = 'orderType-on' if is_pending == 0 else '' %}
+      <a style="width:70px !important" class="orderType {{ orderType_on }}" href="{{ url_for('mobile.order.comment', is_pending=0) }}">{{_('已评价')}} ({{ unpending_count }})</a>
     </div>
   </div>
   <div class="order_list">
-    <!-- 没有商品评价时显示 -->
-    <!-- <div class="not-product">
-      <div class="not-product_img">
-        <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
+    {% if uncomments: %}
+      <div class="weui-cells weui-cells_form">
+        {% for uncomment in uncomments %}
+        <div class="weui-cell" onclick="enter({{ uncomment.goods_id }})">
+          <div class="weui-cell__hd avatar mar-right">
+            <img src="{{ uncomment.goods_img }}" alt="">
+          </div>
+          <div class="weui-cell__bd">
+            <div class="all_title height25">{{ uncomment.goods_name }}</div>
+            <div class="all_desc height25">{{ uncomment.goods_desc }}</div>
+          </div>
+          {% if uncomment.comment_id == 0 %}
+            <div class="weui-cell__ft review" data-value="{{ uncomment.og_id }}">
+              <button type="button" class="order_btn order-state_btn">{{_('去评价')}}</button>
+            </div>
+          {% else %}
+            <div class="weui-cell__ft view" data-value="{{ uncomment.og_id }}">
+              <button type="button" class="order_btn">{{_('查看评价')}}</button>
+            </div>
+          {% endif %}
+        </div>
+        {% endfor %}
       </div>
-      <div class="not-product_text">{{_('您暂无相关商品需要评价')}}</div>
-      <div class="reg_btn">
-        <a href="{{ url_for('mobile.index.root') }}">
-          <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
-        </a>
-      </div>
-    </div> -->
-    <div class="weui-cells weui-cells_form">
-      <div class="weui-cell" onclick="enter(9)">
-        <div class="weui-cell__hd avatar mar-right">
-          <img src="" alt="">
+    {% else %}
+      <div class="not-product">
+        <div class="not-product_img">
+          <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
         </div>
-        <div class="weui-cell__bd">
-          <div class="all_title height25">测试商品09</div>
-          <div class="all_desc height25">商品详情</div>
-        </div>
-        <div class="weui-cell__ft review">
-          <button type="button" class="order_btn order-state_btn">{{_('去评价')}}</button>
-        </div>
-      </div>
-      <div class="weui-cell" onclick="enter(9)">
-        <div class="weui-cell__hd avatar mar-right">
-          <img src="" alt="">
-        </div>
-        <div class="weui-cell__bd">
-          <div class="all_title height25">测试商品09</div>
-          <div class="all_desc height25">商品详情</div>
-        </div>
-        <div class="weui-cell__ft view">
-          <button type="button" class="order_btn">{{_('查看评价')}}</button>
+        <div class="not-product_text">{{_('您暂无相关商品需要评价')}}</div>
+        <div class="reg_btn">
+          <a href="{{ url_for('mobile.index.root') }}">
+            <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
+          </a>
         </div>
       </div>
-    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
@@ -70,15 +70,17 @@
   $('.review').click(function (event) {       //event:事件对象
     event.stopPropagation();                        //停止事件冒泡
 
-    var url = "/mobile/order/create-comment";
+    var og_id = $(this).attr('data-value');
+    var url = "/mobile/order/create-comment/"+og_id;
     window.location.href = url;
   });
 
-  //点击进入发表评价页面
+  //点击进入查看评价页面
   $('.view').click(function (event) {       //event:事件对象
     event.stopPropagation();                        //停止事件冒泡
 
-    var url = "/mobile/order/comment/9";
+    var og_id = $(this).attr('data-value');
+    var url = "/mobile/order/comment/" + og_id;
     window.location.href = url;
   });
 </script>

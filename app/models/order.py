@@ -79,6 +79,7 @@ class OrderGoods(BaseModel, db.Model):
     goods_id = db.Column(db.Integer, default=0)
     goods_name = db.Column(db.String(255), default='')
     goods_img = db.Column(db.String(255), default='')
+    goods_desc = db.Column(db.String(255), default='')
     goods_quantity = db.Column(db.Integer, default=0)
     goods_price = db.Column(db.Float, default=0.00)
     comment_id = db.Column(db.Integer, default=0)

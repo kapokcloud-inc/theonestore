@@ -1,0 +1,112 @@
+{% extends '/default/mobile/layout/base.html.j2' %} 
+
+{% block head %}
+<title>{{_('添加收货地址 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+{% endblock %} 
+
+{% block body %}
+<div class="user_wrap">
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <input id="edit_address_name" class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人姓名')}}" value="{{ address.name }}">
+      </div>
+    </div>
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <input id="edit_address_mobile" class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人手机号码')}}" value="{{ address.mobile }}">
+      </div>
+    </div>
+    <div class="weui-cell weui-cell_select weui-cell_select-after">
+      <div class="weui-cell__bd">
+        {% set pcd = ('%s %s %s' % (address.province, address.city, 'address.district')) if address else '' %}
+        <input id='edit_address_pcd' class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="{{ pcd }}">
+      </div>
+    </div>
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <input id="edit_address_address" class="weui-input greykGap" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}" value="{{ address.address }}">
+      </div>
+    </div>
+  </div>
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-cell weui-cell_switch">
+      <div class="weui-cell__bd">{{_('设为默认地址')}}</div>
+      <div class="weui-cell__ft">
+        <label for="edit_address_is_default" class="weui-switch-cp">
+          {% set checked = 'checked="checked"' if address.is_default == 1 else '' %}
+          <input id="edit_address_is_default" class="weui-switch-cp__input" type="checkbox" {{ checked }}>
+          <div class="weui-switch-cp__box"></div>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="reg_btn">
+    {{ wtf_form.csrf_token }}
+    <input id="edit_address_ua_id" type="hidden" value="{{ ua_id }}" />
+    <button type="button" class="weui-btn weui-btn_red" onClick="save()">{{_('保存')}}</button>
+  </div>
+  <div class="reg_btn">
+    {% if ua_id > 0 %}
+      <button type="button" class="weui-btn weui-btn_c" onClick="remove()">{{_('删除')}}</button>
+    {% endif %}
+  </div>
+</div>
+{% endblock %} 
+
+{% block script %}
+<script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/city-picker.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/static/default/mobile/js/jquery.ui.widget.js" type="text/javascript"></script>
+<script src="/static/default/mobile/js/jquery.fileupload.js" type="text/javascript"></script>
+<script type="text/javascript">
+var csrftoken = $('#csrf_token').val();
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
+//保存
+function save() {
+  var ua_id = $("#edit_address_ua_id").val();
+  var name = $("#edit_address_name").val();
+  var mobile = $("#edit_address_mobile").val();
+  var pcd = $("#edit_address_pcd").val();
+  var address = $("#edit_address_address").val();
+  var pcd_arr = pcd.split(' ');
+  var province = pcd_arr[0];
+  var city = pcd_arr[1];
+  var district = pcd_arr[2];
+  var is_default = $("#edit_address_is_default").is(':checked') ? 1 : 0;
+
+  var params = {'ua_id':ua_id, 'name':name, 'mobile':mobile, 'province':province, 'city':city, 'district':district, 'address':address, 'is_default':is_default}
+  $.post("{{ url_for('api.me.address_save') }}", params, function(json) {
+    if (json.ret == 0) {
+      window.location.href = "{{ url_for('mobile.me.addresses') }}";
+    } else {
+      $.toast(json.msg, "text");
+      return false;
+    }
+  });
+}
+
+//删除
+function remove() {
+  var ua_id = $("#edit_address_ua_id").val();
+
+  $.get("{{ url_for('api.me.address_remove') }}", {'ua_id':ua_id}, function(json) {
+    if (json.ret == 0) {
+      window.location.href = "{{ url_for('mobile.me.addresses') }}";
+    } else {
+      $.toast(json.msg, "text");
+      return false;
+    }
+  });
+}
+
+$(document).ready(function(){
+  $("#edit_address_pcd").cityPicker({
+    title: "请选择所在地"
+  });
+});
+</script>
+{% endblock %}

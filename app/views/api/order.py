@@ -204,8 +204,8 @@ def save_comment():
             msg = value[0]
         return resjson.print_json(11, msg)
 
-    oa_id       = wtf_form.oa_id.data
-    order_goods = OrderGoods.query.get(oa_id)
+    og_id       = wtf_form.og_id.data
+    order_goods = OrderGoods.query.get(og_id)
     if not order_goods:
         return resjson.print_json(12, _(u'订单商品不存在'))
     
@@ -213,8 +213,8 @@ def save_comment():
     if not order:
         return resjson.print_json(13, _(u'订单商品不存在'))
 
-    img_data = wtf_form.img_data.data
-    img_data = img_data.split(',')
+    img_data = wtf_form.img_data.data.strip()
+    img_data = img_data.split(',') if img_data != '' else []
 
     # 检测图片合法性 ??
 
@@ -222,6 +222,8 @@ def save_comment():
 
     data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'ttype':1, 'tid':order_goods.goods_id,
             'rating':wtf_form.rating.data, 'content':wtf_form.content.data, 'img_data':img_data, 'add_time':current_time}
-    model_create(Comment, data, commit=True)
+    comment = model_create(Comment, data, commit=True)
+
+    model_update(order_goods, {'comment_id':comment.comment_id}, commit=True)
 
     return resjson.print_json(0, u'ok')

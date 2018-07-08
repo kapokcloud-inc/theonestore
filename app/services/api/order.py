@@ -162,8 +162,8 @@ class OrderCreateService(object):
             item = _cart['item']
 
             # 创建订单商品
-            data = {'order_id':order_id, 'goods_id':item.goods_id, 'goods_name':item.goods_name,
-                    'goods_img':item.goods_img, 'goods_quantity':cart.quantity, 'goods_price':item.goods_price,
+            data = {'order_id':order_id, 'goods_id':item.goods_id, 'goods_name':item.goods_name, 'goods_img':item.goods_img,
+                    'goods_desc':item.goods_desc, 'goods_quantity':cart.quantity, 'goods_price':item.goods_price,
                     'add_time':self.current_time}
             model_create(OrderGoods, data)
 

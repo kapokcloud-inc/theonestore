@@ -18,8 +18,11 @@ from flask import (
 from flask_babel import gettext as _
 from sqlalchemy import or_, and_
 
+from app.database import db
+
 from app.helpers import (
     render_template,
+    log_info,
     get_count
 )
 from app.helpers.date_time import current_timestamp
@@ -30,11 +33,23 @@ from app.helpers.user import (
     get_avatar
 )
 
-from app.forms.api.me import ProfileForm
+from app.services.api.like import LikeStaticMethodsService
 
+from app.forms.api.me import (
+    ProfileForm,
+    AddressForm
+)
+
+from app.models.order import (
+    Order,
+    OrderGoods
+)
 from app.models.funds import Funds
 from app.models.coupon import Coupon
-from app.models.user import User
+from app.models.user import (
+    User,
+    UserAddress
+)
 
 
 me = Blueprint('mobile.me', __name__)
@@ -59,9 +74,48 @@ def index():
             filter(Coupon.end_time >= current_time)
     coupon_count = get_count(q)
 
+    # 未付款订单
+    q = db.session.query(Order.order_id).\
+            filter(Order.uid == uid).\
+            filter(Order.is_remove == 0).\
+            filter(Order.order_status == 1).\
+            filter(Order.pay_status == 1)
+    unpaid_count = get_count(q)
+
+    # 待收货订单
+    q = db.session.query(Order.order_id).\
+            filter(Order.uid == uid).\
+            filter(Order.is_remove == 0).\
+            filter(Order.order_status == 1).\
+            filter(Order.pay_status == 2).\
+            filter(Order.deliver_status.in_([0,1]))
+    undeliver_count = get_count(q)
+
+    completed = db.session.query(Order.order_id).\
+                    filter(Order.uid == uid).\
+                    filter(Order.is_remove == 0).\
+                    filter(Order.order_status == 2).\
+                    filter(Order.pay_status == 2).\
+                    filter(Order.deliver_status == 2).all()
+    completed = [order.order_id for order in completed]
+
+    # 待评价
+    q = db.session.query(OrderGoods.og_id).\
+            filter(OrderGoods.order_id.in_(completed)).\
+            filter(OrderGoods.comment_id == 0)
+    uncomment_count = get_count(q)
+
+    # 退款售后
+    q = db.session.query(OrderGoods.og_id).\
+            filter(OrderGoods.order_id.in_(completed)).\
+            filter(OrderGoods.goods_quantity > OrderGoods.service_goods_quantity)
+    aftersales_count = get_count(q)
+
     funds = Funds.query.filter(Funds.uid == uid).first()
 
-    data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'coupon_count':coupon_count, 'funds':funds}
+    data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'coupon_count':coupon_count,
+            'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count,
+            'uncomment_count':uncomment_count, 'aftersales_count':aftersales_count, 'funds':funds}
     return render_template('mobile/me/index.html.j2', **data)
 
 
@@ -80,22 +134,69 @@ def profile():
     return render_template('mobile/me/profile.html.j2', user=user, wtf_form=wtf_form)
 
 
-@me.route('/address')
-def address():
+@me.route('/addresses')
+def addresses():
     """手机站 - 收货地址管理"""
-    return render_template('mobile/user/delivery_address.html.j2')
+
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+
+    addresses = UserAddress.query.filter(UserAddress.uid == uid).order_by(UserAddress.is_default.desc()).all()
+
+    return render_template('mobile/me/addresses.html.j2', addresses=addresses)
 
 
-@me.route('/add')
-def add():
+@me.route('/address/<int:ua_id>')
+def address(ua_id):
     """手机站 - 收货地址管理"""
-    return render_template('mobile/user/add_address.html.j2')
+
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+
+    address = {}
+    if ua_id > 0:
+        address = UserAddress.query.filter(UserAddress.ua_id == ua_id).filter(UserAddress.uid == uid).first()
+        if not address:
+            return redirect(request.headers['Referer'])
+
+    wtf_form = AddressForm()
+
+    return render_template('mobile/me/address.html.j2', ua_id=ua_id, address=address, wtf_form=wtf_form)
 
 
 @me.route('/collect')
 def collect():
     """手机站 - 我的收藏"""
-    return render_template('mobile/user/collect.html.j2')
+
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+
+    likes      = LikeStaticMethodsService.likes({'uid':uid})
+    paging_url = url_for('mobile.me.collect_paging', **request.args)
+
+    return render_template('mobile/me/collect.html.j2', likes=likes, paging_url=paging_url)
+
+
+@me.route('/collect-paging')
+def collect_paging():
+    """我的收藏 - 加载分页"""
+
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+
+    params        = request.args.to_dict()
+    params['uid'] = uid
+    likes         = LikeStaticMethodsService.likes(params)
+
+    return render_template('mobile/me/collect_paging.html.j2', likes=likes)
 
 
 @me.route('/coupon')

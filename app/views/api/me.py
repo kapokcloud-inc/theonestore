@@ -77,7 +77,7 @@ def update():
     return resjson.print_json(0, u'ok')
 
 
-@me.route('/address/save', methods=["POST"])
+@me.route('/address-save', methods=["POST"])
 def address_save():
     """保存地址"""
     resjson.action_code = 11
@@ -109,23 +109,36 @@ def address_save():
 
     data = {'name':wtf_form.name.data, 'mobile':wtf_form.mobile.data, 'province':wtf_form.province.data,
             'city':wtf_form.city.data, 'district':wtf_form.district.data, 'address':wtf_form.address.data,
-            'update_time':current_time}
+            'is_default':is_default, 'update_time':current_time}
 
-    default = UserAddress.query.filter(UserAddress.uid == uid).first()
-    if not default:
-        is_default = 1
-
-    if is_default == 0:
-        data['is_default'] = 1
-    elif is_default == 1:
+    if is_default == 1:
         default = UserAddress.query.filter(UserAddress.uid == uid).filter(UserAddress.is_default == 1).first()
-        if default.ua_id != ua_id:
+        if default and default.ua_id != ua_id:
             default.is_default = 0
-
-        data['is_default'] = 1
 
     user_address = model_update(user_address, data)
 
     db.session.commit()
 
     return resjson.print_json(0, u'ok', {'ua_id':user_address.ua_id})
+
+
+@me.route('/address-remove')
+def address_remove():
+    """删除地址"""
+    resjson.action_code = 12
+
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
+
+    ua_id = toint(request.args.get('ua_id', '0'))
+
+    # 检查
+    user_address = UserAddress.query.filter(UserAddress.ua_id == ua_id).filter(UserAddress.uid == uid).first()
+    if not user_address:
+        return resjson.print_json(0, u'ok')
+
+    model_delete(user_address, commit=True)
+
+    return resjson.print_json(0, u'ok')
