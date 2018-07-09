@@ -20,7 +20,7 @@
     </div>
     <div class="weui-cell weui-cell_select weui-cell_select-after">
       <div class="weui-cell__bd">
-        {% set pcd = ('%s %s %s' % (address.province, address.city, 'address.district')) if address else '' %}
+        {% set pcd = ('%s %s %s' % (address.province, address.city, address.district)) if address else '' %}
         <input id='edit_address_pcd' class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="{{ pcd }}">
       </div>
     </div>

@@ -32,6 +32,7 @@ from app.helpers.date_time import (
     before_after_timestamp
 )
 
+from app.services.message import MessageCreateService
 from app.services.api.cart import CheckoutService
 from app.services.api.funds import FundsService
 
@@ -93,7 +94,7 @@ class OrderCreateService(object):
         return True
 
     def _check_shopping_cart(self):
-        """ 检查 - 购物车商品项 """
+        """检查 - 购物车商品项"""
 
         if len(self.carts_id) == 0:
             self.msg = _(u'购物车为空')
@@ -116,7 +117,7 @@ class OrderCreateService(object):
         return True
 
     def check(self):
-        """ 检查 """
+        """检查"""
 
         if not self._check_shipping_address():
             return False
@@ -127,7 +128,7 @@ class OrderCreateService(object):
         return True
 
     def create(self):
-        """ 创建订单 """
+        """创建订单"""
 
         # 订单冗余商品数据
         order_items = []
@@ -190,6 +191,15 @@ class OrderCreateService(object):
         #for cart_id in self.carts_id:
         #    cart = Cart.query.get(cart_id)
         #    model_delete(cart)
+
+        # 站内消息
+        content = _(u'您的订单%s已创建，请尽快完成支付。' % order_sn)
+        mcs = MessageCreateService(1, self.order.uid, -1, content, ttype=1, tid=order_id, current_time=self.current_time)
+        if not mcs.check():
+            log_error('[ErrorServiceApiOrderCreateServiceCreate][MessageCreateError]  order_id:%s msg:%s' %\
+                (order_id, mcs.msg))
+        else:
+            mcs.do()
 
         db.session.commit()
 
@@ -364,6 +374,7 @@ class RechargeOrderCreateService(object):
 
         self.tran_id               = 0                      # 交易ID
         self.order_id              = 0                      # 订单ID
+        self.order_sn              = ''                     # 订单编号
         self.tran                  = None                   # 交易实例
         self.order_goods_amount    = Decimal('0.00')        # 订单商品总金额
         self.order_amount          = Decimal('0.00')        # 订单金额: order_goods_amount + shipping_amount
@@ -382,6 +393,9 @@ class RechargeOrderCreateService(object):
         # 创建订单索引
         order_index = model_create(OrderIndex, {}, commit=True)
         self.order_id = order_index.order_id
+
+        # 创建订单编号
+        self.order_sn = OrderStaticMethodsService.create_order_sn(self.current_time)
 
         return True
 
@@ -411,8 +425,8 @@ class RechargeOrderCreateService(object):
         self.tran_pay_amount = self.order_pay_amount
 
         # 创建订单
-        data = {'order_id':self.order_id, 'tran_id':self.tran_id, 'uid':self.uid, 'order_type':2, 'order_status':1,
-                'order_desc':'', 'goods_amount':self.order_goods_amount, 'order_amount':self.order_amount,
+        data = {'order_id':self.order_id, 'order_sn':self.order_sn, 'tran_id':self.tran_id, 'uid':self.uid, 'order_type':2,
+                'order_status':1, 'order_desc':'', 'goods_amount':self.order_goods_amount, 'order_amount':self.order_amount,
                 'discount_amount':self.order_discount_amount, 'discount_desc':self.order_discount_desc,
                 'pay_amount':self.order_pay_amount, 'pay_type':1, 'pay_status':1, 'add_time':self.current_time}
         order = model_create(Order, data)
@@ -421,6 +435,15 @@ class RechargeOrderCreateService(object):
         data = {'tran_id':self.tran_id, 'uid':self.uid, 'pay_amount':self.tran_pay_amount, 'pay_status':1,
                 'order_id_list':order_id_list, 'add_time':self.current_time}
         tran = model_create(OrderTran, data)
+
+        # 站内消息
+        content = _(u'您的订单%s已创建，请尽快完成支付。' % self.order_sn)
+        mcs = MessageCreateService(1, order.uid, -1, content, ttype=1, tid=self.order_id, current_time=self.current_time)
+        if not mcs.check():
+            log_error('[ErrorServiceApiRechargeOrderCreateServiceCreate][MessageCreateError]  order_id:%s msg:%s' %\
+                (self.order_id, mcs.msg))
+        else:
+            mcs.do()
 
         db.session.commit()
 
@@ -601,6 +624,14 @@ class PaidService(object):
 
             model_update(order, data)
 
+            # 站内消息
+            content = _(u'您的订单%s已支付，我们会尽快发货。' % order.order_sn)
+            mcs = MessageCreateService(1, order.uid, -1, content, ttype=1, tid=order_id, current_time=self.current_time)
+            if not mcs.check():
+                log_error('[ErrorServiceApiOrderPaidServicePaid][MessageCreateError]  order_id:%s msg:%s' % (order_id, mcs.msg))
+            else:
+                mcs.do()
+
             # 提交订单事务
             db.session.commit()
 
@@ -656,6 +687,16 @@ class OrderCancelService(object):
                 'cancel_time':self.current_time, 'update_time':self.current_time}
         model_update(self.order, data)
 
+        # 站内消息
+        content = _(u'您的订单%s已取消。' % self.order.order_sn)
+        mcs = MessageCreateService(1, self.order.uid, -1, content, ttype=1, tid=self.order.order_id,
+                                    current_time=self.current_time)
+        if not mcs.check():
+            log_error('[ErrorServiceApiOrderCancelServiceCancel][MessageCreateError]  order_id:%s msg:%s' %\
+                (self.order.order_id, mcs.msg))
+        else:
+            mcs.do()
+
         return True
 
 
@@ -698,6 +739,16 @@ class OrderDeliverService(object):
 
         data = {'order_status':2, 'deliver_status':2, 'deliver_time':self.current_time}
         model_update(self.order, data)
+
+        # 站内消息
+        content = _(u'您的订单%s已确认签收，请前往评价。' % self.order.order_sn)
+        mcs = MessageCreateService(1, self.order.uid, -1, content, ttype=1, tid=self.order.order_id,
+                                    current_time=self.current_time)
+        if not mcs.check():
+            log_error('[ErrorServiceApiOrderDeliverServiceDeliver][MessageCreateError]  order_id:%s msg:%s' %\
+                (self.order.order_id, mcs.msg))
+        else:
+            mcs.do()
 
 
 class OrderStaticMethodsService(object):
@@ -753,7 +804,7 @@ class OrderStaticMethodsService(object):
 
     @staticmethod
     def order_status_text_and_action_code(order, min_pay_time=0):
-        """ 获取订单状态和订单指令 """
+        """获取订单状态和订单指令"""
         status_text = u''   # 订单状态: 已取消; 待付款; 待收货; 待评价; 已完成;
         action_code = []    # 订单指令: 0.无指令; 1.付款; 2.取消订单; 3.查看物流; 4.确认收货; 5.再次购买; 6.删除订单;
 

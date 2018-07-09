@@ -21,6 +21,7 @@ from app.helpers import (
     model_create,
     model_update,
     log_info,
+    log_error,
     toint
 )
 from app.helpers.date_time import current_timestamp
@@ -32,6 +33,7 @@ from app.helpers.user import (
 )
 
 from app.services.response import ResponseJson
+from app.services.message import MessageCreateService
 from app.services.api.order import (
     OrderCreateService,
     OrderUpdateService,
@@ -225,5 +227,13 @@ def save_comment():
     comment = model_create(Comment, data, commit=True)
 
     model_update(order_goods, {'comment_id':comment.comment_id}, commit=True)
+
+    # 站内消息
+    content = _(u'您已评价“%s”。' % order_goods.goods_name)
+    mcs = MessageCreateService(1, uid, -1, content, ttype=2, tid=og_id, current_time=current_time)
+    if not mcs.check():
+        log_error('[ErrorViewApiOrderSaveComment][MessageCreateError]  og_id:%s msg:%s' % (og_id, mcs.msg))
+    else:
+        mcs.do()
 
     return resjson.print_json(0, u'ok')

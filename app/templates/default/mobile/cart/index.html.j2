@@ -124,8 +124,10 @@ function checkout() {
   var carts_id = [];
 
   $(".is_valid").each(function(){
-    var cart_id = parseInt($(this).val());
-    carts_id.push(cart_id);
+    if ($(this).is(':checked')) {
+      var cart_id = parseInt($(this).val());
+      carts_id.push(cart_id);
+    }
   });
 
   if (carts_id.length == 0) {

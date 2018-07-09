@@ -33,6 +33,7 @@ from app.helpers.user import (
     get_avatar
 )
 
+from app.services.message import MessageStaticMethodsService
 from app.services.api.like import LikeStaticMethodsService
 
 from app.forms.api.me import (
@@ -40,6 +41,7 @@ from app.forms.api.me import (
     AddressForm
 )
 
+from app.models.message import Message
 from app.models.order import (
     Order,
     OrderGoods
@@ -48,7 +50,8 @@ from app.models.funds import Funds
 from app.models.coupon import Coupon
 from app.models.user import (
     User,
-    UserAddress
+    UserAddress,
+    UserLastTime
 )
 
 
@@ -111,11 +114,16 @@ def index():
             filter(OrderGoods.goods_quantity > OrderGoods.service_goods_quantity)
     aftersales_count = get_count(q)
 
+    # 未读消息
+    ult          = UserLastTime.query.filter(UserLastTime.uid == uid).filter(UserLastTime.last_type == 1).first()
+    last_time    = ult.last_time if ult else 0
+    unread_count = get_count(db.session.query(Message.message_id).filter(Message.tuid == uid).filter(Message.add_time > last_time))
+
     funds = Funds.query.filter(Funds.uid == uid).first()
 
     data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'coupon_count':coupon_count,
-            'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count,
-            'uncomment_count':uncomment_count, 'aftersales_count':aftersales_count, 'funds':funds}
+            'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count, 'uncomment_count':uncomment_count,
+            'aftersales_count':aftersales_count, 'unread_count':unread_count, 'funds':funds}
     return render_template('mobile/me/index.html.j2', **data)
 
 
@@ -237,10 +245,29 @@ def coupon():
 @me.route('/messages')
 def messages():
     """手机站 - 消息"""
-    return render_template('mobile/user/messages.html.j2')
+
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+
+    messages   = MessageStaticMethodsService.messages({'uid':uid})
+    paging_url = url_for('mobile.me.messages_paging', **request.args)
+
+    return render_template('mobile/me/messages.html.j2', messages=messages, paging_url=paging_url)
 
 
-@me.route('/review')
-def review():
-    """手机站 - 发表评价"""
-    return render_template('mobile/user/review.html.j2')
+@me.route('/messages-paging')
+def messages_paging():
+    """消息 - 加载分页"""
+
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+
+    params        = request.args.to_dict()
+    params['uid'] = uid
+    messages      = MessageStaticMethodsService.messages(params)
+
+    return render_template('mobile/me/messages_paging.html.j2', messages=messages)

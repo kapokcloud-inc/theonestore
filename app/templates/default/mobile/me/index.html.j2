@@ -92,7 +92,9 @@
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">{{_('消息')}}</div>
-      <div class="weui-cell__ft">{{_('未读1条')}}</div>
+      {% if unread_count > 0 %}
+        <div class="weui-cell__ft">{{_('未读%s条' % unread_count)}}</div>
+      {% endif %}
     </a>
   </div>
   <div class="weui-cells weui-cells_form">

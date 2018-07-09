@@ -167,7 +167,6 @@ class LikeStaticMethodsService(object):
         p   = toint(params.get('p', '1'))
         ps  = toint(params.get('ps', '10'))
         uid = toint(params.get('uid', '0'))
-        log_info(params)
 
         likes = db.session.query(Like.like_id, Like.like_type, Like.ttype, Like.tid, Like.tname, Like.timg,
                                     Like.ext_data, Like.add_time).\

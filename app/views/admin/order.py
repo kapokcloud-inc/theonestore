@@ -21,9 +21,11 @@ from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
 
 from app.database import db
+
 from app.helpers import (
     render_template, 
     log_info,
+    log_error,
     toint,
     kt_to_dict
 )
@@ -31,8 +33,11 @@ from app.helpers.date_time import (
     current_timestamp,
     date_range
 )
+
+from app.services.message import MessageCreateService
 from app.services.admin.order import OrderStaticMethodsService
 from app.services.response import ResponseJson
+
 from app.models.order import (
     Order,
     OrderAddress,
@@ -157,11 +162,11 @@ def shipping():
     """确认发货"""
     resjson.action_code = 10
 
-    form               = request.form
-    order_id           = toint(form.get('order_id', 0))
-    shipping_sn        = form.get('shipping_sn', '').strip()
-    operation_note     = form.get('operation_note', '').strip()
-    _current_timestamp = current_timestamp()
+    form           = request.form
+    order_id       = toint(form.get('order_id', 0))
+    shipping_sn    = form.get('shipping_sn', '').strip()
+    operation_note = form.get('operation_note', '').strip()
+    current_time   = current_timestamp()
 
     order = Order.query.get(order_id)
     if not order:
@@ -175,9 +180,17 @@ def shipping():
 
     order.shipping_sn     = shipping_sn
     order.shipping_status = 2
-    order.shipping_time   = _current_timestamp
+    order.shipping_time   = current_time
     order.deliver_status  = 1
-    order.update_time     = _current_timestamp
+    order.update_time     = current_time
+
+    # 站内消息
+    content = _(u'您的订单%s已发货，%s，快递单号%s，请注意查收。' % (order.order_sn, order.shipping_name, shipping_sn))
+    mcs = MessageCreateService(1, order.uid, -1, content, ttype=1, tid=order_id, current_time=current_time)
+    if not mcs.check():
+        log_error('[ErrorViewAdminOrderShipping][MessageCreateError]  order_id:%s msg:%s' % (order_id, mcs.msg))
+    else:
+        mcs.do()
 
     db.session.commit()
 
