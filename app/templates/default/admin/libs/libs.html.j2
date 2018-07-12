@@ -186,22 +186,24 @@
 {# 构造form表单 #}
 {% macro render_form(form, action='', method='POST', enctype='') %}
 <form class="form-horizontal" action="{{ action }}" method="{{ method }}"{% if enctype %} enctype="{{ enctype }}"{% endif %}>
-{%- for name, field  in form._fields|iteritems -%}
-{% if name != 'csrf_token' %}
+{%- for field in form -%}
+{% if field.name != 'csrf_token' %}
   <div class="form-group">
-    <label for="{{ name }}" class="control-label col-xs-12 col-sm-3 col-md-2 col-lg-1">{{ get_required_star(field) }}{{ field.label|safe }}</label>
-    <div class="col-xs-12 col-sm-7 col-md-5 col-lg-3{%if field.errors%} has-error{%endif%}">
+    <label for="{{ field.name }}" class="control-label col-xs-12 col-sm-4 col-md-3 col-lg-2">{{ get_required_star(field) }}{{ field.label|safe }}</label>
+    <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3{%if field.errors%} has-error{%endif%}">
     {% set class_ = 'form-control' %}
-    {% set required = '' %}
     {% if field.flags.required %}
-      {{ field(class_=class_,   **kwargs) }}
+      {{ field(class_=class_, required='', **kwargs) }}
     {% else %}
-      {{ field(class_=class_,  **kwargs) }}
+      {{ field(class_=class_, **kwargs) }}
     {% endif %}
 
+    {# 描述 #}
     {%- if field.description -%}
       <span class="help-block m-b-none">{{ field.description|safe }}</span>
     {%- endif -%}
+    
+    {# 错误提示 #}
     {%- for error in field.errors -%}
       <span class="help-block m-b-none">{{ error|safe }}</span>
     {%- endfor -%}
@@ -211,7 +213,7 @@
 {% endfor %}
   {{ form.csrf_token }}
   <div class="form-group">
-    <div class="col-sm-offset-3 col-md-offset-2 col-lg-offset-1 col-xs-12 col-sm-7 col-md-5 col-lg-3">
+    <div class="col-sm-offset-3 col-md-offset-2 col-lg-offset-2 col-xs-12 col-sm-7 col-md-5 col-lg-3">
       <button type="submit" class="btn btn-danger btn-md " id="submit">保存</button>
     </div>
   </div>
