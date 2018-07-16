@@ -15,44 +15,63 @@
   <header class="header clearfix">
     <!-- nav -->
     <nav class="top-nav">
-      <div class="head-inner" style="height:28px;">
+      <div class="head-inner" style="height:35px;">
         <ul class="top-nav-tool">
           <!-- 用户未登录时显示 -->
-          <!-- <li class="top-nav_item">
-            <a href="" class="mouseon" target="_blank">{{_('请登录')}}</a>
+          <li class="top-nav_item">
+            <a href="" class="mouseon">{{_('请登录')}}</a>
           </li>
           <li class="top-nav_item">
-            <a href="" class="mouseon" target="_blank">{{_('注册')}}</a>
-          </li> -->
+            <a href="" class="mouseon">{{_('注册')}}</a>
+          </li>
           <!-- 用户未登录时显示 end -->
 
           <!-- 用户登录时显示 -->
-          <li class="top-nav_me">
-            <a href="" target="_blank">135****229</a>
-            <div class="">
-              <div class="">
-            
+          <li class="top-nav_user">
+            <div class="user-on">
+              <a href="">135****229</a>
+            </div>
+            <div class="user-wrap">
+              <div class="one-cell">
+                <div class="one-cell_hd avatar">
+                  <img class="ava" src="http://u.vpimg1.com/upload/myi/2017/06/01/84/avatar_89373029_1496285287409_38x38_90.jpg" alt="">
+                </div>
+                <div class="one-cell_bd username">
+                  <a href="">135****229</a>
+                </div>
+                <div class="one-cell_ft signout" id="signout">
+                  <a href="">{{_('[退出]')}}</a>
+                </div>
               </div>
-              <p>
-                <a href="">我的订单</a>
-                <a href="">优惠券</a>
-                <a href="">收藏</a>
-                <a href="">信息</a>
-              </p>
+              <div class="user-about">
+                <span>
+                  <a class="" href="">我的订单</a>
+                </span>
+                <span>
+                  <a class="" href="">优惠券</a>
+                </span>
+                <span>
+                  <a class="" href="">收藏</a>
+                </span>
+                <span>
+                  <a class="" href="">信息</a>
+                </span>
+              </div>
             </div>
           </li>
           <!-- 用户登录时显示 end -->
+          
           <li class="top-nav_item">
-            <a href="" class="mouseon" target="_blank">{{_('我的订单')}}</a>
+            <a href="" class="mouseon">{{_('我的订单')}}</a>
           </li>
           <li class="top-nav_item">
-            <a href="" class="mouseon" target="_blank">{{_('优惠券')}}</a>
+            <a href="" class="mouseon">{{_('优惠券')}}</a>
           </li>
           <li class="top-nav_item">
-            <a href="" class="mouseon" target="_blank">{{_('收藏')}}</a>
+            <a href="" class="mouseon">{{_('收藏')}}</a>
           </li>
           <li class="top-nav_item">
-            <a href="" class="mouseon" target="_blank">{{_('消息')}}</a>
+            <a href="" class="mouseon">{{_('消息')}}</a>
           </li>
         </ul>
       </div>
@@ -61,9 +80,9 @@
 
     <!-- logo search -->
     <div class="head-logo">
-      <div class="head-inner clearfix" style="background-color:#fff">
+      <div class="head-inner clearfix bg-white">
         <div class="one-logo">
-          <a href="" target="_blank">
+          <a href="">
             <img class="logoImg" src="http://b.appsimg.com/2017/08/31/540/1504164551874.png" alt="">
           </a>
         </div>
@@ -72,11 +91,93 @@
         </div>
         <div class="head-cart">
           <div class="tool">
-            <a href="" target="_blank">
+            <a href="">
               <img class="cart-bag" src="/static/default/pc/img/cart.png" alt="">
               <span class="cart-text">{{_('购物车')}}</span>
               <span class="cart-badge">0</span>
             </a>
+          </div>
+          <div class="tool-cnt">
+            <!-- 未登录时，购物车下拉框显示 -->
+            <div class="no-one">
+              <span>您还没有登录，请
+                <a href="">登录</a>
+                后查看购物车
+              </span>
+            </div>
+
+            <!-- 已登录时，购物车没有商品时下拉框显示-->
+            <div class="no-one">
+              <span>购物车中暂无商品，赶紧去
+                <a href="">商城</a>
+                选购吧
+              </span>
+            </div>
+
+            <!-- 已登录时，购物车有商品时下拉框显示-->
+            <div class="cart-cnt">
+              <a class="one-cell" href="">
+                <div class="one-cell_hd avatar">
+                  <img src="http://i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg" alt="">
+                </div>
+                <div class="one-cell_bd">
+                  <p class="all-title">红米6A</p>
+                  <p class="all-desc">AI人脸解锁，小巧全面屏，高性能处理器</p>
+                </div>
+                <div class="one-cell_ft mar-left">
+                  <p class="all-price">￥1299</p>
+                  <p class="all-count">x1</p>
+                </div>
+              </a>
+              <a class="one-cell" href="">
+                <div class="one-cell_hd avatar">
+                  <img src="http://i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg" alt="">
+                </div>
+                <div class="one-cell_bd">
+                  <p class="all-title">红米6A</p>
+                  <p class="all-desc">AI人脸解锁，小巧全面屏，高性能处理器</p>
+                </div>
+                <div class="one-cell_ft mar-left">
+                  <p class="all-price">￥1299</p>
+                  <p class="all-count">x1</p>
+                </div>
+              </a>
+              <a class="one-cell" href="">
+                <div class="one-cell_hd avatar">
+                  <img src="http://i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg" alt="">
+                </div>
+                <div class="one-cell_bd">
+                  <p class="all-title">红米6A</p>
+                  <p class="all-desc">AI人脸解锁，小巧全面屏，高性能处理器</p>
+                </div>
+                <div class="one-cell_ft mar-left">
+                  <p class="all-price">￥1299</p>
+                  <p class="all-count">x1</p>
+                </div>
+              </a>
+              <a class="one-cell" href="">
+                <div class="one-cell_hd avatar">
+                  <img src="http://i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg" alt="">
+                </div>
+                <div class="one-cell_bd">
+                  <p class="all-title">红米6A</p>
+                  <p class="all-desc">AI人脸解锁，小巧全面屏，高性能处理器</p>
+                </div>
+                <div class="one-cell_ft mar-left">
+                  <p class="all-price">￥1299</p>
+                  <p class="all-count">x1</p>
+                </div>
+              </a>
+            </div>
+            <div class="one-cell mar-top not-before">
+              <div class="one-cell_bd">
+                <p class="cart-text">4件商品，共计
+                  <span class="cart-price">￥5888</span>
+                </p>
+                <button class="one-btn" type="button">去购物车结算</button>
+              </div>
+            </div>
+            <!-- 已登录时，购物车有商品时显示 end-->
           </div>
         </div>
         <div class="one-search">
@@ -93,22 +194,27 @@
 
     <!-- main-nav -->
     <div class="top-main_nav">
-      <div class="head-inner" style="background-color:#f33155">
+      <div class="head-inner bg-red">
         <ul class="top-main_list clearfix">
-          <li class="top-main_item">
-            <a class="top-main_atag atag_on" href="">{{_('首页')}}</a>
-          </li>
-          <li class="top-main_item">
-            <a class="top-main_atag" href="">{{_('分类一分类一')}}</a>
-          </li>
-          <li class="top-main_item">
-            <a class="top-main_atag" href="">{{_('分类二')}}</a>
-          </li>
-          <li class="top-main_item">
-            <a class="top-main_atag" href="">{{_('分类三')}}</a>
-          </li>
-          <li class="top-main_item">
-            <a class="top-main_atag" href="">{{_('分类四')}}</a>
+          <div class="category-wrap">
+            <li class="top-main_item item_on">
+              <a class="top-main_atag" href="{{ url_for('pc.index.root') }}">{{_('首页')}}</a>
+            </li>
+            <li class="top-main_item">
+              <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=1) }}">{{_('分类一分类一')}}</a>
+            </li>
+            <li class="top-main_item">
+              <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=1) }}">{{_('分类二')}}</a>
+            </li>
+            <li class="top-main_item">
+              <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=1) }}">{{_('分类三')}}</a>
+            </li>
+            <li class="top-main_item">
+              <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=1) }}">{{_('分类四')}}</a>
+            </li>
+          </div>
+          <li class="top-main_allCat">
+            <a class="top-main_atag" href="{{ url_for('pc.category.root') }}">{{_('全部分类')}}</a>
           </li>
         </ul>
       </div>
@@ -119,12 +225,14 @@
   <!-- 返回顶部 -->
   <!-- <div class="back-top">
     <div class="back-top_img">
-      <img src="https://i1.mifile.cn/f/i/2018/home/totop.png" alt="">
+      <img src="http://i1.mifile.cn/f/i/2018/home/totop.png" alt="">
     </div>
   </div> -->
   
   {% block body %} {% endblock %}
 
+  <script type="text/javascript" src="/static/default/pc/js/common.js" charset="utf-8"></script>
+  
   {% block script %} {% endblock %}
 </body>
 

@@ -1,0 +1,200 @@
+{% extends '/default/pc/layout/base.html.j2' %} 
+
+{% block head %}
+<title>{{_('商品详情页 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/item.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap">
+  <div class="box-wrap clearfix">
+    <div class="type-head">
+      <div class="head-inner">
+        <p class="type-head_text">
+          <span>显示商品名称</span>
+        </p>
+      </div>
+    </div>
+    <div class="goods-detail">
+      <div class="goods-detail_info clearfix">
+        <div class="head-inner">
+          <div class="detail-info_cnt">
+            <div class="detail-info_left">
+              <div class="info-left_box">
+                <div class="goods-big_pic">
+                  <img src="http://i8.mifile.cn/a1/pms_1522636275.75022423.jpg" alt="">
+                </div>
+                <div class="goods-small_pic clearfix">
+                  <ul class="small-pic_list">
+                    <li class="small-pic_item">
+                      <img src="http://i8.mifile.cn/a1/pms_1522636275.74216007.jpg" alt="">
+                    </li>
+                    <li class="small-pic_item current">
+                      <img src="http://i8.mifile.cn/a1/pms_1522636275.75022423.jpg" alt="">
+                    </li>
+                    <li class="small-pic_item">
+                      <img src="http://i8.mifile.cn/a1/pms_1522636275.74433028.jpg" alt="">
+                    </li>
+                    <li class="small-pic_item">
+                      <img src="http://i8.mifile.cn/a1/pms_1522636275.75416077.jpg" alt="">
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="detail-info_right">
+              <div class="info-right_box">
+                <div class="goods-name">小米短袖T恤 两件装</div>
+                <div class="goods-desc mar-top">精梳棉，适合多场景穿着，精选两色;精梳棉，适合多场景穿着，精选两色</div>
+                <div class="goods-price mar-top">
+                  <span>￥84</span>
+                  <span class="price-del">￥89</span>
+                </div>
+                <div class="one-cell not-border mar-top">
+                  <div class="one-cell_bd">
+                    <span class="buycount">{{_('购买数量')}}</span>
+                  </div>
+                  <div class="one-cell_ft mar-left">
+                    <div class="apply-service_num">
+                      <i class="num_minus"></i>
+                      <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="1" minnum="1">
+                      <i class="num_add"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="one-cell not-border serve-cell">
+                  <ul class="detail_serve one-cell_bd">
+                    <li class="detail_serve_item">
+                      <img class="tagImg" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <span class="tagText">{{_('7天无理由退货')}}</span>
+                    </li>
+                    <li class="detail_serve_item">
+                      <img class="tagImg" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <span class="tagText">{{_('运费险')}}</span>
+                    </li>
+                    <li class="detail_serve_item">
+                      <img class="tagImg" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <span class="tagText">{{_('48小时内发货')}}</span>
+                    </li>
+                  </ul>
+                  <div class="one-cell_ft mar-left service-tips">
+                    <img class="tipsImg" src="/static/default/mobile/img/tips.png" alt="">
+
+                    <div class="service-all">
+                      <div class="service-head">
+                        <span>{{_('服务说明')}}</span>
+                      </div>
+                      <div class="one-cell">
+                        <div class="one-cell_bd">
+                          <p class="service-black">{{_('7天无理由退货')}}</p>
+                          <p class="service-grey">{{_('此商品支持7天无理由退货，换货')}}</p>
+                        </div>
+                      </div>
+                      <div class="one-cell">
+                        <div class="one-cell_bd">
+                          <p class="service-black">{{_('运费险')}}</p>
+                          <p class="service-grey">{{_('购买此商品赠送运费险')}}</p>
+                        </div>
+                      </div>
+                      <div class="one-cell">
+                        <div class="one-cell_bd">
+                          <p class="service-black">{{_('48小时内发货')}}</p>
+                          <p class="service-grey">{{_('商家承诺下单成功48小时内发货')}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+
+                <!-- 商品没有下架时显示 -->
+                <div class="one-cell not-border mar-top">
+                  <div class="one-cell_bd" style="margin-right:15px">
+                    <button type="button" class="cartTo">{{_('加入购物车')}}</button>
+                  </div>
+
+                  <!-- 商品可以购买时显示 -->
+                  <div class="one-cell_bd">
+                    <a href="">
+                      <button type="button" class="buyTo">{{_('立即购买')}}</button>
+                    </a>
+                  </div>
+
+                  <!-- 商品缺货时显示 -->
+                  <!-- <div class="one-cell_bd">
+                    <button type="button" class="buyTo">{{_('缺货')}}</button>
+                  </div> -->
+                </div>
+
+                <!-- 商品下架时显示 -->
+                <!-- <div class="one-cell not-border mar-top">
+                  <div class="one-cell_bd">
+                    <button type="button" class="downOut">{{_('商品已下架')}}</button>
+                  </div>
+                </div> -->
+                <div class="one-cell not-border serve-cell">
+                  <div class="one-cell_bd">
+                    <a href="" class="goods-scroll" style="border-left:none !important">
+                      <img class="goods-scroll_img" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <span>{{_('评价 ')}}(4345)</span>
+                    </a>
+                  </div>
+                  <div class="one-cell_bd">
+                    <a href="" class="goods-scroll">
+                      <img class="goods-scroll_img" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <span>{{_('满意度 ')}}(97.5%)</span>
+                    </a>
+                  </div>
+                  <div class="one-cell_bd">
+                    <a  href="" class="goods-scroll">
+                      <img class="goods-scroll_img" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <span>{{_('收藏')}}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="goods-detail_nav">
+        <div class="head-inner">
+          <ul class="detail-nav_list">
+            <li class="detail-nav_item currentOn">
+              <a class="detail-nav_head" href="">{{_('详情')}}</a>
+            </li>
+            <li class="detail-nav_item">
+              <a class="detail-nav_head" href="">{{_('评价 ')}}(4345)</a>
+            </li>
+            <li class="detail-nav_item">
+              <a class="detail-nav_head" href="">{{_('商品')}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- 商品详情 -->
+      <div class="goods-detail-desc">
+        <div class="head-inner">
+          <ul class="detailBlock">
+            <li>
+              <img src="http://i8.mifile.cn/b2c-mimall-media/f843e2aed1e9781c87c83c51fa94e69c.jpg" alt="">
+            </li>
+            <li>
+              <img src="http://i8.mifile.cn/b2c-mimall-media/f5e9f5f659ee00e4f12130c04b0f27f4.jpg" alt="">
+            </li>
+            <li>
+              <img src="http://i8.mifile.cn/b2c-mimall-media/a47747f5aa95f452409938f41243fce1.jpg" alt="">
+            </li>
+            <li>
+              <img src="http://i8.mifile.cn/b2c-mimall-media/46b4771f39df722fcf651030780d5dee.jpg" alt="">
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- 商品详情 end -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %} {% endblock%}

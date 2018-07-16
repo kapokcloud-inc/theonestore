@@ -1,0 +1,264 @@
+@charset "UTF-8";
+.goods-detail {
+  position: relative;
+}
+.goods-detail_info {
+  background-color: #fff;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  height: 500px;
+}
+.detail-info_cnt {
+  position: relative;
+  overflow: hidden;
+  margin-left: -15px;
+}
+.detail-info_left {
+  position: relative;
+  width: 755px;
+  float: left;
+  margin-left: 15px;
+  overflow: hidden;
+}
+.detail-info_right {
+  position: relative;
+  width: 400px;
+  height: 500px;
+  margin-left: 15px;
+  float: left;
+}
+.info-left_box {
+  user-select: none;
+  position: relative;
+  height: 500px;
+  text-align: center;
+}
+.goods-big_pic {
+  user-select: none;
+  width: 500px;
+  height: 500px;
+  float: right;
+  padding-left: 90px;
+  padding-right: 75px;
+  z-index: 10;
+  cursor: zoom-in;
+}
+.goods-big_pic img {
+  user-select: none;
+  width: 100%;
+  height: 100%;
+}
+.goods-small_pic {
+  user-select: none;
+  position: relative;
+  float: left;
+  overflow: hidden;
+}
+.small-pic_list {
+  width: 90px;
+  height: 500px;
+  overflow: hidden;
+}
+.small-pic_item {
+  width: 78px;
+  height: 78px;
+  margin-bottom: 15px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  overflow: hidden;
+}
+.small-pic_item:last-child {
+  margin-bottom: 0;
+}
+.small-pic_item img {
+  user-select: none;
+  width: 100%;
+  height: 100%;
+}
+.current {
+  cursor: default;
+  border-color: #f33155;
+}
+.info-right_box {
+  position: relative;
+  height: 500px;
+}
+.goods-name {
+  color: #333;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 40px;
+}
+.goods-desc {
+  font-size: 14px;
+  color: #999;
+  line-height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.goods-price {
+  height: 65px;
+  line-height: 65px;
+  font-size: 30px;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  color: #f33155;
+  font-weight: 400;
+}
+.goods-price .price-del {
+  font-size: 16px;
+}
+.not-border {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.not-border::before {
+  border-top: none !important;
+  height: 0;
+}
+.buycount {
+  font-size: 16px;
+  color: #333;
+  font-weight: 400;
+}
+.serve-cell {
+  margin-top: 10px;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+}
+.tagImg {
+  width: 15px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.tagText {
+  font-size: 12px;
+}
+.detail_serve {
+  height: 30px;
+  line-height: 30px;
+  color: #999;
+  overflow: auto;
+}
+.detail_serve_item {
+  padding: 0px 12px 0px 0;
+  display: inline-block;
+  line-height: 1;
+}
+.cartTo,
+.buyTo,
+.downOut {
+  width: 100%;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+}
+.cartTo {
+  background-color: #EA8D42;
+}
+.buyTo {
+  background-color: #f33155;
+}
+.downOut {
+  background-color: #c8c8c8;
+}
+.goods-scroll {
+  display: inline-block;
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
+  color: #999;
+  font-size: 12px;
+  text-align: center;
+  border-left: 1px solid #e5e5e5;
+  overflow: hidden;
+}
+.goods-scroll:hover {
+  color: #f33155;
+}
+.goods-scroll_img {
+  width: 15px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.tipsImg {
+  width: 25px;
+  vertical-align: middle;
+}
+.service-tips:hover .service-all {
+  display: block;
+}
+.service-all {
+  position: absolute;
+  bottom: 20px;
+  right: 0;
+  display: none;
+  width: 300px;
+  background-color: #f3f4f5;
+  z-index: 30;
+  border: 1px solid #e5e5e5;
+}
+.service-head {
+  line-height: 30px;
+  color: #333;
+  font-size: 14px;
+  text-align: center;
+}
+.service-black {
+  font-size: 12px;
+  color: #333;
+  font-weight: 400;
+}
+.service-grey {
+  font-size: 12px;
+  color: #666;
+  font-weight: 400;
+}
+.goods-detail_nav {
+  width: 100%;
+  background-color: #fff;
+  border-top: 1px solid #e5e5e5;
+}
+.detail-nav_list {
+  width: 680px;
+  margin: 0 auto;
+  height: 60px;
+  text-align: center;
+}
+.detail-nav_item {
+  display: inline-block;
+  width: 168px;
+  height: 20px;
+  margin-top: 20px;
+  line-height: 20px;
+  text-align: center;
+  font-size: 16px;
+  color: #333;
+  border-right: 1px solid #e5e5e5;
+}
+.detail-nav_item:last-of-type {
+  border-right: none;
+}
+.detail-nav_head {
+  display: block;
+  cursor: pointer;
+  transition: color 0.2s ease-out;
+}
+.detail-nav_head:hover {
+  color: #f33155;
+}
+.goods-detail-desc {
+  width: 100%;
+  text-align: center;
+}
+.detailBlock img {
+  width: 100%;
+  display: block;
+}
