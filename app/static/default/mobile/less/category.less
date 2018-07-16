@@ -2,28 +2,26 @@
 
 @import "variables.less";
 
-.category_wrap{
-  .category{
-    background: @white-color;
-    padding: 10px;
-    display: -webkit-flex;
-    display: flex;
-    text-align: center;
-    .category_phone{
-      width: 80px;
+.category{
+  background: @white-color;
+  padding: 10px;
+  display: -webkit-flex;
+  display: flex;
+  text-align: center;
+  &_phone{
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    img{
+      max-width: 80px;
       height: 80px;
-      margin: 0 auto;
-      img{
-        max-width: 80px;
-        height: 80px;
-      }
     }
-    .category_name{
-      padding: 10px;
-      height: 20px;
-      line-height: 20px;
-      color: @black-color;
-      font-size: @font-size14;
-    }
+  }
+  &_name{
+    padding: 10px;
+    height: 20px;
+    line-height: 20px;
+    color: @black-color;
+    font-size: @font-size14;
   }
 }

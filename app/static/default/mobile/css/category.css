@@ -1,21 +1,21 @@
 @charset "UTF-8";
-.category_wrap .category {
+.category {
   background: #fff;
   padding: 10px;
   display: -webkit-flex;
   display: flex;
   text-align: center;
 }
-.category_wrap .category .category_phone {
+.category_phone {
   width: 80px;
   height: 80px;
   margin: 0 auto;
 }
-.category_wrap .category .category_phone img {
+.category_phone img {
   max-width: 80px;
   height: 80px;
 }
-.category_wrap .category .category_name {
+.category_name {
   padding: 10px;
   height: 20px;
   line-height: 20px;
