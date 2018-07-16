@@ -29,22 +29,22 @@ from app.forms import Form
 
 class SmsYunpianForm(Form):
     ak = StringField(_name='ak', 
-                    label='APIKEY',
+                    label=_(u'APIKEY'),
                     validators=[Required(message=_(u'请填写APIKEY'))])
     app_name = StringField(_name='app_name', 
-                    label='短信前辍',
+                    label=_(u'短信前辍'),
                     description=_(u'例如：【一店】，则填写 一店，不需填写方括号'),
                     validators=[Required(message=_(u'请填写前缀'))])
 
 
 class SmsAlismsForm(Form):
     access_key_id = StringField(_name='access_key_id', 
-                    label=_('AccessKey ID'),
+                    label=_(u'AccessKey ID'),
                     description=_(u'<a target="_blank" href="https://help.aliyun.com/knowledge_detail/38738.html">AccessKey ID和AccessKey Secret 请见阿里云文档</a>'), 
                     validators=[Required(message=_(u'请填写ACCESSKEY'))])
 
     access_key_secret = StringField(_name='access_key_secret', 
-                    label=_('AccessKey Secret'),
+                    label=_(u'AccessKey Secret'),
                     validators=[Required(message=_(u'请填写AccessKey Secret'))])
 
     app_name = StringField(_name='app_name', 
@@ -67,7 +67,7 @@ class StorageQiniuForm(Form):
 
     cname = StringField(_name='cname', 
                     label=_(u'CDN加速域名'), 
-                    description=_('<p>不需要填写https或者http开头，只需要填写域名</p><p>例如：static.theonestore.cn</p>'),
+                    description=_(u'<p>不需要填写https或者http开头，只需要填写域名</p><p>例如：static.theonestore.cn</p>'),
                     validators=[Required(message=_(u'请填写CDN加速域名'))])
 
 
@@ -88,5 +88,5 @@ class StorageAliossForm(Form):
 
     cname = StringField(_name='cname', 
                     label=_(u'CDN加速域名'), 
-                    description=_('<p>不需要填写https或者http开头，只需要填写域名</p><p>例如：static.theonestore.cn</p>'),
+                    description=_(u'<p>不需要填写https或者http开头，只需要填写域名</p><p>例如：static.theonestore.cn</p>'),
                     validators=[Required(message=_(u'请填写CDN加速域名'))])
