@@ -536,3 +536,19 @@ ul li {
 .weui-check__label {
   background-color: #fff !important;
 }
+.review_img {
+  width: 70px;
+  height: 70px;
+  display: inline-block;
+  overflow: hidden;
+  text-align: center;
+  background: 50% no-repeat;
+  background-size: contain;
+}
+.review_img img {
+  width: auto;
+  display: inline-block;
+  height: auto;
+  width: 70px;
+  height: 70px;
+}

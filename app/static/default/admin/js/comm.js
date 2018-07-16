@@ -8,6 +8,13 @@
 *
 *    admin公共js函数
 **/
+$(document).ready(function () {
+    //绑定input图片上传预览事件
+    $('input[type=file][file-type=image]').change(function (e) { 
+        e.preventDefault();
+        previewFile(this);
+    });
+});
 
 function previewFile(input) {
     // 判断浏览器是否支持文件读取操作

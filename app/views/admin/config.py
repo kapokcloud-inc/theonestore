@@ -52,12 +52,16 @@ def sms_yunpian():
             data = json.loads(ss.value)
         except Exception as e:
             data = {}
+        form.fill_form(data=data)
     else:
         data = {'ak':form.ak.data, 'app_name':form.app_name.data}
         if form.validate_on_submit():
+            if ss is None:
+                ss = SysSetting()
+                ss.key = 'config_sms_yunpian'
+                db.session.add(ss)
             ss.value = json.dumps(data)
             db.session.commit()
-
             return redirect(url_for('admin.config.sms_yunpian'))
 
     return render_template('admin/config/sms_yunpian.html.j2', form=form, data=data)
@@ -76,11 +80,16 @@ def sms_alisms():
             data = json.loads(ss.value)
         except Exception as e:
             data = {}
+        form.fill_form(data=data)
     else:
         data = {'access_key_id':form.access_key_id.data,
                 'access_key_secret':form.access_key_secret.data,
                 'app_name':form.app_name.data}
         if form.validate_on_submit():
+            if ss is None:
+                ss = SysSetting()
+                ss.key = 'config_sms_yunpian'
+                db.session.add(ss)
             ss.value = json.dumps(data)
             db.session.commit()
 
@@ -92,34 +101,41 @@ def sms_alisms():
 @config.route('/storage/qiniu', methods=["GET", "POST"])
 def storage_qiniu():
     """配置七牛存储"""
-    g.page_title = _(u'七牛存储')
+    g.page_title = _(u'七牛云存储')
 
     form = StorageQiniuForm()
     ss   = SysSetting.query.filter(SysSetting.key == 'config_storage_qiniu').first()
 
+    data = {}
     if request.method == "GET":
-        try:
-            data = json.loads(ss.value)
-        except Exception as e:
-            data = {}
-    else:
-        data = {'access_key':form.access_key.data,
-                'secret_key':form.secret_key.data,
-                'bucket_name':form.bucket_name.data,
-                'cname':form.cname.data}
-        if form.validate_on_submit():
-            ss.value = json.dumps(data)
-            db.session.commit()
+        if ss and ss.value:
+            try:
+                data = json.loads(ss.value)
+            except Exception as identifier:
+                pass
+        form.fill_form(data=data)
+        return render_template('admin/config/storage_qiniu.html.j2', form=form, data=data)
 
-            return redirect(url_for('admin.config.storage_qiniu'))
+    data = {'access_key':form.access_key.data,
+            'secret_key':form.secret_key.data,
+            'bucket_name':form.bucket_name.data,
+            'cname':form.cname.data}
+    if not form.validate_on_submit():
+        return render_template('admin/config/storage_qiniu.html.j2', form=form, data=data)
 
-    return render_template('admin/config/storage_qiniu.html.j2', form=form, data=data)
+    if ss is None:
+        ss = SysSetting()
+        ss.key = 'config_storage_qiniu'
+        db.session.add(ss)
+    ss.value = json.dumps(data)
+    db.session.commit()
+    return redirect(url_for('admin.config.storage_qiniu'))
 
 
 @config.route('/storage/alioss', methods=["GET", "POST"])
 def storage_alioss():
     """配置阿里存储"""
-    g.page_title = _(u'阿里存储')
+    g.page_title = _(u'阿里云OSS存储')
 
     form = StorageAliossForm()
     ss   = SysSetting.query.filter(SysSetting.key == 'config_storage_alioss').first()
@@ -127,6 +143,7 @@ def storage_alioss():
     if request.method == "GET":
         try:
             data = json.loads(ss.value)
+            form.fill_form(data=data)
         except Exception as e:
             data = {}
     else:
@@ -135,9 +152,12 @@ def storage_alioss():
                 'bucket_name':form.bucket_name.data,
                 'cname':form.cname.data}
         if form.validate_on_submit():
+            if ss is None:
+                ss = SysSetting()
+                ss.key = 'config_storage_alioss'
+                db.session.add(ss)
             ss.value = json.dumps(data)
             db.session.commit()
-
             return redirect(url_for('admin.config.storage_alioss'))
 
     return render_template('admin/config/storage_alioss.html.j2', form=form, data=data)

@@ -11,4 +11,6 @@ from app.views import pc
 
 PC_ROUTES = (
     (pc.index,          ''),
+    (pc.category,       '/pc/category'),
+    (pc.item,           '/pc/item'),
 )

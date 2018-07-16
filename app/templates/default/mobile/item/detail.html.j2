@@ -72,7 +72,7 @@
                 </div>
               </div>
               <div class="weui-cell__bd">
-                <p class="all_title mar-bottom">{{ item.goods_name }}</p>
+                <p class="all_title">{{ item.goods_name }}</p>
               </div>
               <div class="weui-cell__ft mar-left width46">
                 <span class="all_price">￥{{ item.goods_price }}</span>
@@ -171,7 +171,7 @@
               </div>
               <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
               <div class="review_cnt">{{ comment.content }}</div>
-              <div class="review_att">
+              <div class="mar-top">
                 {% set imgs = comment.img_data|json_loads %}
                 {% for img in imgs %}
                   <span class="review_img">
