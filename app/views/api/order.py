@@ -21,6 +21,7 @@ from app.helpers import (
     model_create,
     model_update,
     log_info,
+    log_error,
     toint
 )
 from app.helpers.date_time import current_timestamp
@@ -32,6 +33,7 @@ from app.helpers.user import (
 )
 
 from app.services.response import ResponseJson
+from app.services.message import MessageCreateService
 from app.services.api.order import (
     OrderCreateService,
     OrderUpdateService,
@@ -204,8 +206,8 @@ def save_comment():
             msg = value[0]
         return resjson.print_json(11, msg)
 
-    oa_id       = wtf_form.oa_id.data
-    order_goods = OrderGoods.query.get(oa_id)
+    og_id       = wtf_form.og_id.data
+    order_goods = OrderGoods.query.get(og_id)
     if not order_goods:
         return resjson.print_json(12, _(u'订单商品不存在'))
     
@@ -213,8 +215,8 @@ def save_comment():
     if not order:
         return resjson.print_json(13, _(u'订单商品不存在'))
 
-    img_data = wtf_form.img_data.data
-    img_data = img_data.split(',')
+    img_data = wtf_form.img_data.data.strip()
+    img_data = img_data.split(',') if img_data != '' else []
 
     # 检测图片合法性 ??
 
@@ -222,6 +224,16 @@ def save_comment():
 
     data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'ttype':1, 'tid':order_goods.goods_id,
             'rating':wtf_form.rating.data, 'content':wtf_form.content.data, 'img_data':img_data, 'add_time':current_time}
-    model_create(Comment, data, commit=True)
+    comment = model_create(Comment, data, commit=True)
+
+    model_update(order_goods, {'comment_id':comment.comment_id}, commit=True)
+
+    # 站内消息
+    content = _(u'您已评价“%s”。' % order_goods.goods_name)
+    mcs = MessageCreateService(1, uid, -1, content, ttype=2, tid=og_id, current_time=current_time)
+    if not mcs.check():
+        log_error('[ErrorViewApiOrderSaveComment][MessageCreateError]  og_id:%s msg:%s' % (og_id, mcs.msg))
+    else:
+        mcs.do()
 
     return resjson.print_json(0, u'ok')

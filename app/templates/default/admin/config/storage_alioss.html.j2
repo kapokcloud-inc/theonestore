@@ -9,38 +9,30 @@
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="white-box">
-          <h3 class="box-title">Custom Design Tab</h3>
-          <p class="text-muted m-b-30">Use default tab with class
-            <code>customtab</code>
+          <h3 class="box-title"><a target="_blank" href="https://help.aliyun.com/document_detail/31817.html?spm=a2c4g.11186623.6.539.odCzu8">阿里云OSS</a></h3>
+          <p class="text-muted m-b-30">
+            海量、安全、低成本、高可靠的云存储服务，提供99.999999999%的数据可靠性。使用RESTful API 可以在互联网任何位置存储和访问，容量和处理能力弹性扩展，多种存储类型供选择全面优化存储成本。
           </p>
           <div class="m-b-40">
             <ul class="nav customtab nav-tabs" role="tablist">
               <li role="presentation" class="">
                 <a href="{{ url_for('admin.config.storage_qiniu') }}" aria-controls="alioss" role="tab" aria-expanded="true" style="background:none !important">
-                  <span class="visible-xs">{{_('七牛')}}</span>
-                  <span class="hidden-xs">{{_('七牛')}}</span>
+                  <span class="visible-xs">{{_('七牛云')}}</span>
+                  <span class="hidden-xs">{{_('七牛云')}}</span>
                 </a>
               </li>
               <li role="presentation" class="active">
                 <a href="{{ url_for('admin.config.storage_alioss') }}" aria-controls="qiniu" role="tab" aria-expanded="false" style="background:none !important">
-                  <span class="visible-xs">{{_('阿里')}}</span>
-                  <span class="hidden-xs">{{_('阿里')}}</span>
+                  <span class="visible-xs">{{_('阿里云OSS')}}</span>
+                  <span class="hidden-xs">{{_('阿里云OSS')}}</span>
                 </a>
               </li>
             </ul>
           </div>
-          <form action="{{ url_for('admin.config.storage_alioss') }}" method="POST">
-            <div class="row">
-              {{ libs.wtf_input(form.access_key_id, _('Access Key ID'), _value=data.access_key_id, _class="form-control") }}
-              {{ libs.wtf_input(form.access_key_secret, _('Access Key Secret'), _value=data.access_key_secret, _class="form-control") }}
-            </div>
-            <div class="row">
-              {{ libs.wtf_input(form.bucket_name, _('存储空间'), _value=data.bucket_name, _class="form-control") }}
-              {{ libs.wtf_input(form.cname, _('融合CDN加速域名'), _value=data.cname, _class="form-control") }}
-            </div>
-            {{ form.csrf_token }}
-            {{ libs.wtf_submit() }}
-          </form>
+
+          {# 阿里云OSS form表单 #}
+          {{ libs.render_form(form, action=url_for('admin.config.storage_alioss')) }}
+
         </div>
       </div>
     </div>

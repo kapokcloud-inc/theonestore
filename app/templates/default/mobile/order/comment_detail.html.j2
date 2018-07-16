@@ -1,4 +1,5 @@
 {% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/const.html.j2' as const %}
 
 {% block head %}
 <title>{{_('查看评价- 一店')}}</title>
@@ -10,14 +11,14 @@
 <div class="user_wrap">
   <a class="weui-cell bg-white" href="{{ url_for('mobile.item.detail', goods_id=9) }}">
     <div class="weui-cell__hd avatar mar-right">
-      <img src="" alt="">
+      <img src="{{ order_goods.goods_img }}" alt="">
     </div>
     <div class="weui-cell__bd">
-      <div class="all_title height25">测试商品09</div>
-      <div class="all_desc height25">商品详情</div>
+      <div class="all_title height25">{{ order_goods.goods_name }}</div>
+      <div class="all_desc height25">{{ order_goods.goods_desc }}</div>
     </div>
     <div class="weui-cell__ft mar-left">
-      <p class="all_price">￥12</p>
+      <p class="all_price">￥{{ order_goods.goods_price }}</p>
     </div>
   </a>
   <div class="weui-cells weui-cells_form">
@@ -31,18 +32,20 @@
     </div>
     <div class="weui-media-box weui-media-box_appmsg">
       <div class="weui-media-box__hd">
-        <img class="weui-media-box__thumb ava" src="" alt="">
+        <img class="weui-media-box__thumb ava" src="{{ comment.avatar }}" alt="">
       </div>
       <div class="weui-media-box__bd">
         <div class="all_title">
-          大头
-          <span class="typeText">好评</span>
+          {{ comment.nickname }}
+          <span class="typeText">{{ const.RATING_TEXT.get(comment.rating) }}</span>
         </div>
-        <div class="all_add" style="margin-top:5px">2018.07.05 15:31</div>
-        <div class="review_cnt">这是好评这是好评这是好评</div>
+        <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
+        <div class="review_cnt">{{ comment.content }}</div>
         <ul class="weui-uploader__files mar-top" id="uploaderFiles">
-          <li class="weui-uploader__file" style="background-image:url('http://i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg')"></li>
-          <li class="weui-uploader__file" style="background-image:url('https://i8.mifile.cn/b2c-mimall-media/10c6f6ede2fcfa2ad162d2869a716c14.jpg')"></li>
+          {% set img_data = comment.img_data|json_loads %}
+          {% for img in img_data %}
+            <li class="weui-uploader__file" style="background-image:url('{{ img }}')"></li>
+          {% endfor %}
         </ul>
       </div>
     </div>

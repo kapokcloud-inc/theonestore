@@ -7,6 +7,8 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import json
+
 from flask_babel import gettext as _
 
 from app.database import db
@@ -58,8 +60,9 @@ class LikeService(object):
                 self.msg = _(u'商品不存在')
                 return False
 
-            self.tname = self.third_obj.goods_name
-            self.timg  = self.third_obj.goods_img
+            self.tname    = self.third_obj.goods_name
+            self.timg     = self.third_obj.goods_img
+            self.ext_data = json.dumps({'goods_desc':self.third_obj.goods_desc})
         else:
             self.msg = _(u'第三方类型错误')
             return False
@@ -152,3 +155,24 @@ class LikeService(object):
                             order_by(Like.like_id.desc()).limit(ps).offset((p-1) * ps).all()
 
         return like_list
+
+
+class LikeStaticMethodsService(object):
+    """赞静态方法Service"""
+
+    @staticmethod
+    def likes(params):
+        """获取赞列表"""
+
+        p   = toint(params.get('p', '1'))
+        ps  = toint(params.get('ps', '10'))
+        uid = toint(params.get('uid', '0'))
+
+        likes = db.session.query(Like.like_id, Like.like_type, Like.ttype, Like.tid, Like.tname, Like.timg,
+                                    Like.ext_data, Like.add_time).\
+                    filter(Like.uid == uid).\
+                    filter(Like.like_type == 2).\
+                    filter(Like.ttype == 1).\
+                    order_by(Like.like_id.desc()).offset((p-1)*ps).limit(ps).all()
+
+        return likes

@@ -56,3 +56,13 @@ class UserThirdBind(BaseModel, db.Model):
     third_res_text = db.Column(db.Text, default=None)
     add_time = db.Column(db.Integer, default=0)
     update_time = db.Column(db.Integer, default=0)
+
+
+class UserLastTime(BaseModel, db.Model):
+    __bind_key__ = 'theonestore'
+    __tablename__ = 'user_last_time'
+
+    ult_id = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.Integer, default=0)
+    last_type = db.Column(db.Integer, default=0)
+    last_time = db.Column(db.Integer, default=0)

@@ -146,10 +146,44 @@ def tofloat(s):
     return float(0)
 
 
+def model_to_dict(model):
+    """ orm model转换成dict """
+
+    ret = {}
+    for c in model.__table__.columns:
+        ret[c.name] = getattr(model, c.name)
+
+    return ret
+
+
+def model_to_dict_only(model, only=[]):
+    """ orm model转换成dict - only版 """
+
+    __dict = model_to_dict(model)
+
+    _dict = {}
+    for key in only:
+        _dict[key] = __dict.get(key, None)
+
+    return _dict
+
+
+def ml_to_dl(model_list):
+    """ model list to dict list """
+
+    return [model_to_dict(m) for m in model_list]
+
+
 def kt_to_dict(kt):
     """KeyedTuple转换成Dict"""
 
     return kt._asdict()
+
+
+def ktl_to_dl(kt_list):
+    """ KeyedTuple List转换成Dict List """
+
+    return [kt_to_dict(kt) for kt in kt_list]
 
 
 def static_uri(uri):
