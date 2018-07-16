@@ -46,7 +46,6 @@
         <span class="trading_state">{{ text }}</span>
       </div>
     </div>
-    {% set items = order.goods_data|json_loads %}
     {% for item in items %}
       <div class="weui-cell not_before" onclick="enter({{ item.goods_id }})">
         <div class="weui-cell__hd avatar mar-right">
@@ -59,9 +58,11 @@
             <span>x {{ item.quantity }}</span>
           </div>
         </div>
-        <div class="weui-cell__ft applySale">
-          <button type="button" class="order_btn">{{_('申请售后')}}</button>
-        </div>
+        {% if order.pay_status == 2 and item.goods_quantity > item.service_goods_quantity %}
+          <div class="weui-cell__ft applySale" data-value="{{ item.og_id }}">
+            <button type="button" class="order_btn">{{_('申请售后')}}</button>
+          </div>
+        {% endif %}
       </div>
     {% endfor %}
     <div class="weui-form-preview">
@@ -175,7 +176,8 @@ function enter(goods_id) {
 $('.applySale').click(function (event) {       //event:事件对象
   event.stopPropagation();                        //停止事件冒泡
 
-  var url = "/mobile/aftersales/apply";
+  var og_id = $(this).attr('data-value');
+  var url = "/mobile/aftersales/apply?og_id=" + og_id;
   window.location.href = url;
 });
 

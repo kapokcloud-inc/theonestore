@@ -21,6 +21,7 @@ from app.helpers import (
     toint
 )
 from app.helpers.date_time import current_timestamp
+from app.helpers.user import check_login
 
 from app.services.response import ResponseJson
 from app.services.api.like import LikeService
@@ -38,9 +39,8 @@ def action():
     """ 点赞或取消点赞 """
     resjson.action_code = 10
 
-    # ??
-    #if not check_login():
-    #    return resjson.print_json(10, _(u'未登陆'))
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
 
     args      = request.args
     like_type = toint(args.get('like_type', 0))

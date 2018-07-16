@@ -62,10 +62,7 @@ def create():
     """添加广告"""
     g.page_title = _(u'添加广告')
 
-    wtf_form               = AdvForm()
-    wtf_form.ac_id.choices = [(1, _(u'首页Banner'))]
-    wtf_form.ttype.choices = [(0, _(u'请选择')), (1, _(u'商品详情页')), (2, _(u'分类商品列表页')),
-                              (3, _(u'更多热卖商品列表页')), (4, _(u'更多推荐商品列表页'))]
+    wtf_form = AdvForm()
 
     return render_template('admin/adv/detail.html.j2', wtf_form=wtf_form, adv={})
 
@@ -78,9 +75,6 @@ def detail(adv_id):
     adv = Adv.query.get_or_404(adv_id)
 
     wtf_form               = AdvForm()
-    wtf_form.ac_id.choices = [(1, _(u'首页Banner'))]
-    wtf_form.ttype.choices = [(0, _(u'请选择')), (1, _(u'商品详情页')), (2, _(u'分类商品列表页')),
-                              (3, _(u'更多热卖商品列表页')), (4, _(u'更多推荐商品列表页'))]
     wtf_form.ac_id.data    = adv.ac_id
     wtf_form.ttype.data    = adv.ttype
     wtf_form.is_show.data  = adv.is_show
@@ -93,11 +87,8 @@ def save():
     """保存广告"""
     g.page_title = _(u'保存广告')
 
-    wtf_form               = AdvForm()
-    wtf_form.ac_id.choices = [(1, _(u'首页Banner'))]
-    wtf_form.ttype.choices = [(0, _(u'请选择')), (1, _(u'商品详情页')), (2, _(u'分类商品列表页')),
-                              (3, _(u'更多热卖商品列表页')), (4, _(u'更多推荐商品列表页'))]
-    _current_timestamp     = current_timestamp()
+    wtf_form     = AdvForm()
+    current_time = current_timestamp()
 
     if wtf_form.validate_on_submit():
         adv_id = wtf_form.adv_id.data
@@ -105,7 +96,7 @@ def save():
             adv = Adv.query.get_or_404(adv_id)
         else:
             adv          = Adv()
-            adv.add_time = _current_timestamp
+            adv.add_time = current_time
             db.session.add(adv)
 
         adv.ac_id   = wtf_form.ac_id.data

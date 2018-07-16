@@ -53,8 +53,8 @@ from app.models.shipping import Shipping
 from app.models.user import UserAddress
 from app.models.cart import Cart
 
-cart = Blueprint('mobile.cart', __name__)
 
+cart = Blueprint('mobile.cart', __name__)
 
 @cart.route('/')
 def root():

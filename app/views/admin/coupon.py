@@ -50,19 +50,19 @@ def index(page=1, page_size=20):
     """优惠券列表"""
     g.page_title = _(u'优惠券')
 
-    args               = request.args
-    tab_status         = toint(args.get('tab_status', '0'))
-    cb_name            = args.get('cb_name', '').strip()
-    _current_timestamp = current_timestamp()
+    args         = request.args
+    tab_status   = toint(args.get('tab_status', '0'))
+    cb_name      = args.get('cb_name', '').strip()
+    current_time = current_timestamp()
 
     q = CouponBatch.query
 
     if tab_status == 1:
         q = q.filter(CouponBatch.is_valid == 1).\
-                filter(or_(CouponBatch.begin_time == 0, CouponBatch.begin_time <= _current_timestamp)).\
-                filter(or_(CouponBatch.end_time == 0, CouponBatch.end_time >= _current_timestamp))
+                filter(or_(CouponBatch.begin_time == 0, CouponBatch.begin_time <= current_time)).\
+                filter(or_(CouponBatch.end_time == 0, CouponBatch.end_time >= current_time))
     elif tab_status == 2:
-        q = q.filter(and_(CouponBatch.end_time > 0, CouponBatch.end_time < _current_timestamp))
+        q = q.filter(and_(CouponBatch.end_time > 0, CouponBatch.end_time < current_time))
 
     if cb_name:
         q = q.filter(CouponBatch.cb_name.like('%%%s%%' % cb_name))
@@ -104,8 +104,8 @@ def save():
     """保存优惠券"""
     g.page_title = _(u'保存优惠券')
 
-    wtf_form           = CouponBatchForm()
-    _current_timestamp = current_timestamp()
+    wtf_form     = CouponBatchForm()
+    current_time = current_timestamp()
 
     if wtf_form.validate_on_submit():
         cb_id = wtf_form.cb_id.data
@@ -113,7 +113,7 @@ def save():
             batch = CouponBatch.query.get_or_404(cb_id)
         else:
             batch          = CouponBatch()
-            batch.add_time = _current_timestamp
+            batch.add_time = current_time
             db.session.add(batch)
 
         batch.cb_name       = wtf_form.cb_name.data
@@ -126,7 +126,7 @@ def save():
         batch.coupon_amount = wtf_form.coupon_amount.data
         batch.date_num      = wtf_form.date_num.data
         batch.coupon_from   = wtf_form.coupon_from.data
-        batch.update_time   = _current_timestamp
+        batch.update_time   = current_time
         db.session.commit()
 
         return redirect(url_for('admin.coupon.index'))
@@ -143,9 +143,7 @@ def coupons(page=1, page_size=20):
     """用户优惠券列表"""
     g.page_title = _(u'用户优惠券')
 
-    args               = request.args
-    cb_id              = toint(args.get('cb_id', '0'))
-    _current_timestamp = current_timestamp()
+    cb_id = toint(request.args.get('cb_id', '0'))
 
     q = Coupon.query
 

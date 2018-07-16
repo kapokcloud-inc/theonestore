@@ -107,7 +107,8 @@ def detail(order_id):
     order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
     if not order:
         return redirect(request.headers['Referer'])
-    
+
+    items         = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
     order_address = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
 
     text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
@@ -118,7 +119,7 @@ def detail(order_id):
         if _express_msg == 'ok':
             express_data = _express_data[0] if len(_express_data) > 0 else {}
 
-    data = {'order':order, 'order_address':order_address, 'text':text, 'code':code, 'express_data':express_data}
+    data = {'order':order, 'items':items, 'order_address':order_address, 'text':text, 'code':code, 'express_data':express_data}
     return render_template('mobile/order/detail.html.j2', **data)
 
 

@@ -202,11 +202,11 @@ def cancel():
     """取消订单"""
     resjson.action_code = 11
 
-    form               = request.form
-    order_id           = toint(form.get('order_id', 0))
-    cancel_desc        = form.get('cancel_desc', '').strip()
-    operation_note     = form.get('operation_note', '').strip()
-    _current_timestamp = current_timestamp()
+    form           = request.form
+    order_id       = toint(form.get('order_id', 0))
+    cancel_desc    = form.get('cancel_desc', '').strip()
+    operation_note = form.get('operation_note', '').strip()
+    current_time   = current_timestamp()
 
     order = Order.query.get(order_id)
     if not order:
@@ -218,8 +218,8 @@ def cancel():
     order.order_status    = 3
     order.cancel_status   = 2
     order.cancel_desc     = cancel_desc
-    order.cancel_time     = _current_timestamp
-    order.update_time     = _current_timestamp
+    order.cancel_time     = current_time
+    order.update_time     = current_time
 
     db.session.commit()
 

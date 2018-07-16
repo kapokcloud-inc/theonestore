@@ -79,11 +79,12 @@ class ItemForm(FlaskForm):
                         choices=[(0, _(u'否')), (1, _(u'是'))]
                     )
 
-    """def __init__(self, *args, **kwargs):
-        _categories = db.session.query(GoodsCategories.cat_id, GoodsCategories.cat_name).\
-                        order_by(GoodsCategories.cat_id.desc()).all()
+    def __init__(self, *args, **kwargs):
+        super(ItemForm, self).__init__(*args, **kwargs)
+
+        _categories = db.session.query(GoodsCategories.cat_id, GoodsCategories.cat_name).all()
         _categories = [(category.cat_id, category.cat_name) for category in _categories]
-        self.cat_id.choices = _categories"""
+        self.cat_id.choices = _categories
 
 
 class ItemH5Form(FlaskForm):

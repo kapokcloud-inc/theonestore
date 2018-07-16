@@ -74,14 +74,20 @@ class AdvForm(FlaskForm):
     adv_id  = IntegerField()
     ac_id   = SelectField(
                     coerce=int,
+                    choices=[(1, _(u'首页Banner'))],
                     validators=[
                         Required(message=_(u'请选择分类'))]
                 )
     desc    = StringField()
     ttype   = SelectField(
                     coerce=int,
+                    choices=[(0, _(u'请选择')),
+                        (1, _(u'商品详情页')),
+                        (2, _(u'分类商品列表页')),
+                        (3, _(u'更多热卖商品列表页')),
+                        (4, _(u'更多推荐商品列表页'))],
                     validators=[
-                            checkTtype()]
+                        checkTtype()]
                 )
     tid     = IntegerField(validators=[checkTid()])
     url     = StringField(validators=[checkUrl()])

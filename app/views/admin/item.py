@@ -102,8 +102,7 @@ def create():
     """添加商品"""
     g.page_title = _(u'添加商品')
 
-    wtf_form                = ItemForm()
-    wtf_form.cat_id.choices = [(c.cat_id, c.cat_name) for c in GoodsCategories.query.all()]
+    wtf_form = ItemForm()
 
     return render_template('admin/item/detail.html.j2', wtf_form=wtf_form, item={})
 
@@ -116,7 +115,6 @@ def detail(goods_id):
     item = Goods.query.get_or_404(goods_id)
 
     wtf_form                   = ItemForm()
-    wtf_form.cat_id.choices    = [(c.cat_id, c.cat_name) for c in GoodsCategories.query.all()]
     wtf_form.cat_id.data       = item.cat_id
     wtf_form.is_sale.data      = item.is_sale
     wtf_form.is_hot.data       = item.is_hot
@@ -131,9 +129,8 @@ def save():
     """保存商品"""
     g.page_title = _(u'保存商品')
 
-    _current_timestamp      = current_timestamp()
-    wtf_form                = ItemForm()
-    wtf_form.cat_id.choices = [(c.cat_id, c.cat_name) for c in GoodsCategories.query.all()]
+    current_time = current_timestamp()
+    wtf_form     = ItemForm()
 
     if wtf_form.validate_on_submit():
         goods_id = wtf_form.goods_id.data
@@ -142,7 +139,7 @@ def save():
         else:
             item          = Goods()
             item.detail   = ''
-            item.add_time = _current_timestamp
+            item.add_time = current_time
             db.session.add(item)
 
         item.cat_id          = wtf_form.cat_id.data
@@ -154,7 +151,7 @@ def save():
         item.stock_quantity  = wtf_form.stock_quantity.data
         item.is_hot          = wtf_form.is_hot.data
         item.is_recommend    = wtf_form.is_recommend.data
-        item.update_time     = _current_timestamp
+        item.update_time     = current_time
         db.session.commit()
 
         return redirect(url_for('admin.item.index'))
@@ -190,9 +187,8 @@ def h5_save():
     """保存商品H5"""
     g.page_title = _(u'保存商品')
 
-    goods_id           = toint(request.form.get('goods_id', '0'))
-    detail             = request.form.get('detail', '').strip()
-    _current_timestamp = current_timestamp()
+    goods_id = toint(request.form.get('goods_id', '0'))
+    detail   = request.form.get('detail', '').strip()
 
     item = Goods.query.get_or_404(goods_id)
     item.detail = detail
