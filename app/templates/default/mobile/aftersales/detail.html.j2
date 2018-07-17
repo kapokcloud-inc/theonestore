@@ -1,4 +1,5 @@
 {% extends '/default/mobile/layout/base.html.j2' %} 
+{% import '/default/mobile/libs/const.html.j2' as const %}
 
 {% block head %}
 <title>{{_('售后服务详情- 一店')}}</title>
@@ -9,39 +10,42 @@
 <div class="user_wrap">
   <div class="weui-cells weui-cells_form">
     <div class="weui-cell">
-      <div class="weui-cell__bd blackGap">退款信息</div>
+      <div class="weui-cell__bd blackGap">{{_('退款信息')}}</div>
     </div>
     <div class="weui-form-preview">
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('退款类别')}}</label>
-          <span class="weui-form-preview__value">退款退货</span>
+          <span class="weui-form-preview__value">{{ const.AFTERSALES_TYPE.get(aftersales.aftersales_type) }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('申请单号')}}</label>
-          <span class="weui-form-preview__value">20180704153909001</span>
+          <span class="weui-form-preview__value">{{ aftersales.aftersales_sn }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('申请时间')}}</label>
-          <span class="weui-form-preview__value">2018-07-04 15:45:09</span>
+          <span class="weui-form-preview__value">{{ aftersales.add_time|timestamp2str }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('退款件数')}}</label>
-          <span class="weui-form-preview__value">1件</span>
+          <span class="weui-form-preview__value">{{ aftersales.quantity }}件</span>
         </div>
-        <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label">{{_('退款金额')}}</label>
-          <span class="weui-form-preview__value">￥22.5</span>
-        </div>
+        {% if aftersales.aftersales_type in ([1,2]) %}
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('退款金额')}}</label>
+            <span class="weui-form-preview__value">￥{{ aftersales.refunds_amount }}</span>
+          </div>
+        {% endif %}
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('图片')}}</label>
+          <!-- ?? -->
           <span class="weui-form-preview__value">
             <img class="applyImg" src="" alt="">
           </span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('退款原因')}}</label>
-          <span class="weui-form-preview__value">产品损坏产品损坏产品损坏产品损坏产品损坏产品损坏产品损坏产品损坏产品损坏产品损坏产品损坏产品损坏产品损坏</span>
+          <span class="weui-form-preview__value">{{ aftersales.content }}</span>
         </div>
       </div>
     </div>
@@ -52,29 +56,31 @@
         <a href="{{ url_for('mobile.index.root') }}" class="all_title">{{_('一店')}}</a>
       </div>
     </div>
-    <div class="weui-cell  not_before">
-      <div class="weui-cell__hd avatar mar-right">
-        <img src="" alt="">
+    {% set goods_data = aftersales.goods_data|json_loads %}
+    {% for goods in goods_data %}
+      <div class="weui-cell  not_before">
+        <div class="weui-cell__hd avatar mar-right">
+          <img src="{{ goods.goods_img }}" alt="">
+        </div>
+        <div class="weui-cell__bd">
+          <div class="all_title height25">{{ goods.goods_name }}</div>
+          <div class="all_desc height25">{{ goods.goods_desc }}</div>
+        </div>
+        <div class="weui-cell__ft mar-left">
+          <p>x {{ goods.goods_quantity }}</p>
+        </div>
       </div>
-      <div class="weui-cell__bd">
-        <div class="all_title height25">测试商品99</div>
-        <div class="all_desc height25">商品特点</div>
-      </div>
-      <div class="weui-cell__ft mar-left">
-        <p class="all_price">￥100.0</p>
-        <p>x 1</p>
-      </div>
-    </div>
+    {% endfor %}
   </div>
   <div class="weui-cells weui-cells_form">
     <div class="weui-cell">
-      <div class="weui-cell__bd all_add">2018.07.04</div>
+      <div class="weui-cell__bd all_add">{{ log.add_time|timestamp2str }}</div>
       <div class="weui-cell__ft">
-        <span class="trading_state">退款关闭</span>
+        <span class="trading_state">{{ log.content }}</span>
       </div>
     </div>
-    <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.aftersales.track',afs_id=123) }}">
-      <div class="weui-cell__bd blackGap">显示售后服务跟踪的最新跟踪信息，点进去可看</div>
+    <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.aftersales.track',aftersales_id=aftersales.aftersales_id) }}">
+      <div class="weui-cell__bd blackGap">{{_('显示售后服务跟踪的最新跟踪信息，点进去可看')}}</div>
       <div class="weui-cell__ft"></div>
     </a>
   </div>
