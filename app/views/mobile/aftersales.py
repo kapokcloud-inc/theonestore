@@ -120,6 +120,9 @@ def track(aftersales_id):
 def apply():
     """手机站 - 申请售后"""
 
+    session['uid'] = 1
+    session['uuid'] = 'edad8468-fb1a-4213-ae98-c45330dec77d'
+
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']
         return redirect(url_for('api.weixin.login'))

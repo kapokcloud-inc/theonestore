@@ -22,7 +22,7 @@
             <div class="detail-info_left">
               <div class="info-left_box">
                 <div class="goods-big_pic">
-                  <img src="http://i8.mifile.cn/a1/pms_1522636275.75022423.jpg" alt="">
+                  <img id="bigpic" src="http://i8.mifile.cn/a1/pms_1522636275.75022423.jpg" alt="">
                 </div>
                 <div class="goods-small_pic clearfix">
                   <ul class="small-pic_list">
@@ -65,15 +65,15 @@
                 <div class="one-cell not-border serve-cell">
                   <ul class="detail_serve one-cell_bd">
                     <li class="detail_serve_item">
-                      <img class="tagImg" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <img class="tagImg" src="/static/default/pc/img/tagicon.png" alt="">
                       <span class="tagText">{{_('7天无理由退货')}}</span>
                     </li>
                     <li class="detail_serve_item">
-                      <img class="tagImg" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <img class="tagImg" src="/static/default/pc/img/tagicon.png" alt="">
                       <span class="tagText">{{_('运费险')}}</span>
                     </li>
                     <li class="detail_serve_item">
-                      <img class="tagImg" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <img class="tagImg" src="/static/default/pc/img/tagicon.png" alt="">
                       <span class="tagText">{{_('48小时内发货')}}</span>
                     </li>
                   </ul>
@@ -135,19 +135,19 @@
                 <div class="one-cell not-border serve-cell">
                   <div class="one-cell_bd">
                     <a href="" class="goods-scroll" style="border-left:none !important">
-                      <img class="goods-scroll_img" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <img class="goods-scroll_img" src="/static/default/pc/img/review.png" alt="">
                       <span>{{_('评价 ')}}(4345)</span>
                     </a>
                   </div>
                   <div class="one-cell_bd">
                     <a href="" class="goods-scroll">
-                      <img class="goods-scroll_img" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <img class="goods-scroll_img" src="/static/default/pc/img/zan.png" alt="">
                       <span>{{_('满意度 ')}}(97.5%)</span>
                     </a>
                   </div>
                   <div class="one-cell_bd">
                     <a  href="" class="goods-scroll">
-                      <img class="goods-scroll_img" src="http://127.0.0.1:5000/static/default/mobile/img/like.png" alt="">
+                      <img class="goods-scroll_img" src="/static/default/pc/img/notlike.png" alt="">
                       <span>{{_('收藏')}}</span>
                     </a>
                   </div>
@@ -192,9 +192,160 @@
         </div>
       </div>
       <!-- 商品详情 end -->
+      <div class="goods-comment_head">
+        <div class="head-inner main-block">
+          <div class="border-line"></div>
+          <p class="head-text">{{_('评价晒单')}}</p>
+        </div>
+      </div>
+      <!-- 商品评论 -->
+      <div class="goods-detail_comment">
+        <div class="head-inner">
+          <div class="goods-comment_groom bg-white">
+            <div class="percent-block">
+              <p class="percent">97.3%</p>
+              <p class="percent-type">{{_('满意度')}}</p>
+            </div>
+          </div>
+          <div class="rate-wrap">
+            <a href="" class="rate-type rateON">{{_('全部评论 ')}}1123</a>
+            <a href="" class="rate-type">{{_('好评 ')}}</a>
+            <a href="" class="rate-type">{{_('中评 ')}}</a>
+            <a href="" class="rate-type">{{_('差评 ')}}</a>
+            <a href="" class="rate-type">{{_('有图 ')}}</a>
+          </div>
+          <!-- 有评论时显示 -->
+          <ul class="goods-comment_cnt bg-white">
+            <li class="comment-cnt_item">
+              <div class="cnt-item_hd">
+                <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
+              </div>
+              <div class="cnt-item_bd">
+                <div class="review-title">
+                  datou大头
+                  <span class="rate-text">好评</span>
+                </div>
+                <div class="review-add mar-top">1970-01-01 08:00:00</div>
+                <div class="review_cnt">
+                  hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00
+                  hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00
+                  hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00
+                </div>
+                <ul class="comment-img_wrap">
+                  <li class="commentImg">
+                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                  </li>
+                  <li class="commentImg">
+                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                  </li>
+                  <li class="commentImg">
+                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                  </li>
+                  <li class="commentImg">
+                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                  </li>
+                  <li class="commentImg">
+                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                  </li>
+                  <li class="commentImg">
+                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                  </li>
+                  <li class="commentImg">
+                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="comment-cnt_item">
+              <div class="cnt-item_hd">
+                <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
+              </div>
+              <div class="cnt-item_bd">
+                <div class="review-title">
+                  datou大头
+                  <span class="rate-text">好评</span>
+                </div>
+                <div class="review-add mar-top">1970-01-01 08:00:00</div>
+                <div class="review_cnt">
+                  hahahaha1970-01-01 08:00:00
+                </div>
+                <ul class="comment-img_wrap">
+                  <li class="commentImg">
+                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                  </li>
+                  <li class="commentImg">
+                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="comment-cnt_item">
+              <div class="cnt-item_hd">
+                <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
+              </div>
+              <div class="cnt-item_bd">
+                <div class="review-title">
+                  datou大头
+                  <span class="rate-text">好评</span>
+                </div>
+                <div class="review-add mar-top">1970-01-01 08:00:00</div>
+                <div class="review_cnt">
+                  hahahaha1970-01-01
+                </div>
+                <ul class="comment-img_wrap">
+                  <li class="commentImg">
+                    <img src="http://jqweui.com/assets/img/home-btn.png" alt="">
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="comment-cnt_item">
+              <div class="cnt-item_hd">
+                <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
+              </div>
+              <div class="cnt-item_bd">
+                <div class="review-title">
+                  datou大头
+                  <span class="rate-text">好评</span>
+                </div>
+                <div class="review-add mar-top">1970-01-01 08:00:00</div>
+                <div class="review_cnt">
+                  此处省略17条。。。。
+                </div>
+              </div>
+            </li>
+          </ul>
+          <!-- 有评论时显示 end -->
+
+          <!-- 分页 每20条一页 -->
+          <div class="comment-page_list">
+            <a href="" class="page-num">{{_('上一页')}}</a>
+            <a href="" class="page-num">1</a>
+            <a href="" class="page-num">2</a>
+            <a href="" class="page-num">3</a>
+            <a href="" class="page-num">4</a>
+            <a href="" class="page-num">5</a>
+            <a href="" class="page-num">6</a>
+            <span class="page-more">...</span>
+            <a href="" class="page-num">12</a>
+            <a href="" class="page-num">{{_('下一页')}}</a>
+          </div>
+          <!-- 分页 end -->
+
+        </div>
+      </div>
+      <!-- 商品评论 end -->
     </div>
   </div>
 </div>
 {% endblock %}
 
-{% block script %} {% endblock%}
+{% block script %}
+<script type="text/javascript">
+//$('#small-pic_item').on("click", "img",function () {
+  //index = $(this).index();
+  //var srcimg = this.getAttribute("src");
+  //$('#bigpic').attr("src", srcimg);
+//});
+</script>
+{% endblock%}
