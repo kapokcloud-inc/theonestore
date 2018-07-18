@@ -19,14 +19,15 @@ from app.database import db
 from app.helpers import (
     log_info,
     toint,
-    ktl_to_dl,
+    model_to_dict_only,
     model_create,
     model_update,
     model_delete
 )
 from app.helpers.date_time import (
     current_timestamp,
-    timestamp2str
+    timestamp2str,
+    before_after_timestamp
 )
 
 from app.models.order import (
@@ -44,20 +45,21 @@ class AfterSalesCreateService(object):
     """创建售后Service"""
 
     def __init__(self, uid, order_id=0, og_id=0, quantity=0, aftersales_type=0, deliver_status=0, content='', img_data='[]'):
-        self.msg             = u''
-        self.uid             = uid                      # 用户UID
-        self.order_id        = toint(order_id)          # 订单ID
-        self.og_id           = toint(og_id)             # 订单商品ID
-        self.quantity        = toint(quantity)          # 售后商品数量
-        self.aftersales_type = toint(aftersales_type)   # 售后类型: 0.默认; 1.仅退款; 2.退货退款; 3.仅换货;
-        self.deliver_status  = toint(deliver_status)    # 订单收货状态: 0.默认; 1.未收货; 2.已收货;
-        self.content         = content                  # 申请原因
-        self.img_data        = img_data                 # 图片数据
-        self.refunds_amount  = Decimal('0.00')          # 退款金额
-        self.goods_data      = []                       # 售后商品数据
-        self.order           = None                     # 订单实例
-        self.order_goods     = None                     # 订单商品实例
-        self.current_time    = current_timestamp()      #
+        self.msg              = u''
+        self.uid              = uid                     # 用户UID
+        self.order_id         = toint(order_id)         # 订单ID
+        self.og_id            = toint(og_id)            # 订单商品ID
+        self.quantity         = toint(quantity)         # 售后商品数量
+        self.aftersales_type  = toint(aftersales_type)  # 售后类型: 0.默认; 1.仅退款; 2.退货退款; 3.仅换货;
+        self.deliver_status   = toint(deliver_status)   # 订单收货状态: 0.默认; 1.未收货; 2.已收货;
+        self.content          = content                 # 申请原因
+        self.img_data         = img_data                # 图片数据
+        self.refunds_amount   = Decimal('0.00')         # 退款金额
+        self.goods_data       = []                      # 售后商品数据
+        self.order            = None                    # 订单实例
+        self.order_goods      = None                    # 订单商品实例
+        self.order_goods_list = []                      # 订单商品实例列表
+        self.current_time     = current_timestamp()     #
 
     def _check_order(self):
         """检查订单"""
@@ -82,16 +84,22 @@ class AfterSalesCreateService(object):
         if self.order.shipping_status != 1:
             self.msg = _(u'发货状态错误')
             return False
+    
+        limit_time = before_after_timestamp(self.order.paid_time, {'days':7})
+        if self.current_time >= limit_time:
+            self.msg = _(u'超过有效退款时间')
+            return False
 
         aftersales = Aftersales.query.filter(Aftersales.order_id == self.order_id).filter(Aftersales.status.in_([1,2,3])).first()
         if aftersales:
             self.msg = _(u'售后状态错误')
             return False
 
-        self.goods_data = db.session.query(OrderGoods.og_id, OrderGoods.goods_id, OrderGoods.goods_name, OrderGoods.goods_img,
-                                            OrderGoods.goods_desc, OrderGoods.goods_quantity).\
-                            filter(OrderGoods.order_id == self.order_id).all()
-        self.goods_data = ktl_to_dl(self.goods_data)
+        only                  = ['og_id', 'goods_id', 'goods_name', 'goods_img', 'goods_desc', 'goods_quantity']
+        self.order_goods_list = OrderGoods.query.filter(OrderGoods.order_id == self.order_id).all()
+        for order_goods in self.order_goods_list:
+            _goods_data = model_to_dict_only(order_goods, only)
+            self.goods_data.append(_goods_data)
 
         self.refunds_amount = AfterSalesStaticMethodsService.refunds_amount(order=self.order)
 
@@ -104,9 +112,12 @@ class AfterSalesCreateService(object):
     def _check_order_goods(self):
         """检查订单商品"""
 
-        # 检查
         if self.quantity <= 0:
             self.msg = _(u'参数错误')
+            return False
+
+        if self.aftersales_type not in [2,3]:
+            self.msg = _(u'类型错误')
             return False
 
         self.order_goods = OrderGoods.query.get(self.og_id)
@@ -123,20 +134,43 @@ class AfterSalesCreateService(object):
             self.msg = _(u'订单类型错误')
             return False
 
+        if self.order.order_status not in [1,2]:
+            self.msg = _(u'订单状态错误')
+            return False
+
+        if self.order.pay_status != 2:
+            self.msg = _(u'支付状态错误')
+            return False
+
+        if self.order.shipping_status != 2:
+            self.msg = _(u'发货状态错误')
+            return False
+
         maximum = AfterSalesStaticMethodsService.maximum(self.order_goods)
         if self.quantity > maximum:
             self.msg = _(u'数量错误')
             return False
 
+        if self.aftersales_type == 2:
+            limit_time = before_after_timestamp(self.order.paid_time, {'days':7})
+            if self.current_time >= limit_time:
+                self.msg = _(u'超过有效退款时间')
+                return False
+
+            self.refunds_amount = AfterSalesStaticMethodsService.refunds_amount(
+                                                                    order_goods=self.order_goods,
+                                                                    quantity=self.quantity)
+
+        if self.aftersales_type == 3:
+            limit_time = before_after_timestamp(self.order.shipping_time, {'days':15})
+            if self.current_time >= limit_time:
+                self.msg = _(u'超过有效换货时间')
+                return False
+
         data = {'og_id':self.order_goods.og_id, 'goods_id':self.order_goods.goods_id,
                 'goods_name':self.order_goods.goods_name, 'goods_img':self.order_goods.goods_img,
                 'goods_desc':self.order_goods.goods_desc, 'goods_quantity':self.quantity, 'maximum':maximum}
         self.goods_data.append(data)
-
-        if self.aftersales_type in [1,2]:
-            self.refunds_amount = AfterSalesStaticMethodsService.refunds_amount(
-                                                                    order_goods=self.order_goods,
-                                                                    quantity=self.quantity)
 
         return True
     
@@ -196,18 +230,30 @@ class AfterSalesCreateService(object):
         for data in self.goods_data:
             if self.og_id > 0:
                 data.pop('maximum')
-        goods_data    = json.dumps(self.goods_data)
+        goods_data = json.dumps(self.goods_data)
 
-        data = {'aftersales_sn':aftersales_sn, 'uid':self.uid, 'order_id':self.order.order_id,
-                'aftersales_type':self.aftersales_type, 'deliver_status':self.deliver_status, 'content':self.content,
-                'img_data':self.img_data, 'status':1, 'check_status':1, 'refunds_amount':self.refunds_amount,
-                'refunds_method':self.order.pay_method, 'latest_log':u'',
-                'goods_data':goods_data, 'quantity':self.quantity, 'add_time':self.current_time, 'update_time':self.current_time}
+        data      = {'aftersales_sn':aftersales_sn, 'uid':self.uid, 'order_id':self.order.order_id,
+                    'aftersales_type':self.aftersales_type, 'deliver_status':self.deliver_status, 'content':self.content,
+                    'img_data':self.img_data, 'status':1, 'check_status':1, 'refunds_amount':self.refunds_amount,
+                    'refunds_method':self.order.pay_method, 'latest_log':u'',
+                    'goods_data':goods_data, 'quantity':self.quantity,
+                    'add_time':self.current_time, 'update_time':self.current_time}
         aftersales = model_create(Aftersales, data, commit=True)
 
         for data in self.goods_data:
             data['aftersales_id'] = aftersales.aftersales_id
             model_create(AftersalesGoods, data)
+
+        if self.order_goods:
+            quantity = self.order_goods.aftersales_goods_quantity + self.quantity
+            data     = {'aftersales_goods_quantity':quantity, 'update_time':self.current_time}
+            model_update(self.order_goods, data)
+        
+        if len(self.order_goods_list) > 0:
+            for order_goods in self.order_goods_list:
+                quantity = order_goods.aftersales_goods_quantity + self.quantity
+                data     = {'aftersales_goods_quantity':quantity, 'update_time':self.current_time}
+                model_update(order_goods, data)
         
         AfterSalesStaticMethodsService.add_log(aftersales.aftersales_id, _(u'申请售后服务，等待商家审核'), self.current_time, False)
 
@@ -241,10 +287,9 @@ class AfterSalesStaticMethodsService(object):
         ps  = toint(params.get('ps', '10'))
         uid = toint(params.get('uid', '0'))
 
-        aftersales = db.session.query(Aftersales.aftersales_id, Aftersales.goods_data,
-                                        Aftersales.latest_log, Aftersales.add_time).\
-                            filter(Aftersales.uid == uid).\
-                            order_by(Aftersales.aftersales_id.desc()).offset((p-1)*ps).limit(ps).all()
+        aftersales = Aftersales.query.\
+                        filter(Aftersales.uid == uid).\
+                        order_by(Aftersales.aftersales_id.desc()).offset((p-1)*ps).limit(ps).all()
 
         return aftersales
 
@@ -252,8 +297,9 @@ class AfterSalesStaticMethodsService(object):
     def maximum(order_goods):
         """最大售后商品数量"""
 
-        #maximum = order_goods.goods_quantity - order_goods.service_goods_quantity
+        maximum = order_goods.goods_quantity - order_goods.aftersales_goods_quantity
 
+        """
         aftersales    = db.session.query(Aftersales.aftersales_id).\
                             filter(Aftersales.order_id == order_goods.order_id).\
                             filter(Aftersales.status.in_([1,2,3])).all()
@@ -263,6 +309,7 @@ class AfterSalesStaticMethodsService(object):
                         filter(AftersalesGoods.aftersales_id.in_(aftersales_id)).first()
         goods_sum = _sum.goods_sum if _sum.goods_sum else 0
         maximum   = order_goods.goods_quantity - goods_sum
+        """
 
         return maximum
 
@@ -278,23 +325,25 @@ class AfterSalesStaticMethodsService(object):
 
         # 部分退
         if order_goods:
-            order         = db.session.query(Order.goods_quantity, Order.discount_amount, Order.shipping_amount).\
-                                filter(Order.order_id == order_goods.order_id).first()
-            aftersales    = db.session.query(Aftersales.aftersales_id).\
+            # 本订单统计有效的售后ID
+            order         = Order.query.filter(Order.order_id == order_goods.order_id).first()
+            aftersales    = Aftersales.query.\
                                 filter(Aftersales.order_id == order_goods.order_id).\
                                 filter(Aftersales.status.in_([1,2,3])).all()
             aftersales_id = [aftersale.aftersales_id for aftersale in aftersales]
 
+            # 本订单统计有效的售后商品总数
             _sum      = db.session.query(func.sum(AftersalesGoods.goods_quantity).label('goods_sum')).\
                                 filter(AftersalesGoods.aftersales_id.in_(aftersales_id)).first()
             goods_sum = _sum.goods_sum if _sum.goods_sum else 0
 
+            # 是否最后一次售后
             if (order.goods_quantity - goods_sum) == quantity:
                 amount_sum     = db.session.query(func.sum(Aftersales.refunds_amount).label('amount_sum')).\
                                         filter(Aftersales.aftersales_id.in_(aftersales_id)).first()
-                refunds_amount = order.paid_amount - amount_sum.amount_sum
+                refunds_amount = order.paid_amount - order.shipping_amount - amount_sum.amount_sum
             else:
-                avg_amount     = (order.discount_amount + order.shipping_amount) / order.goods_quantity
+                avg_amount     = order.discount_amount / order.goods_quantity
                 refunds_amount = round((order_goods.goods_price - avg_amount) * quantity, 2)
 
         return refunds_amount
@@ -314,3 +363,59 @@ class AfterSalesStaticMethodsService(object):
             model_update(aftersales, data, commit=commit)
 
         return True
+
+    @staticmethod
+    def aftersale_status_text(aftersale):
+        """获取售后状态"""
+
+        status_text = u''
+
+        if aftersale.aftersales_type == 1:
+            if aftersale.status == 1 and aftersale.check_status == 1:
+                status_text = _(u'等待审核')
+
+            if aftersale.status == 4 and aftersale.check_status == 3:
+                status_text = _(u'审核不通过')
+
+            if aftersale.status == 3 and aftersale.check_status == 2 and aftersale.refunds_status == 2:
+                status_text = _(u'退款成功，已完成')
+
+        if aftersale.aftersales_type == 2:
+            if aftersale.status == 1 and aftersale.check_status == 1:
+                status_text = _(u'等待审核')
+
+            if aftersale.status == 4 and aftersale.check_status == 3:
+                status_text = _(u'审核不通过')
+
+            if aftersale.status == 2 and aftersale.check_status == 2 and aftersale.return_status == 1:
+                status_text = _(u'审核通过，待寄换货商品')
+
+            if aftersale.status == 2 and aftersale.return_status == 2:
+                status_text = _(u'已寄换货商品，待收件')
+
+            if aftersale.status == 2 and aftersale.return_status == 3:
+                status_text = _(u'已收到换货商品，待退款')
+
+            if aftersale.status == 3 and aftersale.refunds_status == 2:
+                status_text = _(u'退款成功，已完成')
+
+        if aftersale.aftersales_type == 3:
+            if aftersale.status == 1 and aftersale.check_status == 1:
+                status_text = _(u'等待审核')
+
+            if aftersale.status == 4 and aftersale.check_status == 3:
+                status_text = _(u'审核不通过')
+
+            if aftersale.status == 2 and aftersale.check_status == 2 and aftersale.return_status == 1:
+                status_text = _(u'审核通过，待寄换货商品')
+
+            if aftersale.status == 2 and aftersale.return_status == 2:
+                status_text = _(u'已寄换货商品，待收件')
+
+            if aftersale.status == 2 and aftersale.resend_status == 3:
+                status_text = _(u'已收到换货商品，待处理')
+
+            if aftersale.status == 3 and aftersale.refunds_status == 2:
+                status_text = _(u'退款成功，已完成')
+
+        return status_text

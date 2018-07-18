@@ -25,7 +25,10 @@ from app.helpers import (
     static_uri,
     toint
 )
-from app.helpers.date_time import timestamp2str
+from app.helpers.date_time import (
+    timestamp2str,
+    before_after_timestamp
+)
 
 from app.routes.admin import ADMIN_ROUTES
 from app.routes.mobile import MOBILE_ROUTES
@@ -62,6 +65,7 @@ CSRFProtect(app)
 jinja_filters = {
     'iteritems': iteritems,
     'timestamp2str': timestamp2str,
+    'before_after_timestamp':before_after_timestamp,
     'json_loads': json_loads,
     'static_uri': static_uri,
     'toint': toint

@@ -11,12 +11,15 @@
     <div class="weui-cell">
       <div class="weui-cell__bd">
         <div class="blackGap mar-bottom">{{_('服务类型')}}</div>
-        <button type="button" class="tag_btn tag_btn-on" onclick="change_type(this, 1)" data-value="1">{{_('仅退款')}}</button>
-        <button type="button" class="tag_btn" onclick="change_type(this, 2)" data-value="2">{{_('退货退款')}}</button>
-        <button type="button" class="tag_btn" onclick="change_type(this, 3)" data-value="3">{{_('仅换货')}}</button>
-        <p id="text-1" class="all_desc mar-top type-text">{{_('仅退款：未收到货(包含未签收)，或卖家协商同意前提下')}}</p>
-        <p id="text-2" class="all_desc mar-top type-text" style="display:none;">{{_('退货退款：已收到货，需要退换已收到的货物')}}</p>
-        <p id="text-3" class="all_desc mar-top type-text" style="display:none;">{{_('仅换货：已收到货，货物拍错或是损坏，可跟卖家协商换货')}}</p>
+        {% if aftersales_type == 2 %}
+          <button type="button" class="tag_btn tag_btn-on" onclick="change_type(this, 2)" data-value="2">{{_('退货退款')}}</button>
+          <button type="button" class="tag_btn" onclick="change_type(this, 3)" data-value="3">{{_('仅换货')}}</button>
+          <p id="text-2" class="all_desc mar-top type-text">{{_('退货退款：已收到货，需要退换已收到的货物')}}</p>
+          <p id="text-3" class="all_desc mar-top type-text" style="display:none;">{{_('仅换货：已收到货，货物拍错或是损坏，可跟卖家协商换货')}}</p>
+        {% else %}
+          <button type="button" class="tag_btn tag_btn-on" onclick="change_type(this, 3)" data-value="3">{{_('仅换货')}}</button>
+          <p id="text-3" class="all_desc mar-top type-text">{{_('仅换货：已收到货，货物拍错或是损坏，可跟卖家协商换货')}}</p>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -93,7 +96,7 @@
   <div style="height:75px"></div>
   <div class="footer" style="display:block;height:65px">
     {{ wtf_form.csrf_token }}
-    <input id="aftersales_type" name="aftersales_type" type="hidden" value="1" />
+    <input id="aftersales_type" name="aftersales_type" type="hidden" value="{{ aftersales_type }}" />
     <a class="weui-cell weui-cell_access" href="javascript:void(0);" style="padding:10px" onclick="submit()">
       <button type="button" class="weui-btn weui-btn_red">提交申请</button>
     </a>

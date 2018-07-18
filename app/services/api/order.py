@@ -805,6 +805,7 @@ class OrderStaticMethodsService(object):
     @staticmethod
     def order_status_text_and_action_code(order, min_pay_time=0):
         """获取订单状态和订单指令"""
+
         status_text = u''   # 订单状态: 已取消; 待付款; 待收货; 待评价; 已完成;
         action_code = []    # 订单指令: 0.无指令; 1.付款; 2.取消订单; 3.查看物流; 4.确认收货; 5.再次购买; 6.删除订单;
 

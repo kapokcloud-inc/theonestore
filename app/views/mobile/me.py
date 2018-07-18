@@ -111,7 +111,7 @@ def index():
     # 退款售后
     q = db.session.query(OrderGoods.og_id).\
             filter(OrderGoods.order_id.in_(completed)).\
-            filter(OrderGoods.goods_quantity > OrderGoods.service_goods_quantity)
+            filter(OrderGoods.goods_quantity > OrderGoods.aftersales_goods_quantity)
     aftersales_count = get_count(q)
 
     # 未读消息
