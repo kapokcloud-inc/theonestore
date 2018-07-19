@@ -187,19 +187,30 @@
 {% macro render_form(form, action='', method='POST', enctype='') %}
 <form class="form-horizontal" action="{{ action }}" method="{{ method }}"{% if enctype %} enctype="{{ enctype }}"{% endif %}>
 {%- for field in form -%}
-{% if field.name != 'csrf_token' %}
+{% if field.name != 'csrf_token' and field.type != 'HiddenField'  %}
   <div class="form-group">
     <label for="{{ field.name }}" class="control-label col-xs-12 col-sm-4 col-md-3 col-lg-2">{{ get_required_star(field) }}{{ field.label|safe }}</label>
     <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3{%if field.errors%} has-error{%endif%}">
-    {% set class_ = 'form-control' %}
-    {% if field.flags.required %}
-      {{ field(class_=class_, required='', **kwargs) }}
+    {% if field.type == 'BooleanField' %}
+      <div class="checkbox checkbox-success `">
+          {{ field(**kwargs) }}
+          <label for="{{ field.id }}">{{ field.description|safe }}</label>
+      </div>
     {% else %}
-      {{ field(class_=class_, **kwargs) }}
+      {% set class_ = 'form-control' %}
+      {% if field.type in ('TextField', 'TextAreaField', 'PasswordField', 
+            'DecimalField', 'SelectField', 'IntegerField', 
+            'StringField') %}
+        {% if field.flags.required %}
+          {{ field(class_=class_, required='', **kwargs) }}
+        {% else %}
+          {{ field(class_=class_, **kwargs) }}
+        {% endif %}
+      {% endif %}
     {% endif %}
 
     {# 描述 #}
-    {%- if field.description -%}
+    {%- if field.description and field.type != 'BooleanField' -%}
       <span class="help-block m-b-none">{{ field.description|safe }}</span>
     {%- endif -%}
     
@@ -209,6 +220,8 @@
     {%- endfor -%}
     </div>
   </div>
+{% elif field.type == 'HiddenField' %}
+  {{ field() }}
 {% endif %}
 {% endfor %}
   {{ form.csrf_token }}

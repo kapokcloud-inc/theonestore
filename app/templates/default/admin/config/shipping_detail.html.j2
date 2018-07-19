@@ -10,31 +10,11 @@
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="white-box">
-          <h3 class="box-title m-b-0">{{_('快递基本信息填写')}}</h3>
-          <p class="text-muted m-b-30 font-13">{{_('输入下面的详细信息')}}</p>
+          <h3 class="box-title m-b-0">{{ shipping.shipping_name }}</h3>
+          <p class="text-muted m-b-30 font-13">{{ shipping.shipping_desc }}</p>
+          
+          {{ libs.render_form(form, action=url_for('admin.config.shipping_save')) }}
 
-          <form action="{{ url_for('admin.config.shipping_save') }}" method="POST">
-            <div class="row">
-              {{ libs.wtf_input(wtf_form.shipping_name, _('快递名称'), _value=shipping.shipping_name, _class="form-control", _type="static") }}
-              {{ libs.wtf_select(wtf_form.is_free, _('是否免运费'), _class="form-control") }}
-            </div>
-            {% set display = 'none' if wtf_form.is_free.data == 1 else 'block' %}
-            <div id="shipping_free" class="row" style="display:{{ display }}">
-              {{ libs.wtf_input(wtf_form.free_limit_amount, _('满多少包邮'), _value=shipping.free_limit_amount, _class="form-control") }}
-              {{ libs.wtf_input(wtf_form.shipping_amount, _('运费'), _value=shipping.shipping_amount, _class="form-control") }}
-            </div>
-            <div class="row">
-              {{ libs.wtf_select(wtf_form.is_enable, _('是否启用'), _class="form-control") }}
-              {{ libs.wtf_select(wtf_form.is_default, _('是否默认'), _class="form-control") }}
-            </div>
-            <div class="row">
-              {{ libs.wtf_input(wtf_form.sorting, _('排序'), _value=shipping.sorting, _class="form-control", _help=_('*数值越大排序越靠前')) }}
-            </div>
-            {% set shipping_id = shipping.shipping_id if shipping.shipping_id else 0 %}
-            {{ libs.wtf_input(wtf_form.shipping_id, '', _value=shipping_id, _type="hidden") }}
-            {{ wtf_form.csrf_token }}
-            {{ libs.wtf_submit() }}
-          </form>
         </div>
       </div>
     </div>
