@@ -29,6 +29,7 @@ from app.helpers.user import (
     check_login,
     get_uid
 )
+from app.helpers.date_time import current_timestamp
 
 from app.services.api.order import (
     OrderStaticMethodsService,
@@ -119,7 +120,8 @@ def detail(order_id):
         if _express_msg == 'ok':
             express_data = _express_data[0] if len(_express_data) > 0 else {}
 
-    data = {'order':order, 'items':items, 'order_address':order_address, 'text':text, 'code':code, 'express_data':express_data}
+    data = {'order':order, 'items':items, 'order_address':order_address, 'text':text, 'code':code, 'express_data':express_data,
+            'current_time':current_timestamp()}
     return render_template('mobile/order/detail.html.j2', **data)
 
 

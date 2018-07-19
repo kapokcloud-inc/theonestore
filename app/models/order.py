@@ -83,8 +83,7 @@ class OrderGoods(BaseModel, db.Model):
     goods_quantity = db.Column(db.Integer, default=0)
     goods_price = db.Column(db.Float, default=0.00)
     comment_id = db.Column(db.Integer, default=0)
-    service_valid_time = db.Column(db.Integer, default=0)
-    service_goods_quantity = db.Column(db.Integer, default=0)
+    aftersales_goods_quantity = db.Column(db.Integer, default=0)
     add_time = db.Column(db.Integer, default=0)
     update_time = db.Column(db.Integer, default=0)
 

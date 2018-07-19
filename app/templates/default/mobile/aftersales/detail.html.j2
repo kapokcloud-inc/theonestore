@@ -10,12 +10,12 @@
 <div class="user_wrap">
   <div class="weui-cells weui-cells_form">
     <div class="weui-cell">
-      <div class="weui-cell__bd blackGap">{{_('退款信息')}}</div>
+      <div class="weui-cell__bd blackGap">{{_('申请信息')}}</div>
     </div>
     <div class="weui-form-preview">
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label">{{_('退款类别')}}</label>
+          <label class="weui-form-preview__label">{{_('申请类别')}}</label>
           <span class="weui-form-preview__value">{{ const.AFTERSALES_TYPE.get(aftersales.aftersales_type) }}</span>
         </div>
         <div class="weui-form-preview__item">
@@ -27,7 +27,7 @@
           <span class="weui-form-preview__value">{{ aftersales.add_time|timestamp2str }}</span>
         </div>
         <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label">{{_('退款件数')}}</label>
+          <label class="weui-form-preview__label">{{_('申请件数')}}</label>
           <span class="weui-form-preview__value">{{ aftersales.quantity }}件</span>
         </div>
         {% if aftersales.aftersales_type in ([1,2]) %}
@@ -44,7 +44,7 @@
           </span>
         </div>
         <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label">{{_('退款原因')}}</label>
+          <label class="weui-form-preview__label">{{_('申请原因')}}</label>
           <span class="weui-form-preview__value">{{ aftersales.content }}</span>
         </div>
       </div>
@@ -76,11 +76,11 @@
     <div class="weui-cell">
       <div class="weui-cell__bd all_add">{{ log.add_time|timestamp2str }}</div>
       <div class="weui-cell__ft mar-left tradingW">
-        <span class="trading_state">{{ log.content }}</span>
+        <span class="trading_state">{{ status_text }}</span>
       </div>
     </div>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.aftersales.track',aftersales_id=aftersales.aftersales_id) }}">
-      <div class="weui-cell__bd blackGap">{{_('显示售后服务跟踪的最新跟踪信息，点进去可看')}}</div>
+      <div class="weui-cell__bd blackGap">{{ '%s，点进去可看' % log.content }}</div>
       <div class="weui-cell__ft"></div>
     </a>
   </div>
