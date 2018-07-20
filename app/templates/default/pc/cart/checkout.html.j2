@@ -1,0 +1,238 @@
+{% extends '/default/pc/layout/cart_base.html.j2' %}
+
+{% block head %}
+<title>{{_('提交订单 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+{% endblock %}
+
+{% block nav %} 
+<div class="one-nav_header">
+  <span class="nav-header_type">{{_('确认订单')}}</span>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="cart-wrap">
+  <div class="head-inner">
+    <div class="checkout-box" id="address">
+      <!-- 收货地址部分 -->
+      <div class="address-section">
+        <div class="address-section_header clearfix">
+          <p class="section-header_title">{{_('收货地址')}}</p>
+        </div>
+        <ul class="address-section_body clearfix">
+          <li class="address-body_item selected">
+            <div class="address-item_cnt">
+              <p class="item-cnt_name">大头</p>
+              <p class="item-cnt_mobile">13510515229</p>
+              <p class="item-cnt_address">
+                广东 深圳市 南山区 西丽街道
+                <br>
+                留仙大道平山一路大园工业区
+              </p>
+            </div>
+            <div class="item-cnt_edit" onclick="edit()">
+              <button class="edit-btn" type="button">修改</button>
+            </div>
+          </li>
+          <li class="address-body_item">
+            <div class="address-item_cnt">
+              <p class="item-cnt_name">xiao头</p>
+              <p class="item-cnt_mobile">13510515229</p>
+              <p class="item-cnt_address">
+                广东 深圳市 龙华新区 民治大道
+                <br> 
+                南京新村c12
+              </p>
+            </div>
+            <div class="item-cnt_edit" onclick="edit()">
+              <button class="edit-btn" type="button">修改</button>
+            </div>
+          </li>
+          <li class="address-body_item">
+            <div class="address-item_cnt">
+              <p class="item-cnt_name">da头</p>
+              <p class="item-cnt_mobile">13510515229</p>
+              <p class="item-cnt_address">
+                广东 深圳市 龙岗区 坂田街道
+                <br> 
+                长坑路西五巷1号
+              </p>
+            </div>
+            <div class="item-cnt_edit" onclick="edit()">
+              <button class="edit-btn" type="button">修改</button>
+            </div>
+          </li>
+          <div class="address-body_item" onclick="add()">
+            <div class="add-new_address">
+              <img src="/static/default/pc/img/add.png" alt="">
+              <p>{{_('添加新地址')}}</p>
+            </div>
+          </div>
+        </ul>
+        <div class="address-show-more">
+          <span class="show-more_text">{{_('显示更多收货地址')}}</span>
+          <span class="hide-more_text" style="display:none">{{_('收起更多收货地址')}}</span>
+        </div>
+      </div>
+      <!-- 收货地址部分 end -->
+
+      <!-- 配送方式部分 -->
+      <div class="shipment-section clearfix">
+        <div class="shipment-section_header">{{_('配送方式')}}</div>
+        <div class="shipment-section_body">
+          <div class="shipment-select clearfix">
+            <div class="shipment-text">
+              <li id="infoText" class="info-text" data-values="">请选择配送方式</li>
+              <ul class="select-wrap hide">
+                <li>顺丰 ￥10.0(满￥1000.0免运费)￥10.0(满￥1000.0免运费)</li>
+                <li>圆通 ￥10.0(满￥1000.0免运费)</li>
+                <li>申通 ￥10.0(满￥1000.0免运费)</li>
+                <li>中通 ￥10.0(满￥1000.0免运费)</li>
+                <li>邮政 ￥10.0(满￥1000.0免运费)</li>
+                <li>德邦物流 ￥10.0(满￥1000.0免运费)</li>
+                <li>百世汇通 ￥10.0(满￥1000.0免运费)</li>
+              </ul>
+            </div>
+            <button class="shipment-edit_btn" type="button" onclick="shipment_edit()">修改</button>
+          </div>
+        </div>
+      </div>
+      <!-- 配送方式部分 end -->
+
+      <!-- 商品部分 -->
+      <div class="goods-section clearfix">
+        <div class="goods-section_header">
+          <span class="goods-info">{{_('商品及优惠券')}}</span>
+          <div class="back-cart">
+            <a href="{{ url_for('pc.cart.root') }}">{{_('返回购物车')}}</a>
+          </div>
+        </div>
+        <div class="goods-section_body">
+          <ul class="goods-body_list">
+            <li class="goods-body_item">
+              <div class="col goods-item_img">
+                <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
+              </div>
+              <div class="col goods-item_name">米家石英表 白色</div>
+              <div class="col goods-item_price">￥329</div>
+              <div class="col goods-item_num">x 2</div>
+              <div class="col goods-item_total">￥698</div>
+            </li>
+            <li class="goods-body_item">
+              <div class="col goods-item_img">
+                <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
+              </div>
+              <div class="col goods-item_name">米家石英表 白色</div>
+              <div class="col goods-item_price">￥329</div>
+              <div class="col goods-item_num">x 1</div>
+              <div class="col goods-item_total">￥329</div>
+            </li>
+            <li class="goods-body_item">
+              <div class="col goods-item_img">
+                <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
+              </div>
+              <div class="col goods-item_name">米家石英表 白色</div>
+              <div class="col goods-item_price">￥329</div>
+              <div class="col goods-item_num">x 2</div>
+              <div class="col goods-item_total">￥698</div>
+            </li>
+          </ul>
+        </div>
+        <div class="goods-section_footer">
+          <div>
+            <span class="goods-footer_left">{{_('商品总价：')}}</span>
+            <span class="goods-footer_right">￥1255</span>
+          </div>
+          <div>
+            <span class="goods-footer_left">{{_('优惠金额：')}}</span>
+            <span class="goods-footer_right">￥10</span>
+          </div>
+          <div>
+            <span class="goods-footer_left">{{_('运费：')}}</span>
+            <span class="goods-footer_right">￥10</span>
+          </div>
+          <div>
+            <span class="goods-footer_left">{{_('应付总额：')}}</span>
+            <span class="goods-footer_right" style="color:#f33155">
+              ￥
+              <em>1255</em>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- 商品部分 end -->
+
+      <!-- 提交订单 -->
+      <div class="sub-section">
+        <div class="sub-section_left">
+          <div class="seleced-address">
+            <p id="userInfo">大头妞 135****5229</p>
+            <span id="addressInfo">广东 深圳市 南山区 平山一路云谷二期</span>
+            <button type="button" class="back-add_btn">修改</button>
+          </div>
+        </div>
+        <div class="cart-footer_right">
+          <a class="cart-checkout_btn btn-primary" href="">{{_('提交订单')}}</a>
+        </div>
+      </div>
+      <!-- 提交订单 end -->
+    </div>
+  </div>
+  <div class="hide-mask show">
+    <div class="editAdd-section">
+    
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/static/default/pc/js/jquery.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+var $selectWrap = $('.select-wrap');
+var $addressBd = $('.address-section_body');
+
+// 选中地址
+$('.address-section_body > li').click(function () {
+  $(this).addClass('selected').siblings().removeClass('selected');
+  var $li = $(this);
+  var name = $li.find('.item-cnt_name').text();
+  var mobile = $li.find('.item-cnt_mobile').text();
+  var address = $li.find('.item-cnt_address').text();
+  $('#userInfo').text(name + ' ' + mobile);
+  $('#addressInfo').text(address);
+});
+
+//修改和保存配送方式
+function shipment_edit(){
+  if ($selectWrap.hasClass('hide')) {
+    $('#infoText').addClass('sel-info');
+    $selectWrap.removeClass('hide').addClass('show');
+
+  } else {
+    $('#infoText').removeClass('sel-info');
+    $selectWrap.removeClass('show').addClass('hide');
+  }
+}
+
+// 赋值
+$('.select-wrap > li').click(function () {
+  $(this).addClass('allOn').siblings().removeClass('allOn');
+  
+  $selectWrap.removeClass('show');
+  if (!$selectWrap.hasClass('hide')) {
+    $selectWrap.addClass('hide');
+    $('#infoText').removeClass('sel-info');
+  }
+  // 赋值给配送方式
+  $('#infoText').text($(this).text());
+});
+
+// 返回到收货地址模块
+$('.back-add_btn').click(function () {
+  var t = $("#address").offset().top;
+  $('html,body').animate({scrollTop:t}, 300);
+});
+</script>
+{% endblock%}

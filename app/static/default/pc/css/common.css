@@ -242,60 +242,59 @@ header img {
 .head-cart {
   position: relative;
   display: inline;
-  width: 110px;
+  width: 108px;
   float: right;
   margin-top: 33px;
   margin-left: 20px;
+  background-color: #f3f4f5;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.head-cart:hover {
+  background-color: #fff;
+  border-bottom: none;
 }
 .tool {
   position: relative;
   width: 40px;
   height: 32px;
   line-height: 32px;
-  padding-right: 34px;
-  padding-left: 34px;
+  padding-right: 35px;
+  padding-left: 35px;
   cursor: pointer;
-  border: 1px solid #ccc;
   text-align: center;
-  background-color: #f3f4f5;
-  border-radius: 3px;
-}
-.tool:hover {
-  background-color: #fff;
-  border-bottom: none;
-  height: 33px;
-  line-height: 33px;
-}
-.tool:hover::before {
-  content: " ";
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  width: 108px;
-  height: 50px;
-  border: 1px solid #ccc;
-  border-bottom: none;
-}
-.tool:hover::after {
-  border-right: none;
-  content: " ";
-  position: absolute;
-  top: 47px;
-  right: 109px;
-  width: 192px;
-  height: 1px;
-  border-bottom: 1px solid #ccc;
 }
 .tool-cnt {
   position: absolute;
   top: 50px;
-  right: 0;
+  right: -1px;
   display: none;
   width: 300px;
   z-index: 11;
   background-color: #fff;
   border: 1px solid #ccc;
   border-top: none;
+}
+.tool-cnt::before {
+  content: " ";
+  position: absolute;
+  top: -20px;
+  right: -1px;
+  width: 108px;
+  height: 20px;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  border-top: none;
+}
+.tool-cnt::after {
+  border-right: none;
+  content: " ";
+  position: absolute;
+  top: -2px;
+  right: 109px;
+  width: 192px;
+  height: 1px;
+  border-bottom: 1px solid #ccc;
 }
 .cart-cnt {
   position: relative;
@@ -497,9 +496,9 @@ header img {
 .top-nav_user:hover::before {
   content: " ";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 90px;
+  top: 0px;
+  left: 0px;
+  width: 89px;
   height: 35px;
   border: 1px solid #ccc;
   border-bottom: none;
@@ -508,7 +507,7 @@ header img {
   border-right: none;
   content: " ";
   position: absolute;
-  top: 33px;
+  top: 34px;
   left: 90px;
   width: 180px;
   height: 1px;
@@ -517,7 +516,7 @@ header img {
 .user-wrap {
   position: absolute;
   top: 35px;
-  left: 0;
+  left: 0px;
   display: none;
   width: 268px;
   background-color: #fff;
@@ -577,6 +576,7 @@ header img {
   height: 50px;
   line-height: 50px;
   color: #333;
+  text-align: center;
 }
 .signout:hover {
   color: #f33155;
@@ -693,4 +693,119 @@ header img {
 }
 .currentOn {
   color: #f33155 !important;
+}
+.news-badge {
+  position: absolute;
+  display: inline-block;
+  top: 5px;
+  right: 20px;
+  border-radius: 7px;
+  height: 14px;
+  width: 14px;
+  line-height: 13px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  background-color: #f33155;
+}
+.user-badge {
+  position: absolute;
+  display: inline-block;
+  top: 2px;
+  right: 5px;
+  border-radius: 7px;
+  height: 14px;
+  width: 14px;
+  line-height: 13px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  background-color: #f33155;
+  font-style: inherit;
+}
+.icon-dagou,
+.icon-cancel {
+  font-family: "iconfont" !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.5px;
+}
+.icon-checkbox {
+  position: relative;
+  top: -1px;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.icon-checkbox_selected {
+  border-color: #f33155;
+  background-color: #f33155;
+}
+.not-one {
+  position: relative;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  text-align: center;
+  overflow: hidden;
+}
+.not-one_text {
+  color: #666;
+  font-size: 36px;
+  margin-top: 70px;
+  margin-bottom: 30px;
+}
+.not-one_btn {
+  display: inline-block;
+  width: 200px;
+  height: 48px;
+  line-height: 48px;
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 70px;
+  cursor: pointer;
+  border: 1px solid #e5e5e5;
+}
+.btn-primary {
+  border-color: #f33155 !important;
+  color: #fff;
+  background-color: #f33155;
+}
+.one-nav_header {
+  float: left;
+  height: 100px;
+  line-height: 100px;
+  padding-left: 10px;
+}
+.nav-header_type {
+  color: #333;
+  font-size: 26px;
+}
+.hide {
+  display: none;
+}
+.show {
+  display: block;
+}
+.allOn {
+  color: #f33155;
+}
+.ranpo {
+  z-index: 1100;
+}
+.hide-mask {
+  position: fixed !important;
+  z-index: 1300;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  top: 0px;
+  background: rgba(0, 0, 0, 0.7);
 }

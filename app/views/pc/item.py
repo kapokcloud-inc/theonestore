@@ -40,7 +40,7 @@ item = Blueprint('pc.item', __name__)
 
 @item.route('/')
 def index():
-    """商品列表页"""
+    """pc - 商品列表页"""
 
     items      = ItemStaticMethodsService.items(request.args.to_dict())
     paging_url = url_for('pc.item.paging', **request.args)
@@ -59,7 +59,7 @@ def paging():
 
 @item.route('/<int:goods_id>')
 def detail(goods_id):
-    """ 商品详情页 """
+    """ pc - 商品详情页 """
 
     uid = get_uid()
     if not uid:
@@ -84,7 +84,7 @@ def detail(goods_id):
 
 @item.route('/recommend')
 def recommend():
-    """ 推荐 """
+    """pc - 推荐"""
 
     params     = {'is_recommend':1}
     items      = ItemStaticMethodsService.items(params)
@@ -95,7 +95,7 @@ def recommend():
 
 @item.route('/hot')
 def hot():
-    """ 热卖 """
+    """pc - 热卖"""
 
     params     = {'is_hot':1}
     items      = ItemStaticMethodsService.items(params)
