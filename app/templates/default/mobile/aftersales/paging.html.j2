@@ -1,0 +1,36 @@
+{% for aftersale in aftersales %}
+  <div id="" class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+      <div class="weui-cell__bd all_add">{{ aftersale.add_time|timestamp2str }}</div>
+      <div class="weui-cell__ft">
+        <span class="trading_state">{{ aftersales_status_text.get(aftersale.aftersales_id) }}</span>
+      </div>
+    </div>
+    {% set goods_data = aftersale.goods_data|json_loads %}
+    {% for goods in goods_data %}
+      <div class="weui-cell">
+        <div class="weui-cell__hd avatar mar-right">
+          <img src="{{ goods.goods_img }}" alt="">
+        </div>
+        <div class="weui-cell__bd">
+          <div class="all_title height25">{{ goods.name }}</div>
+          <div class="all_desc height25">{{ goods.desc }}</div>
+        </div>
+        <div class="weui-cell__ft mar-left">
+          <p>x {{ goods.goods_quantity }}</p>
+        </div>
+      </div>
+    {% endfor %}
+    <div class="weui-cell">
+      <div class="weui-cell__bd blackGap">{{ aftersale.latest_log }}</div>
+    </div>
+    <div class="weui-cell">
+      <div class="weui-cell__bd"></div>
+      <div class="weui-cell__ft">
+        <a href="{{ url_for('mobile.aftersales.detail', aftersales_id=aftersale.aftersales_id) }}">
+          <button type="button" class="order_btn order-state_btn">{{_('查看详情')}}</button>
+        </a>
+      </div>
+    </div>
+  </div>
+{% endfor %}

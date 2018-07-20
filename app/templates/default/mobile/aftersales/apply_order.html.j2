@@ -75,7 +75,7 @@
   <div class="footer" style="display:block;height:65px">
     {{ wtf_form.csrf_token }}
     <input id="order_id" name="order_id" type="hidden" value="{{ order_id }}" />
-    <a class="weui-cell weui-cell_access" href="javascript:;" style="padding:10px" onclick="submit()">
+    <a class="weui-cell weui-cell_access" href="javascript:void(0);" style="padding:10px" onclick="submit()">
       <button type="button" class="weui-btn weui-btn_red">提交申请</button>
     </a>
   </div>
@@ -93,7 +93,7 @@ function submit() {
   var order_id = $("#order_id").val();
   var content = $("#content").val();
 
-  var params = {'order_id':order_id, 'content':content, 'aftersales_type':1}
+  var params = {'order_id':order_id, 'aftersales_type':1, 'deliver_status':0, 'content':content};
   $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
     if (json.ret == 0) {
       window.location.href = "{{ url_for('mobile.aftersales.root') }}";

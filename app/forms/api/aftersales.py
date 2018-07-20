@@ -42,4 +42,5 @@ class AfterSalesForm(FlaskForm):
     order_id        = IntegerField(validators=[checkOrderId()])
     og_id           = IntegerField()
     aftersales_type = IntegerField()
+    deliver_status  = IntegerField()
     content         = StringField(validators=[Required(message=_(u'请填写申请原因'))])

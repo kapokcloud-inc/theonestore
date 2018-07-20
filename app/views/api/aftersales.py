@@ -27,9 +27,11 @@ from app.helpers.user import (
 )
 
 from app.services.response import ResponseJson
-from app.services.api.aftersales import AfterSalesCreateService
+from app.services.api.aftersales import AfterSalesCreateService, AfterSalesStaticMethodsService
 
 from app.forms.api.aftersales import AfterSalesForm
+
+from app.models.order import Order, OrderGoods
 
 
 aftersales = Blueprint('api.aftersales', __name__)
@@ -58,6 +60,32 @@ def apply():
         return resjson.print_json(12, ascs.msg)
 
     ascs.create()
-    ascs.commit()
 
     return resjson.print_json(0, u'ok')
+
+
+@aftersales.route('/refunds-amount')
+def refunds_amount():
+    """获取退款金额"""
+    resjson.action_code = 11
+
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
+
+    og_id    = toint(request.args.get('og_id', '0'))
+    quantity = toint(request.args.get('quantity', '0'))
+    if og_id <= 0 or quantity <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    order_goods = OrderGoods.query.get(og_id)
+    if not order_goods:
+        return resjson.print_json(resjson.PARAM_ERROR)
+    
+    order = Order.query.filter(Order.order_id == order_goods.order_id).filter(Order.uid == uid).first()
+    if not order:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    refunds_amount = AfterSalesStaticMethodsService.refunds_amount(order_goods=order_goods, quantity=quantity)
+
+    return resjson.print_json(0, u'ok', {'refunds_amount':refunds_amount})

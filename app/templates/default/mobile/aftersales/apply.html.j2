@@ -11,37 +11,40 @@
     <div class="weui-cell">
       <div class="weui-cell__bd">
         <div class="blackGap mar-bottom">{{_('服务类型')}}</div>
-        <button type="button" class="tag_btn tag_btn-on">{{_('仅退款')}}</button>
-        <button type="button" class="tag_btn">{{_('退货退款')}}</button>
-        <button type="button" class="tag_btn">{{_('仅换货')}}</button>
-        <p class="all_desc mar-top">{{_('仅退款：未收到货(包含未签收)，或卖家协商同意前提下')}}</p>
-        <!-- <p class="all_desc mar-top">{{_('退货退款：已收到货，需要退换已收到的货物')}}</p> -->
-        <!-- <p class="all_desc mar-top">{{_('仅换货：已收到货，货物拍错或是损坏，可跟卖家协商换货')}}</p> -->
+        {% if aftersales_type == 2 %}
+          <button type="button" class="tag_btn tag_btn-on" onclick="change_type(this, 2)" data-value="2">{{_('退货退款')}}</button>
+          <button type="button" class="tag_btn" onclick="change_type(this, 3)" data-value="3">{{_('仅换货')}}</button>
+          <p id="text-2" class="all_desc mar-top type-text">{{_('退货退款：已收到货，需要退换已收到的货物')}}</p>
+          <p id="text-3" class="all_desc mar-top type-text" style="display:none;">{{_('仅换货：已收到货，货物拍错或是损坏，可跟卖家协商换货')}}</p>
+        {% else %}
+          <button type="button" class="tag_btn tag_btn-on" onclick="change_type(this, 3)" data-value="3">{{_('仅换货')}}</button>
+          <p id="text-3" class="all_desc mar-top type-text">{{_('仅换货：已收到货，货物拍错或是损坏，可跟卖家协商换货')}}</p>
+        {% endif %}
       </div>
     </div>
   </div>
   <div class="weui-cells weui-cells_form">
-    {% for goods in goods_data %}
-      <div class="weui-cell">
-        <div class="weui-cell__hd avatar mar-right">
-          <img src="{{ goods.goods_img }}" alt="">
-        </div>
-        <div class="weui-cell__bd">
-          <div class="all_title height25">{{ goods.goods_name }}</div>
-          <div class="all_desc height25">
-            <span>x {{ goods.maximum }}</span>
-          </div>
-        </div>
-        <div class="weui-cell__ft mar-left">
-          <div class="apply-service_num">
-            <i class="num_minus"></i>
-            <input class="num_ipt" type="text" id="wareNum" name="wareNum" value="1" minnum="1">
-            <i class="num_add"></i>
-          </div>
+    {% set goods = goods_data[0] %}
+    <div class="weui-cell">
+      <div class="weui-cell__hd avatar mar-right">
+        <img src="{{ goods.goods_img }}" alt="">
+      </div>
+      <div class="weui-cell__bd">
+        <div class="all_title height25">{{ goods.goods_name }}</div>
+        <div class="all_desc height25">
+          <span>x {{ goods.maximum }}</span>
         </div>
       </div>
-    {% endfor %}
-    <a class="weui-cell weui-cell_access" href="javascript:;">
+      <div class="weui-cell__ft mar-left">
+        <div class="apply-service_num">
+          <i class="num_minus" onclick="minus(this, 1)"></i>
+          <input id="quantity" name="quantity" class="num_ipt" type="text" value="1" minnum="1">
+          <i class="num_add" onclick="add(this, {{ goods.maximum }})"></i>
+        </div>
+      </div>
+      <input id="og_id" name="og_id" type="hidden" value="{{ goods.og_id }}" />
+    </div>
+    <a id="deliver_status_box" class="weui-cell weui-cell_access" href="javascript:;">
       <div class="weui-cell__bd blackGap">
         <p class="blackGap">{{_('货物状态')}}</p>
       </div>
@@ -51,17 +54,17 @@
     </a>
     <div class="weui-cell">
       <div class="weui-cell__bd">
-        <p class="blackGap mar-bottom">{{_('退款说明')}}</p>
+        <p class="blackGap mar-bottom">{{_('申请原因')}}</p>
         <div class="weui-cell" style="background:#f3f4f5;border-radius:5px;">
           <textarea id="content" name="content"  class="review_text" rows="5" placeholder="{{_('请输入退款说明...')}}" style="background:#f3f4f5"></textarea>
         </div>
       </div>
     </div>
-    <div class="weui-cell">
+    <div id="refunds_amount_box" class="weui-cell">
       <div class="weui-cell__bd">
         <p class="blackGap">
           {{_('退款金额：')}}
-          <span class="all_price">￥{{ refunds_amount }}</span>
+          <span id="refunds_amount" class="all_price">￥{{ refunds_amount }}</span>
         </p>
         <p class="all_desc mar-top">{{_('注：退款金额将返回到您原支付账户')}}</p>
       </div>
@@ -92,7 +95,9 @@
   </div>
   <div style="height:75px"></div>
   <div class="footer" style="display:block;height:65px">
-    <a class="weui-cell weui-cell_access" href="javascript:;" style="padding:10px" onclick="submit()">
+    {{ wtf_form.csrf_token }}
+    <input id="aftersales_type" name="aftersales_type" type="hidden" value="{{ aftersales_type }}" />
+    <a class="weui-cell weui-cell_access" href="javascript:void(0);" style="padding:10px" onclick="submit()">
       <button type="button" class="weui-btn weui-btn_red">提交申请</button>
     </a>
   </div>
@@ -101,27 +106,93 @@
 
 {% block script %}
 <script type="text/javascript">
+var csrftoken = $('#csrf_token').val();
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
+function refunds_amount() {
+  var og_id = $("#og_id").val();
+  var quantity = $("#quantity").val();
+
+  $.get("{{ url_for('api.aftersales.refunds_amount') }}", {'og_id':og_id, 'quantity':quantity}, function(json) {
+    if (json.ret == 0) {
+      $("#refunds_amount").text('￥'+json.data.refunds_amount);
+    } else {
+      $.toast(json.msg, "text");
+      return false;
+    }
+  });
+}
+
+function minus(dom, min) {
+  var $input = $(dom).parent().find('#quantity');
+  var number = parseInt($input.val() || "0") - 1;
+  if (number < min) number = min;
+  $input.val(number);
+
+  refunds_amount();
+}
+
+function add(dom, max) {
+  var $input = $(dom).parent().find('#quantity');
+  var number = parseInt($input.val() || "0") + 1;
+  if (number > max) number = max;
+  $input.val(number);
+
+  refunds_amount();
+}
+
+function change_type(dom, type) {
+  $(".tag_btn").removeClass("tag_btn-on");
+  $(dom).addClass("tag_btn-on");
+
+  $(".type-text").hide();
+  $("#text-"+type).show();
+
+  if (type == 1) {
+    $("#deliver_status_box").show();
+  } else {
+    $("#deliver_status_box").hide();
+  }
+
+  if (type == 3) {
+    $("#refunds_amount_box").hide();
+  } else {
+    refunds_amount();
+
+    $("#refunds_amount_box").show();
+  }
+
+  $("#aftersales_type").val($(dom).attr('data-value'));
+}
+
+function submit() {
+  var og_id = $("#og_id").val();
+  var quantity = $("#quantity").val();
+  var aftersales_type = $("#aftersales_type").val();
+  var deliver_status = $("#deliver_status").attr('data-values');
+  var content = $("#content").val();
+
+  if (aftersales_type == 2 || aftersales_type == 3) {
+    deliver_status = 2;
+  }
+
+  var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':aftersales_type, 'deliver_status':deliver_status, 'content':content};
+  $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
+    if (json.ret == 0) {
+      window.location.href = "{{ url_for('mobile.aftersales.root') }}";
+    } else {
+      $.toast(json.msg, "text");
+      return false;
+    }
+  });
+}
 
 $(document).ready(function () {
   $("#deliver_status").select({
     title: "货物状态",
     items: [{'title':'未收到货', 'value':1}, {'title':'已收到货', 'value':2}]
-  });
-
-  //计数器
-  var MAX = {{ maximum }};
-  var MIN = 1;
-  $('.num_minus').click(function (e) {
-    var $input = $(e.currentTarget).parent().find('#wareNum');
-    var number = parseInt($input.val() || "0") - 1;
-    if (number < MIN) number = MIN;
-    $input.val(number);
-  });
-  $('.num_add').click(function (e) {
-    var $input = $(e.currentTarget).parent().find('#wareNum');
-    var number = parseInt($input.val() || "0") + 1;
-    if (number > MAX) number = MAX;
-    $input.val(number);
   });
 });
 </script> 

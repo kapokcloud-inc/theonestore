@@ -181,13 +181,15 @@ def shipping_detail(shipping_id):
 
     shipping = Shipping.query.get_or_404(shipping_id)
 
-    wtf_form                 = ShippingForm()
-    wtf_form.is_enable.data  = shipping.is_enable
-    wtf_form.is_default.data = shipping.is_default
-    wtf_form.is_free.data    = 1 if shipping.free_limit_amount == 0 else 0
-    log_info(wtf_form.is_free.data)
+    # wtf_form                 = ShippingForm()
+    # wtf_form.is_enable.data  = shipping.is_enable
+    # wtf_form.is_default.data = shipping.is_default
+    # wtf_form.is_free.data    = 1 if shipping.free_limit_amount == 0 else 0
+    # log_info(wtf_form.is_free.data)
+    form = ShippingForm()
+    form.fill_form(obj=shipping)
 
-    return render_template('admin/config/shipping_detail.html.j2', wtf_form=wtf_form, shipping=shipping)
+    return render_template('admin/config/shipping_detail.html.j2', form=form, shipping=shipping)
 
 
 @config.route('/shipping/save', methods=['POST'])
@@ -220,5 +222,5 @@ def shipping_save():
     wtf_form.shipping_name.data = shipping.shipping_name
     shipping                    = wtf_form.data
 
-    return render_template('admin/config/shipping_detail.html.j2', wtf_form=wtf_form, shipping=shipping)
+    return render_template('admin/config/shipping_detail.html.j2', form=wtf_form, shipping=shipping)
 

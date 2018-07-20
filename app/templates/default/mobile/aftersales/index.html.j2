@@ -8,58 +8,62 @@
 
 {% block body %}
 <div class="user_wrap">
-  <!-- 没有退款售后列表时显示 -->
-  <!-- <div class="not-product">
-    <div class="not-product_img">
-      <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
-    </div>
-    <div class="not-product_text">{{_('您暂无相关订单')}}</div>
-    <div class="reg_btn">
-      <a href="{{ url_for('mobile.index.root') }}">
-        <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
-      </a>
-    </div>
-  </div> -->
-  <div id="paging-data-list">
-    <div id="" class="weui-cells weui-cells_form">
-      <div class="weui-cell">
-        <div class="weui-cell__bd all_add">2018.07.04</div>
-        <div class="weui-cell__ft">
-          <span class="trading_state">退款失败</span>
-        </div>
+  {% if not aftersales %}
+    <div class="not-product">
+      <div class="not-product_img">
+        <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
       </div>
-      <div class="weui-cell">
-        <div class="weui-cell__hd avatar mar-right">
-          <img src="" alt="">
-        </div>
-        <div class="weui-cell__bd">
-          <div class="all_title height25">测试商品99</div>
-          <div class="all_desc height25">商品特点</div>
-        </div>
-        <div class="weui-cell__ft mar-left">
-          <p class="all_price">￥100.0</p>
-          <p>x 1</p>
-        </div>
-      </div>
-      <div class="weui-cell">
-        <div class="weui-cell__bd blackGap">退货退款，退款关闭</div>
-      </div>
-      <div class="weui-cell">
-        <div class="weui-cell__bd"></div>
-        <div class="weui-cell__ft">
-          <a href="{{ url_for('mobile.aftersales.detail', afs_id=123) }}">
-            <button type="button" class="order_btn order-state_btn">{{_('查看详情')}}</button>
-          </a>
-        </div>
+      <div class="not-product_text">{{_('您暂无相关订单')}}</div>
+      <div class="reg_btn">
+        <a href="{{ url_for('mobile.index.root') }}">
+          <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
+        </a>
       </div>
     </div>
-  </div>
+  {% else %}
+    <div id="paging-data-list">
+      {% for aftersale in aftersales %}
+        <div id="" class="weui-cells weui-cells_form">
+          <div class="weui-cell">
+            <div class="weui-cell__bd all_add">{{ aftersale.add_time|timestamp2str }}</div>
+            <div class="weui-cell__ft">
+              <span class="trading_state">{{ aftersales_status_text.get(aftersale.aftersales_id) }}</span>
+            </div>
+          </div>
+          {% set goods_data = aftersale.goods_data|json_loads %}
+          {% for goods in goods_data %}
+            <div class="weui-cell">
+              <div class="weui-cell__hd avatar mar-right">
+                <img src="{{ goods.goods_img }}" alt="">
+              </div>
+              <div class="weui-cell__bd">
+                <div class="all_title height25">{{ goods.goods_name }}</div>
+                <div class="all_desc height25">{{ goods.goods_desc }}</div>
+              </div>
+              <div class="weui-cell__ft mar-left">
+                <p>x {{ goods.goods_quantity }}</p>
+              </div>
+            </div>
+          {% endfor %}
+          <div class="weui-cell">
+            <div class="weui-cell__bd blackGap">{{ aftersale.latest_log }}</div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__bd"></div>
+            <div class="weui-cell__ft">
+              <a href="{{ url_for('mobile.aftersales.detail', aftersales_id=aftersale.aftersales_id) }}">
+                <button type="button" class="order_btn order-state_btn">{{_('查看详情')}}</button>
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
 
 {% block script %} 
-
 {{ libs.paging_js(paging_url, 0) }}
-
 <script type="text/javascript"></script> 
 {% endblock %}

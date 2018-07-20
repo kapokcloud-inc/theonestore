@@ -9,88 +9,22 @@
 <div class="user_wrap">
   <ul class="weui-cells weui-cells_form">
     <div class="logistics_state">{{_('流水跟踪')}}</div>
-    <li class="track_shipflow cur">
-      <div class="logistics_step">
-        <i class="type_dot"></i>
-      </div>
-      <div class="flex">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p class="balckGap">系统自动关闭服务</p>
-            <p class="all_time">2018-06-13 08:52:57</p>
+    {% for log in logs %}
+      {% set cur = 'cur' if loop.last else '' %}
+      <li class="track_shipflow {{ cur }}">
+        <div class="logistics_step">
+          <i class="type_dot"></i>
+        </div>
+        <div class="flex">
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+              <p class="balckGap">{{ log.content }}</p>
+              <p class="all_time">{{ log.add_time|timestamp2str }}</p>
+            </div>
           </div>
         </div>
-      </div>
-    </li>
-    <li class="track_shipflow">
-      <div class="logistics_step">
-        <i class="type_dot"></i>
-      </div>
-      <div class="flex">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p class="balckGap">服务专员已处理退款，退款到帐可能需要1-3个工作日到帐，请注意查收帐号。</p>
-            <p class="all_time">2018-06-12 20:08:48</p>
-          </div>
-        </div>
-      </div>
-    </li>
-    <li class="track_shipflow">
-      <div class="logistics_step">
-        <i class="type_dot"></i>
-      </div>
-      <div class="flex">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p class="balckGap">退货/换货商品已抵达，需要1-3个工作日处理，请耐心等待。</p>
-            <p class="all_time">2018-06-12 20:08:48</p>
-          </div>
-        </div>
-      </div>
-    </li>
-    <li class="track_shipflow">
-      <div class="logistics_step">
-        <i class="type_dot"></i>
-      </div>
-      <div class="flex">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p class="balckGap">顺丰快递，快递单号:xxxxxx，我们收到退货/换货商品，需要1-3个工作日处理，请耐心等待</p>
-            <p class="all_time">2018-06-12 20:08:48</p>
-          </div>
-        </div>
-      </div>
-    </li>
-    <li class="track_shipflow">
-      <div class="logistics_step">
-        <i class="type_dot"></i>
-      </div>
-      <div class="flex">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p class="balckGap">
-              您的服务单号:xxxxx审核通过。
-              </br>
-              地址：广东省珠海市斗门区白蕉镇时代倾城 收货人：一店售后服务部 电话：0751-12345678
-            </p>
-            <p class="all_time">2018-06-10 11:16:56</p>
-          </div>
-        </div>
-      </div>
-    </li>
-    <li class="track_shipflow last_child">
-      <div class="logistics_step">
-        <i class="type_dot"></i>
-      </div>
-      <div class="flex">
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <p class="balckGap">申请售后服务，等待商家审核</p>
-            <p class="all_time">2018-06-10 11:16:56</p>
-          </div>
-        </div>
-      </div>
-    </li>
+      </li>
+    {% endfor %}
   </ul>
 </div>
 {% endblock %}

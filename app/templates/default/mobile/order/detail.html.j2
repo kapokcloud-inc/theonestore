@@ -55,10 +55,11 @@
           <div class="all_title height25">{{ item.goods_name }}</div>
           <div class="all_desc height25">
             <span class="mar-right all_price">￥{{ item.goods_price }}</span>
-            <span>x {{ item.quantity }}</span>
+            <span>x {{ item.goods_quantity }}</span>
           </div>
         </div>
-        {% if order.pay_status == 2 and item.goods_quantity > item.service_goods_quantity %}
+        {% set limit_time = order.shipping_time|before_after_timestamp({'days':15}) %}
+        {% if order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 and limit_time >= current_time and item.goods_quantity > item.aftersales_goods_quantity %}
           <div class="weui-cell__ft applySale" data-value="{{ item.og_id }}">
             <button type="button" class="order_btn">{{_('申请售后')}}</button>
           </div>
@@ -111,6 +112,13 @@
     <div class="weui-cell">
       <div class="weui-cell__bd"></div>
       <div class="weui-cell__ft">
+        {% set limit_time = order.paid_time|before_after_timestamp({'days':7}) %}
+        {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 and limit_time >= current_time %}
+          <a href="{{ url_for('mobile.aftersales.apply', order_id=order.order_id) }}">
+            <button type="button" class="order_btn order-state_btn">{{_('申请退款')}}</button>
+          </a>
+        {% endif %}
+
         {% for _code in code %}
           {% if _code == 1 %}
             <a href="{{ url_for('mobile.cart.checkout', order_id=order.order_id) }}">
