@@ -39,6 +39,7 @@ from app.services.api.order import (
 
 from app.forms.api.comment import CommentOrderGoodsForm
 
+from app.models.aftersales import Aftersales
 from app.models.comment import Comment
 from app.models.shipping import Shipping
 from app.models.order import (
@@ -120,8 +121,10 @@ def detail(order_id):
         if _express_msg == 'ok':
             express_data = _express_data[0] if len(_express_data) > 0 else {}
 
+    aftersale = Aftersales.query.filter(Aftersales.order_id == order_id).filter(Aftersales.status.in_([1,2])).first()
+
     data = {'order':order, 'items':items, 'order_address':order_address, 'text':text, 'code':code, 'express_data':express_data,
-            'current_time':current_timestamp()}
+            'aftersale':aftersale, 'current_time':current_timestamp()}
     return render_template('mobile/order/detail.html.j2', **data)
 
 

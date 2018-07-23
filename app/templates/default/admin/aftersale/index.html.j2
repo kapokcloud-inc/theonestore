@@ -1,0 +1,121 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    <div class="row bg-title">
+      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+        {% set tab_status = request.args.get('tab_status', '0') %}
+
+        {% set active_0 = 'active' if tab_status == '0' else '' %}
+        <li role="presentation" class="{{ active_0 }}">
+          <a href="{{ url_for('admin.aftersale.index', tab_status=0) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('全部')}}</span>
+          </a>
+        </li>
+        {% set active_1 = 'active' if tab_status == '1' else '' %}
+        <li role="presentation" class="{{ active_1 }}">
+          <a href="{{ url_for('admin.aftersale.index', tab_status=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('仅退款')}}</span>
+          </a>
+        </li>
+        {% set active_2 = 'active' if tab_status == '2' else '' %}
+        <li role="presentation" class="{{ active_2 }}">
+          <a href="{{ url_for('admin.aftersale.index', tab_status=2) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-email"></i>
+            </span>
+            <span class="hidden-xs">{{_('退货退款')}}</span>
+          </a>
+        </li>
+        {% set active_3 = 'active' if tab_status == '3' else '' %}
+        <li role="presentation" class="{{ active_3 }}">
+          <a href="{{ url_for('admin.aftersale.index', tab_status=3) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-email"></i>
+            </span>
+            <span class="hidden-xs">{{_('换货')}}</span>
+          </a>
+        </li>
+        {% set active_4 = 'active' if tab_status == '4' else '' %}
+        <li role="presentation" class="{{ active_4 }}">
+          <a href="{{ url_for('admin.aftersale.index', tab_status=4) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-email"></i>
+            </span>
+            <span class="hidden-xs">{{_('待收货')}}</span>
+          </a>
+        </li>
+        {% set active_5 = 'active' if tab_status == '5' else '' %}
+        <li role="presentation" class="{{ active_5 }}">
+          <a href="{{ url_for('admin.aftersale.index', tab_status=5) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-email"></i>
+            </span>
+            <span class="hidden-xs">{{_('待发货')}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          <div class="table-responsive">
+            <table class="table product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('售后号')}}</th>
+                  <th>{{_('类型')}}</th>
+                  <th>{{_('退款金额')}}</th>
+                  <th>{{_('申请原因')}}</th>
+                  <th>{{_('图片')}}</th>
+                  <th>{{_('状态')}}</th>
+                  <th>{{_('申请时间')}}</th>
+                  <th>{{_('操作')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for aftersale in aftersalses %}
+                    <tr>
+                      <td>{{ aftersale.aftersales_sn }}</td>
+                      <td>{{ const.AFTERSALES_TYPE.get(aftersale.aftersales_type) }}</td>
+                      <td>{{ aftersale.refunds_amount }}</td>
+                      <td>{{ aftersale.content }}</td>
+                      <td>
+                        {% set imgs = aftersale.img_data|json_loads %}
+                        {% for img in imgs %}
+                          <img src="{{ img }}" width="50" />
+                        {% endfor %}
+                      </td>
+                      <td>{{ texts.get(aftersale.aftersales_id) }}</td>
+                      <td>{{ aftersale.add_time|timestamp2str }}</td>
+                      <td>
+                        <a href="{{url_for('admin.aftersale.detail', aftersales_id=aftersale.aftersales_id)}}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">
+                          <i class="ti-pencil-alt"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                {{ libs.pagination_html(pagination, 9) }}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript"></script>
+{% endblock %}
+
