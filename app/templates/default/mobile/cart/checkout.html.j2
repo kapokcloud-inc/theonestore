@@ -250,7 +250,7 @@
                 <span id="funds" name="" class="funds mar-left" data-value="{{ funds }}">可用余额：￥{{ funds }}</span>
               </div>
               <div class="weui-cell__ft">
-                <input id="funds_pay" class="weui-check" type="radio" name="funds_pay" value="funds_pay" onclick="choose_pay(this)">
+                <input id="funds_pay" name="funds_pay" class="weui-check" type="radio" onclick="choose_pay(this, 'funds_pay')">
                 <span class="weui-icon-checked"></span>
               </div>
             </label>
@@ -260,7 +260,7 @@
               </div>
               <div class="weui-cell__bd blackGap">微信支付</div>
               <div class="weui-cell__ft">
-                <input id="weixin_pay" class="weui-check" type="radio" name="weixin_pay" value="weixin_pay" checked="" onclick="choose_pay(this)">
+                <input id="weixin_pay" name="weixin_pay" class="weui-check" type="radio" checked="" onclick="choose_pay(this, 'weixin_pay')">
                 <span class="weui-icon-checked"></span>
               </div>
             </label>
@@ -592,26 +592,74 @@ function funds_pay(order_id) {
   });
 }
 
-
-//微信支付 ??
+//微信支付
 function weixin_pay(order_id) {
-  return true;
+  var openid = '';
+
+  //检查
+  if ( !order_id ) {
+    $.toast("{{_('创建订单失败，请刷新页面重试。')}}", "text");
+    return false;
+  }
+
+  //获取openid
+  $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'order_id':order_id, 'redirect_type':1}, function(res) {
+    if (res.ret != 0) {
+      $.toast(res.msg, "text");
+      return false;
+    }
+
+    openid = res.data.openid;
+  });
+
+  //检查
+  if ( !openid ) {
+    $.toast("{{_('获取openid失败，请刷新页面重试。')}}", "text");
+    return false;
+  }
+
+  var order_id_list = '[' + order_id + ']';
+  $.get("{{ url_for('api.pay.weixinjspay_req') }}", {'order_id_list':order_id_list}, function(res) {
+    if (res.ret != 0) {
+      $.toast(res.msg, "text");
+      return false;
+    }
+
+    //调起支付
+    WeixinJSBridge.invoke(
+        'getBrandWCPayRequest', res.data.info, function(res){
+            //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。     
+            if (res.err_msg == "get_brand_wcpay_request:ok" ) {
+                window.location.href = "/mobile/pay/success/"+order_id;
+                return true;
+            }      
+        }
+    );
+  });
+
+  return false;
 }
 
 //选择支付
-function choose_pay(dom) {
+function choose_pay(dom, pay_type) {
   var $dom = $(dom);
+  var order_id = parseInt($("#order_id").val());
+
+  if (order_id <= 0) {
+    $.toast("{{_('未创建订单')}}", "text");
+    return false;
+  }
 
   if (!($dom.is(':disabled'))) {
-    var order_id = parseInt($("#order_id").val());
-    var pay_type = $dom.attr('value');
-
     if (pay_type == 'funds_pay') {
       $("#weixin_pay").prop('checked', false);
       funds_pay(order_id);
     } else if (pay_type == 'weixin_pay') {
       $("#funds_pay").prop('checked', false);
       weixin_pay(order_id);
+    } else {
+      $.toast("{{_('错误的支付方式')}}", "text");
+      return false;
     }
 
     $payList.removeClass('show');

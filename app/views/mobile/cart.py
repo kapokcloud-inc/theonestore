@@ -107,6 +107,7 @@ def checkout():
 
     args         = request.args
     order_id     = args.get('order_id', None)
+    is_weixin    = toint(args.get('is_weixin', '0'))
     current_time = current_timestamp()
 
     # 钱包
@@ -131,7 +132,7 @@ def checkout():
         shipping_title = _(u'%s  ￥%s(满￥%s免运费)' % (order.shipping_name, order.shipping_amount, order.free_limit_amount))
 
         data = {'order':order, 'order_address':order_address, 'coupon':coupon,
-                'shipping_title':shipping_title, 'funds':funds.funds}
+                'shipping_title':shipping_title, 'funds':funds.funds, 'is_weixin':is_weixin}
         return render_template('mobile/cart/pay.html.j2', **data)
 
     # 立即购买或结算

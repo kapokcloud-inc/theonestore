@@ -30,7 +30,7 @@ from app.helpers.date_time import (
     before_after_timestamp
 )
 
-from app.services.api.funds import FundsService
+from app.services.admin.refunds import RefundsService
 
 from app.models.order import (
     Order,
@@ -94,7 +94,7 @@ class AfterSaleCheckService(object):
             if not self.order_address:
                 self.msg = _(u'订单地址不存在')
                 return False
-        
+
         if self.aftersale.aftersales_type == 1:
             self.order_goods_list = OrderGoods.query.filter(OrderGoods.order_id == self.aftersale.order_id).all()
         else:
@@ -253,49 +253,11 @@ class AfterSaleRefundsService(object):
     def __init__(self, aftersales_id):
         self.msg           = u''
         self.aftersales_id = aftersales_id
+        self.pay_methods   = ['funds', 'weixin_jsapi']
         self.aftersale     = None
         self.order         = None
-        self.fs            = None
+        self.rs            = None
         self.current_time  = current_timestamp()
-
-    def _funds(self):
-        """余额退款"""
-
-        self.fs.update()
-        self.fs.commit()
-
-        if self.aftersale.aftersales_type == 1:
-            data    = {'status':3, 'check_status':2, 'refunds_method':'funds', 'refunds_sn':self.fs.funds_detail.fs_id,
-                        'refunds_status':2, 'update_time':self.current_time}
-            content = _(u'您的服务单号：%s审核通过，退款金额已经到钱包，请注意查收。' % self.aftersale.aftersales_sn)
-        else:
-            data    = {'status':3, 'refunds_method':'funds', 'refunds_sn':self.fs.funds_detail.fd_id, 'refunds_status':2,
-                        'update_time':self.current_time}
-            content = _(u'服务专员已处理退款，退款金额已经到钱包，请注意查收。')
-
-        model_update(self.aftersale, data)
-        AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
-
-        return True
-
-    def _weixin(self):
-        """微信退款"""
-
-        # 处理退款 ??
-
-        if self.aftersale.aftersales_type == 1:
-            data    = {'status':3, 'check_status':2, 'refunds_method':'funds', 'refunds_sn':self.fs.funds_detail.fs_id,
-                        'refunds_status':2, 'update_time':self.current_time}
-            content = _(u'您的服务单号:%s审核通过，退款到帐可能需要1-3个工作日到帐，请注意查收帐号。' % self.aftersale.aftersales_sn)
-        else:
-            data    = {'status':3, 'refunds_method':'funds', 'refunds_sn':self.fs.funds_detail.fd_id, 'refunds_status':2,
-                        'update_time':self.current_time}
-            content = _(u'服务专员已处理退款，退款金额已经到钱包，请注意查收。')
-
-        model_update(self.aftersale, data)
-        AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
-
-        return True
 
     def check(self):
         """检查"""
@@ -333,35 +295,42 @@ class AfterSaleRefundsService(object):
             return False
 
         # 检查
-        if self.order.pay_method not in ('funds', 'weixin'):
+        if self.order.pay_method not in self.pay_methods:
             self.msg = _(u'订单支付方式错误')
             return False
 
         # 检查
-        if self.order.pay_method == 'funds':
-            aftersales_id  = self.aftersale.aftersales_id
-            aftersales_sn  = self.aftersale.aftersales_sn
-            uid            = self.aftersale.uid
-            refunds_amount = self.aftersale.refunds_amount
-            remark_user    = _(u'售后退款')
-            remark_sys     = _(u'售后退款，售后号:%s 退款金额:%s' % (aftersales_sn, refunds_amount))
-            self.fs        = FundsService(uid, refunds_amount, 3, 3, aftersales_id, remark_user, remark_sys, self.current_time)
-            if not self.fs.check():
-                self.msg = self.fs.msg
-                return False
+        self.rs = RefundsService(self.aftersale.order_id, self.aftersale.refunds_amount, self.current_time)
+        if not self.rs.check():
+            self.msg = self.rs.msg
+            return False
 
         return True
 
     def do(self):
         """退款"""
 
-        # 余额退款
-        if self.order.pay_method == 'funds':
-            self._funds()
+        self.rs.do()
+        if self.rs.refunds.refunds_status == 1:
+            if self.aftersale.aftersales_type == 1:
+                data = {'status':3, 'check_status':2, 'refunds_method':self.rs.refunds.refunds_method,
+                        'refunds_sn':self.rs.refunds.refunds_sn, 'refunds_status':2, 'update_time':self.current_time}
 
-        # 微信退款
-        if self.order.pay_method == 'weixin':
-            self._weixin()
+                # 余额退款
+                if self.order.pay_method == 'funds':
+                    content = _(u'您的服务单号：%s审核通过，退款金额已经到钱包，请注意查收。' % self.aftersale.aftersales_sn)
+
+                # 微信退款
+                if self.order.pay_method == 'weixin_jsapi':
+                    content = _(u'您的服务单号:%s审核通过，退款到帐可能需要1-3个工作日到帐，请注意查收帐号。' % self.aftersale.aftersales_sn)
+            else:
+                data    = {'status':3, 'refunds_method':self.rs.refunds.refunds_method,
+                            'refunds_sn':self.rs.refunds.refunds_sn, 'refunds_status':2, 'update_time':self.current_time}
+                content = _(u'服务专员已处理退款，退款金额已经到钱包，请注意查收。')
+
+            data['refunds_sn'] = self.rs.refunds.refunds_sn
+            model_update(self.aftersale, data)
+            AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
 
         return True
 

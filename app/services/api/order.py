@@ -196,7 +196,7 @@ class OrderCreateService(object):
         content = _(u'您的订单%s已创建，请尽快完成支付。' % order_sn)
         mcs = MessageCreateService(1, self.order.uid, -1, content, ttype=1, tid=order_id, current_time=self.current_time)
         if not mcs.check():
-            log_error('[ErrorServiceApiOrderCreateServiceCreate][MessageCreateError]  order_id:%s msg:%s' %\
+            log_error('[ErrorServiceApiOrderOrderCreateServiceCreate][MessageCreateError]  order_id:%s msg:%s' %\
                 (order_id, mcs.msg))
         else:
             mcs.do()
@@ -440,7 +440,7 @@ class RechargeOrderCreateService(object):
         content = _(u'您的订单%s已创建，请尽快完成支付。' % self.order_sn)
         mcs = MessageCreateService(1, order.uid, -1, content, ttype=1, tid=self.order_id, current_time=self.current_time)
         if not mcs.check():
-            log_error('[ErrorServiceApiRechargeOrderCreateServiceCreate][MessageCreateError]  order_id:%s msg:%s' %\
+            log_error('[ErrorServiceApiOrderRechargeOrderCreateServiceCreate][MessageCreateError]  order_id:%s msg:%s' %\
                 (self.order_id, mcs.msg))
         else:
             mcs.do()
@@ -692,7 +692,7 @@ class OrderCancelService(object):
         mcs = MessageCreateService(1, self.order.uid, -1, content, ttype=1, tid=self.order.order_id,
                                     current_time=self.current_time)
         if not mcs.check():
-            log_error('[ErrorServiceApiOrderCancelServiceCancel][MessageCreateError]  order_id:%s msg:%s' %\
+            log_error('[ErrorServiceApiOrderOrderCancelServiceCancel][MessageCreateError]  order_id:%s msg:%s' %\
                 (self.order.order_id, mcs.msg))
         else:
             mcs.do()
@@ -745,7 +745,7 @@ class OrderDeliverService(object):
         mcs = MessageCreateService(1, self.order.uid, -1, content, ttype=1, tid=self.order.order_id,
                                     current_time=self.current_time)
         if not mcs.check():
-            log_error('[ErrorServiceApiOrderDeliverServiceDeliver][MessageCreateError]  order_id:%s msg:%s' %\
+            log_error('[ErrorServiceApiOrderOrderDeliverServiceDeliver][MessageCreateError]  order_id:%s msg:%s' %\
                 (self.order.order_id, mcs.msg))
         else:
             mcs.do()
