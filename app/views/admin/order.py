@@ -38,6 +38,7 @@ from app.services.response import ResponseJson
 from app.services.message import MessageCreateService
 from app.services.admin.order import OrderStaticMethodsService
 
+from app.models.user import User
 from app.models.order import (
     Order,
     OrderAddress,
@@ -139,6 +140,7 @@ def detail(order_id):
     g.page_title = _(u'订单详情')
 
     order                    = Order.query.get_or_404(order_id)
+    user                     = User.query.get(order.uid)
     order_goods              = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
     order_address            = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
     status_text, action_code = OrderStaticMethodsService.order_status_text_and_action_code(order)
@@ -150,6 +152,7 @@ def detail(order_id):
 
     return render_template('admin/order/detail.html.j2',
         order=order,
+        user=user,
         order_goods=order_goods,
         order_address=order_address,
         status_text=status_text,

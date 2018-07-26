@@ -31,7 +31,8 @@ from app.database import db
 from app.helpers import (
     log_error,
     log_info,
-    toint
+    toint,
+    url_push_query
 )
 from app.helpers.date_time import current_timestamp
 
@@ -41,9 +42,9 @@ from app.models.sys import SysSetting
 class JsapiOpenidService(object):
     """jsapi获取openidService"""
 
-    def __init__(self, redirect_uri):
+    def __init__(self, redirect_url):
         self.msg           = u''
-        self.redirect_uri  = redirect_uri
+        self.redirect_url  = redirect_url
         self.current_time  = current_timestamp()
         self.code_url      = ''
         self.appid         = ''
@@ -56,7 +57,8 @@ class JsapiOpenidService(object):
         """创建获取code的uri"""
 
         weixin_authorize_url = 'https://open.weixin.qq.com/connect/oauth2/authorize'
-        params               = {'redirect_uri':self.redirect_uri.encode('utf8')}
+        redirect_uri         = url_push_query(request.url, 'redirect_url=%s' % self.redirect_url)
+        params               = {'redirect_uri':redirect_uri.encode('utf8')}
         redirect_uri_param   = urlencode(params)
         self.code_url        = u'%s?appid=%s&%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect' % (
                                     weixin_authorize_url, self.appid, redirect_uri_param)
@@ -119,6 +121,9 @@ class JsapiOpenidService(object):
 
             session['jsapi_weixin_openid']   = self.openid
             session['jsapi_weixin_opentime'] = self.current_time
+
+            redirect_url = request.args.get('redirect_url')
+            return redirect(redirect_url)
 
         return True
 

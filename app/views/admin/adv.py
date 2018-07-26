@@ -7,8 +7,6 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
-import json
-
 from flask import (
     request,
     session,
@@ -22,7 +20,7 @@ from flask_sqlalchemy import Pagination
 
 from app.database import db
 from app.helpers import (
-    render_template, 
+    render_template,
     log_info,
     toint
 )
@@ -44,7 +42,6 @@ def index(page=1, page_size=20):
 
     args       = request.args
     tab_status = toint(args.get('tab_status', '0'))
-    ac_dict    = {1:_(u'首页Banner')}
 
     q = Adv.query
 
@@ -54,7 +51,7 @@ def index(page=1, page_size=20):
     advs       = q.order_by(Adv.adv_id.desc()).offset((page-1)*page_size).limit(page_size).all()
     pagination = Pagination(None, page, page_size, q.count(), None)
 
-    return render_template('admin/adv/index.html.j2', pagination=pagination, advs=advs, ac_dict=ac_dict)
+    return render_template('admin/adv/index.html.j2', pagination=pagination, advs=advs)
 
 
 @adv.route('/create')
@@ -122,4 +119,3 @@ def remove(adv_id):
     db.session.commit()
 
     return redirect(request.headers['Referer'])
-

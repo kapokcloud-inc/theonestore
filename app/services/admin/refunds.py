@@ -78,7 +78,7 @@ class RefundsService(object):
         # 检查
         if self.third_type == 1:
             remark_user = u'退款'
-            remark_sys  = u'退款，订单编号:%s 退款金额:%s' % (self.order.order_sn, self.refunds_amount)
+            remark_sys  = u'退款，订单编号:%s，退款金额:%s' % (self.order.order_sn, self.refunds_amount)
             self.fs     = FundsService(self.order.uid, self.refunds_amount, 3, 2, self.order_id,
                                         remark_user, remark_sys, self.current_time)
             if not self.fs.check():

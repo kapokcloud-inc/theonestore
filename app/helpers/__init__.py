@@ -17,6 +17,7 @@ import uuid
 import urllib
 import types
 import random
+import urlparse
 
 from flask import (
     Flask,
@@ -179,6 +180,17 @@ def urlencode(params):
             _params[k] = v.encode('utf8')
 
     return urllib.urlencode(_params)
+
+
+def url_push_query(url, key_value_str):
+    """url增加query参数"""
+
+    url_tuple = urlparse.urlparse(url)
+    query     = key_value_str if url_tuple.query == '' else url_tuple.query+'&'+key_value_str
+    new_tuple = (url_tuple.scheme, url_tuple.netloc, url_tuple.path, url_tuple.params, query, url_tuple.fragment)
+    url       = urlparse.urlunparse(new_tuple)
+
+    return url
 
 
 def model_to_dict(model):

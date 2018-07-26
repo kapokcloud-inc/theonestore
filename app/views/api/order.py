@@ -38,7 +38,8 @@ from app.services.api.order import (
     OrderCreateService,
     OrderUpdateService,
     OrderCancelService,
-    OrderDeliverService
+    OrderDeliverService,
+    RechargeOrderCreateService
 )
 
 from app.forms.api.comment import CommentOrderGoodsForm
@@ -81,7 +82,7 @@ def create():
 
     ocs.create()
 
-    return resjson.print_json(0, u'ok', {'order':ocs.order})
+    return resjson.print_json(0, u'ok', {'order_id':ocs.order.order_id})
 
 
 @order.route('/update', methods=['POST'])
@@ -237,3 +238,24 @@ def save_comment():
         mcs.do()
 
     return resjson.print_json(0, u'ok')
+
+
+@order.route('/recharge', methods=['POST'])
+def recharge():
+    """创建充值订单"""
+    resjson.action_code = 16
+
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
+
+    form            = request.form
+    recharge_amount = form.get('recharge_amount', '0.00').strip()
+
+    rocs = RechargeOrderCreateService(uid, recharge_amount)
+    if not rocs.check():
+        return resjson.print_json(11, rocs.msg)
+
+    rocs.create()
+
+    return resjson.print_json(0, u'ok', {'order_id':rocs.order.order_id})

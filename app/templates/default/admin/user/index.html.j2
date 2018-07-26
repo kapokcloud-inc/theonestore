@@ -14,15 +14,16 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':g.page_title, 'href':""}] %}
+  {% set breadcrumbs = [{'title':_('用户'), 'href':""}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
         <div class="white-box">
-          {% set 
+          {% set
             form_fields = [
-              {'label':'批次ID', 'name':'cb_id'}
+              {'label':'昵称', 'name':'nickname'},
+              {'label':'注册日期', 'name':'add_time_daterange', 'type':'daterange'}
             ]
           %}
           {{ libs.build_search_form(form_fields) }}
@@ -36,37 +37,26 @@
             <table class="table table-hover product-overview footable" id="myTable">
               <thead>
                 <tr>
-                  <th>{{_('优惠券ID')}}</th>
-                  <th>{{_('批次ID')}}</th>
-                  <th>{{_('优惠券名称')}}</th>
-                  <th>{{_('激活时间')}}</th>
-                  <th>{{_('过期时间')}}</th>
-                  <th>{{_('优惠券金额')}}</th>
-                  <th>{{_('满减额度')}}</th>
-                  <th>{{_('是否有效')}}</th>
-                  <th>{{_('是否已使用')}}</th>
-                  <th>{{_('领取时间')}}</th>
+                  <th>{{_('用户ID')}}</th>
+                  <th>{{_('头像')}}</th>
+                  <th>{{_('昵称')}}</th>
+                  <th>{{_('性别')}}</th>
+                  <th>{{_('城市')}}</th>
+                  <th>{{_('注册时间')}}</th>
                   <th>{{_('操作')}}</th>
                 </tr>
               </thead>
                 <tbody>
-                  {% for coupon in coupons %}
+                  {% for user in users %}
                     <tr>
-                      <td>{{ coupon.coupon_id }}</td>
-                      <td>{{ coupon.cb_id }}</td>
-                      <td>{{ coupon.coupon_name }}</td>
-                      {% set begin_time = _('无限制') if coupon.begin_time == 0 else coupon.begin_time|timestamp2str %}
-                      <td>{{ begin_time }}</td>
-                      {% set end_time = _('无限制') if coupon.end_time == 0 else coupon.end_time|timestamp2str %}
-                      <td>{{ end_time }}</td>
-                      <td>{{ coupon.coupon_amount }}</td>
-                      <td>{{ coupon.limit_amount }}</td>
-                      <td>{{ const.YES_OR_NO.get(coupon.is_valid, '错误') }}</td>
-                      {% set is_used = '是' if coupon.order_id else '否' %}
-                      <td>{{ is_used }}</td>
-                      <td>{{ coupon.add_time|timestamp2str }}</td>
+                      <td>{{ user.uid }}</td>
+                      <td><img src="{{ user.avatar }}" width="50" class="img-circle" /></td>
+                      <td>{{ user.nickname }}</td>
+                      <td>{{ const.GENDER.get(user.gender, _('保密')) }}</td>
+                      <td>{{ user.country }} {{ user.province }} {{ user.city }}</td>
+                      <td>{{ user.add_time|timestamp2str }}</td>
                       <td>
-                        <a href="javascript:void(0);" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
+                        <a href="{{url_for('admin.user.detail', uid=user.uid)}}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">
                           <i class="ti-pencil-alt"></i>
                         </a>
                       </td>

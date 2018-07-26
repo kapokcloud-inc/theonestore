@@ -529,8 +529,8 @@ function submit() {
     var params = {'carts_id':carts_id, 'ua_id':ua_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id}
     $.post("{{ url_for('api.order.create') }}", params, function(json) {
       if (json.ret == 0) {
-        var order = json.data.order;
-        $("#order_id").val(order.order_id);
+        var order_id = json.data.order_id;
+        $("#order_id").val(order_id);
       } else {
         $.toast(json.msg, "text");
         return false;
@@ -603,7 +603,8 @@ function weixin_pay(order_id) {
   }
 
   //获取openid
-  $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'order_id':order_id, 'redirect_type':1}, function(res) {
+  var redirect_url = '{{ request.base_url }}' + '?order_id=' + order_id + '&weixin=1';
+  $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'redirect_url':redirect_url}, function(res) {
     if (res.ret != 0) {
       $.toast(res.msg, "text");
       return false;
@@ -628,11 +629,11 @@ function weixin_pay(order_id) {
     //调起支付
     WeixinJSBridge.invoke(
         'getBrandWCPayRequest', res.data.info, function(res){
-            //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。     
+            //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
             if (res.err_msg == "get_brand_wcpay_request:ok" ) {
                 window.location.href = "/mobile/pay/success/"+order_id;
                 return true;
-            }      
+            }
         }
     );
   });

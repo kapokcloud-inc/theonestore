@@ -1,0 +1,80 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('用户'), 'href':url_for('admin.user.index')}, {'title':g.page_title, 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4 col-xs-12">
+        <div class="white-box">
+          <div class="user-bg">
+            <div class="overlay-box">
+              <div class="user-content">
+                <a href="javascript:void(0)"><img src="{{ user.avatar }}" class="thumb-lg img-circle" alt="img"></a>
+                <h4 class="text-white">{{ user.nickname }}</h4>
+                <h5 class="text-white">{{ user.country }} {{ user.province }} {{ user.city }}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="user-btm-box">
+            <div class="col-md-6 col-sm-6 text-center">
+              <p class="text-purple">{{_('性别')}}</p>
+              <h3>{{ const.GENDER.get(user.gender, _('保密')) }}</h3>
+            </div>
+            <div class="col-md-6 col-sm-6 text-center">
+              <p class="text-purple">{{_('钱包')}}</p>
+              <h3>{{ funds.funds }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8 col-xs-12">
+          <div class="white-box">
+              <ul class="nav nav-tabs tabs customtab">
+                  <li class="active tab">
+                      <a href="#funds_details" data-toggle="tab"> <span class="visible-xs"><i class="fa fa-home"></i></span> <span class="hidden-xs">{{_('钱包流水')}}</span> </a>
+                  </li>
+              </ul>
+              <div class="tab-content">
+                  <div class="tab-pane active" id="funds_details">
+                      <div class="table-responsive">
+                        <table class="table table-hover product-overview footable" id="myTable">
+                          <thead>
+                            <tr>
+                              <th width="90">{{_('上次余额')}}</th>
+                              <th width="40">{{_('变更')}}</th>
+                              <th width="90">{{_('当前余额')}}</th>
+                              <th>{{_('说明')}}</th>
+                              <th width="148">{{_('变更时间')}}</th>
+                            </tr>
+                          </thead>
+                            <tbody>
+                              {% for funds_detail in funds_details %}
+                                <tr>
+                                  <td>{{ funds_detail.funds_prev }}</td>
+                                  <td>{{ funds_detail.funds_change }}</td>
+                                  <td>{{ funds_detail.funds }}</td>
+                                  <td>{{ funds_detail.remark_sys }}</td>
+                                  <td>{{ funds_detail.add_time|timestamp2str }}</td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                            {{ libs.pagination_html(pagination, 9) }}
+                        </table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript"></script>
+{% endblock %}
+

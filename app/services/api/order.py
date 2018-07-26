@@ -367,42 +367,23 @@ class RechargeOrderCreateService(object):
     """创建充值订单Service"""
 
     def __init__(self, uid, recharge_amount):
-        self.msg                   = ''
-        self.uid                   = uid                    # 购买人
-        self.recharge_amount       = recharge_amount        # 充值金额
-        self.current_time          = current_timestamp()    # 当前时间
-
-        self.tran_id               = 0                      # 交易ID
-        self.order_id              = 0                      # 订单ID
-        self.order_sn              = ''                     # 订单编号
-        self.tran                  = None                   # 交易实例
-        self.order_goods_amount    = Decimal('0.00')        # 订单商品总金额
-        self.order_amount          = Decimal('0.00')        # 订单金额: order_goods_amount + shipping_amount
-        self.order_discount_amount = Decimal('0.00')        # 订单优惠金额: 使用优惠券等优惠金额
-        self.order_discount_desc   = u''                    # 订单优惠说明
-        self.order_pay_amount      = Decimal('0.00')        # 订单应付金额: order_amount - discount_amount
-        self.tran_pay_amount       = Decimal('0.00')        # 交易应付金额: order_amount01 + order_amount02 + ...
-
-    def _check_create_index(self):
-        """检查 - 创建索引"""
-
-        # 创建交易索引
-        tran_index   = model_create(OrderTranIndex, {}, commit=True)
-        self.tran_id = tran_index.tran_id
-
-        # 创建订单索引
-        order_index = model_create(OrderIndex, {}, commit=True)
-        self.order_id = order_index.order_id
-
-        # 创建订单编号
-        self.order_sn = OrderStaticMethodsService.create_order_sn(self.current_time)
-
-        return True
+        self.msg             = ''
+        self.uid             = uid                    # 购买人
+        self.recharge_amount = recharge_amount        # 充值金额
+        self.current_time    = current_timestamp()    # 当前时间
+        self.order           = None                   # 订单实例
 
     def check(self):
         """检查"""
 
-        if not self._check_create_index():
+        try:
+            self.recharge_amount = Decimal(self.recharge_amount)
+        except Exception as e:
+            self.msg = _(u'充值金额无效')
+            return False
+
+        if self.recharge_amount <= 0:
+            self.msg = _(u'充值金额不能小于或等于0')
             return False
 
         return True
@@ -410,40 +391,28 @@ class RechargeOrderCreateService(object):
     def create(self):
         """创建订单"""
 
-        order_id_list = '%s' % self.order_id
+        # 创建订单索引
+        order_index = model_create(OrderIndex, {}, commit=True)
+        order_id    = order_index.order_id
+
+        # 创建订单编号
+        order_sn = OrderStaticMethodsService.create_order_sn(self.current_time)
 
         # 订单商品总金额
-        self.order_goods_amount = self.recharge_amount
+        goods_amount = self.recharge_amount
 
         # 更新订单金额
-        self.order_amount = self.order_goods_amount
+        order_amount = goods_amount
 
         # 更新订单应付金额
-        self.order_pay_amount = self.order_amount + self.order_discount_amount
-
-        # 更新交易应付金额
-        self.tran_pay_amount = self.order_pay_amount
+        pay_amount = order_amount
 
         # 创建订单
-        data = {'order_id':self.order_id, 'order_sn':self.order_sn, 'tran_id':self.tran_id, 'uid':self.uid, 'order_type':2,
-                'order_status':1, 'order_desc':'', 'goods_amount':self.order_goods_amount, 'order_amount':self.order_amount,
-                'discount_amount':self.order_discount_amount, 'discount_desc':self.order_discount_desc,
-                'pay_amount':self.order_pay_amount, 'pay_type':1, 'pay_status':1, 'add_time':self.current_time}
-        order = model_create(Order, data)
-
-        # 创建交易
-        data = {'tran_id':self.tran_id, 'uid':self.uid, 'pay_amount':self.tran_pay_amount, 'pay_status':1,
-                'order_id_list':order_id_list, 'add_time':self.current_time}
-        tran = model_create(OrderTran, data)
-
-        # 站内消息
-        content = _(u'您的订单%s已创建，请尽快完成支付。' % self.order_sn)
-        mcs = MessageCreateService(1, order.uid, -1, content, ttype=1, tid=self.order_id, current_time=self.current_time)
-        if not mcs.check():
-            log_error('[ErrorServiceApiOrderRechargeOrderCreateServiceCreate][MessageCreateError]  order_id:%s msg:%s' %\
-                (self.order_id, mcs.msg))
-        else:
-            mcs.do()
+        data = {'order_id':order_id, 'order_sn':order_sn, 'uid':self.uid, 'order_type':2, 'order_status':1,
+                'goods_amount':goods_amount, 'order_amount':order_amount,
+                'pay_amount':pay_amount, 'pay_type':1, 'pay_status':1,
+                'add_time':self.current_time, 'update_time':self.current_time}
+        self.order = model_create(Order, data)
 
         db.session.commit()
 
@@ -458,6 +427,7 @@ class PayService(object):
         self.uid            = uid
         self.order_id_list  = order_id_list
         self.order_id_json  = '[]'
+        self.order_sn_list  = []
         self.pay_order_list = []
         self.tran           = None
         self.current_time   = current_timestamp()
@@ -466,7 +436,7 @@ class PayService(object):
         """检查支付订单列表"""
 
         for order in self.pay_order_list:
-            continue
+            self.order_sn_list.append(order.order_sn)
 
         return True
 
@@ -484,7 +454,7 @@ class PayService(object):
         self.order_id_json = json.dumps(self.order_id_list)
 
         # 支付订单列表
-        q = db.session.query(Order.order_id, Order.pay_amount, Order.order_type, Order.uid).\
+        q = db.session.query(Order.order_id, Order.order_sn, Order.pay_amount, Order.order_type, Order.uid).\
                     filter(Order.uid == self.uid).\
                     filter(Order.pay_status == 1).\
                     filter(Order.order_id.in_(self.order_id_list))

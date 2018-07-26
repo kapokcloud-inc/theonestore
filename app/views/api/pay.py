@@ -79,7 +79,7 @@ def fundspay_req():
 
     # 更新资金 - 使用资金支付 - 检查
     remark_user = _(u'支付订单')
-    remark_sys  = _(u'支付订单，交易ID:%s 支付金额:%s' % (tran_id, pay_amount))
+    remark_sys  = _(u'支付订单，订单编号:%s，支付金额:%s' % (','.join(ps.order_sn_list), pay_amount))
     fs = FundsService(uid, pay_amount, 2, 1, tran_id, remark_user, remark_sys, paid_time)
     if not fs.check():
         return resjson.print_json(12, fs.msg)
@@ -99,16 +99,9 @@ def weixinjspay_openid():
     """获取微信支付openid"""
     resjson.action_code = 11
 
-    order_id      = toint(request.args.get('order_id'))
-    redirect_type = toint(request.args.get('redirect_type'))    # 跳转类型: 1.checkout order; 2.funds order;
+    redirect_url = request.args.get('redirect_url', '').strip()
 
-    if order_id <= 0 or redirect_type not in [1,2]:
-        return resjson.print_json(resjson.PARAM_ERROR)
-
-    redirect_uri_dict = {1:url_for('mobile.cart.checkout', order_id=order_id, is_weixin=1), 2:''}    # 2 ??
-    redirect_uri      = redirect_uri_dict.get(redirect_type)
-
-    jos = JsapiOpenidService(redirect_uri)
+    jos = JsapiOpenidService(redirect_url)
     if not jos.check():
         return resjson.print_json(10, jos.msg)
 

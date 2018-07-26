@@ -14,16 +14,20 @@
             <div class="panel-heading">{{_('基本信息')}}</div>
             <div class="panel-body">
               <div class="row">
-                {{ libs.form_control_static(_('订单ID'), order.order_id) }}
                 {{ libs.form_control_static(_('订单编号'), order.order_sn) }}
-                <!-- ?? -->
-                {{ libs.form_control_static(_('下单用户'), 'Steave') }}
-                {{ libs.form_control_static(_('应付金额'), order.pay_amount) }}
                 {{ libs.form_control_static(_('订单状态'), status_text) }}
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label">下单用户：</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                      <a class="form-control-static" href="{{ url_for('admin.user.detail', uid=user.uid) }}" target="_blank">{{ user.nickname }}</a>
+                    </div>
+                  </div>
+                </div>
                 {{ libs.form_control_static(_('下单时间'), order.add_time|timestamp2str) }}
                 {% if order.paid_time %}
-                  {{ libs.form_control_static(_('支付方式'), order.pay_method) }}
-                  {{ libs.form_control_static(_('支付流水号'), order.pay_tran_id) }}
+                  {{ libs.form_control_static(_('支付方式'), const.PAY_METHOD.get(order.pay_method)) }}
+                  {{ libs.form_control_static(_('支付流水'), order.pay_tran_id) }}
                   {{ libs.form_control_static(_('支付时间'), order.paid_time|timestamp2str) }}
                 {% endif %}
                 <!--{{ libs.form_control_static(_('支付状态'), const.PAY_STATUS.get(order.pay_status, _('错误状态'))) }}-->
@@ -58,7 +62,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">{{_('商品信息')}}</div>
             <div class="panel-body form-horizontal">
-              <table class="table product-overview footable" id="myTable">
+              <table class="table table-hover product-overview footable" id="myTable">
                 <thead>
                   <tr>
                     <th>{{_('商品名称')}}</th>
@@ -109,7 +113,7 @@
             <div class="panel-heading">{{_('物流信息')}}</div>
             <div class="panel-body form-horizontal">
               {% if express_msg == 'ok' %}
-                <table class="table product-overview footable" id="myTable">
+                <table class="table table-hover product-overview footable" id="myTable">
                   <thead>
                     <tr>
                       <th>{{_('时间')}}</th>
