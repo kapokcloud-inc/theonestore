@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/static/default/pc/css/common.css">
+ 
+  {% block head %} {% endblock %}
+</head>
+
+<body>
+  <!-- 顶部 -->
+  <header class="header clearfix">
+    <!-- logo search -->
+    <div class="head-logo" style="border-bottom:2px solid #f33155">
+      <div class="head-inner clearfix bg-white">
+        <div class="one-logo">
+          <a href="{{ url_for('pc.index.root') }}">
+            <img class="logoImg" src="http://b.appsimg.com/2017/08/31/540/1504164551874.png" alt="">
+          </a>
+        </div>
+        {% block nav %} {% endblock %}
+        <ul class="top-nav-tool" style="margin-top:33px;">
+          <li class="top-nav_user">
+            <div class="user-on">135****229</div>
+            <div class="user-wrap">
+              <div class="one-cell">
+                <div class="one-cell_hd avatar">
+                  <img class="ava" src="http://u.vpimg1.com/upload/myi/2017/06/01/84/avatar_89373029_1496285287409_38x38_90.jpg" alt="">
+                </div>
+                <div class="one-cell_bd username">
+                  <a href="">135****229</a>
+                </div>
+                <div class="one-cell_ft signout" onclick="signout()">{{_('[退出]')}}<</div>
+              </div>
+              <div class="user-about">
+                <span>
+                  <a class="" href="">{{_('我的订单')}}</a>
+                </span>
+                <span>
+                  <a class="" href="">{{_('优惠券')}}</a>
+                </span>
+                <span>
+                  <a class="" href="">{{_('收藏')}}</a>
+                </span>
+                <span>
+                  <a class="" href="">{{_('消息')}}</a>
+                  <i class="user-badge">1</i>
+                </span>
+              </div>
+            </div>
+          </li>
+          <li class="top-nav_item">
+            <a href="" class="mouseon">{{_('我的订单')}}</a>
+          </li>
+          <li class="top-nav_item">
+            <a href="" class="mouseon">{{_('优惠券')}}</a>
+          </li>
+          <li class="top-nav_item">
+            <a href="" class="mouseon">{{_('收藏')}}</a>
+          </li>
+          <li class="top-nav_item">
+            <a href="" class="mouseon">{{_('消息')}}</a>
+            <span class="news-badge">1</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- logo search end -->
+  </header>
+  
+  
+  {% block body %} {% endblock %}
+  
+  {% block script %} {% endblock %}
+</body>
+</html>

@@ -13,4 +13,5 @@ PC_ROUTES = (
     (pc.index,          ''),
     (pc.category,       '/pc/category'),
     (pc.item,           '/pc/item'),
+    (pc.cart,           '/pc/cart'),
 )

@@ -58,7 +58,8 @@ def root():
 
     aftersales_status_text = {}
     for aftersale in aftersales:
-        aftersales_status_text[aftersale.aftersales_id] = AfterSalesStaticMethodsService.aftersale_status_text(aftersale)
+        status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersale)
+        aftersales_status_text[aftersale.aftersales_id] = status_text
 
     data = {'aftersales':aftersales, 'paging_url':paging_url, 'aftersales_status_text':aftersales_status_text}
     return render_template('mobile/aftersales/index.html.j2', **data)
@@ -79,7 +80,8 @@ def paging():
 
     aftersales_status_text = {}
     for aftersale in aftersales:
-        aftersales_status_text[aftersale.aftersales_id] = AfterSalesStaticMethodsService.aftersale_status_text(aftersale)
+        status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersale)
+        aftersales_status_text[aftersale.aftersales_id] = status_text
 
     data = {'aftersales':aftersales, 'aftersales_status_text':aftersales_status_text}
     return render_template('mobile/aftersales/paging.html.j2', **data)
@@ -102,9 +104,10 @@ def detail(aftersales_id):
             filter(AftersalesLogs.aftersales_id == aftersales.aftersales_id).\
             order_by(AftersalesLogs.al_id.desc()).first()
 
-    status_text = AfterSalesStaticMethodsService.aftersale_status_text(aftersales)
+    status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersales)
 
-    return render_template('mobile/aftersales/detail.html.j2', aftersales=aftersales, log=log, status_text=status_text)
+    data = {'aftersales':aftersales, 'log':log, 'status_text':status_text, 'action_code':action_code}
+    return render_template('mobile/aftersales/detail.html.j2', **data)
 
 
 @aftersales.route('/track/<int:aftersales_id>')

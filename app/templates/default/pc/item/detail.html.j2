@@ -198,7 +198,7 @@
           <p class="head-text">{{_('评价晒单')}}</p>
         </div>
       </div>
-      <!-- 商品评论 -->
+      <!-- 商品有评论时显示 -->
       <div class="goods-detail_comment">
         <div class="head-inner">
           <div class="goods-comment_groom bg-white">
@@ -214,7 +214,7 @@
             <a href="" class="rate-type">{{_('差评 ')}}</a>
             <a href="" class="rate-type">{{_('有图 ')}}</a>
           </div>
-          <!-- 有评论时显示 -->
+          <!-- 评论内容 -->
           <ul class="goods-comment_cnt bg-white">
             <li class="comment-cnt_item">
               <div class="cnt-item_hd">
@@ -315,7 +315,7 @@
               </div>
             </li>
           </ul>
-          <!-- 有评论时显示 end -->
+          <!-- 评论内容 end -->
 
           <!-- 分页 每20条一页 -->
           <div class="comment-page_list">
@@ -331,21 +331,25 @@
             <a href="" class="page-num">{{_('下一页')}}</a>
           </div>
           <!-- 分页 end -->
-
         </div>
       </div>
-      <!-- 商品评论 end -->
+      <!-- 商品有评论时显示 end -->
+
+      <!-- 商品没有评论时显示 -->
+      <!-- <div class="goods-null_comment">
+        <div class="head-inner">
+          <div class="null-comment_cnt">
+            <p>暂时还没有评价</p>
+            <p>期待你分享对产品的印象</p>
+          </div>
+        </div>
+      </div> -->
+      <!-- 商品没有评论时显示 end -->
     </div>
   </div>
 </div>
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript">
-//$('#small-pic_item').on("click", "img",function () {
-  //index = $(this).index();
-  //var srcimg = this.getAttribute("src");
-  //$('#bigpic').attr("src", srcimg);
-//});
-</script>
+<script type="text/javascript"></script>
 {% endblock%}

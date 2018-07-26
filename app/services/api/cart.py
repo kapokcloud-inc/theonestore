@@ -160,8 +160,8 @@ class CheckoutService(object):
             self.msg = _(u'快递不存在')
             return False
 
-        # 快递金额
-        if self.shipping.free_limit_amount > self.items_amount:
+        # 快递金额: 不包邮或未满包邮金额
+        if self.shipping.free_limit_amount == 0 or self.shipping.free_limit_amount > self.items_amount:
             self.shipping_amount = Decimal(self.shipping.shipping_amount)
 
         if self.coupon_id:

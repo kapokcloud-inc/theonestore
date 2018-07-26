@@ -34,9 +34,9 @@ from app.helpers.date_time import (
     date_range
 )
 
+from app.services.response import ResponseJson
 from app.services.message import MessageCreateService
 from app.services.admin.order import OrderStaticMethodsService
-from app.services.response import ResponseJson
 
 from app.models.order import (
     Order,
@@ -49,7 +49,7 @@ from app.models.order import (
 order = Blueprint('admin.order', __name__)
 
 resjson = ResponseJson()
-resjson.module_code = 11
+resjson.module_code = 14
 
 @order.route('/index')
 @order.route('/index/<int:page>')
@@ -68,8 +68,9 @@ def index(page=1, page_size=20):
     paid_time_daterange     = args.get('paid_time_daterange', '').strip()
     shipping_time_daterange = args.get('shipping_time_daterange', '').strip()
 
-    q = db.session.query(Order.order_id, Order.order_sn, Order.goods_data, Order.goods_quantity,
-                        Order.paid_time, Order.shipping_sn, Order.shipping_time, Order.order_status, Order.add_time,
+    q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.pay_status, Order.paid_time,
+                        Order.shipping_sn, Order.shipping_status, Order.shipping_time, Order.deliver_status,
+                        Order.goods_quantity, Order.goods_data, Order.add_time,
                         OrderAddress.name, OrderAddress.mobile).\
             filter(Order.order_id == OrderAddress.order_id)
 
