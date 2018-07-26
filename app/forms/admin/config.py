@@ -71,21 +71,21 @@ class StorageQiniuForm(Form):
 
 
 class StorageAliossForm(Form):
-    access_key_id = StringField(_name='access_key_id', 
-                    label=_('AccessKey ID'),
+    access_key_id = StringField(label=_('AccessKey ID'),
                     description=_(u'<a target="_blank" href="https://help.aliyun.com/knowledge_detail/38738.html">AccessKey ID和AccessKey Secret 请见阿里云文档</a>'), 
                     validators=[Required(message=_(u'请填写ACCESSKEY'))])
 
-    access_key_secret = StringField(_name='access_key_secret', 
-                    label=_('AccessKey Secret'),
+    access_key_secret = StringField(label=_('AccessKey Secret'),
                     validators=[Required(message=_(u'请填写AccessKey Secret'))])
 
-    bucket_name = StringField(_name='bucket_name', 
-                    label=_(u'存储空间'), 
-                    description=_(u'<a target="_blank" href="https://help.aliyun.com/document_detail/31883.html">存储空间 请见阿里云OSS文档</a>'), 
+    bucket_name = StringField(label=_(u'存储空间'), 
+                    description=_(u'<a target="_blank" href="https://help.aliyun.com/document_detail/31883.html">存储空间 请见阿里云OSS文档</a>'),
                     validators=[Required(message=_(u'请填写存储空间'))])
 
-    cname = StringField(_name='cname', 
-                    label=_(u'CDN加速域名'), 
+    endpoint = StringField(label=_(u'EndPoint（地域节点）'), 
+                    description=_(u'请登录你的阿里云OSS查看地域节点EndPoint'),
+                    validators=[Required(message=_(u'请填写EndPoint（地域节点）'))])
+
+    cname = StringField(label=_(u'CDN加速域名'), 
                     description=_(u'<p>不需要填写https或者http开头，只需要填写域名</p><p>例如：static.theonestore.cn</p>'),
                     validators=[Required(message=_(u'请填写CDN加速域名'))])

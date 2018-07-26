@@ -115,3 +115,6 @@ run/
 
 # .DS_Store
 .DS_Store
+
+uploads/
+.qiniu_pythonsdk_hostscache.json

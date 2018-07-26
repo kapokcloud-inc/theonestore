@@ -200,7 +200,7 @@
       {% set class_ = 'form-control' %}
       {% if field.type in ('TextField', 'TextAreaField', 'PasswordField', 
             'DecimalField', 'SelectField', 'IntegerField', 
-            'StringField') %}
+            'StringField', 'FileField') %}
         {% if field.flags.required %}
           {{ field(class_=class_, required='', **kwargs) }}
         {% else %}

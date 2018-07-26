@@ -14,6 +14,7 @@ import logging
 import logging.config
 import string
 import uuid
+import random
 
 from flask import (
     Flask,
@@ -24,8 +25,9 @@ from flask import (
 from flask_uploads import (
     UploadSet, 
     configure_uploads as flask_configure_uploads, 
-    DEFAULTS,
-    patch_request_class
+    patch_request_class,
+    DOCUMENTS,
+    IMAGES
 )
 from sqlalchemy import func
 
@@ -64,12 +66,15 @@ def configure_uploads(app):
     UPLOADED_FILES_DEST = app.config.get('UPLOADED_FILES_DEST', 'uploads')
     if UPLOADED_FILES_DEST[0] != '/':
         UPLOADED_FILES_DEST = os.path.join(os.getcwd(), 'uploads')
-
-    print('UPLOADED_FILES_DEST:%s' % UPLOADED_FILES_DEST)
+    print (UPLOADED_FILES_DEST)
     app.config['UPLOADED_FILES_DEST'] = UPLOADED_FILES_DEST
+    app.config['UPLOADED_DOCUMENTS_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'documents')
+    app.config['UPLOADED_IMAGES_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'images')
 
-    # default = UploadSet('default', DEFAULTS)
-    # flask_configure_uploads(app, default)
+    documents = UploadSet('documents', DOCUMENTS)
+    images = UploadSet('images', IMAGES)
+    flask_configure_uploads(app, (documents, images))
+    
     # 最大上传文件大小64M，MAX_CONTENT_LENGTH=64*1024*1024
     patch_request_class(app)
 
@@ -244,3 +249,19 @@ def get_count(q):
     count   = q.session.execute(count_q).scalar()
 
     return count
+
+
+def randomstr(random_len = 6, random_type = 0):
+    """
+    获取随机字符串
+    @param random_len: 随机字符串长度
+    @param random_type: 随机类型 0:大小写数字混合 1:数字 2:小写字母 3:大写字母
+    @return string
+    """
+    random_string_array = ['0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        '0123456789', 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
+    if random_type < 0 or random_type > len(random_string_array):
+        random_type = 0
+
+    random_string = random_string_array[random_type]
+    return ''.join(random.sample(random_string, random_len))
