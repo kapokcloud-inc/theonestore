@@ -8,16 +8,16 @@
   {{ libs.breadcrumbs(breadcrumbs, button) }}
   <div class="container-fluid">
     <div class="row el-element-overlay m-b-40">
-      <!-- /.usercard -->
-      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+    {% for au in admin_users %}
+      <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
         <div class="white-box">
           <div class="el-card-item">
             <div class="el-card-avatar el-overlay-1">
-              <img src="/static/default/admin/plugins/images/users/1.jpg" />
+              <img src="{{ au.avatar }}-square.large" />
               <div class="el-overlay">
                 <ul class="el-info">
                   <li>
-                    <a class="bg-info" href="#">
+                    <a class="bg-info" href="{{ url_for('admin.auth.edit', admin_uid=au.admin_uid) }}">
                       <i class="ti-marker-alt"></i>
                     </a>
                   </li>
@@ -30,100 +30,13 @@
               </div>
             </div>
             <div class="el-card-content">
-              <h3 class="box-title">Genelia Deshmukh</h3>
-              <small>Managing Director</small>
+              <h3 class="box-title">{{ au.username }}</h3>
+              <small>{{ au.mobile }}</small>
               <br/> </div>
           </div>
         </div>
       </div>
-      <!-- /.usercard-->
-      <!-- /.usercard -->
-      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-        <div class="white-box">
-          <div class="el-card-item">
-            <div class="el-card-avatar el-overlay-1">
-              <img src="/static/default/admin/plugins/images/users/2.jpg" />
-              <div class="el-overlay">
-                <ul class="el-info">
-                  <li>
-                    <a class="bg-info" href="#">
-                      <i class="ti-marker-alt"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a class="bg-danger" href="#">
-                      <i class="ti-trash"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="el-card-content">
-              <h3 class="box-title">Genelia Deshmukh</h3>
-              <small>Managing Director</small>
-              <br/> </div>
-          </div>
-        </div>
-      </div>
-      <!-- /.usercard-->
-      <!-- /.usercard -->
-      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-        <div class="white-box">
-          <div class="el-card-item">
-            <div class="el-card-avatar el-overlay-1">
-              <img src="/static/default/admin/plugins/images/users/3.jpg" />
-              <div class="el-overlay">
-                <ul class="el-info">
-                  <li>
-                    <a class="bg-info" href="#">
-                      <i class="ti-marker-alt"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a class="bg-danger" href="#">
-                      <i class="ti-trash"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="el-card-content">
-              <h3 class="box-title">Genelia Deshmukh</h3>
-              <small>Managing Director</small>
-              <br/> </div>
-          </div>
-        </div>
-      </div>
-      <!-- /.usercard-->
-      <!-- /.usercard -->
-      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-        <div class="white-box">
-          <div class="el-card-item">
-            <div class="el-card-avatar el-overlay-1">
-              <img src="/static/default/admin/plugins/images/users/4.jpg" />
-              <div class="el-overlay">
-                <ul class="el-info">
-                  <li>
-                    <a class="bg-info" href="#">
-                      <i class="ti-marker-alt"></i>
-                    </a>
-                  </li>
-                  <li>
-                    <a class="bg-danger" href="#">
-                      <i class="ti-trash"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="el-card-content">
-              <h3 class="box-title">Genelia Deshmukh</h3>
-              <small>Managing Director</small>
-              <br/> </div>
-          </div>
-        </div>
-      </div>
-      <!-- /.usercard-->
+    {% endfor %}
     </div>
     <!-- /.row -->
   </div>

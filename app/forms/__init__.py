@@ -11,7 +11,6 @@
 from flask_wtf import FlaskForm
 from wtforms.compat import iteritems
 from wtforms.fields import Field
-from app.helpers import log_info
 
 class Form(FlaskForm):
     """
