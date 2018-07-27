@@ -1,0 +1,156 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block head %}
+<!-- Popup CSS -->
+<link href="/static/default/admin/plugins/bower_components/Magnific-Popup-master/dist/magnific-popup.css" rel="stylesheet">
+<!-- Color picker plugins css -->
+<link href="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/css/asColorPicker.css" rel="stylesheet">
+<!-- Date picker plugins css -->
+<link href="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+<!-- Daterange picker plugins css -->
+<link href="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+<link href="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+<!--alerts CSS -->
+<link href="/static/default/admin/plugins/bower_components/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('评论'), 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="white-box">
+          {% set
+            form_fields = [
+              {'label':'商品ID', 'name':'goods_id'},
+              {'label':'评论日期', 'name':'add_time_daterange', 'type':'daterange'}
+            ]
+          %}
+          {{ libs.build_search_form(form_fields) }}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          <div class="table-responsive">
+            <table class="table table-hover product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('ID')}}</th>
+                  <th>{{_('用户')}}</th>
+                  <th>{{_('商品')}}</th>
+                  <th>{{_('评分')}}</th>
+                  <th>{{_('评价')}}</th>
+                  <th>{{_('图片')}}</th>
+                  <th>{{_('注册时间')}}</th>
+                  <th>{{_('操作')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for comment in comments %}
+                    <tr id="comment-{{ comment.comment_id }}">
+                      <td>{{ comment.comment_id }}</td>
+                      <td>
+                        <a href="{{url_for('admin.user.detail', uid=comment.uid)}}" target="_blank">
+                          <img src="{{ comment.avatar }}" width="50" class="img-circle" />
+                        </a>
+                      </td>
+                      <td>
+                        <a href="{{url_for('admin.item.detail', goods_id=comment.goods_id)}}" target="_blank">
+                          <img src="{{ comment.goods_img }}" width="50" />
+                        </a>
+                      </td>
+                      <td>{{ comment.rating }}</td>
+                      <td>{{ comment.content }}</td>
+                      <td>
+                        {% set img_data = comment.img_data|json_loads %}
+                        {% if img_data %}
+                          <!--<div class="zoom-gallery">-->
+                            {% for img in img_data %}
+                              <a href="{{ img }}" title="" class="image-popup-no-margins">
+                                <img src="{{ img }}" width="50" />
+                              </a>
+                            {% endfor %}
+                          <!--</div>-->
+                        {% endif %}
+                      </td>
+                      <td>{{ comment.add_time|timestamp2str }}</td>
+                      <td>
+                        <a href="javascript:void(0);" class="text-inverse" data-toggle="tooltip" title="{{_('删除')}}" onclick="remove({{ comment.comment_id }})">
+                          <i class="ti-trash"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                {{ libs.pagination_html(pagination, 9) }}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<!-- Magnific popup JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup.min.js"></script>
+<script src="/static/default/admin/plugins/bower_components/Magnific-Popup-master/dist/jquery.magnific-popup-init.js"></script>
+<!-- Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/moment/moment.js"></script>
+<!-- Clock Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>
+<!-- Color Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asColor.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asGradient.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js"></script>
+<!-- Date Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js?v=35"></script>
+<!-- Sweet-Alert  -->
+<script src="/static/default/admin/plugins/bower_components/sweetalert/sweetalert.min.js"></script>
+<script type="text/javascript">
+function remove(comment_id) {
+  swal({
+      title: "{{_('确认删除')}}",
+      text: "{{_('确认删除此条评论？')}}",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "{{_('删除')}}",
+      cancelButtonText: "{{_('取消')}}",
+      closeOnConfirm: false
+  }, function(){
+      $.get("{{ url_for('admin.comment.remove') }}", {'comment_id':comment_id}, function(json) {
+        if (json.ret != 0) {
+          swal("{{_('删除失败')}}", json.msg, "error");
+          return false;
+        }
+
+        $("#comment-"+comment_id).remove();
+        swal("{{_('删除成功')}}", "", "success");
+      });
+  });
+}
+
+$(document).ready(function(){
+  // Daterange picker
+  $('.input-daterange-datepicker').daterangepicker({
+    format: 'YYYY-MM-DD',
+    buttonClasses: ['btn', 'btn-sm'],
+    applyClass: 'btn-success',
+    cancelClass: 'btn-info',
+    clearClass: 'btn-inverse'
+  });
+});
+</script>
+{% endblock %}
+

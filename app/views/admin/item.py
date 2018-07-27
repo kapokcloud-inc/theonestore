@@ -27,7 +27,8 @@ from app.database import db
 from app.helpers import (
     render_template, 
     log_info,
-    toint
+    toint,
+    model_update
 )
 from app.helpers.date_time import current_timestamp
 
@@ -49,7 +50,7 @@ from app.models.item import (
 item = Blueprint('admin.item', __name__)
 
 resjson = ResponseJson()
-resjson.module_code = 10
+resjson.module_code = 13
 
 @item.route('/index')
 @item.route('/index/<int:page>')
@@ -161,14 +162,26 @@ def save():
     return render_template('admin/item/detail.html.j2', wtf_form=wtf_form, item=item)
 
 
-@item.route('/remove/<int:goods_id>')
-def remove(goods_id):
+@item.route('/remove')
+def remove():
     """删除商品"""
-    item = Goods.query.get_or_404(goods_id)
-    item.is_delete = 1
-    db.session.commit()
+    resjson.action_code = 10
 
-    return redirect(request.headers['Referer'])
+    goods_id = toint(request.args.get('goods_id', '0'))
+
+    if goods_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    item = Goods.query.get(goods_id)
+    if not item:
+        return resjson.print_json(10, _(u'商品不存在'))
+
+    if item.is_delete == 1:
+        return resjson.print_json(0, u'ok')
+
+    model_update(item, {'is_delete':1}, commit=True)
+
+    return resjson.print_json(0, u'ok')
 
 
 @item.route('/h5/<int:goods_id>')
@@ -225,7 +238,7 @@ def galleries_save():
 @item.route('/galleries/remove')
 def galleries_remove():
     """删除商品相册"""
-    resjson.action_code = 10
+    resjson.action_code = 11
 
     id      = toint(request.args.get('id'))
     gallery = GoodsGalleries.query.filter(GoodsGalleries.id == id).first()

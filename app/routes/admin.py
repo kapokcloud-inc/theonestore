@@ -19,5 +19,6 @@ ADMIN_ROUTES = (
     (admin.coupon,      '/admin/coupon'),
     (admin.adv,         '/admin/adv'),
     (admin.aftersale,   '/admin/aftersale'),
-    (admin.user,        '/admin/user')
+    (admin.user,        '/admin/user'),
+    (admin.comment,     '/admin/comment')
 )

@@ -22,16 +22,22 @@ from app.database import db
 from app.helpers import (
     render_template,
     log_info,
-    toint
+    toint,
+    model_delete
 )
 from app.helpers.date_time import current_timestamp
 
 from app.forms.admin.adv import AdvForm
 
+from app.services.response import ResponseJson
+
 from app.models.adv import Adv
 
 
 adv = Blueprint('admin.adv', __name__)
+
+resjson = ResponseJson()
+resjson.module_code = 16
 
 @adv.route('/index')
 @adv.route('/index/<int:page>')
@@ -111,11 +117,20 @@ def save():
     return render_template('admin/adv/detail.html.j2', wtf_form=wtf_form, adv=adv)
 
 
-@adv.route('/remove/<int:adv_id>')
-def remove(adv_id):
+@adv.route('/remove')
+def remove():
     """删除广告"""
-    adv = Adv.query.get_or_404(adv_id)
-    db.session.delete(adv)
-    db.session.commit()
+    resjson.action_code = 10
 
-    return redirect(request.headers['Referer'])
+    adv_id = toint(request.args.get('adv_id', '0'))
+
+    if adv_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    adv = Adv.query.get(adv_id)
+    if not adv:
+        return resjson.print_json(10, _(u'广告不存在'))
+
+    model_delete(adv, commit=True)
+
+    return resjson.print_json(0, u'ok')
