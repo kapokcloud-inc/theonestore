@@ -18,4 +18,3 @@ from .adv import adv
 from .aftersale import aftersale
 from .user import user
 from .comment import comment
-from .upload import upload

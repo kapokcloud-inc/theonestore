@@ -13,7 +13,6 @@ import optparse
 from decimal import Decimal
 from hashlib import md5
 from xml.etree import ElementTree
-from xml2json import xml2json
 try:
     from urllib.parse import urlencode
 except ImportError as identifier:
@@ -35,8 +34,8 @@ from app.helpers import (
     url_push_query
 )
 from app.helpers.date_time import current_timestamp
-
 from app.models.sys import SysSetting
+from app.ext.xml2json import xml2json
 
 
 class JsapiOpenidService(object):
