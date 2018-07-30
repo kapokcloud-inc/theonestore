@@ -17,7 +17,26 @@
     </div>
     <div class="head-inner">
       <ul class="all-list clearfix pad-top40">
-        <li class="list-item">
+        {% for item in items %}
+          <li class="list-item">
+            <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">
+              <div class="item-product">
+                <img src="{{ item.goods_img }}" alt="">
+              </div>
+              <div class="item-detail">
+              <p class="all-title">{{ item.goods_name }}</p>
+              <p class="all-desc">{{ item.goods_desc }}</p>
+                <div class="all-price mar-top">
+                  <span>￥{{ item.goods_price }}</span>
+                  {% if item.market_price > 0 %}
+                    <span class="price-del">￥{{ item.market_price }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </a>
+          </li>
+        {% endfor %}
+        <!-- <li class="list-item">
           <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
             <div class="item-product">
               <img src="http://img12.360buyimg.com/n1/jfs/t16849/153/1617055958/168557/60b0a4e9/5ad06574N286156e8.jpg" alt="">
@@ -105,7 +124,7 @@
               </div>
             </div>
           </a>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>

@@ -41,5 +41,4 @@ def root():
 
 
     data = {'advs':advs, 'hot_items':hot_items, 'recommend_items':recommend_items}
-    log_info(advs)
     return render_template('pc/index/index.html.j2', **data)
