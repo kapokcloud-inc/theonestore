@@ -37,8 +37,9 @@ def root():
         filter(Adv.is_show == 1).\
         order_by(Adv.sorting.desc(), Adv.adv_id.desc()).all()
     
-    hot_items       = ItemStaticMethodsService.items({'is_hot':1, 'p':1, 'ps':12})
-    recommend_items = ItemStaticMethodsService.items({'is_recommend':1, 'p':1, 'ps':12})
+    hot_items, pagination       = ItemStaticMethodsService.items({'is_hot':1, 'p':1, 'ps':12})
+    recommend_items, pagination = ItemStaticMethodsService.items({'is_recommend':1, 'p':1, 'ps':12})
 
-    return render_template('mobile/index/index.html.j2', advs=advs, hot_items=hot_items, recommend_items=recommend_items)
+    data = {'advs':advs, 'hot_items':hot_items, 'recommend_items':recommend_items}
+    return render_template('mobile/index/index.html.j2', **data)
 
