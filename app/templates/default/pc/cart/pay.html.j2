@@ -1,218 +1,99 @@
-{% extends '/default/mobile/layout/base.html.j2' %}
+{% extends '/default/pc/layout/cart_base.html.j2' %}
 
 {% block head %}
-<title>{{_('提交订单 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/mobile/css/user.css">
+<title>{{_('支付订单 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+{% endblock %}
+
+{% block nav %} 
+<div class="one-nav_header">
+  <span class="nav-header_type">{{_('支付订单')}}</span>
+</div>
 {% endblock %}
 
 {% block body %}
-<div class="user_wrap">
-  <div class="choiceAddress">
-    <a class="weui-cell weui-cell_access bg-white" href="javascript:;">
-      <div class="weui-cell__hd mar-right">
-        <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
-      </div>
-      <div class="weui-cell__bd">
-        <div class="blackGap">
-          <span>{{_('收件人')}}：</span>
-          <span>{{ order_address.name }}</span>
-          <span class="mar-left">{{ order_address.mobile }}</span>
-        </div>
-        <div class="address" style="color:#666 !important">
-          <span>{{_('收货地址')}}：</span>
-          <span>{{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address }}</span>
-        </div>
-      </div>
-      <div class="weui-cell__ft mar-left"></div>
-    </a>
-  </div>
-  <div class="weui-cells weui-cells_form">
-    <div class="weui-cell">
-      <div class="weui-cell__bd">
-        <a href="{{ url_for('mobile.index.root') }}" class="all_title">{{_('一店')}}</a>
-      </div>
-    </div>
-    {% set items = order.goods_data|json_loads %}
-    {% for item in items %}
-      {% set not_before = 'not_before' if loop.first else '' %}
-      <div class="weui-cell {{ not_before }}">
-        <div class="weui-cell__hd avatar mar-right">
-          <img src="{{ item.goods_img }}" alt="">
-        </div>
-        <div class="weui-cell__bd">
-          <div class="all_title height25">{{ item.goods_name }}</div>
-          <div class="all_desc height25">{{ item.goods_desc }}</div>
-        </div>
-        <div class="weui-cell__ft mar-left">
-          <span class="all_price height25">￥{{ item.goods_price }}</span>
-          <p class="height25">x {{ item.quantity }}</p>
-        </div>
-      </div>
-    {% endfor %}
-    <a class="weui-cell weui-cell_access bg-white" href="javascript:;">
-      <div class="weui-cell__bd blackGap">{{_('配送方式')}}</div>
-      <div class="weui-cell__ft mar-left">{{ shipping_title }}</div>
-    </a>
-  </div>
-  <div class="weui-cells weui-cells_form">
-    {% set _text = _('%s元优惠券' % coupon.coupon_amount) if coupon else _('无使用优惠券') %}
-    <a class="weui-cell weui-cell_access"  href="javascript:void(0);">
-      <div class="weui-cell__bd blackGap">{{_('优惠券码')}}</div>
-      <div class="weui-cell__ft">{{ _text }}</div>
-    </a>
-  </div>
-  <div class="weui-cells weui-cells_form">
-    <div class="weui-form-preview">
-      <div class="weui-form-preview__bd">
-        <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label blackGap">{{_('商品总价')}}</label>
-          <span class="weui-form-preview__value">￥{{ order.goods_amount }}</span>
-        </div>
-        <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label blackGap">{{_('运费')}}</label>
-          <span class="weui-form-preview__value">+￥{{ order.shipping_amount }}</span>
-        </div>
-        <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label blackGap">{{_('优惠金额')}}</label>
-          <span class="weui-form-preview__value">-￥{{ order.discount_amount }}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div style="height:56px;"></div>
-  <div class="submit_order">
-    <div class="flex_wrap order_bar">
-      <div class="total">
-        <div class="total-price">
-          <span>{{_('支付金额')}}：</span>
-          <span class="all_price" style="font-size:18px">￥{{ order.pay_amount }}</span>
-        </div>
-        <input id="order_id" type="hidden" value="{{ order.order_id }}" />
-        <div class="btn_primary" onclick="submit()">{{_('提交订单')}}</div>
-      </div>
-    </div>
-    <div class="hide ranpo" id="payList">
-      <div class="hide-mask"></div>
-      <div class="weui-actionsheet weui-actionsheet_toggle">
-        <div class="weui-actionsheet__menu">
-          <div class="weui-actionsheet__cell not-product_text bg-white">
-            <span>选择支付方式</span>
-            <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="closePay()">
+<div class="cart-wrap">
+  <div class="head-inner">
+    <form action="#" id="">
+      <div class="order-section">
+        <img class="order-section_img" src="/static/default/pc/img/complete.png" alt="">
+        <div class="order-section_info">
+          <div class="order-info_fl">
+            <p class="order-info_hd">{{_('订单提交成功！去付款吧')}}</p>
+            <p class="mar-bottom">
+              {{_('请在')}}
+              <span class="allOn">24时</span>
+              {{_('内完成支付, 超时后将取消订单')}}
+            </p>
+            <p id="userAdd"> {{_('收货信息：')}}大头 135****5229 广东 深圳市 龙华新区 民治街道 南景新村c12</p>
           </div>
-          <div class="weui-cells weui-cells_form weui-cells_radio" style="margin-top:0px !important">
-            <label class="weui-cell weui-check__label">
-              <div class="weui-cell__hd mar-right">
-                <img class="cancal_image" src="/static/default/mobile/img/balancePay.png" alt="">
-              </div>
-              <div class="weui-cell__bd blackGap">
-                余额支付
-                <span id="funds" name="" class="funds mar-left" data-value="{{ funds }}">可用余额：￥{{ funds }}</span>
-              </div>
-              <div class="weui-cell__ft">
-                <input id="funds_pay" class="weui-check" type="radio" name="funds_pay" value="funds_pay" onclick="choose_pay(this)">
-                <span class="weui-icon-checked"></span>
-              </div>
-            </label>
-            <label class="weui-cell weui-check__label">
-              <div class="weui-cell__hd mar-right">
-                <img class="cancal_image" src="/static/default/mobile/img/weixin.png" alt="">
-              </div>
-              <div class="weui-cell__bd blackGap">微信支付</div>
-              <div class="weui-cell__ft">
-                <input id="weixin_pay" class="weui-check" type="radio" name="weixin_pay" value="weixin_pay" checked="" onclick="choose_pay(this)">
-                <span class="weui-icon-checked"></span>
-              </div>
-            </label>
+          <div class="order-info_fr">
+            <p class="order-info_total">
+              {{_(' 应付总额：')}}
+              <span class="allOn">￥</span>
+              <span class="allOn" style="font-size:24px;">1499</span>
+            </p>
+            <div class="order-info_detail" onclick="detail()">{{_('订单详情')}}</div>
           </div>
         </div>
+        <ul class="order-section_detail hide">
+          <li class="order-detail_item">
+            <label class="detail-label">{{_('订单号：')}}</label>
+            <div class="detail-cnt allOn">5180724570906637</div>
+          </li>
+          <li class="order-detail_item">
+            <label class="detail-label">{{_('收货信息：')}}</label>
+            <div class="detail-cnt">
+              <p>大头</p>
+              <p>135****5229</p>
+              <p>广东 深圳市 龙华新区 民治街道 南景新村c12</p>
+            </div>
+          </li>
+          <li class="order-detail_item">
+            <label class="detail-label">{{_('商品名称：')}}</label>
+            <div class="detail-cnt">
+              <p> 米家空气净化器Pro 白色</p>
+              <p> 米家空气净化器Pro 白色</p>
+            </div>
+          </li>
+          <li class="order-detail_item">
+            <label class="detail-label">{{_('配送方式：')}}</label>
+            <div class="detail-cnt">申通 ￥10.0(满￥1000.0免运费)</div>
+          </li>
+        </ul>
       </div>
-    </div>
+      <div class="payment-section">
+        <p class="pay-hd">微信支付</p>
+        <div class="pay-bd">
+          <div class="bd-weixin">
+            <img src="/static/default/pc/img/weixin.png" alt="">
+          <span>微信支付</span>
+          </div>
+          <div class="bd-QRcode">
+            <img src="http://i.huodong.mi.com/qrcode/wxget?code=weixin%3A%2F%2Fwxpay%2Fbizpayurl%3Fpr%3DAnUWbUU&key=93cca3325e17f353ed46462f77c19aaa" alt="">
+          </div>
+          <p>
+            请用
+            <span class="allOn">微信</span>
+            扫一扫二维码完成支付</p>
+        </div>
+      </div>
+    </form>
   </div>
 </div>
-{% endblock %} 
+{% endblock %}
 
 {% block script %}
-<script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/city-picker.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="/static/default/mobile/js/jquery.ui.widget.js" type="text/javascript"></script>
-
 <script type="text/javascript">
-var $payList = $('#payList');
-
-//提交订单
-function submit() {
-  var pay_amount = $("#pay_amount").attr('data-value');
-  var funds = $("#funds").attr('data-value');
-  if (parseFloat(pay_amount) > parseFloat(funds)) {
-    $("#funds_pay").prop('disabled', true);
-  } else {
-    $("#funds_pay").prop('disabled', false);
-  }
-
-  // 显示选择地址弹窗
-  if ($payList.hasClass('hide')) {
-    $payList.removeClass('hide').addClass('show');
-
-  // 隐藏选择地址弹窗
-  } else {
-    $payList.removeClass('show').addClass('hide');
+// 点击收起或显示订单详情
+function detail(){
+  if($('.order-section_detail').hasClass('hide')){
+    $('#userAdd').addClass('hide');
+    $('.order-section_detail').addClass('show').removeClass('hide');
+  } else{
+    $('#userAdd').removeClass('hide');
+    $('.order-section_detail').addClass('hide').removeClass('show');
   }
 }
-
-//关闭支付方式弹窗
-function closePay() {
-  $payList.removeClass('show');
-  if (!$payList.hasClass('hide')) {
-    $payList.addClass('hide');
-  }
-}
-
-//余额支付
-function funds_pay(order_id) {
-  // 检查
-  if ( !order_id ) {
-    $.toast("{{_('创建订单失败，请刷新页面重试。')}}", "text");
-    return false;
-  }
-
-  var order_id_list = '[' + order_id + ']';
-  $.get("{{ url_for('api.pay.fundspay_req') }}", {'order_id_list':order_id_list}, function(res) {
-    if (res.ret != 0) {
-      $.toast(res.msg, "text");
-      return false;
-    }
-
-    window.location.href = "/mobile/pay/success/"+order_id;
-    return true;
-  });
-}
-
-
-//微信支付 ??
-function weixin_pay(order_id) {
-  return true;
-}
-
-//选择支付
-function choose_pay(dom) {
-  var $dom = $(dom);
-
-  if (!($dom.is(':disabled'))) {
-    var order_id = parseInt($("#order_id").val());
-    var pay_type = $dom.attr('value');
-
-    if (pay_type == 'funds_pay') {
-      $("#weixin_pay").prop('checked', false);
-      funds_pay(order_id);
-    } else if (pay_type == 'weixin_pay') {
-      $("#funds_pay").prop('checked', false);
-      weixin_pay(order_id);
-    }
-
-    $payList.removeClass('show');
-    if (!$payList.hasClass('hide')) {
-      $payList.addClass('hide');
-    }
-  }
-}
-</script> 
-{% endblock %}
+</script>
+{% endblock%}

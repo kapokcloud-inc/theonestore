@@ -33,27 +33,27 @@
                 <div class="one-cell_bd username">
                   <a href="">135****229</a>
                 </div>
-                <div class="one-cell_ft signout" onclick="signout()">{{_('[退出]')}}<</div>
+                <div class="one-cell_ft signout" onclick="signout()">{{_('[退出]')}}</div>
               </div>
               <div class="user-about">
                 <span>
-                  <a class="" href="">{{_('我的订单')}}</a>
+                  <a href="{{ url_for('pc.order.index') }}">{{_('我的订单')}}</a>
                 </span>
                 <span>
-                  <a class="" href="">{{_('优惠券')}}</a>
+                  <a href="">{{_('优惠券')}}</a>
                 </span>
                 <span>
-                  <a class="" href="">{{_('收藏')}}</a>
+                  <a href="">{{_('收藏')}}</a>
                 </span>
                 <span>
-                  <a class="" href="">{{_('消息')}}</a>
+                  <a  href="">{{_('消息')}}</a>
                   <i class="user-badge">1</i>
                 </span>
               </div>
             </div>
           </li>
           <li class="top-nav_item">
-            <a href="" class="mouseon">{{_('我的订单')}}</a>
+            <a href="{{ url_for('pc.order.index') }}" class="mouseon">{{_('我的订单')}}</a>
           </li>
           <li class="top-nav_item">
             <a href="" class="mouseon">{{_('优惠券')}}</a>
@@ -73,6 +73,8 @@
   
   
   {% block body %} {% endblock %}
+  
+  <script type="text/javascript" src="/static/default/pc/js/jquery.min.js" charset="utf-8"></script>
   
   {% block script %} {% endblock %}
 </body>

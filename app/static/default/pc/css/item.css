@@ -171,6 +171,7 @@
 }
 .goods-scroll {
   display: inline-block;
+  flex: 1;
   width: 100%;
   height: 25px;
   line-height: 25px;
@@ -405,32 +406,6 @@
 .commentImg img {
   width: 100%;
   height: 100%;
-}
-.comment-page_list {
-  height: 40px;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  text-align: center;
-}
-.page-num {
-  display: inline-block;
-  width: 50px;
-  height: 20px;
-  padding: 3px 0;
-  margin: 0 5px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 20px;
-  color: #333;
-  border: 1px solid #ccc;
-}
-.page-more {
-  display: inline-block;
-  height: 33px;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 25px;
-  color: #333;
 }
 .null-comment_cnt {
   padding: 30px;
