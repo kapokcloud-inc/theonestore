@@ -2,11 +2,6 @@
 {% import '/default/admin/libs/libs.html.j2' as libs %}
 {% import '/default/admin/libs/const.html.j2' as const %}
 
-{% block head %}
-<!--alerts CSS -->
-<link href="/static/default/admin/plugins/bower_components/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
-{% endblock %}
-
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
@@ -129,29 +124,27 @@
 {% endblock %}
 
 {% block footer %}
-<!-- Sweet-Alert  -->
-<script src="/static/default/admin/plugins/bower_components/sweetalert/sweetalert.min.js"></script>
 <script type="text/javascript">
 function remove(goods_id) {
   swal({
-      title: "{{_('确认删除')}}",
-      text: "{{_('确认删除此条商品？')}}",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#DD6B55",
-      confirmButtonText: "{{_('删除')}}",
-      cancelButtonText: "{{_('取消')}}",
-      closeOnConfirm: false
+    title: "{{_('确认删除')}}",
+    text: "{{_('确认删除此条商品？')}}",
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#DD6B55",
+    confirmButtonText: "{{_('删除')}}",
+    cancelButtonText: "{{_('取消')}}",
+    closeOnConfirm: false
   }, function(){
-      $.get("{{ url_for('admin.item.remove') }}", {'goods_id':goods_id}, function(json) {
-        if (json.ret != 0) {
-          swal("{{_('删除失败')}}", json.msg, "error");
-          return false;
-        }
+    $.get("{{ url_for('admin.item.remove') }}", {'goods_id':goods_id}, function(json) {
+      if (json.ret != 0) {
+        swal("{{_('删除失败')}}", json.msg, "error");
+        return false;
+      }
 
-        $("#item-"+goods_id).remove();
-        swal("{{_('删除成功')}}", "", "success");
-      });
+      $("#item-"+goods_id).remove();
+      swal("{{_('删除成功')}}", "", "success");
+    });
   });
 }
 </script>

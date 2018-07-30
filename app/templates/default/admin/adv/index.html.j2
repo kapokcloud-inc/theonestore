@@ -10,8 +10,6 @@
 <!-- Daterange picker plugins css -->
 <link href="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
 <link href="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-<!--alerts CSS -->
-<link href="/static/default/admin/plugins/bower_components/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block body %}
@@ -97,29 +95,27 @@
 {% endblock %}
 
 {% block footer %}
-<!-- Sweet-Alert  -->
-<script src="/static/default/admin/plugins/bower_components/sweetalert/sweetalert.min.js"></script>
 <script type="text/javascript">
 function remove(adv_id) {
   swal({
-      title: "{{_('确认删除')}}",
-      text: "{{_('确认删除此条广告？')}}",
-      type: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#DD6B55",
-      confirmButtonText: "{{_('删除')}}",
-      cancelButtonText: "{{_('取消')}}",
-      closeOnConfirm: false
+    title: "{{_('确认删除')}}",
+    text: "{{_('确认删除此条广告？')}}",
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#DD6B55",
+    confirmButtonText: "{{_('删除')}}",
+    cancelButtonText: "{{_('取消')}}",
+    closeOnConfirm: false
   }, function(){
-      $.get("{{ url_for('admin.adv.remove') }}", {'adv_id':adv_id}, function(json) {
-        if (json.ret != 0) {
-          swal("{{_('删除失败')}}", json.msg, "error");
-          return false;
-        }
+    $.get("{{ url_for('admin.adv.remove') }}", {'adv_id':adv_id}, function(json) {
+      if (json.ret != 0) {
+        swal("{{_('删除失败')}}", json.msg, "error");
+        return false;
+      }
 
-        $("#adv-"+adv_id).remove();
-        swal("{{_('删除成功')}}", "", "success");
-      });
+      $("#adv-"+adv_id).remove();
+      swal("{{_('删除成功')}}", "", "success");
+    });
   });
 }
 </script>
