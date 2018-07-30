@@ -11,7 +11,6 @@ from json import loads as json_loads
 
 from flask_babel import Babel
 from flask_wtf.csrf import CSRFProtect
-from wtforms.compat import iteritems
 
 from app import configure_before
 
@@ -63,7 +62,6 @@ CSRFProtect(app)
 
 # 注册jinja模板过滤器
 jinja_filters = {
-    'iteritems': iteritems,
     'timestamp2str': timestamp2str,
     'before_after_timestamp':before_after_timestamp,
     'json_loads': json_loads,
@@ -79,6 +77,10 @@ configure_before(app)
 if __name__ == '__main__':
     app.config.from_pyfile('config/config.dev.cfg')
     babel.init_app(app)
+    
+    # 上传文件存储
+    configure_uploads(app)
+
     app.jinja_env.auto_reload = True
     app.jinja_env.cache_size = 0
     app.run(host='0.0.0.0', debug=True, port=5000)

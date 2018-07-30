@@ -14,6 +14,13 @@ import logging
 import logging.config
 import string
 import uuid
+import urllib
+import types
+import random
+try:
+    import urlparse
+except Exception as e:
+    from urllib.parse import urlparse
 
 from flask import (
     Flask,
@@ -24,8 +31,9 @@ from flask import (
 from flask_uploads import (
     UploadSet, 
     configure_uploads as flask_configure_uploads, 
-    DEFAULTS,
-    patch_request_class
+    patch_request_class,
+    DOCUMENTS,
+    IMAGES
 )
 from sqlalchemy import func
 
@@ -64,12 +72,15 @@ def configure_uploads(app):
     UPLOADED_FILES_DEST = app.config.get('UPLOADED_FILES_DEST', 'uploads')
     if UPLOADED_FILES_DEST[0] != '/':
         UPLOADED_FILES_DEST = os.path.join(os.getcwd(), 'uploads')
-
-    print('UPLOADED_FILES_DEST:%s' % UPLOADED_FILES_DEST)
+    print (UPLOADED_FILES_DEST)
     app.config['UPLOADED_FILES_DEST'] = UPLOADED_FILES_DEST
+    app.config['UPLOADED_DOCUMENTS_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'documents')
+    app.config['UPLOADED_IMAGES_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'images')
 
-    # default = UploadSet('default', DEFAULTS)
-    # flask_configure_uploads(app, default)
+    documents = UploadSet('documents', DOCUMENTS)
+    images = UploadSet('images', IMAGES)
+    flask_configure_uploads(app, (documents, images))
+    
     # 最大上传文件大小64M，MAX_CONTENT_LENGTH=64*1024*1024
     patch_request_class(app)
 
@@ -144,6 +155,49 @@ def tofloat(s):
         pass
 
     return float(0)
+
+
+def randomstr(random_len = 6, random_type = 0):
+    """
+    获取随机字符串
+    @param random_len: 随机字符串长度
+    @param random_type: 随机类型 0:大小写数字混合 1:数字 2:小写字母 3:大写字母
+    @return string
+    """
+    random_str_lists = ['0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                        '0123456789',
+                        'abcdefghijklmnopqrstuvwxyz',
+                        'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
+    if random_type < 0 or random_type > len(random_str_lists):
+        random_type = 0
+
+    random_string = random_str_lists[random_type]
+    return ''.join(random.sample(random_string, random_len))
+
+
+def urlencode(params):
+    """url转码"""
+
+    if not params:
+        return ''
+
+    _params = params.copy()
+    for k,v in params.items():
+        if isinstance(v, types.StringType) or isinstance(v, types.UnicodeType):
+            _params[k] = v.encode('utf8')
+
+    return urllib.urlencode(_params)
+
+
+def url_push_query(url, key_value_str):
+    """url增加query参数"""
+
+    url_tuple = urlparse.urlparse(url)
+    query     = key_value_str if url_tuple.query == '' else url_tuple.query+'&'+key_value_str
+    new_tuple = (url_tuple.scheme, url_tuple.netloc, url_tuple.path, url_tuple.params, query, url_tuple.fragment)
+    url       = urlparse.urlunparse(new_tuple)
+
+    return url
 
 
 def model_to_dict(model):
@@ -244,3 +298,19 @@ def get_count(q):
     count   = q.session.execute(count_q).scalar()
 
     return count
+
+
+def randomstr(random_len = 6, random_type = 0):
+    """
+    获取随机字符串
+    @param random_len: 随机字符串长度
+    @param random_type: 随机类型 0:大小写数字混合 1:数字 2:小写字母 3:大写字母
+    @return string
+    """
+    random_string_array = ['0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        '0123456789', 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
+    if random_type < 0 or random_type > len(random_string_array):
+        random_type = 0
+
+    random_string = random_string_array[random_type]
+    return ''.join(random.sample(random_string, random_len))

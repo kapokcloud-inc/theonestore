@@ -150,6 +150,7 @@ def storage_alioss():
         data = {'access_key_id':form.access_key_id.data,
                 'access_key_secret':form.access_key_secret.data,
                 'bucket_name':form.bucket_name.data,
+                'endpoint':form.endpoint.data,
                 'cname':form.cname.data}
         if form.validate_on_submit():
             if ss is None:

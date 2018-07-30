@@ -19,7 +19,9 @@ from flask_babel import gettext as _
 
 from app.helpers import (
     render_template,
-    log_info
+    log_info,
+    toint,
+    url_push_query
 )
 from app.helpers.user import (
     check_login,
@@ -28,6 +30,7 @@ from app.helpers.user import (
 
 from app.services.api.funds import FundsStaticMethodsService
 
+from app.models.order import Order
 from app.models.funds import (
     Funds,
     FundsDetail
@@ -72,7 +75,28 @@ def paging():
 @wallet.route('/recharge')
 def recharge():
     """手机站 - 钱包充值"""
-    return render_template('mobile/wallet/recharge.html.j2')
+
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+
+    order_id        = toint(request.args.get('order_id', '0'))
+    is_weixin       = toint(request.args.get('is_weixin', '0'))
+    recharge_amount = 0
+    redirect_url    = url_push_query(request.url, 'is_weixin=1')
+
+    # 订单付款
+    if order_id > 0:
+        # 检查
+        order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
+        if not order:
+            return redirect(request.headers['Referer'])
+        
+        recharge_amount = order.pay_amount
+
+    data = {'order_id':order_id, 'recharge_amount':recharge_amount, 'is_weixin':is_weixin, 'redirect_url':redirect_url}
+    return render_template('mobile/wallet/recharge.html.j2', **data)
 
 
 @wallet.route('/detail/<int:fd_id>')

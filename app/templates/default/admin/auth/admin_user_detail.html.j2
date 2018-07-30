@@ -21,3 +21,15 @@
 </div>
 <!-- /#page-wrapper -->
 {% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(document).ready(function(){
+  var admin_uid = parseInt($('#admin_uid').val());
+  if (admin_uid > 0) {
+    $('#password').parents('.form-group').remove();
+    $('#password2').parents('.form-group').remove();
+  }
+});
+</script>
+{% endblock %}

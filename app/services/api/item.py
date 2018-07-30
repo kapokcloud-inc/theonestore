@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for more details.
 """
 from flask_babel import gettext as _
+from flask_sqlalchemy import Pagination
 
 from app.database import db
 
@@ -24,11 +25,11 @@ from app.models.item import (
 
 
 class ItemStaticMethodsService(object):
-    """ 商品静态方法Service """
+    """商品静态方法Service"""
 
     @staticmethod
     def items(params):
-        """ 获取商品列表 """
+        """获取商品列表"""
 
         p            = toint(params.get('p', '1'))
         ps           = toint(params.get('ps', '10'))
@@ -51,6 +52,20 @@ class ItemStaticMethodsService(object):
         if is_recommend in [0,1]:
             q = q.filter(Goods.is_recommend == is_recommend)
 
-        items = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
+        items      = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
+        pagination = Pagination(None, p, ps, q.count(), None)
 
-        return items
+        return (items, pagination)
+
+    @staticmethod
+    def categories(params):
+        """获取商品分类列表"""
+
+        categories = db.session.query(GoodsCategories.cat_id,
+                                        GoodsCategories.cat_name,
+                                        GoodsCategories.cat_img).\
+                            filter(GoodsCategories.is_show == 1).\
+                            order_by(GoodsCategories.sorting.desc()).\
+                            order_by(GoodsCategories.cat_id.desc()).all()
+
+        return categories

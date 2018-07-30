@@ -25,6 +25,7 @@ class Aftersales(BaseModel, db.Model):
     status = db.Column(db.Integer, default=0)
     check_status = db.Column(db.Integer, default=0)
     check_content = db.Column(db.String(255), default='')
+    refunds_id = db.Column(db.Integer, default=0)
     refunds_amount = db.Column(db.Float, default=0.00)
     refunds_method = db.Column(db.String(16), default='')
     refunds_sn = db.Column(db.String(25), default='')

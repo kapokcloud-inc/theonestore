@@ -244,18 +244,19 @@ class AfterSalesCreateService(object):
             data['aftersales_id'] = aftersales.aftersales_id
             model_create(AftersalesGoods, data)
 
+        # 售后商品数量 - 单个
         if self.order_goods:
             quantity = self.order_goods.aftersales_goods_quantity + self.quantity
             data     = {'aftersales_goods_quantity':quantity, 'update_time':self.current_time}
             model_update(self.order_goods, data)
-        
+    
+        # 售后商品数量 - 整单
         if len(self.order_goods_list) > 0:
             for order_goods in self.order_goods_list:
-                quantity = order_goods.aftersales_goods_quantity + self.quantity
-                data     = {'aftersales_goods_quantity':quantity, 'update_time':self.current_time}
+                data = {'aftersales_goods_quantity':order_goods.goods_quantity, 'update_time':self.current_time}
                 model_update(order_goods, data)
         
-        AfterSalesStaticMethodsService.add_log(aftersales.aftersales_id, _(u'申请售后服务，等待商家审核'), self.current_time, False)
+        AfterSalesStaticMethodsService.add_log(aftersales.aftersales_id, _(u'申请售后服务，等待商家审核。'), self.current_time, False)
 
         db.session.commit()
 
@@ -365,10 +366,11 @@ class AfterSalesStaticMethodsService(object):
         return True
 
     @staticmethod
-    def aftersale_status_text(aftersale):
+    def aftersale_status_text_and_action_code(aftersale):
         """获取售后状态"""
 
         status_text = u''
+        action_code = []    # 售后指令列表: 1.寄回商品; 2.签收商品;
 
         if aftersale.aftersales_type == 1:
             if aftersale.status == 1 and aftersale.check_status == 1:
@@ -388,13 +390,14 @@ class AfterSalesStaticMethodsService(object):
                 status_text = _(u'审核不通过')
 
             if aftersale.status == 2 and aftersale.check_status == 2 and aftersale.return_status == 1:
-                status_text = _(u'审核通过，待寄换货商品')
+                status_text = _(u'审核通过，待寄退货商品')
+                action_code = [1]
 
             if aftersale.status == 2 and aftersale.return_status == 2:
-                status_text = _(u'已寄换货商品，待收件')
+                status_text = _(u'已寄退货商品，待收件')
 
             if aftersale.status == 2 and aftersale.return_status == 3:
-                status_text = _(u'已收到换货商品，待退款')
+                status_text = _(u'已收到退货商品，待退款')
 
             if aftersale.status == 3 and aftersale.refunds_status == 2:
                 status_text = _(u'退款成功，已完成')
@@ -408,14 +411,19 @@ class AfterSalesStaticMethodsService(object):
 
             if aftersale.status == 2 and aftersale.check_status == 2 and aftersale.return_status == 1:
                 status_text = _(u'审核通过，待寄换货商品')
+                action_code = [1]
 
             if aftersale.status == 2 and aftersale.return_status == 2:
                 status_text = _(u'已寄换货商品，待收件')
 
-            if aftersale.status == 2 and aftersale.resend_status == 3:
+            if aftersale.status == 2 and aftersale.return_status == 3 and aftersale.resend_status == 1:
                 status_text = _(u'已收到换货商品，待处理')
 
-            if aftersale.status == 3 and aftersale.refunds_status == 2:
-                status_text = _(u'退款成功，已完成')
+            if aftersale.status in [2] and aftersale.resend_status in [2]:
+                status_text = _(u'重新发货，已完成')
+                action_code = [2]
 
-        return status_text
+            if aftersale.status in [3] and aftersale.resend_status in [3]:
+                status_text = _(u'重新发货，已完成')
+
+        return (status_text, action_code)

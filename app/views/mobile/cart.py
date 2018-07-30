@@ -26,7 +26,8 @@ from app.helpers import (
     model_update,
     model_delete,
     log_info,
-    toint
+    toint,
+    url_push_query
 )
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import (
@@ -106,20 +107,15 @@ def checkout():
     uid = get_uid()
 
     args         = request.args
-    order_id     = args.get('order_id', None)
+    order_id     = toint(args.get('order_id', '0'))
+    is_weixin    = toint(args.get('is_weixin', '0'))
     current_time = current_timestamp()
 
     # 钱包
     funds = Funds.query.filter(Funds.uid == uid).first()
 
     # 订单付款
-    if order_id is not None:
-        order_id = toint(order_id)
-
-        # 检查
-        if order_id <= 0:
-            return redirect(request.headers['Referer'])
-
+    if order_id > 0:
         # 检查
         order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
         if not order:
@@ -130,8 +126,8 @@ def checkout():
 
         shipping_title = _(u'%s  ￥%s(满￥%s免运费)' % (order.shipping_name, order.shipping_amount, order.free_limit_amount))
 
-        data = {'order':order, 'order_address':order_address, 'coupon':coupon,
-                'shipping_title':shipping_title, 'funds':funds.funds}
+        data = {'order':order, 'order_address':order_address, 'coupon':coupon, 'shipping_title':shipping_title,
+                'funds':funds.funds, 'is_weixin':is_weixin}
         return render_template('mobile/cart/pay.html.j2', **data)
 
     # 立即购买或结算

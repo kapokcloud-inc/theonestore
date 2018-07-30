@@ -34,10 +34,11 @@ from app.helpers.date_time import (
     date_range
 )
 
+from app.services.response import ResponseJson
 from app.services.message import MessageCreateService
 from app.services.admin.order import OrderStaticMethodsService
-from app.services.response import ResponseJson
 
+from app.models.user import User
 from app.models.order import (
     Order,
     OrderAddress,
@@ -49,7 +50,7 @@ from app.models.order import (
 order = Blueprint('admin.order', __name__)
 
 resjson = ResponseJson()
-resjson.module_code = 11
+resjson.module_code = 14
 
 @order.route('/index')
 @order.route('/index/<int:page>')
@@ -68,8 +69,9 @@ def index(page=1, page_size=20):
     paid_time_daterange     = args.get('paid_time_daterange', '').strip()
     shipping_time_daterange = args.get('shipping_time_daterange', '').strip()
 
-    q = db.session.query(Order.order_id, Order.order_sn, Order.goods_data, Order.goods_quantity,
-                        Order.paid_time, Order.shipping_sn, Order.shipping_time, Order.order_status, Order.add_time,
+    q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.pay_status, Order.paid_time,
+                        Order.shipping_sn, Order.shipping_status, Order.shipping_time, Order.deliver_status,
+                        Order.goods_quantity, Order.goods_data, Order.add_time,
                         OrderAddress.name, OrderAddress.mobile).\
             filter(Order.order_id == OrderAddress.order_id)
 
@@ -138,6 +140,7 @@ def detail(order_id):
     g.page_title = _(u'订单详情')
 
     order                    = Order.query.get_or_404(order_id)
+    user                     = User.query.get(order.uid)
     order_goods              = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
     order_address            = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
     status_text, action_code = OrderStaticMethodsService.order_status_text_and_action_code(order)
@@ -149,6 +152,7 @@ def detail(order_id):
 
     return render_template('admin/order/detail.html.j2',
         order=order,
+        user=user,
         order_goods=order_goods,
         order_address=order_address,
         status_text=status_text,

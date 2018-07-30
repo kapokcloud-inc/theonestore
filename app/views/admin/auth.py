@@ -7,8 +7,10 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import time
 from hashlib import sha256
 
+from werkzeug.datastructures import CombinedMultiDict
 from flask import (
     request,
     session,
@@ -23,12 +25,15 @@ from wtforms.compat import with_metaclass, iteritems, itervalues
 from app.helpers import (
     render_template, 
     log_info,
-    toint
+    log_error,
+    toint,
+    randomstr
 )
 from app.database import db
 from app.forms.admin.auth import AdminUsersForm
 from app.models.auth import AdminUsers
 from app.services.admin.auth import AuthLoginService
+from app.services.uploads import FileUploadService
 
 auth = Blueprint('admin.auth', __name__)
 
@@ -67,25 +72,19 @@ def create():
     """创建管理员"""
     g.page_title = _(u'添加管理员')
 
-    form = AdminUsersForm(request.form)
-    for name, field in iteritems(form._fields):
-        for validator in field.validators:
-            if hasattr(validator, 'field_flags'):
-                if 'required' in validator.field_flags:
-                    log_info(u'必填项')
-        
-        log_info('--------------------')
-
+    form = AdminUsersForm()
     return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
 
 @auth.route('/edit/<int:admin_uid>')
 def edit(admin_uid):
     """编辑管理员"""
-    g.page_title = _(u'管理员详情')
-
+    g.page_title = _(u'编辑管理员')
     au = AdminUsers.query.get_or_404(admin_uid)
-    return render_template('admin/auth/admin_user_detail.html.j2', au=au)
+
+    form = AdminUsersForm()
+    form.fill_form(au)
+    return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
 
 @auth.route('/delete/<int:admin_uid>')
@@ -100,10 +99,36 @@ def delete(admin_uid):
 @auth.route('/save', methods=['POST'])
 def save():
     """保存管理员"""
-    form = AdminUsersForm(request.form)
-    if not form.validate():
-        log_info(form.errors)
+    form = AdminUsersForm(CombinedMultiDict((request.files, request.form)))
+    if not form.validate_on_submit():
+        return render_template('admin/auth/admin_user_detail.html.j2', form=form)
+    
+    admin_uid = toint(form.admin_uid.data)
+    au = AdminUsers()
+    if admin_uid > 0:
+        au = AdminUsers.query.filter(AdminUsers.admin_uid == admin_uid).first()
+    else:
+        db.session.add(au)
+        au.add_time = int(time.time())
+        au.salt = randomstr(random_len=32)
+        password = sha256(form.password.data.encode('utf8')).hexdigest()
+        sha256_password_salt = sha256((password+au.salt).encode('utf8')).hexdigest()
+        au.password = sha256(sha256_password_salt.encode('utf8')).hexdigest()
+
+    fus = FileUploadService()
+    try:
+        avatar = fus.save_storage(form.avatar.data, 'avatar')
+    except Exception as e:
+        log_error(u'[FileUploadService] Exception:%s' % e)
+        form.avatar.errors = (_(u'上传失败，请检查云存储配置'),)
         return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
-    return 'save'
+    au.username = form.username.data
+    au.mobile = form.mobile.data
+    au.nickname = form.username.data
+    au.update_time = int(time.time())
+    au.avatar = avatar
+    db.session.commit()
+
+    return redirect(url_for('admin.auth.index'))
 

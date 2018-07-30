@@ -27,7 +27,9 @@ from app.database import db
 from app.helpers import (
     render_template, 
     log_info,
-    toint
+    toint,
+    model_create,
+    model_update
 )
 from app.helpers.date_time import current_timestamp
 
@@ -39,6 +41,8 @@ from app.forms.admin.item import (
 )
 
 from app.services.response import ResponseJson
+from app.services.uploads import FileUploadService
+
 from app.models.item import (
     Goods,
     GoodsCategories,
@@ -49,7 +53,7 @@ from app.models.item import (
 item = Blueprint('admin.item', __name__)
 
 resjson = ResponseJson()
-resjson.module_code = 10
+resjson.module_code = 13
 
 @item.route('/index')
 @item.route('/index/<int:page>')
@@ -161,14 +165,26 @@ def save():
     return render_template('admin/item/detail.html.j2', wtf_form=wtf_form, item=item)
 
 
-@item.route('/remove/<int:goods_id>')
-def remove(goods_id):
+@item.route('/remove')
+def remove():
     """删除商品"""
-    item = Goods.query.get_or_404(goods_id)
-    item.is_delete = 1
-    db.session.commit()
+    resjson.action_code = 10
 
-    return redirect(request.headers['Referer'])
+    goods_id = toint(request.args.get('goods_id', '0'))
+
+    if goods_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    item = Goods.query.get(goods_id)
+    if not item:
+        return resjson.print_json(10, _(u'商品不存在'))
+
+    if item.is_delete == 1:
+        return resjson.print_json(0, u'ok')
+
+    model_update(item, {'is_delete':1}, commit=True)
+
+    return resjson.print_json(0, u'ok')
 
 
 @item.route('/h5/<int:goods_id>')
@@ -202,30 +218,45 @@ def galleries(goods_id):
     """商品相册"""
     g.page_title = _(u'商品详情')
 
-    galleries = GoodsGalleries.query.filter(GoodsGalleries.goods_id == goods_id).order_by(GoodsGalleries.id.desc()).all()
+    err_msg = request.args.get('err_msg', '')
+
+    galleries = GoodsGalleries.query.\
+                    filter(GoodsGalleries.goods_id == goods_id).\
+                    order_by(GoodsGalleries.id.desc()).all()
     wtf_form  = ItemGalleriesForm()
 
-    return render_template('admin/item/galleries.html.j2', wtf_form=wtf_form, goods_id=goods_id, galleries=galleries)
+    data = {'wtf_form':wtf_form, 'goods_id':goods_id, 'galleries':galleries, 'err_msg':err_msg}
+    return render_template('admin/item/galleries.html.j2', **data)
 
 
 @item.route('/galleries/save', methods=['POST'])
 def galleries_save():
-    """保存商品相册 ??"""
+    """保存商品相册"""
     g.page_title = _(u'保存商品')
 
-    goods_id      = toint(request.form.get('goods_id', '0'))
-    galleries     = request.files.getlist('galleries')
-    
-    for gallery in galleries:
-        log_info(gallery)
+    goods_id     = toint(request.form.get('goods_id', '0'))
+    images       = request.files.getlist('image')
+    current_time = current_timestamp()
 
-    return redirect(url_for('admin.item.index'))
+    for image in images:
+        try:
+            fus  = FileUploadService()
+            img  = fus.save_storage(image, 'item')
+            data = {'goods_id':goods_id, 'img':img, 'add_time':current_time}
+            model_create(GoodsGalleries, data)
+        except Exception as e:
+            err_msg = _(u'上传失败，请检查云存储配置')
+            return redirect(url_for('admin.item.galleries', goods_id=goods_id, err_msg=err_msg))
+
+    db.session.commit()
+
+    return redirect(url_for('admin.item.galleries', goods_id=goods_id))
 
 
 @item.route('/galleries/remove')
 def galleries_remove():
     """删除商品相册"""
-    resjson.action_code = 10
+    resjson.action_code = 11
 
     id      = toint(request.args.get('id'))
     gallery = GoodsGalleries.query.filter(GoodsGalleries.id == id).first()

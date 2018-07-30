@@ -30,6 +30,8 @@
               'endpoints':['admin.item.index',
                            'admin.item.create',
                            'admin.item.detail',
+                           'admin.item.h5',
+                           'admin.item.galleries',
                            'admin.item.save']
               },
               {'title':_('分类'),
@@ -45,6 +47,24 @@
            'href':url_for('admin.order.index'),
            'view':'order',
            'icon':'mdi mdi-truck-delivery',
+           'children':None
+          },
+          {'title':_('售后'),
+           'href':url_for('admin.aftersale.index'),
+           'view':'aftersale',
+           'icon':'mdi mdi-all-inclusive',
+           'children':None
+          },
+          {'title':_('用户'),
+           'href':url_for('admin.user.index'),
+           'view':'user',
+           'icon':'mdi mdi-account',
+           'children':None
+          },
+          {'title':_('评论'),
+           'href':url_for('admin.comment.index'),
+           'view':'comment',
+           'icon':'mdi mdi-comment',
            'children':None
           },
           {'title':_('优惠券'),

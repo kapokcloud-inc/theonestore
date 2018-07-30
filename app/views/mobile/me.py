@@ -41,6 +41,7 @@ from app.forms.api.me import (
     AddressForm
 )
 
+from app.models.aftersales import Aftersales
 from app.models.message import Message
 from app.models.order import (
     Order,
@@ -109,9 +110,8 @@ def index():
     uncomment_count = get_count(q)
 
     # 退款售后
-    q = db.session.query(OrderGoods.og_id).\
-            filter(OrderGoods.order_id.in_(completed)).\
-            filter(OrderGoods.goods_quantity > OrderGoods.aftersales_goods_quantity)
+    q = db.session.query(Aftersales.aftersales_id).\
+            filter(Aftersales.status.in_([1,2]))
     aftersales_count = get_count(q)
 
     # 未读消息

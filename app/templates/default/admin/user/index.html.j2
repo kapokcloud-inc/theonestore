@@ -1,0 +1,103 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+{% import '/default/admin/libs/const.html.j2' as const %}
+
+{% block head %}
+<!-- Color picker plugins css -->
+<link href="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/css/asColorPicker.css" rel="stylesheet">
+<!-- Date picker plugins css -->
+<link href="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+<!-- Daterange picker plugins css -->
+<link href="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+<link href="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('用户'), 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="white-box">
+          {% set
+            form_fields = [
+              {'label':'昵称', 'name':'nickname'},
+              {'label':'注册日期', 'name':'add_time_daterange', 'type':'daterange'}
+            ]
+          %}
+          {{ libs.build_search_form(form_fields) }}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          <div class="table-responsive">
+            <table class="table table-hover product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('用户ID')}}</th>
+                  <th>{{_('头像')}}</th>
+                  <th>{{_('昵称')}}</th>
+                  <th>{{_('性别')}}</th>
+                  <th>{{_('城市')}}</th>
+                  <th>{{_('注册时间')}}</th>
+                  <th>{{_('操作')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for user in users %}
+                    <tr>
+                      <td>{{ user.uid }}</td>
+                      <td><img src="{{ user.avatar }}" width="50" class="img-circle" /></td>
+                      <td>{{ user.nickname }}</td>
+                      <td>{{ const.GENDER.get(user.gender, _('保密')) }}</td>
+                      <td>{{ user.country }} {{ user.province }} {{ user.city }}</td>
+                      <td>{{ user.add_time|timestamp2str }}</td>
+                      <td>
+                        <a href="{{url_for('admin.user.detail', uid=user.uid)}}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">
+                          <i class="ti-pencil-alt"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                {{ libs.pagination_html(pagination, 9) }}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<!-- Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/moment/moment.js"></script>
+<!-- Clock Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>
+<!-- Color Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asColor.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asGradient.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js"></script>
+<!-- Date Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js?v=35"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  // Daterange picker
+  $('.input-daterange-datepicker').daterangepicker({
+    format: 'YYYY-MM-DD',
+    buttonClasses: ['btn', 'btn-sm'],
+    applyClass: 'btn-success',
+    cancelClass: 'btn-info',
+    clearClass: 'btn-inverse'
+  });
+});
+</script>
+{% endblock %}
+

@@ -32,7 +32,7 @@ class FundsService(object):
         self.uid          = uid
         self.funds_change = funds_change    # 变更资金: 收入即值大于0, 支出即值小于或等于0
         self.event        = event           # 事件: 0.默认; 1.充值; 2.支付; 3.退款;
-        self.ttype        = ttype           # 第三方类型: 0.默认; 1.tran; 2.order; 3.transfers;
+        self.ttype        = ttype           # 第三方类型: 0.默认; 1.tran; 2.order;
         self.tid          = tid             # 第三方ID
         self.remark_user  = remark_user
         self.remark_sys   = remark_sys

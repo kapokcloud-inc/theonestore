@@ -16,7 +16,17 @@
   </div>
   <div class="head-inner">
     <ul class="category-list">
-      <li class="category-list_item">
+      {% for item in categories %}
+        <li class="category-list_item">
+          <a href="{{ url_for('pc.item.index', cat_id=item.cat_id) }}">
+            <div class="category-img">
+             <img src="{{ item.cat_img }}" alt="">
+            </div>
+            <p class="category-name">{{ item.cat_name }}</p>
+          </a>
+        </li>
+      {% endfor %}
+      <!-- <li class="category-list_item">
         <a href="{{ url_for('pc.item.index', cat_id=1) }}">
           <div class="category-img">
             <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
@@ -79,7 +89,7 @@
           </div>
           <p class="category-name">品类八</p>
         </a>
-      </li>
+      </li> -->
     </ul>
   </div>
  
