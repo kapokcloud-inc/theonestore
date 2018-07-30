@@ -20,7 +20,7 @@ import random
 try:
     import urlparse
 except Exception as e:
-    from urllib2 import urlparse
+    from urllib.parse import urlparse
 
 from flask import (
     Flask,
