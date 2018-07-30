@@ -302,28 +302,6 @@
   line-height: 30px;
   color: #333;
 }
-.rate-wrap {
-  padding-top: 30px;
-  padding-bottom: 30px;
-}
-.rate-type {
-  display: inline-block;
-  width: 130px;
-  height: 30px;
-  line-height: 30px;
-  font-size: 14px;
-  color: #333;
-  text-align: center;
-  margin-right: 10px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  overflow: hidden;
-}
-.rateON {
-  background-color: #f33155;
-  color: #fff;
-  border: none;
-}
 .comment-cnt_item {
   position: relative;
   display: flex;

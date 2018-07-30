@@ -894,3 +894,29 @@ header img {
   line-height: 25px;
   color: #333;
 }
+.goodsName {
+  border-right: none !important;
+  color: #999;
+}
+.rate-wrap {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.rate-type {
+  display: inline-block;
+  width: 130px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+  margin-right: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+.rateON {
+  background-color: #f33155;
+  color: #fff;
+  border: none;
+}

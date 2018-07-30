@@ -211,7 +211,7 @@ def track():
 
 @order.route('/create-comment/<int:og_id>')
 def create_comment(og_id):
-    """手机站 - 发表评价"""
+    """pc站 - 发表评价"""
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']
@@ -231,9 +231,10 @@ def create_comment(og_id):
     return render_template('pc/order/create_comment.html.j2', order_goods=order_goods, wtf_form=wtf_form)
 
 
+
 @order.route('/comment')
 def comment():
-    """手机站 - 评价中心"""
+    """pc站 - 评价中心"""
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']
@@ -270,7 +271,7 @@ def comment():
 
 @order.route('/comment/<int:og_id>')
 def comment_detail(og_id):
-    """手机站 - 查看评价"""
+    """pc站 - 查看评价"""
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']

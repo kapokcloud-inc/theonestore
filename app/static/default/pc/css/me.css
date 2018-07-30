@@ -292,3 +292,93 @@
 .delivery-more .hide-more_text::after {
   border-color: transparent transparent #fff transparent;
 }
+.goods-info_block {
+  float: left;
+  width: 375px;
+  height: 400px;
+  overflow: hidden;
+  text-align: center;
+}
+.goods-add_com {
+  position: relative;
+  float: left;
+  width: 700px;
+  min-height: 400px;
+  margin-left: 15px;
+}
+.rate-type_box {
+  margin-bottom: 25px;
+}
+.comment-cnt {
+  padding: 15px 20px;
+  border: 1px solid #e5e5e5;
+}
+.comment-cnt_text {
+  width: 100%;
+  height: 120px;
+  font-size: 14px;
+  color: #666;
+  border: none;
+  resize: none;
+}
+.uploader_wrap {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.one-uploader_bd {
+  margin-bottom: -4px;
+  margin-right: -9px;
+  overflow: hidden;
+}
+.one-uploader_file {
+  float: left;
+  margin-right: 9px;
+  margin-bottom: 9px;
+  width: 100px;
+  height: 100px;
+  background: no-repeat 50%;
+  background-size: cover;
+}
+.one-uploader_input-box {
+  float: left;
+  position: relative;
+  margin-right: 9px;
+  margin-bottom: 9px;
+  width: 98px;
+  height: 98px;
+  border: 1px solid #ccc;
+}
+.one-uploader_input-box::before {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #e5e5e5;
+  width: 2px;
+  height: 39.5px;
+}
+.one-uploader_input-box::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #e5e5e5;
+  width: 39.5px;
+  height: 2px;
+}
+.one-uploader_input {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.reg-btn {
+  width: 200px;
+  margin: 0 0 0 auto;
+}
