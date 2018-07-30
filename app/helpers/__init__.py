@@ -17,7 +17,10 @@ import uuid
 import urllib
 import types
 import random
-import urlparse
+try:
+    import urlparse
+except Exception as e:
+    from urllib2 import urlparse
 
 from flask import (
     Flask,
