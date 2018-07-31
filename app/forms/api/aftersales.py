@@ -43,4 +43,5 @@ class AfterSalesForm(FlaskForm):
     og_id           = IntegerField()
     aftersales_type = IntegerField()
     deliver_status  = IntegerField()
+    img_data        = StringField()
     content         = StringField(validators=[Required(message=_(u'请填写申请原因'))])

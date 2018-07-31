@@ -61,8 +61,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   // 初始化ue
-  // 图片上传地址 ??
-  var ueditor = UE.getEditor('detail_html', {serverUrl: '/sys/ueditor/upload'});
+  var ueditor = UE.getEditor('detail_html', {serverUrl: "{{ url_for('api.upload.ueditor') }}"});
 
   ueditor.ready(function() {
     ueditor.setContent('{{ item.detail }}');

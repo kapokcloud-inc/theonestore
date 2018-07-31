@@ -25,7 +25,8 @@ from app.helpers import (
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import (
     check_login,
-    get_uid
+    get_uid,
+    set_user_session
 )
 
 from app.services.response import ResponseJson
@@ -63,16 +64,13 @@ def update():
             msg = value[0]
         return resjson.print_json(11, msg)
 
-    data = {'nickname':wtf_form.nickname.data, 'gender':wtf_form.gender.data, 'update_time':current_time}
-
-    avatar = request.form.get('avatar', '').strip()
-    if avatar:
-        # 检测图片合法性 ??
-
-        data['avatar'] = avatar
+    data = {'nickname':wtf_form.nickname.data, 'avatar':wtf_form.avatar.data,
+            'gender':wtf_form.gender.data, 'update_time':current_time}
 
     user = User.query.get(uid)
     model_update(user, data, commit=True)
+
+    set_user_session(user)
 
     return resjson.print_json(0, u'ok')
 

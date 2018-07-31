@@ -108,10 +108,7 @@ function submit() {
       return false;
     }
 
-    carts_id = carts_id.split(',');
-    carts_id = JSON.stringify(carts_id);
-
-    var params = {'carts_id':carts_id, 'ua_id':ua_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id}
+    var params = {'recharge_amount':recharge_amount}
     $.post("{{ url_for('api.order.recharge') }}", params, function(json) {
       if (json.ret == 0) {
         order_id = json.data.order_id;

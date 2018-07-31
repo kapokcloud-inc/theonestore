@@ -57,6 +57,14 @@
     </div>
   </div>
   <div class="weui-cells weui-cells_form">
+    <div class="weui-gallery" id="gallery">
+      <span class="weui-gallery__img" id="galleryImg"></span>
+      <div class="weui-gallery__opr">
+        <a href="javascript:" class="weui-gallery__del">
+          <i class="weui-icon-delete weui-icon_gallery-delete"></i>
+        </a>
+      </div>
+    </div>
     <div class="weui-cell uploader_wrap">
       <div class="weui-cell__bd">
         <div class="blackGap mar-bottom">{{_('上传凭证')}}</div>
@@ -64,7 +72,7 @@
           <div class="weui-uploader__bd">
             <ul class="weui-uploader__files" id="uploaderFiles"></ul>
             <div class="weui-uploader__input-box">
-              <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">
+              <input id="uploaderInput" name="image" class="weui-uploader__input" type="file" accept="image/*" multiple="">
             </div>
           </div>
         </div>
@@ -75,6 +83,7 @@
   <div class="footer" style="display:block;height:65px">
     {{ wtf_form.csrf_token }}
     <input id="order_id" name="order_id" type="hidden" value="{{ order_id }}" />
+    <input id="img_data" name="img_data" type="hidden" value="[]" />
     <a class="weui-cell weui-cell_access" href="javascript:void(0);" style="padding:10px" onclick="submit()">
       <button type="button" class="weui-btn weui-btn_red">提交申请</button>
     </a>
@@ -83,17 +92,41 @@
 {% endblock %}
 
 {% block script %}
+<!-- 异步上传 -->
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.iframe-transport.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
 <script type="text/javascript">
 var csrftoken = $('#csrf_token').val();
 $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
 
+$('#uploaderInput').fileupload({
+    url: "{{ url_for('api.upload.image') }}",
+    dataType: 'json',
+    formData:{'prefix':'aftersale'},
+    done: function (e, data) {
+      if(data.result.ret == 0) {
+        var image = data.result.data.image;
+
+        var html_text = '<li class="weui-uploader__file" style="background-image:url(' + image + ')" data-value="'+image+'"></li>';
+        $("#uploaderFiles").append(html_text);
+      }
+    }
+});
+
 function submit() {
   var order_id = $("#order_id").val();
   var content = $("#content").val();
+  
+  var images = [];
+  $(".weui-uploader__file").each(function(i){
+    images.push($(this).attr('data-value'));
+  });
+  var img_data = JSON.stringify(images);
 
-  var params = {'order_id':order_id, 'aftersales_type':1, 'deliver_status':0, 'content':content};
+  var params = {'order_id':order_id, 'aftersales_type':1, 'deliver_status':0, 'content':content, 'img_data':img_data};
   $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
     if (json.ret == 0) {
       window.location.href = "{{ url_for('mobile.aftersales.root') }}";
@@ -103,5 +136,27 @@ function submit() {
     }
   });
 }
+
+$(document).ready(function(){
+  //点击图片淡入放大
+  $('#uploaderFiles').on("click", "li", function () {
+    index = $(this).index();
+    var style = this.getAttribute("style");
+    $('#galleryImg').attr("style", style);
+    $('#gallery').fadeIn(100);
+  });
+
+  //点击图片淡出消失
+  $('#gallery').on("click", function () {
+    $('#gallery').fadeOut(100);
+  });
+
+  //删除图片
+  $(".weui-gallery__del").click(function (event) {
+    event.stopPropagation();        //冒泡事件
+    $('#uploaderFiles').find("li").eq(index).remove();
+    $('#gallery').fadeOut(100);
+  });
+});
 </script>
 {% endblock %}

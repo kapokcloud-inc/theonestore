@@ -58,7 +58,8 @@ db.init_app(app)
 configure_uploads(app)
 
 # 启动form表单csr保护
-CSRFProtect(app)
+csrf = CSRFProtect(app)
+csrf.exempt('app.views.api.upload.ueditor')
 
 # 注册jinja模板过滤器
 jinja_filters = {
