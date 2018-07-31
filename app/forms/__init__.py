@@ -40,7 +40,7 @@ class Form(FlaskForm):
     def validate_on_submit(self):
         """表单校验"""
         primary_key = request.form.get('primary_key', '').strip()
-        ret = super().validate_on_submit()
+        ret = super(Form, self).validate_on_submit()
         if ret is True or (not primary_key or primary_key == '0'):
             return ret
 
@@ -55,6 +55,6 @@ class Form(FlaskForm):
         for name, field in iteritems(self._fields):
             if field.errors:
                 return False
-                
+
         return True
 

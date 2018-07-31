@@ -58,7 +58,7 @@ class AdminUsersEditForm(Form):
 
     def validate_on_submit(self):
         """检验表单"""
-        ret = super().validate_on_submit()
+        ret = super(AdminUsersEditForm, self).validate_on_submit()
         if ret is False:
             return ret
 
