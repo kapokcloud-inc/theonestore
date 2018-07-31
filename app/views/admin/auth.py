@@ -30,7 +30,7 @@ from app.helpers import (
     randomstr
 )
 from app.database import db
-from app.forms.admin.auth import AdminUsersForm
+from app.forms.admin.auth import AdminUsersForm, AdminUsersEditForm
 from app.models.auth import AdminUsers
 from app.services.admin.auth import AuthLoginService
 from app.services.uploads import FileUploadService
@@ -73,6 +73,10 @@ def create():
     g.page_title = _(u'添加管理员')
 
     form = AdminUsersForm()
+    from flask_wtf.file import FileAllowed
+    for validator in form.avatar.validators:
+        if isinstance(validator, FileAllowed):
+            log_info(validator.upload_set.name)
     return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
 
@@ -84,6 +88,9 @@ def edit(admin_uid):
 
     form = AdminUsersForm()
     form.fill_form(au)
+    log_info('----------------------------')
+    log_info(form.avatar.data)
+    log_info('----------------------------')
     return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
 
@@ -99,7 +106,12 @@ def delete(admin_uid):
 @auth.route('/save', methods=['POST'])
 def save():
     """保存管理员"""
-    form = AdminUsersForm(CombinedMultiDict((request.files, request.form)))
+    primary_key = request.form.get('primary_key', '').strip()
+    if primary_key and primary_key != '0':
+        form = AdminUsersEditForm(CombinedMultiDict((request.files, request.form)))
+    else:
+        form = AdminUsersForm(CombinedMultiDict((request.files, request.form)))
+
     if not form.validate_on_submit():
         return render_template('admin/auth/admin_user_detail.html.j2', form=form)
     
@@ -115,19 +127,21 @@ def save():
         sha256_password_salt = sha256((password+au.salt).encode('utf8')).hexdigest()
         au.password = sha256(sha256_password_salt.encode('utf8')).hexdigest()
 
-    fus = FileUploadService()
-    try:
-        avatar = fus.save_storage(form.avatar.data, 'avatar')
-    except Exception as e:
-        log_error(u'[FileUploadService] Exception:%s' % e)
-        form.avatar.errors = (_(u'上传失败，请检查云存储配置'),)
-        return render_template('admin/auth/admin_user_detail.html.j2', form=form)
+    avatar = ''
+    if form.avatar.data:
+        fus = FileUploadService()
+        try:
+            avatar = fus.save_storage(form.avatar.data, 'avatar')
+        except Exception as e:
+            log_error(u'[FileUploadService] Exception:%s' % e)
+            form.avatar.errors = (_(u'上传失败，请检查云存储配置'),)
+            return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
     au.username = form.username.data
     au.mobile = form.mobile.data
     au.nickname = form.username.data
     au.update_time = int(time.time())
-    au.avatar = avatar
+    au.avatar = avatar if avatar else au.avatar
     db.session.commit()
 
     return redirect(url_for('admin.auth.index'))

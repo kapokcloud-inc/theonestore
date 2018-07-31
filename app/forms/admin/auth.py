@@ -36,8 +36,8 @@ from app.helpers import toint, log_info
 from app.forms import Form
 from app.models.auth import AdminUsers
 
-class AdminUsersForm(Form):
-    """管理员form"""
+class AdminUsersEditForm(Form):
+    """编辑管理员form"""
     admin_uid = HiddenField(default=0)
 
     username = StringField(_(u'用户名'), validators=[
@@ -48,18 +48,6 @@ class AdminUsersForm(Form):
     mobile = StringField(_(u'手机号码'), validators=[
                     Required(message=_(u'必填项')), 
                     Length(min=11, max=11, message=_(u'手机号码长度只能为11位'))
-                ])
-
-    password = PasswordField(_(u'密码'), validators=[
-                    Required(message=_(u'必填项')), 
-                    Length(min=6, max=20, message=_(u'密码长度在6位至20位')),
-                    EqualTo('password2', message=_(u'密码不相同'))
-                ])
-
-    password2 = PasswordField(_(u'重复密码'), validators=[
-                    Required(message=_(u'必填项')), 
-                    Length(min=6, max=20, message=_(u'密码长度在6位至20位')),
-                    EqualTo('password', message=_(u'密码不相同'))
                 ])
 
     avatar = FileField(_(u'头像'), 
@@ -83,7 +71,21 @@ class AdminUsersForm(Form):
         au = AdminUsers.query.filter(AdminUsers.mobile == self.mobile.data).first()
         if au is not None and au.admin_uid != admin_uid:
             self.mobile.errors = (_(u'手机号码已经存在'),)
-            ret = False
+            ret = False         
 
         return ret
-    
+
+
+class AdminUsersForm(AdminUsersEditForm):
+    """管理员form"""
+    password = PasswordField(_(u'密码'), validators=[
+                    Required(message=_(u'必填项')), 
+                    Length(min=6, max=20, message=_(u'密码长度在6位至20位')),
+                    EqualTo('password2', message=_(u'密码不相同'))
+                ])
+
+    password2 = PasswordField(_(u'重复密码'), validators=[
+                    Required(message=_(u'必填项')), 
+                    Length(min=6, max=20, message=_(u'密码长度在6位至20位')),
+                    EqualTo('password', message=_(u'密码不相同'))
+                ])

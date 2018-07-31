@@ -22,7 +22,7 @@
                     </a>
                   </li>
                   <li>
-                    <a class="bg-danger" href="#">
+                    <a class="bg-danger" href="javascript:;" onclick="removeAdminUser({{ au.admin_uid }});">
                       <i class="ti-trash"></i>
                     </a>
                   </li>
@@ -41,4 +41,26 @@
     <!-- /.row -->
   </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+/**
+ * 删除管理员
+ */
+function removeAdminUser(admin_uid) {
+  var ret = confirm("{{ _('确实要删除管理员?') }}");
+  if (ret) {
+    $.get('/admin/auth/delete/'+admin_uid, function(res){
+      var ret = res.ret;
+      var msg = res.msg;
+      if (ret != 0) {
+        alert(msg);
+        return;
+      }
+      window.location.reload();
+    });
+  }
+}
+</script>
 {% endblock %}

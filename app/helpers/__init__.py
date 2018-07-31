@@ -35,6 +35,7 @@ from flask_uploads import (
     DOCUMENTS,
     IMAGES
 )
+from flask_wtf.file import FileAllowed
 from sqlalchemy import func
 
 from app.database import db
@@ -303,9 +304,9 @@ def get_count(q):
 def randomstr(random_len = 6, random_type = 0):
     """
     获取随机字符串
-    @param random_len: 随机字符串长度
-    @param random_type: 随机类型 0:大小写数字混合 1:数字 2:小写字母 3:大写字母
-    @return string
+    :param random_len: 随机字符串长度
+    :param random_type: 随机类型 0:大小写数字混合 1:数字 2:小写字母 3:大写字母
+    :return string
     """
     random_string_array = ['0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
         '0123456789', 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ']
@@ -314,3 +315,15 @@ def randomstr(random_len = 6, random_type = 0):
 
     random_string = random_string_array[random_type]
     return ''.join(random.sample(random_string, random_len))
+
+
+def get_file_uploadtype(field):
+    """获取文件上传类型
+    :param field
+    :return string
+    """
+    uploadtype = ''
+    for validator in field.validators:
+        if isinstance(validator, FileAllowed):
+            uploadtype = validator.upload_set.name
+    return uploadtype
