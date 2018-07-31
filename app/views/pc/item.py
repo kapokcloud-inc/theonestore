@@ -81,7 +81,7 @@ def detail(goods_id):
 
     comments = []
     if item.comment_count > 0:
-        comments = CommentStaticMethodsService.comments({'p':1, 'ps':2, 'ttype':1, 'tid':goods_id})
+        comments = CommentStaticMethodsService.comments({'p':1, 'ps':10, 'ttype':1, 'tid':goods_id})
 
     return render_template('pc/item/detail.html.j2', item=item, galleries=galleries, is_fav=is_fav, comments=comments)
 
