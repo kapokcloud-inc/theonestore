@@ -12,3 +12,4 @@ from .index import index
 from .category import category
 from .item import item
 from .cart import cart
+from .order import order

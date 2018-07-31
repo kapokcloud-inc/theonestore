@@ -187,10 +187,10 @@ class OrderCreateService(object):
                 'goods_data':goods_data, 'add_time':self.current_time, 'update_time':self.current_time}
         self.order = model_create(Order, data)
 
-        # 删除购物车商品项 ??
-        #for cart_id in self.carts_id:
-        #    cart = Cart.query.get(cart_id)
-        #    model_delete(cart)
+        # 删除购物车商品项
+        for cart_id in self.carts_id:
+            cart = Cart.query.get(cart_id)
+            model_delete(cart)
 
         # 站内消息
         content = _(u'您的订单%s已创建，请尽快完成支付。' % order_sn)
@@ -278,7 +278,7 @@ class OrderUpdateService(object):
         _coupon_id   = self._coupon.coupon_id if self._coupon else None
 
         if self.coupon_id > 0 and self.coupon_id != _coupon_id:
-            # 检查 - 优惠券 ??
+            # 检查 - 优惠券
             self.coupon = Coupon.query.filter(Coupon.coupon_id == self.coupon_id).filter(Coupon.uid == self.uid).first()
             if not self.coupon:
                 self.msg = _(u'优惠券不存在')

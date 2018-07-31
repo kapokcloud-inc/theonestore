@@ -22,14 +22,14 @@
             <div class="detail-info_left">
               <div class="info-left_box">
                 <div class="goods-big_pic">
-                  <img id="bigpic" src="http://i8.mifile.cn/a1/pms_1522636275.75022423.jpg" alt="">
+                  <img id="bigpic" src="http://i8.mifile.cn/a1/pms_1522636275.74216007.jpg" alt="">
                 </div>
                 <div class="goods-small_pic clearfix">
                   <ul class="small-pic_list">
-                    <li class="small-pic_item">
+                    <li class="small-pic_item current">
                       <img src="http://i8.mifile.cn/a1/pms_1522636275.74216007.jpg" alt="">
                     </li>
-                    <li class="small-pic_item current">
+                    <li class="small-pic_item">
                       <img src="http://i8.mifile.cn/a1/pms_1522636275.75022423.jpg" alt="">
                     </li>
                     <li class="small-pic_item">
@@ -133,23 +133,20 @@
                   </div>
                 </div> -->
                 <div class="one-cell not-border serve-cell">
-                  <div class="one-cell_bd">
-                    <a href="" class="goods-scroll" style="border-left:none !important">
-                      <img class="goods-scroll_img" src="/static/default/pc/img/review.png" alt="">
-                      <span>{{_('评价 ')}}(4345)</span>
-                    </a>
+                  <!-- 点击评价，跳到商品的全部评价，点击事件在下方 -->
+                  <div class="goods-scroll" style="border-left:none !important" onclick="comment()">
+                    <img class="goods-scroll_img" src="/static/default/pc/img/review.png" alt="">
+                    <span>{{_('评价 ')}}(4345)</span>
                   </div>
-                  <div class="one-cell_bd">
-                    <a href="" class="goods-scroll">
-                      <img class="goods-scroll_img" src="/static/default/pc/img/zan.png" alt="">
-                      <span>{{_('满意度 ')}}(97.5%)</span>
-                    </a>
+
+                  <!-- 点击满意度，跳到商品的好评，点击事件在下方 -->
+                  <div class="goods-scroll" onclick="goodCom()">
+                    <img class="goods-scroll_img" src="/static/default/pc/img/zan.png" alt="">
+                    <span>{{_('满意度 ')}}(97.5%)</span>
                   </div>
-                  <div class="one-cell_bd">
-                    <a  href="" class="goods-scroll">
-                      <img class="goods-scroll_img" src="/static/default/pc/img/notlike.png" alt="">
-                      <span>{{_('收藏')}}</span>
-                    </a>
+                  <div class="goods-scroll">
+                    <img class="goods-scroll_img" src="/static/default/pc/img/notlike.png" alt="">
+                    <span>{{_('收藏')}}</span>
                   </div>
                 </div>
               </div>
@@ -160,196 +157,236 @@
       <div class="goods-detail_nav">
         <div class="head-inner">
           <ul class="detail-nav_list">
-            <li class="detail-nav_item currentOn">
-              <a class="detail-nav_head" href="">{{_('详情')}}</a>
+            <li class="detail-nav_item allOn" id="navDatail">
+              <div class="detail-nav_head">{{_('详情')}}</div>
             </li>
-            <li class="detail-nav_item">
-              <a class="detail-nav_head" href="">{{_('评价 ')}}(4345)</a>
-            </li>
-            <li class="detail-nav_item">
-              <a class="detail-nav_head" href="">{{_('商品')}}</a>
+            <li class="detail-nav_item" id="navCom">
+              <div class="detail-nav_head">{{_('评价 ')}}(4345)</div>
             </li>
           </ul>
         </div>
       </div>
-      <!-- 商品详情 -->
-      <div class="goods-detail-desc">
-        <div class="head-inner">
-          <ul class="detailBlock">
-            <li>
-              <img src="http://i8.mifile.cn/b2c-mimall-media/f843e2aed1e9781c87c83c51fa94e69c.jpg" alt="">
-            </li>
-            <li>
-              <img src="http://i8.mifile.cn/b2c-mimall-media/f5e9f5f659ee00e4f12130c04b0f27f4.jpg" alt="">
-            </li>
-            <li>
-              <img src="http://i8.mifile.cn/b2c-mimall-media/a47747f5aa95f452409938f41243fce1.jpg" alt="">
-            </li>
-            <li>
-              <img src="http://i8.mifile.cn/b2c-mimall-media/46b4771f39df722fcf651030780d5dee.jpg" alt="">
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- 商品详情 end -->
-      <div class="goods-comment_head">
-        <div class="head-inner main-block">
-          <div class="border-line"></div>
-          <p class="head-text">{{_('评价晒单')}}</p>
-        </div>
-      </div>
-      <!-- 商品有评论时显示 -->
-      <div class="goods-detail_comment">
-        <div class="head-inner">
-          <div class="goods-comment_groom bg-white">
-            <div class="percent-block">
-              <p class="percent">97.3%</p>
-              <p class="percent-type">{{_('满意度')}}</p>
+      <div id="cntBox">
+        <!-- 商品详情 -->
+        <div class="allCnt show" id="detail">
+          <div class="goods-detail-desc">
+            <div class="head-inner">
+              <ul class="detailBlock">
+                <li>
+                  <img src="http://i8.mifile.cn/b2c-mimall-media/f843e2aed1e9781c87c83c51fa94e69c.jpg" alt="">
+                </li>
+                <li>
+                  <img src="http://i8.mifile.cn/b2c-mimall-media/f5e9f5f659ee00e4f12130c04b0f27f4.jpg" alt="">
+                </li>
+                <li>
+                  <img src="http://i8.mifile.cn/b2c-mimall-media/a47747f5aa95f452409938f41243fce1.jpg" alt="">
+                </li>
+                <li>
+                  <img src="http://i8.mifile.cn/b2c-mimall-media/46b4771f39df722fcf651030780d5dee.jpg" alt="">
+                </li>
+              </ul>
             </div>
           </div>
-          <div class="rate-wrap">
-            <a href="" class="rate-type rateON">{{_('全部评论 ')}}1123</a>
-            <a href="" class="rate-type">{{_('好评 ')}}</a>
-            <a href="" class="rate-type">{{_('中评 ')}}</a>
-            <a href="" class="rate-type">{{_('差评 ')}}</a>
-            <a href="" class="rate-type">{{_('有图 ')}}</a>
-          </div>
-          <!-- 评论内容 -->
-          <ul class="goods-comment_cnt bg-white">
-            <li class="comment-cnt_item">
-              <div class="cnt-item_hd">
-                <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
-              </div>
-              <div class="cnt-item_bd">
-                <div class="review-title">
-                  datou大头
-                  <span class="rate-text">好评</span>
-                </div>
-                <div class="review-add mar-top">1970-01-01 08:00:00</div>
-                <div class="review_cnt">
-                  hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00
-                  hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00
-                  hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00
-                </div>
-                <ul class="comment-img_wrap">
-                  <li class="commentImg">
-                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
-                  </li>
-                  <li class="commentImg">
-                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
-                  </li>
-                  <li class="commentImg">
-                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
-                  </li>
-                  <li class="commentImg">
-                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
-                  </li>
-                  <li class="commentImg">
-                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
-                  </li>
-                  <li class="commentImg">
-                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
-                  </li>
-                  <li class="commentImg">
-                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li class="comment-cnt_item">
-              <div class="cnt-item_hd">
-                <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
-              </div>
-              <div class="cnt-item_bd">
-                <div class="review-title">
-                  datou大头
-                  <span class="rate-text">好评</span>
-                </div>
-                <div class="review-add mar-top">1970-01-01 08:00:00</div>
-                <div class="review_cnt">
-                  hahahaha1970-01-01 08:00:00
-                </div>
-                <ul class="comment-img_wrap">
-                  <li class="commentImg">
-                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
-                  </li>
-                  <li class="commentImg">
-                    <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li class="comment-cnt_item">
-              <div class="cnt-item_hd">
-                <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
-              </div>
-              <div class="cnt-item_bd">
-                <div class="review-title">
-                  datou大头
-                  <span class="rate-text">好评</span>
-                </div>
-                <div class="review-add mar-top">1970-01-01 08:00:00</div>
-                <div class="review_cnt">
-                  hahahaha1970-01-01
-                </div>
-                <ul class="comment-img_wrap">
-                  <li class="commentImg">
-                    <img src="http://jqweui.com/assets/img/home-btn.png" alt="">
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li class="comment-cnt_item">
-              <div class="cnt-item_hd">
-                <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
-              </div>
-              <div class="cnt-item_bd">
-                <div class="review-title">
-                  datou大头
-                  <span class="rate-text">好评</span>
-                </div>
-                <div class="review-add mar-top">1970-01-01 08:00:00</div>
-                <div class="review_cnt">
-                  此处省略17条。。。。
-                </div>
-              </div>
-            </li>
-          </ul>
-          <!-- 评论内容 end -->
-
-          <!-- 分页 每20条一页 -->
-          <div class="comment-page_list">
-            <a href="" class="page-num">{{_('上一页')}}</a>
-            <a href="" class="page-num">1</a>
-            <a href="" class="page-num">2</a>
-            <a href="" class="page-num">3</a>
-            <a href="" class="page-num">4</a>
-            <a href="" class="page-num">5</a>
-            <a href="" class="page-num">6</a>
-            <span class="page-more">...</span>
-            <a href="" class="page-num">12</a>
-            <a href="" class="page-num">{{_('下一页')}}</a>
-          </div>
-          <!-- 分页 end -->
         </div>
+        <!-- 商品详情 end -->
+
+        <!-- 商品评价 -->
+        <div class="allCnt" id="comment">
+          <div class="goods-comment_head">
+            <div class="head-inner main-block">
+              <div class="border-line"></div>
+              <p class="head-text">{{_('评价晒单')}}</p>
+            </div>
+          </div>
+        
+          <!-- 商品有评论时显示 -->
+          <div class="goods-detail_comment">
+            <div class="head-inner">
+              <div class="goods-comment_groom bg-white">
+                <div class="percent-block">
+                  <p class="percent">97.3%</p>
+                  <p class="percent-type">{{_('满意度')}}</p>
+                </div>
+              </div>
+              <div class="rate-wrap">
+                <a href="" class="rate-type rateON">{{_('全部评论 ')}}1123</a>
+                <a href="" class="rate-type">{{_('好评 ')}}</a>
+                <a href="" class="rate-type">{{_('中评 ')}}</a>
+                <a href="" class="rate-type">{{_('差评 ')}}</a>
+                <a href="" class="rate-type">{{_('有图 ')}}</a>
+              </div>
+              <!-- 评论内容 -->
+              <ul class="goods-comment_cnt bg-white">
+                <li class="comment-cnt_item">
+                  <div class="cnt-item_hd">
+                    <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
+                  </div>
+                  <div class="cnt-item_bd">
+                    <div class="review-title">
+                      datou大头
+                      <span class="rate-text">好评</span>
+                    </div>
+                    <div class="review-add mar-top">1970-01-01 08:00:00</div>
+                    <div class="review_cnt">
+                      hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00 hahahaha1970-01-01 08:00:00hahahaha1970-01-01
+                      08:00:00hahahaha1970-01-01 08:00:00 hahahaha1970-01-01 08:00:00hahahaha1970-01-01 08:00:00
+                    </div>
+                    <ul class="comment-img_wrap">
+                      <li class="commentImg">
+                        <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                      </li>
+                      <li class="commentImg">
+                        <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                      </li>
+                      <li class="commentImg">
+                        <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                      </li>
+                      <li class="commentImg">
+                        <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                      </li>
+                      <li class="commentImg">
+                        <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                      </li>
+                      <li class="commentImg">
+                        <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                      </li>
+                      <li class="commentImg">
+                        <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="comment-cnt_item">
+                  <div class="cnt-item_hd">
+                    <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
+                  </div>
+                  <div class="cnt-item_bd">
+                    <div class="review-title">
+                      datou大头
+                      <span class="rate-text">好评</span>
+                    </div>
+                    <div class="review-add mar-top">1970-01-01 08:00:00</div>
+                    <div class="review_cnt">
+                      hahahaha1970-01-01 08:00:00
+                    </div>
+                    <ul class="comment-img_wrap">
+                      <li class="commentImg">
+                        <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                      </li>
+                      <li class="commentImg">
+                        <img src="http://i1.mifile.cn/a2/1522740204_6506446_s1080_1920wh.jpg" alt="">
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="comment-cnt_item">
+                  <div class="cnt-item_hd">
+                    <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
+                  </div>
+                  <div class="cnt-item_bd">
+                    <div class="review-title">
+                      datou大头
+                      <span class="rate-text">好评</span>
+                    </div>
+                    <div class="review-add mar-top">1970-01-01 08:00:00</div>
+                    <div class="review_cnt">
+                      hahahaha1970-01-01
+                    </div>
+                    <ul class="comment-img_wrap">
+                      <li class="commentImg">
+                        <img src="http://jqweui.com/assets/img/home-btn.png" alt="">
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="comment-cnt_item">
+                  <div class="cnt-item_hd">
+                    <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/s010/p01NWV1Evkgl/mlaVqPsrWhSWAA_90.jpg" alt="">
+                  </div>
+                  <div class="cnt-item_bd">
+                    <div class="review-title">
+                      datou大头
+                      <span class="rate-text">好评</span>
+                    </div>
+                    <div class="review-add mar-top">1970-01-01 08:00:00</div>
+                    <div class="review_cnt">
+                      此处省略17条。。。。
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <!-- 评论内容 end -->
+        
+              <!-- 分页 每20条一页 -->
+              <div class="comment-page_list">
+                <a href="" class="page-num">{{_('上一页')}}</a>
+                <span class="page-num btn-primary">1</span>
+                <a href="" class="page-num">2</a>
+                <a href="" class="page-num">3</a>
+                <a href="" class="page-num">4</a>
+                <a href="" class="page-num">5</a>
+                <a href="" class="page-num">6</a>
+                <span class="page-more">...</span>
+                <a href="" class="page-num">12</a>
+                <a href="" class="page-num">{{_('下一页')}}</a>
+              </div>
+              <!-- 分页 end -->
+            </div>
+          </div>
+          <!-- 商品有评论时显示 end -->
+        
+          <!-- 商品没有评论时显示 -->
+          <!-- <div class="goods-null_comment">
+                        <div class="head-inner">
+                          <div class="null-comment_cnt">
+                            <p>暂时还没有评价</p>
+                            <p>期待你分享对产品的印象</p>
+                          </div>
+                        </div>
+                      </div> -->
+          <!-- 商品没有评论时显示 end -->
+        </div>
+        <!-- 商品评价 -->
       </div>
-      <!-- 商品有评论时显示 end -->
-
-      <!-- 商品没有评论时显示 -->
-      <!-- <div class="goods-null_comment">
-        <div class="head-inner">
-          <div class="null-comment_cnt">
-            <p>暂时还没有评价</p>
-            <p>期待你分享对产品的印象</p>
-          </div>
-        </div>
-      </div> -->
-      <!-- 商品没有评论时显示 end -->
     </div>
   </div>
 </div>
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript"></script>
+<script type="text/javascript">
+//点击切换图片
+$('.small-pic_item').on("click","img", function(){
+  index = $(this).index();
+  var imgurl = this.getAttribute("src");
+  $('#bigpic').attr("src", imgurl);
+  $('.goods-big_pic').fadeIn(100);
+  $(this).parent().addClass('current').siblings().removeClass('current');
+});
+
+//点击切换商品详情和商品评价
+$(function () {
+  $(".detail-nav_list li").off("click").on("click", function () {
+    var index = $(this).index();
+    $(this).addClass("allOn").siblings().removeClass("allOn");
+    $("#cntBox .allCnt").eq(index).addClass("show").siblings().removeClass("show");
+  });
+});
+
+//点击评论跳到评论版块
+function comment(){
+  $('#comment').addClass("show").removeClass("hide");
+  $('#detail').addClass("hide").removeClass("show");
+  $('#navCom').addClass("allOn");
+  $('#navDatail').removeClass("allOn");
+}
+
+//点击满意度跳到评论的好评版块
+function goodCom() {
+  $('#comment').addClass("show").removeClass("hide");
+  $('#detail').addClass("hide").removeClass("show");
+  $('#navCom').addClass("allOn");
+  $('#navDatail').removeClass("allOn");
+}
+</script>
 {% endblock%}

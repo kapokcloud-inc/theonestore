@@ -3,7 +3,7 @@
 
 {% block head %}
 <title>{{_('我的订单- 一店')}}</title>
-<link rel="stylesheet" href="{{'/static/default/mobile/css/user.css'|static_uri}}"> 
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
 {% endblock %} 
 
 {% block body %}
@@ -175,15 +175,14 @@ function cancel() {
   }
 }
 
-//点击去评价商品，关闭确认收货弹窗 ??
+//点击去评价商品，关闭确认收货弹窗
 function review() {
   $confirmReceipt.removeClass('show');
   if (!$confirmReceipt.hasClass('hide')) {
     $confirmReceipt.addClass('hide');
   }
   
-  var url = "/mobile/order/create-comment";
-  window.location.href = url;
+  window.location.href = "{{ url_for('mobile.order.comment', is_pending=1) }}";
 }
 
 //取消订单弹窗

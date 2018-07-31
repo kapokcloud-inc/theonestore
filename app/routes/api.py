@@ -17,5 +17,6 @@ API_ROUTES = (
     (api.me,        '/api/me'),
     (api.order,     '/api/order'),
     (api.pay,       '/api/pay'),
-    (api.aftersales,'/api/aftersales')
+    (api.aftersales,'/api/aftersales'),
+    (api.upload,    '/api/upload')
 )

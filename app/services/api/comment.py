@@ -16,7 +16,6 @@ from app.helpers import (
     toint
 )
 from app.helpers.date_time import current_timestamp
-# ?? from app.helpers.user import get_uid, get_nickname, get_avatar
 
 from app.models.comment import Comment
 

@@ -23,6 +23,11 @@ ul,li{
   list-style:none;
 }
 
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
 .ava{border-radius: 50%;}
 
 .flex_wrap{display: flex;}
@@ -60,11 +65,17 @@ ul,li{
 .mar-left{
   margin-left: 10px;
 }
+.mar-left40{
+  margin-left: 40px;
+}
 .mar-right{
   margin-right: 10px;
 }
-.pad-top30{
-  padding-top: 30px;
+.mar-bottom{
+  margin-bottom: 10px;
+}
+.pad-top40{
+  padding-top: 40px;
 }
 .blackGap{
   font-size: @font-size14 !important;
@@ -80,6 +91,15 @@ ul,li{
   width: 50px;
   height: 50px;
   margin-right: 15px;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+}
+.avatar80{
+  width: 80px;
+  height: 80px;
+  margin-right: 25px;
   img{
     width: 100%;
     height: 100%;
@@ -112,7 +132,7 @@ header img{
   position: relative;
   z-index: 103;
   height: @height35;
-  background-color: #f3f4f5;
+  background-color: @body-color;
   color: @grey-color6;
   .head-inner{
     z-index: 103;
@@ -245,7 +265,7 @@ header img{
   float: right;
   margin-top: 33px;
   margin-left: 20px;
-  background-color: #f3f4f5;
+  background-color: @body-color;
   border: @border;
   border-radius: 3px;
   &:hover{
@@ -550,6 +570,10 @@ header img{
     border-top: none;
   }
 }
+.not-oneCell::before{
+  border-top: none !important;
+  height: 0 !important;
+}
 .one-cell_bd{
   flex: 1;
   -webkit-box-flex: 1;
@@ -694,9 +718,6 @@ header img{
   font-size: @font-size14;
   border: 1px solid @grey-color;
 }
-.currentOn{
-  color: @main-color !important;
-}
 .news-badge{
   position: absolute;
   display: inline-block;
@@ -777,8 +798,8 @@ header img{
 }
 .btn-primary{
   border-color: @main-color !important;
-  color: @white-color;
-  background-color: @main-color;
+  color: @white-color !important;
+  background-color: @main-color !important;
 }
 .one-nav_header{
   float: left;
@@ -790,14 +811,14 @@ header img{
   color: @black-color;
   font-size: 26px;
 }
-.hide{
-  display: none;
+.hide,.allCnt{
+  display: none !important;
 }
 .show{
-  display: block;
+  display: block !important;
 }
 .allOn{
-  color: @main-color;
+  color: @main-color !important;
 }
 .ranpo{
   z-index: 1100;
@@ -810,4 +831,94 @@ header img{
   bottom: 0;
   top: 0px;
   background: rgba(0, 0, 0, 0.7);
+}
+.wave{
+  position: absolute;
+  top: -6px;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background-size: 8px 8px;
+  background-position: -4px 5px;
+  background-image: radial-gradient(transparent 0px, transparent 4px, #f33155 4px, #f33155 4px, white 4px, white);
+}
+.activeOn{
+  width: 0 !important;
+  height: 0 !important;
+}
+.user-main{
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+.allPad{
+  padding: 40px;
+}
+.btn-link{
+  display: block;
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+.order-type_btn{
+  cursor: pointer;
+  display: inline-block;
+  border: @border;
+  width: 118px;
+  height: 30px;
+  line-height: 28px;
+  font-size: @font-size14;
+  color: @grey-color6;
+  text-align: center;
+}
+.comment-page_list{
+  height: 30px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  text-align: center;
+}
+.page-num{
+  display: inline-block;
+  width: 50px;
+  height: 20px;
+  padding: 4px 0;
+  margin: 0 5px;
+  font-size: @font-size16;
+  font-weight: @font-weight400;
+  line-height: 20px;
+  color: @black-color;
+  border: @border;
+}
+.page-more{
+  display: inline-block;
+  height: 33px;
+  font-size: @font-size16;
+  font-weight: @font-weight400;
+  line-height: 25px;
+  color: @black-color;
+}
+.goodsName{
+  border-right: none !important;
+  color: @grey-color9;
+}
+.rate-wrap{
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+.rate-type{
+  display: inline-block;
+  width: 130px;
+  height: 30px;
+  line-height: 30px;
+  font-size: @font-size14;
+  color: @black-color;
+  text-align: center;
+  margin-right: 10px;
+  border-radius: 20px;
+  border:@border;
+  overflow: hidden;
+}
+.rateON{
+  background-color: @main-color;
+  color: @white-color;
+  border: none;
 }

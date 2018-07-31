@@ -1,0 +1,357 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+
+
+{% block head %}
+<title>{{_('订单详情 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/me.css">
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('订单详情')}}</span>
+      </p>
+    </div>
+  </div>
+  <div class="user-main">
+    <div class="head-inner clearfix">
+      {%include 'default/pc/layout/nav_left.html.j2'%}
+      <div class="order-wrap">
+        <div class="allPad">
+          <div class="order-detail_hd">
+            <div class="order-num">
+              <span>{{_('订单号：')}}</span>
+              <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+            </div>
+            <div class="type-btn">
+              <!-- 未支付订单，有取消订单按钮 -->
+              <a class="order-type_btn mar-right" href="javascript:;" onclick="calOrder({{ order.order_id }})">{{_('取消订单')}}</a>
+  
+              <!-- 已取消订单/已完成订单，有删除订单按钮 -->
+              <a class="order-type_btn mar-right" href="javascript:;" onclick="del({{ order.order_id }})">{{_('删除订单')}}</a>
+  
+              <!-- 未支付订单，有立即支付按钮 -->
+              <!-- <a class="order-type_btn btn-primary mar-right" href="{{ url_for('pc.cart.pay') }}">{{_('立即支付')}}</a> -->
+  
+              <!-- 已发货/未发货订单，有确认收货按钮 -->
+              <a class="order-type_btn btn-primary mar-right" href="javascript:;" onclick="okey({{ order.order_id }})">{{_('确认收货')}}</a>
+  
+              <!-- 已支付订单，有申请售后按钮 -->
+              <a class="order-type_btn mar-right" href="">{{_('申请售后')}}</a>
+            </div>
+          </div>
+          <div class="order-detail_bd">
+            <div class="order-goods_det">
+              <div class="order-summary">
+                <div class="order-status">待收货</div>
+                <div class="order-progress">
+                  <ul class="progress-list clearfix">
+                    <li class="step step-first step-done">
+                      <div>{{_('下单')}}</div>
+                      <div class="progress-info">2015.06.14 23:28</div>
+                    </li>
+                    <li class="step step-active">
+                      <div>{{_('付款')}}</div>
+                      <div class="progress-info">2015.06.14 23:31</div>
+                    </li>
+                    <li class="step">
+                      <div>{{_('配货')}}</div>
+                      <div class="progress-info"></div>
+                    </li>
+                    <li class="step">
+                      <div>{{_('出库')}}</div>
+                      <div class="progress-info"></div>
+                    </li>
+                    <li class="step step-last">
+                      <div>{{_('交易成功')}}</div>
+                      <div class="progress-info"></div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="order-delivery hide">
+                  <p class="delivery-num">
+                    <span class="mar-right">{{_('物流公司：')}}中通快递</span>
+                    <span>{{_('物流单号：')}}1146293841115</span>
+                  </p>
+                  <div class="delivery-list_box">
+                    <ul class="delivery-list">
+                      <li class="delivery-list_item first">深圳市:中国邮政速递物流股份有限公司深圳市南山分公司塘朗揽安排投递（ 投递员姓名：李爱胜;联系电话：13510592901） 2018-07-10 16:41:30</li>
+                      <li class="delivery-list_item">深圳市:离开深圳市 发往深圳站 2018-07-10 12:45:00</li>
+                      <li class="delivery-list_item">深圳市:到达 深圳市 处理中心 2018-07-10 11:56:00</li>
+                      <li class="delivery-list_item">深圳市:已离开深圳市南油速递营销部，发往深圳市 2018-07-10 11:33:42</li>
+                      <li class="delivery-list_item last">深圳市:深圳市南油速递营销部已收件（揽投员姓名：陈东光,联系电话:） 2018-07-10 11:21:00</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="delivery-more" id="more">
+                  <span class="show-more_text" id="moreText">{{_('展开物流详情')}}</span>
+                </div>
+              </div>
+              <div class="order-goods bd-bottom5">
+                <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                  <div class="one-cell_hd avatar80">
+                    <img src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
+                  </div>
+                  <div class="one-cell_bd">
+                    <p class="blackGap">红米手机2A 移动4G双卡版 绿色 8GB</p>
+                    <p class="greyGap mar-top">
+                      <span>￥499</span>
+                      <span>x1</span>
+                    </p>
+                  </div>
+                </a>
+                <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                  <div class="one-cell_hd avatar80">
+                    <img src="http://i1.mifile.cn/a1/T1QtxTBvET1RXrhCrK!80x80.jpg" alt="">
+                  </div>
+                  <div class="one-cell_bd">
+                    <p class="blackGap">小米礼品袋 透明</p>
+                    <p class="greyGap mar-top">
+                      <span>￥1</span>
+                      <span>x1</span>
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="order-det_info">
+              <div class="info-hd">{{_('收货信息')}}</div>
+              <table class="info-table">
+                <tbody>
+                  <tr>
+                    <th>{{_('姓名：')}}</th>
+                    <td>李炬明</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('联系电话：')}}</th>
+                    <td>13794489108</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('收货地址：')}}</th>
+                    <td>广东 深圳市 龙华新区 民治大道南景新村c12</td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- 订单未支付状态，有修改按钮 -->
+              <div class="actions">
+                <button class="order-type_btn" type="button" onclick="edit()">{{_('修改')}}</button>
+              </div>
+              <!-- 订单未支付状态，有修改按钮 end -->
+            </div>
+            <div class="order-det_info">
+              <div class="info-hd">{{_('支付信息')}}</div>
+              <table class="info-table">
+                <tbody>
+                  <tr>
+                    <th>{{_('支付方式：')}}</th>
+                    <td>{{_('微信支付')}}</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('配送时间：')}}</th>
+                    <td>{{_('不限送货时间')}}</td>
+                  </tr>
+                  <!-- 未支付时不显示 -->
+                  <tr>
+                    <th>{{_('支付流水号：')}}</th>
+                    <td>4200000158201807261083228703</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('支付时间：')}}</th>
+                    <td>2016.05.14 22:43</td>
+                  </tr>
+                  <!-- 未支付时不显示 end -->
+                </tbody>
+              </table>
+            </div>
+            <div class="order-detail-total">
+              <table class="total-table">
+                <tbody>
+                  <tr>
+                    <th>{{_('商品总价：')}}</th>
+                    <td>￥88</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('运费：')}}</th>
+                    <td>+￥10</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('优惠：')}}</th>
+                    <td>-￥10</td>
+                  </tr>
+                  <tr class="total-table_tl">
+                    <th>{{_('应付金额：')}}</th>
+                    <td>￥88</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 修改收货地址弹窗 -->
+  <div class="hide-mask hide" id="changeAdd">
+    <div class="editAdd-section">
+      <div class="editAdd-section_hd">
+        <span>{{_('修改地址')}}</span>
+        <a class="add-del" href="javascript:;" onclick="cal()">
+          <i class="icon-cancel"></i>
+        </a>
+      </div>
+      <div class="editAdd-section_bd">
+        <div class="bd-flex">
+          <label class="bd-label">{{_('姓名：')}}</label>
+          <input class="bd-input" type="text" placeholder="{{_('请填写收件人姓名')}}">
+        </div>
+        <div class="bd-flex">
+          <label class="bd-label">{{_('手机号码：')}}</label>
+          <input class="bd-input" type="text" placeholder="{{_('请填写收件人手机号码')}}">
+        </div>
+        <div class="bd-flex">
+          <label class="bd-label">{{_('地区：')}}</label>
+          <input readonly class="bd-input city-picker-input" type="text" data-toggle="city-picker" placeholder="{{_('请选择省/市/区')}}">
+        </div>
+        <div class="bd-flex">
+          <label class="bd-label">{{_('详细地址：')}}</label>
+          <input class="bd-input" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}">
+        </div>
+      </div>
+      <div class="editAdd-section_ft">
+        <button class="save-btn btn-primary mar-right" type="button" onclick="save()">{{_('保存')}}</button>
+        <button class="cancel-btn" type="button" onclick="cal()">{{_('取消')}}</button>
+      </div>
+    </div>
+  </div>
+  <!-- 修改收货地址弹窗 end -->
+
+  <!-- 修改收货地址弹窗 -->
+  <div class="hide-mask hide" id="confRet">
+    <div class="editAdd-section">
+      <div class="editAdd-section_hd">
+        <span>{{_('确认收货')}}</span>
+        <a class="add-del" href="javascript:;" onclick="confCan()">
+          <i class="icon-cancel"></i>
+        </a>
+      </div>
+      <div class="not-one">
+        <p class="not-one_text" style="margin-top:58px;">{{_('您的订单已确认收货成功!')}}</p>
+        <button type="button" class="not-one_btn btn-primary" onclick="review()">{{_('去评价')}}</button>
+      </div>
+    </div>
+  </div>
+  <!-- 修改收货地址弹窗 end -->
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+//确定收货弹窗
+function okey(order_id) {
+  var conf = confirm('确认收到此订单的商品了么？');
+  if(conf){
+    $('#confRet').removeClass('hide');
+    if (!$('#confRet').hasClass('show')) {
+      $('#confRet').addClass('show');
+    }
+  }
+}
+
+//关闭确认收货弹窗
+function confCan() {
+  $('#confRet').removeClass('show');
+  if (!$('#confRet').hasClass('hide')) {
+    $('#confRet').addClass('hide');
+  }
+}
+
+//点击去评价商品，关闭确认收货弹窗
+function review() {
+  $('#confRet').removeClass('show');
+  if (!$('#confRet').hasClass('hide')) {
+    $('#confRet').addClass('hide');
+  }
+
+  var url = "/pc/order/create-comment";
+  window.location.href = url;
+}
+
+//点击edit()打开修改收货地址弹窗
+function edit() {
+  $('#changeAdd').removeClass('hide');
+  if (!$('#changeAdd').hasClass('show')) {
+    $('#changeAdd').addClass('show');
+  }
+}
+
+//点击cal()关闭修改收货地址弹窗
+function cal() {
+  $('#changeAdd').removeClass('show');
+  if (!$('#changeAdd').hasClass('hide')) {
+    $('#changeAdd').addClass('hide');
+  } 
+}
+
+//点击save()关闭修改收货地址弹窗，并保存修改的地址
+function save() {
+  $('#changeAdd').removeClass('show');
+  if (!$('#changeAdd').hasClass('hide')) {
+    $('#changeAdd').addClass('hide');
+  }
+}
+
+//点击more显示物流信息
+$('#more').click(function(){
+  var $moreText = $('#moreText');
+  if($moreText.text()=='展开物流详情' && $moreText.hasClass('show-more_text')){
+    $('.order-delivery').removeClass('hide').addClass('show');
+    $moreText.removeClass('show-more_text');
+    $moreText.text('收起物流详情');
+    if (!$moreText.hasClass('hide-more_text')) {
+      $moreText.addClass('hide-more_text');
+    }
+  } else{
+    $('.order-delivery').removeClass('show').addClass('hide');
+    $moreText.removeClass('hide-more_text');
+    $moreText.text('展开物流详情');
+    if (!$moreText.hasClass('show-more_text')) {
+      $moreText.addClass('show-more_text');
+    }
+  }
+});
+
+//取消订单弹窗
+function calOrder(order_id) {
+  var cal = confirm('确定取消该订单？');
+  if (cal) {
+   $.get("{{ url_for('api.order.cancel') }}", { 'order_id': order_id }, function (json) {
+      if (json.ret != 0) {
+        alert(json.msg,"cal");
+        return false;
+      }
+
+      location.reload();
+    });
+  }
+}
+
+//删除订单弹窗
+function del(order_id) {
+  var dele = confirm('确定删除该订单？');
+  if (dele) {
+    $.get("{{ url_for('api.order.remove') }}", { 'order_id': order_id }, function (json) {
+      if (json.ret != 0) {
+        alert(json.msg, "text");
+        return false;
+      }
+
+      window.location.href = "{{ url_for('pc.order.index') }}";
+    });
+  }
+}
+</script>
+{% endblock%}

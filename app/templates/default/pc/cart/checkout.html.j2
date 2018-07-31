@@ -1,8 +1,10 @@
 {% extends '/default/pc/layout/cart_base.html.j2' %}
 
 {% block head %}
-<title>{{_('提交订单 - 一店')}}</title>
+<title>{{_('确认订单 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/cart.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
+<link rel="stylesheet" href="/static/default/pc/css/city-picker.css">
 {% endblock %}
 
 {% block nav %} 
@@ -21,7 +23,7 @@
           <p class="section-header_title">{{_('收货地址')}}</p>
         </div>
         <ul class="address-section_body clearfix">
-          <li class="address-body_item selected">
+          <li class="address-body_item hide selected">
             <div class="address-item_cnt">
               <p class="item-cnt_name">大头</p>
               <p class="item-cnt_mobile">13510515229</p>
@@ -35,7 +37,20 @@
               <button class="edit-btn" type="button">修改</button>
             </div>
           </li>
-          <li class="address-body_item">
+          <li class="address-body_item hide">
+            <div class="address-item_cnt">
+              <p class="item-cnt_name">da头</p>
+              <p class="item-cnt_mobile">13510515229</p>
+              <p class="item-cnt_address">
+                广东 深圳市 龙岗区 坂田街道
+                <br> 长坑路西五巷1号
+              </p>
+            </div>
+            <div class="item-cnt_edit" onclick="edit()">
+              <button class="edit-btn" type="button">修改</button>
+            </div>
+          </li>
+          <li class="address-body_item hide">
             <div class="address-item_cnt">
               <p class="item-cnt_name">xiao头</p>
               <p class="item-cnt_mobile">13510515229</p>
@@ -49,7 +64,7 @@
               <button class="edit-btn" type="button">修改</button>
             </div>
           </li>
-          <li class="address-body_item">
+          <li class="address-body_item hide">
             <div class="address-item_cnt">
               <p class="item-cnt_name">da头</p>
               <p class="item-cnt_mobile">13510515229</p>
@@ -63,6 +78,19 @@
               <button class="edit-btn" type="button">修改</button>
             </div>
           </li>
+          <li class="address-body_item hide">
+            <div class="address-item_cnt">
+              <p class="item-cnt_name">xiao头</p>
+              <p class="item-cnt_mobile">13510515229</p>
+              <p class="item-cnt_address">
+                广东 深圳市 龙华新区 民治大道
+                <br> 南京新村c12
+              </p>
+            </div>
+            <div class="item-cnt_edit" onclick="edit()">
+              <button class="edit-btn" type="button">修改</button>
+            </div>
+          </li>
           <div class="address-body_item" onclick="add()">
             <div class="add-new_address">
               <img src="/static/default/pc/img/add.png" alt="">
@@ -70,9 +98,8 @@
             </div>
           </div>
         </ul>
-        <div class="address-show-more">
-          <span class="show-more_text">{{_('显示更多收货地址')}}</span>
-          <span class="hide-more_text" style="display:none">{{_('收起更多收货地址')}}</span>
+        <div class="address-show-more hide" id="more">
+          <span class="show-more_text" id="moreText">{{_('显示更多收货地址')}}</span>
         </div>
       </div>
       <!-- 收货地址部分 end -->
@@ -100,7 +127,7 @@
       </div>
       <!-- 配送方式部分 end -->
 
-      <!-- 商品部分 -->
+      <!-- 商品及优惠券 -->
       <div class="goods-section clearfix">
         <div class="goods-section_header">
           <span class="goods-info">{{_('商品及优惠券')}}</span>
@@ -140,28 +167,92 @@
           </ul>
         </div>
         <div class="goods-section_footer">
-          <div>
-            <span class="goods-footer_left">{{_('商品总价：')}}</span>
-            <span class="goods-footer_right">￥1255</span>
+          <div class="coupon-left">
+            <img class="coupon-img" src="/static/default/pc/img/coupon.png" alt="">
+            <span>{{_('使用优惠券')}}</span>
+            <div style="line-height:25px;" class="hide" id="couponNum">{{_('使用优惠券1张，共抵扣')}}
+              <span class="allOn">￥20.0</span>
+            </div>
           </div>
-          <div>
-            <span class="goods-footer_left">{{_('优惠金额：')}}</span>
-            <span class="goods-footer_right">￥10</span>
+
+          <!-- 优惠券弹窗 -->
+          <div class="coupon-box hide">
+            <div class="coupon-box_hd">
+              <span style="padding-left:25px;">{{_('选择优惠券')}}</span>
+              <a class="add-del" style="top:0;" href="javascript:;" id="couponCel">
+                <i class="icon-cancel"></i>
+              </a>
+            </div>
+            <div class="coupon-box_bd">
+              <!-- 没有可用优惠券时显示 -->
+              <!-- <div class="not-coupon">{{_('您暂时没有可用的优惠券')}}</div> -->
+              <!-- 没有可用优惠券时显示 end -->
+
+              <!-- 有可用优惠券时显示 -->
+              <ul class="coupon-list">
+                <li class="coupon-list_item">
+                  <div class="coupon-info">
+                    <div class="wave"></div>
+                    <p>
+                      <span class="coupon-amount">￥20</span>
+                      满100
+                    </p>
+                    <p>{{_('有效期')}}：2018.07.12</p>
+                  </div>
+                  <div class="all-store">{{_('[全场通用]')}}</div>
+                </li>
+                <li class="coupon-list_item">
+                  <div class="coupon-info">
+                    <div class="wave"></div>
+                    <p>
+                      <span class="coupon-amount">￥10</span>
+                      满100
+                    </p>
+                    <p>{{_('有效期')}}：2018.07.12</p>
+                  </div>
+                  <div class="all-store">{{_('[全场通用]')}}</div>
+                </li>
+                <li class="coupon-list_item">
+                  <div class="coupon-info">
+                    <div class="wave"></div>
+                    <p>
+                      <span class="coupon-amount">￥20</span>
+                      满200
+                    </p>
+                    <p>{{_('有效期')}}：2018.07.12</p>
+                  </div>
+                  <div class="all-store">{{_('[全场通用]')}}</div>
+                </li>
+              </ul>
+              <!-- 有可用优惠券时显示 end -->
+            </div>
           </div>
-          <div>
-            <span class="goods-footer_left">{{_('运费：')}}</span>
-            <span class="goods-footer_right">￥10</span>
-          </div>
-          <div>
-            <span class="goods-footer_left">{{_('应付总额：')}}</span>
-            <span class="goods-footer_right" style="color:#f33155">
-              ￥
-              <em>1255</em>
-            </span>
-          </div>
+          <!-- 优惠券弹窗 end -->
+
+          <ul class="list-right">
+            <li>
+              <label class="goods-footer_left">{{_('商品总价：')}}</label>
+              <span class="goods-footer_right">￥1255</span>
+            </li>
+            <li>
+              <label class="goods-footer_left">{{_('优惠金额：')}}</label>
+              <span class="goods-footer_right">￥10</span>
+            </li>
+            <li>
+              <label class="goods-footer_left">{{_('运费：')}}</label>
+              <span class="goods-footer_right">￥10</span>
+            </li>
+            <li>
+              <label class="goods-footer_left">{{_('应付总额：')}}</label>
+              <span class="goods-footer_right" style="color:#f33155">
+                ￥
+                <em>1255</em>
+              </span>
+            </li>
+          </ul>
         </div>
       </div>
-      <!-- 商品部分 end -->
+      <!-- 商品及优惠券 end -->
 
       <!-- 提交订单 -->
       <div class="sub-section">
@@ -173,25 +264,56 @@
           </div>
         </div>
         <div class="cart-footer_right">
-          <a class="cart-checkout_btn btn-primary" href="">{{_('提交订单')}}</a>
+          <a class="cart-checkout_btn btn-primary" href="{{ url_for('pc.cart.pay') }}">{{_('提交订单')}}</a>
         </div>
       </div>
       <!-- 提交订单 end -->
     </div>
   </div>
-  <div class="hide-mask show">
+
+  <!-- 添加收货地址弹窗 -->
+  <div class="hide-mask hide">
     <div class="editAdd-section">
-    
+      <div class="editAdd-section_hd">
+        <span>{{_('添加收货地址')}}</span>
+        <a class="add-del" href="javascript:;" onclick="cancel()">
+          <i class="icon-cancel"></i>
+        </a>
+      </div>
+      <div class="editAdd-section_bd">
+        <div class="bd-flex">
+          <label class="bd-label">{{_('姓名：')}}</label>
+          <input class="bd-input" type="text" placeholder="{{_('请填写收件人姓名')}}">
+        </div>
+        <div class="bd-flex">
+          <label class="bd-label">{{_('手机号码：')}}</label>
+          <input class="bd-input" type="text" placeholder="{{_('请填写收件人手机号码')}}">
+        </div>
+        <div class="bd-flex">
+          <label class="bd-label">{{_('地区：')}}</label>
+          <input readonly class="bd-input city-picker-input" type="text" data-toggle="city-picker" placeholder="{{_('请选择省/市/区')}}">
+        </div>
+        <div class="bd-flex">
+          <label class="bd-label">{{_('详细地址：')}}</label>
+          <input class="bd-input" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}">
+        </div>
+      </div>
+      <div class="editAdd-section_ft">
+        <button class="save-btn btn-primary mar-right" type="button" onclick="save()">{{_('保存')}}</button>
+        <button class="cancel-btn" type="button" onclick="cancel()">{{_('取消')}}</button>
+      </div>
     </div>
   </div>
+  <!-- 添加收货地址弹窗 end -->
 </div>
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript" src="/static/default/pc/js/jquery.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/default/pc/js/city-picker.data.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/default/pc/js/city-picker.min.js" charset="utf-8"></script>
 <script type="text/javascript">
 var $selectWrap = $('.select-wrap');
-var $addressBd = $('.address-section_body');
+var $mask = $('.hide-mask');
 
 // 选中地址
 $('.address-section_body > li').click(function () {
@@ -233,6 +355,115 @@ $('.select-wrap > li').click(function () {
 $('.back-add_btn').click(function () {
   var t = $("#address").offset().top;
   $('html,body').animate({scrollTop:t}, 300);
+});
+
+//点击edit()打开添加新地址弹窗
+function edit() {
+  $mask.removeClass('hide');
+  if (!$mask.hasClass('show')) {
+    $mask.addClass('show');
+  }
+}
+
+//点击add()打开添加新地址弹窗
+function add() {
+  $mask.removeClass('hide');
+  if (!$mask.hasClass('show')) {
+    $mask.addClass('show');
+  }
+}
+
+//点击cancel()关闭添加新地址弹窗
+function cancel() {
+  $mask.removeClass('show');
+  if (!$mask.hasClass('hide')) {
+    $mask.addClass('hide');
+  } 
+}
+
+//点击save()关闭添加新地址弹窗，并保存新添加的地址
+function save() {
+  $mask.removeClass('show');
+  if (!$mask.hasClass('hide')) {
+    $mask.addClass('hide');
+  }
+}
+
+//收货地址超过3个时，显示更多收货地址show
+$(function(){
+  if($('.address-body_item').length>4){
+    $('.address-section_body > li:lt(3)').removeClass('hide').addClass('show');
+    var $more = $('#more');
+    $more.removeClass('hide');
+    if (!$more.hasClass('show')) {
+      $more.addClass('show');
+    }
+  } else{
+    $('.address-section_body > li').removeClass('hide').addClass('show');
+    $more.removeClass('show');
+    if (!$more.hasClass('hide')) {
+      $more.addClass('hide');
+    }
+  }
+});
+
+//点击more显示更多收货地址
+$('#more').click(function(){
+  var $moreText = $('#moreText');
+  if($moreText.text()=='显示更多收货地址' && $moreText.hasClass('show-more_text')){
+    $('.address-section_body > li').removeClass('hide').addClass('show');
+    $moreText.removeClass('show-more_text');
+    $moreText.text('收起更多收货地址');
+    if (!$moreText.hasClass('hide-more_text')) {
+      $moreText.addClass('hide-more_text');
+    }
+  } else{
+    $('.address-section_body > li:gt(2)').removeClass('show').addClass('hide');
+    $moreText.removeClass('hide-more_text');
+    $moreText.text('显示更多收货地址');
+    if (!$moreText.hasClass('show-more_text')) {
+      $moreText.addClass('show-more_text');
+    }
+  }
+});
+
+//点击打开选择优惠券弹窗
+$('.coupon-left').click(function(){
+  $('.coupon-box').removeClass('hide');
+  if(!$('.coupon-box').hasClass('show')){
+    $('.coupon-box').addClass('show');
+  }
+});
+
+//点击关闭选择优惠券弹窗
+$('#couponCel').click(function(){
+  $('.coupon-box').removeClass('show');
+  if(!$('.coupon-box').hasClass('hide')){
+    $('.coupon-box').addClass('hide');
+  }
+  $('#couponNum').removeClass('hide')
+  if (!$('#couponNum').hasClass('show')) {
+    $('#couponNum').addClass('show');
+  }
+});
+
+//选中优惠券，赋值然后关闭选择优惠券弹窗
+$('.coupon-list_item').click(function () {
+  $('.coupon-box').removeClass('show');
+  if (!$('.coupon-box').hasClass('hide')) {
+    $('.coupon-box').addClass('hide');
+  }
+
+  var $curItem = $(this);
+  $curItem.find('.wave').addClass('activeOn');
+  $curItem.siblings().find('.wave').removeClass('activeOn');
+
+  $('#couponNum').removeClass('hide')
+  if (!$('#couponNum').hasClass('show')) {
+    $('#couponNum').addClass('show');
+  }
+  var text = $curItem.find('.coupon-amount').text();
+  $('#couponNum > span').text(text);
 });
 </script>
 {% endblock%}

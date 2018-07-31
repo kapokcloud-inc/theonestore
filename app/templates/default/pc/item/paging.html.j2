@@ -1,6 +1,6 @@
 {% for item in items %}
-  <li class="list_item">
-    <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+  <li class="list-item">
+    <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">
       <div class="item-product">
         <img src="{{ item.goods_img }}" alt="">
       </div>
@@ -10,7 +10,7 @@
         <div class="all-price mar-top">
           <span>￥{{ item.goods_price }}</span>
           {% if item.market_price > 0 %}
-            <span class="price_del">￥{{ item.market_price }}</span>
+            <span class="price-del">￥{{ item.market_price }}</span>
           {% endif %}
         </div>
       </div>

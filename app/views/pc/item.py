@@ -42,10 +42,14 @@ item = Blueprint('pc.item', __name__)
 def index():
     """pc - 商品列表页"""
 
+    categorys = ItemStaticMethodsService.categories({'cat_id':request.args.to_dict().get('cat_id')})
     items, pagination = ItemStaticMethodsService.items(request.args.to_dict())
     paging_url        = url_for('pc.item.paging', **request.args)
 
-    return render_template('pc/item/index.html.j2', items=items, paging_url=paging_url)
+    if categorys:
+        currentCate = categorys[0]
+
+    return render_template('pc/item/index.html.j2', currentCate=currentCate, items=items, paging_url=paging_url)
 
 
 @item.route('/paging')

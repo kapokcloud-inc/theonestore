@@ -1,0 +1,94 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+
+{% block head %}
+<title>{{_('发表评价 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/me.css">
+<link rel="stylesheet" href="/static/default/pc/css/index.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('发表评价')}}</span>
+      </p>
+    </div>
+    <div class="user-main">
+      <div class="head-inner">
+        <div class="allPad bg-white clearfix">
+          <div class="goods-info_block">
+            <li class="list-item">
+              <div class="item-product">
+                <img src="http://i1.mifile.cn/a1/pms_1522666970.27937468!185x185.jpg" alt="">
+              </div>
+              <div class="item-detail">
+                <div class="all-title"> 小米AI音箱 白</div>
+                <div class="all-price mar-top">￥299</div>
+              </div>
+            </li>
+          </div>
+          <div class="goods-add_com">
+            <div class="rate-type_box">
+              <button type="button" class="rate-type rateON" data-value="3">{{_('好评 ')}}</button>
+              <button type="button" class="rate-type" data-value="2">{{_('中评 ')}}</button>
+              <button type="button" class="rate-type" data-value="1">{{_('差评 ')}}</button>
+            </div>
+            <div class="comment-cnt">
+              <textarea class="comment-cnt_text" name="content" id="content" placeholder="{{_('请输入评价信息...')}}"></textarea>
+            </div>
+            <div class="uploader_wrap">
+              <div class="one-uploader">
+                <div class="one-uploader_bd">
+                  <ul class="one-uploader_files" id="uploaderFiles">
+                    <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531116730.76137577!200x200.jpg')"></li>
+                    <li class="one-uploader_file" style="background-image:url('https://i1.mifile.cn/a1/pms_1531116947.09778771!200x200.jpg')"></li>
+                    <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531878001.22998509!200x200.jpg')"></li>
+                  </ul>
+                  <div class="one-uploader_input-box">
+                    <input id="uploaderInput" class="one-uploader_input" type="file" accept="image/*" multiple="">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="reg-btn">
+              {{ wtf_form.csrf_token }}
+              <input id="og_id" type="hidden" value="{{ order_goods.og_id }}" />
+              <button type="button" class="one-btn btn-primary" onclick="submit()">{{_('提交')}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+var csrftoken = $('#csrf_token').val();
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
+function submit() {
+  var og_id = $("#og_id").val();
+  var rating = $(".rate-type").attr('data-value');
+  var content = $("#content").val();
+
+  var params = {'og_id':og_id, 'rating':rating, 'content':content}
+  $.post("{{ url_for('api.order.save_comment') }}", params, function(json) {
+    if (json.ret == 0) {
+      window.location.href = "{{ url_for('pc.order.comment', is_pending=1) }}";
+    } else {
+      alert(json.msg, "text");
+      return false;
+    }
+  });
+}
+
+$(".rate-type").click(function () {
+  $(this).addClass('rateON').siblings().removeClass('rateON');
+});
+</script>
+{% endblock%}
