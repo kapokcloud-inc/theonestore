@@ -11,7 +11,8 @@
     <div class="type-head">
       <div class="head-inner">
         <p class="type-head_text">
-          <span>分类名称</span>
+          {% set categoryName = currentCate.cat_name if currentCate else "" %}
+          <span>{{ categoryName }}</span>
         </p>
       </div>
     </div>

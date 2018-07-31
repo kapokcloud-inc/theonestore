@@ -61,11 +61,19 @@ class ItemStaticMethodsService(object):
     def categories(params):
         """获取商品分类列表"""
 
-        categories = db.session.query(GoodsCategories.cat_id,
+        if params:
+            cat_id      = toint(params.get('cat_id', '0'))
+        else:
+            cat_id      = 0
+
+        q = db.session.query(GoodsCategories.cat_id,
                                         GoodsCategories.cat_name,
                                         GoodsCategories.cat_img).\
-                            filter(GoodsCategories.is_show == 1).\
-                            order_by(GoodsCategories.sorting.desc()).\
-                            order_by(GoodsCategories.cat_id.desc()).all()
+                            filter(GoodsCategories.is_show == 1)
+        if cat_id > 0:
+            q = q.filter(GoodsCategories.cat_id==cat_id)
 
+        categories = q.order_by(GoodsCategories.sorting.desc()).\
+                     order_by(GoodsCategories.cat_id.desc()).all()
+       
         return categories
