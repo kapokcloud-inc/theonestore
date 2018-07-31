@@ -75,7 +75,7 @@ def root():
 
 @cart.route('/checkout')
 def checkout():
-    """pc - 结算"""
+    """pc - 确认订单"""
 
     # if not check_login():
     #     session['weixin_login_url'] = request.headers['Referer']
@@ -198,3 +198,11 @@ def checkout():
 
     # return render_template('pc/cart/checkout.html.j2', **data)
     return render_template('pc/cart/checkout.html.j2')
+
+
+@cart.route('/pay')
+def pay():
+    """pc - 支付订单"""
+    return render_template('pc/cart/pay.html.j2')
+
+

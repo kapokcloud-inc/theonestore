@@ -18,9 +18,9 @@
       <div class="head-inner" style="height:35px;">
         <ul class="top-nav-tool">
           <!-- 用户未登录时显示 -->
-          <li class="top-nav_item">
+          <!-- <li class="top-nav_item">
             <a href="" class="mouseon">{{_('请登录')}}</a>
-          </li>
+          </li> -->
           <!-- 用户未登录时显示 end -->
 
           <!-- 用户登录时显示 -->
@@ -38,16 +38,16 @@
               </div>
               <div class="user-about">
                 <span>
-                  <a class="" href="">{{_('我的订单')}}</a>
+                  <a href="{{ url_for('pc.order.index') }}">{{_('我的订单')}}</a>
                 </span>
                 <span>
-                  <a class="" href="">{{_('优惠券')}}</a>
+                  <a href="">{{_('优惠券')}}</a>
                 </span>
                 <span>
-                  <a class="" href="">{{_('收藏')}}</a>
+                  <a href="">{{_('收藏')}}</a>
                 </span>
                 <span>
-                  <a class="" href="">{{_('消息')}}</a>
+                  <a href="">{{_('消息')}}</a>
                   <i class="user-badge">1</i>
                 </span>
               </div>
@@ -56,7 +56,7 @@
           <!-- 用户登录时显示 end -->
           
           <li class="top-nav_item">
-            <a href="" class="mouseon">{{_('我的订单')}}</a>
+            <a href="{{ url_for('pc.order.index') }}" class="mouseon">{{_('我的订单')}}</a>
           </li>
           <li class="top-nav_item">
             <a href="" class="mouseon">{{_('优惠券')}}</a>
@@ -229,6 +229,7 @@
   {% block body %} {% endblock %}
 
   <script type="text/javascript" src="/static/default/pc/js/common.js" charset="utf-8"></script>
+  <script type="text/javascript" src="/static/default/pc/js/jquery.min.js" charset="utf-8"></script>
   
   {% block script %} {% endblock %}
 </body>
