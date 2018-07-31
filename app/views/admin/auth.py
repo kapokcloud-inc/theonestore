@@ -71,12 +71,7 @@ def index():
 def create():
     """创建管理员"""
     g.page_title = _(u'添加管理员')
-
     form = AdminUsersForm()
-    from flask_wtf.file import FileAllowed
-    for validator in form.avatar.validators:
-        if isinstance(validator, FileAllowed):
-            log_info(validator.upload_set.name)
     return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
 
@@ -85,12 +80,8 @@ def edit(admin_uid):
     """编辑管理员"""
     g.page_title = _(u'编辑管理员')
     au = AdminUsers.query.get_or_404(admin_uid)
-
-    form = AdminUsersForm()
+    form = AdminUsersEditForm()
     form.fill_form(au)
-    log_info('----------------------------')
-    log_info(form.avatar.data)
-    log_info('----------------------------')
     return render_template('admin/auth/admin_user_detail.html.j2', form=form)
 
 
