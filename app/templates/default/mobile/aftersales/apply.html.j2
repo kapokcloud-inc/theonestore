@@ -86,7 +86,7 @@
           <div class="weui-uploader__bd">
             <ul class="weui-uploader__files" id="uploaderFiles"></ul>
             <div class="weui-uploader__input-box">
-              <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">
+              <input id="uploaderInput" name="image" class="weui-uploader__input" type="file" accept="image/*" multiple="">
             </div>
           </div>
         </div>
@@ -97,6 +97,7 @@
   <div class="footer" style="display:block;height:65px">
     {{ wtf_form.csrf_token }}
     <input id="aftersales_type" name="aftersales_type" type="hidden" value="{{ aftersales_type }}" />
+    <input id="img_data" name="img_data" type="hidden" value="[]" />
     <a class="weui-cell weui-cell_access" href="javascript:void(0);" style="padding:10px" onclick="submit()">
       <button type="button" class="weui-btn weui-btn_red">提交申请</button>
     </a>
@@ -105,6 +106,10 @@
 {% endblock %} 
 
 {% block script %}
+<!-- 异步上传 -->
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.iframe-transport.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
 <script type="text/javascript">
 var csrftoken = $('#csrf_token').val();
 $.ajaxSetup({
@@ -167,18 +172,39 @@ function change_type(dom, type) {
   $("#aftersales_type").val($(dom).attr('data-value'));
 }
 
+$('#uploaderInput').fileupload({
+    url: "{{ url_for('api.upload.image') }}",
+    dataType: 'json',
+    formData:{'prefix':'aftersale'},
+    done: function (e, data) {
+      if(data.result.ret == 0) {
+        var image = data.result.data.image;
+
+        var html_text = '<li class="weui-uploader__file" style="background-image:url(' + image + ')"></li>';
+        $("#uploaderFiles").append(html_text);
+
+        var img_data = $("#img_data").val();
+        var _img_data = JSON.parse(img_data);
+        _img_data.push(image);
+        img_data = JSON.stringify(_img_data);
+        $("#img_data").val(img_data);
+      }
+    }
+});
+
 function submit() {
   var og_id = $("#og_id").val();
   var quantity = $("#quantity").val();
   var aftersales_type = $("#aftersales_type").val();
   var deliver_status = $("#deliver_status").attr('data-values');
   var content = $("#content").val();
+  var img_data = $("#img_data").val();
 
   if (aftersales_type == 2 || aftersales_type == 3) {
     deliver_status = 2;
   }
 
-  var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':aftersales_type, 'deliver_status':deliver_status, 'content':content};
+  var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':aftersales_type, 'deliver_status':deliver_status, 'content':content, 'img_data':img_data};
   $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
     if (json.ret == 0) {
       window.location.href = "{{ url_for('mobile.aftersales.root') }}";

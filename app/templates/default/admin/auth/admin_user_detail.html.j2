@@ -13,23 +13,14 @@
         <div class="white-box">
           <h3 class="box-title m-b-0">{{_('管理员基本信息填写')}}</h3>
           <p class="text-muted m-b-30 font-13">{{_('输入下面的详细信息')}}</p>
-          {{ libs.render_form(form, action=url_for('admin.auth.save'), enctype="multipart/form-data") }}
+          {{ libs.render_form(form, 
+              action=url_for('admin.auth.save'), 
+              enctype="multipart/form-data", 
+              primary_key=form.admin_uid.data) }}
         </div>
       </div>
     </div>
   </div>
 </div>
 <!-- /#page-wrapper -->
-{% endblock %}
-
-{% block footer %}
-<script type="text/javascript">
-$(document).ready(function(){
-  var admin_uid = parseInt($('#admin_uid').val());
-  if (admin_uid > 0) {
-    $('#password').parents('.form-group').remove();
-    $('#password2').parents('.form-group').remove();
-  }
-});
-</script>
 {% endblock %}

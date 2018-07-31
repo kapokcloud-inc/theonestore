@@ -18,7 +18,7 @@ from app.helpers import (
     toint
 )
 from app.helpers.date_time import current_timestamp
-# ?? from app.helpers.user import get_uid, get_nickname, get_avatar
+from app.helpers.user import get_uid, get_nickname, get_avatar
 
 from app.models.item import Goods
 from app.models.like import Like
@@ -34,12 +34,9 @@ class LikeService(object):
         self.tid          = toint(tid)          # 第三方ID
         self.tname        = u''                 # 第三方名称
         self.timg         = u''                 # 第三方封面图
-        # ?? self.uid          = get_uid()           # 用户UID
-        # ?? self.nickname     = get_nickname()      # 用户昵称
-        # ?? self.avatar       = get_avatar()        # 用户头像
-        self.uid          = 1                   # 用户UID
-        self.nickname     = ''                  # 用户昵称
-        self.avatar       = ''                  # 用户头像
+        self.uid          = get_uid()           # 用户UID
+        self.nickname     = get_nickname()      # 用户昵称
+        self.avatar       = get_avatar()        # 用户头像
         self.action_code  = 0                   # 0.默认; 1.添加; 2.取消;
         self.ext_data     = '{}'                # 扩展数据, json
         self.like         = None                # Like实例

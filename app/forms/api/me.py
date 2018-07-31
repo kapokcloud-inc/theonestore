@@ -43,4 +43,5 @@ class AddressForm(FlaskForm):
 class ProfileForm(FlaskForm):
     """个人信息form"""
     nickname = StringField(validators=[Required(message=_(u'请填写昵称'))])
+    avatar   = StringField(validators=[Required(message=_(u'请上传头像'))])
     gender   = IntegerField(validators=[NumberRange(min=1, max=2, message=_(u'请选择性别'))])

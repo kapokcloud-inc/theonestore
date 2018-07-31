@@ -10,7 +10,7 @@
 **/
 $(document).ready(function () {
     //绑定input图片上传预览事件
-    $('input[type=file][file-type=image]').change(function (e) { 
+    $('input[type=file][uploadtype=images]').change(function (e) { 
         e.preventDefault();
         previewFile(this);
     });
@@ -23,15 +23,23 @@ function previewFile(input) {
     }
 
     var $input = $(input);
+    var $div = $input.parent();
     var files = $input.prop('files');
     if (files.length == 0) {
         return;
     }
     var file = files[0];
-    var $img = $input.next().find('img');
+    var $img = $div.find('a>img');
     var reader = new FileReader();
     reader.onloadend = function() {
-        $img.attr('src', reader.result);
+        if ($img.length > 0) {
+            $img.attr('src', reader.result);
+            $img.parent().attr('href', 'javascript:;');
+        } else {
+            var img_html = '<a href="javascript:;"><img style="width:200px; padding-left:0px;" src="' + reader.result + '"></a>';
+            $div.append(img_html);
+        }
+        
     }
     if (file) {
         reader.readAsDataURL(file);

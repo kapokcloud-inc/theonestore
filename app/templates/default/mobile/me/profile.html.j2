@@ -14,8 +14,9 @@
         <label class="weui-label blackGap">{{_('头像')}}</label>
       </div>
       <div class="weui-cell__bd all-ava">
-        <input class="weui-uploader__input" type="file" accept="image/*">
-        <img src="{{ user.avatar }}" alt="" class="all-ava_img">
+        <input id="image" name="image" class="weui-uploader__input" type="file" accept="image/*">
+        <input id="avatar" name="avatar" type="hidden" value="{{ user.avatar }}" />
+        <img id="avatar_img" src="{{ user.avatar }}" alt="" class="all-ava_img">
       </div>
     </div>
     <div class="weui-cell">
@@ -46,21 +47,39 @@
 {% endblock %}  
 
 {% block script %}
+<!-- 异步上传 -->
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.iframe-transport.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
 <script type="text/javascript">
 var csrftoken = $('#csrf_token').val();
 $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
 
+$('#image').fileupload({
+    url: "{{ url_for('api.upload.image') }}",
+    dataType: 'json',
+    formData:{'prefix':'avatar'},
+    done: function (e, data) {
+      if(data.result.ret == 0) {
+        var image = data.result.data.image;
+        $("#avatar_img").attr('src', image);
+        $("#avatar").val(image);
+      }
+    }
+});
+
 // 保存
 function submit() {
   var gender_arr = {'男':1, '女':2};
   var nickname = $("#nickname").val();
+  var avatar = $("#avatar").val();
   var gender = $("#gender").val();
   var gender = gender_arr[gender];
-  // var avatar = ??
 
-  var params = {'nickname':nickname, 'gender':gender}
+  var params = {'nickname':nickname, 'avatar':avatar, 'gender':gender}
+  console.log(params);
   $.post("{{ url_for('api.me.update') }}", params, function(json) {
     if (json.ret != 0) {
       $.toast(json.msg, "text");
