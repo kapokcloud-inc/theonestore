@@ -20,10 +20,11 @@ from wtforms import (
     IntegerField,
     StringField,
     DecimalField,
-    FileField,
     SelectField,
     TextAreaField,
-    DateField
+    DateField,
+    HiddenField,
+    BooleanField
 )
 from wtforms.validators import (
     Required,
@@ -33,48 +34,71 @@ from wtforms.validators import (
     NumberRange
 )
 
-from app.database import db
 from app.helpers import (
     render_template, 
     log_info,
     toint
 )
 
+from app.forms import Form
 
-class CouponBatchForm(FlaskForm):
+
+class CouponBatchForm(Form):
     """优惠券form"""
-    cb_id            = IntegerField()
-    cb_name          = StringField(
-                        validators=[
-                            Required(message=_(u'请填写批次名称'))]
-                        )
-    coupon_name      = StringField(
-                        validators=[
-                            Required(message=_(u'请填写优惠券名称'))]
-                        )
-    begin_time       = StringField()
-    end_time         = StringField()
-    is_valid         = SelectField(
-                        coerce=int,
-                        choices=[(0, _(u'否')), (1, _(u'是'))]
-                        )
-    publish_num      = IntegerField(
-                        validators=[
-                            NumberRange(min=0, message=_(u'不能小于0'))]
-                        )
-    coupon_amount    = DecimalField(
-                        validators=[
-                            NumberRange(min=0, message=_(u'金额不能小于0'))]
-                        )
-    limit_amount     = DecimalField(
-                        validators=[
-                            NumberRange(min=0, message=_(u'金额不能小于0'))]
-                        )
-    limit_goods      = StringField()
-    limit_goods_name = StringField()
-    date_num         = IntegerField(
-                        validators=[
-                            NumberRange(min=0, message=_(u'不能小于0'))]
-                        )
-    coupon_from      = StringField()
+    cb_id            = HiddenField(default=0)
 
+    cb_name          = StringField(
+                            _(u'批次名称'),
+                            validators=[
+                                Required(message=_(u'请填写批次名称'))
+                            ]
+                        )
+
+    coupon_name      = StringField(
+                            _(u'优惠券名称'),
+                            validators=[
+                                Required(message=_(u'请填写优惠券名称'))
+                            ]
+                        )
+
+    begin_time       = StringField(
+                            _(u'开始时间'),
+                            render_kw={'class':'form-control datepicker-autoclose'}
+                        )
+
+    end_time         = StringField(
+                            _(u'结束时间'),
+                            render_kw={'class':'form-control datepicker-autoclose'}
+                        )
+
+    is_valid         = BooleanField(_(u'是否有效'), false_values=(0, '0', ''))
+
+    publish_num      = IntegerField(
+                            _(u'发行数量'),
+                            validators=[
+                                NumberRange(min=0, message=_(u'不能小于0'))
+                            ]
+                        )
+
+    coupon_amount    = DecimalField(
+                            _(u'优惠券金额'),
+                            validators=[
+                                NumberRange(min=0, message=_(u'金额不能小于0'))
+                            ]
+                        )
+
+    limit_amount     = DecimalField(
+                            _(u'满减额度'),
+                            validators=[
+                                NumberRange(min=0, message=_(u'金额不能小于0'))
+                            ]
+                        )
+
+    date_num         = IntegerField(
+                            _(u'每天最大赠送数'),
+                            validators=[
+                                NumberRange(min=0, message=_(u'不能小于0'))
+                            ]
+                        )
+
+    coupon_from      = StringField(_(u'优惠券来源说明'))

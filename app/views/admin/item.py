@@ -144,7 +144,7 @@ def save():
             form.goods_img.errors = (_(u'上传失败，请检查云存储配置'))
             return render_template('admin/item/detail.html.j2', form=form, item=form.data)
 
-    goods_id = form.goods_id.data
+    goods_id = toint(form.goods_id.data)
     if goods_id:
         item = Goods.query.get_or_404(goods_id)
     else:
