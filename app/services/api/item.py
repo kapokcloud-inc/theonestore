@@ -17,6 +17,9 @@ from app.helpers import (
     toint
 )
 
+from app.services.api.comment import CommentStaticMethodsService
+
+from app.models.like import Like
 from app.models.item import (
     Goods,
     GoodsCategories,
@@ -43,8 +46,10 @@ class ItemStaticMethodsService(object):
             filter(Goods.is_sale == 1).\
             filter(Goods.stock_quantity > 0)
 
+        category = None
         if cat_id > 0:
-            q = q.filter(Goods.cat_id == cat_id)
+            q        = q.filter(Goods.cat_id == cat_id)
+            category = GoodsCategories.query.get(cat_id)
         
         if is_hot in [0,1]:
             q = q.filter(Goods.is_hot == is_hot)
@@ -55,25 +60,38 @@ class ItemStaticMethodsService(object):
         items      = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
         pagination = Pagination(None, p, ps, q.count(), None)
 
-        return (items, pagination)
+        return {'items':items, 'category':category, 'pagination':pagination}
 
     @staticmethod
-    def categories(params):
+    def categories():
         """获取商品分类列表"""
 
-        if params:
-            cat_id      = toint(params.get('cat_id', '0'))
-        else:
-            cat_id      = 0
-
-        q = db.session.query(GoodsCategories.cat_id,
+        categories = db.session.query(GoodsCategories.cat_id,
                                         GoodsCategories.cat_name,
                                         GoodsCategories.cat_img).\
-                            filter(GoodsCategories.is_show == 1)
-        if cat_id > 0:
-            q = q.filter(GoodsCategories.cat_id==cat_id)
-
-        categories = q.order_by(GoodsCategories.sorting.desc()).\
-                     order_by(GoodsCategories.cat_id.desc()).all()
+                            filter(GoodsCategories.is_show == 1).\
+                            order_by(GoodsCategories.sorting.desc()).\
+                            order_by(GoodsCategories.cat_id.desc()).all()
        
         return categories
+
+    @staticmethod
+    def detail_page(goods_id, uid):
+        """商品详情页"""
+
+        item      = Goods.query.get_or_404(goods_id)
+        galleries = db.session.query(GoodsGalleries.img).\
+                        filter(GoodsGalleries.goods_id == goods_id).all()
+
+        is_fav = db.session.query(Like.like_id).\
+                    filter(Like.like_type == 2).\
+                    filter(Like.ttype == 1).\
+                    filter(Like.tid == goods_id).\
+                    filter(Like.uid == uid).first()
+        is_fav = 1 if is_fav else 0
+
+        comments = []
+        if item.comment_count > 0:
+            comments = CommentStaticMethodsService.comments({'p':1, 'ps':2, 'ttype':1, 'tid':goods_id})
+
+        return {'item':item, 'galleries':galleries, 'is_fav':is_fav, 'comments':comments}
