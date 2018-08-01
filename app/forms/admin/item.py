@@ -15,14 +15,17 @@ from flask_wtf.file import (
     FileRequired, 
     FileStorage
 )
-from flask_uploads import IMAGES
+from flask_uploads import (
+    UploadSet,
+    IMAGES
+)
 from wtforms import (
     IntegerField,
     StringField,
     DecimalField,
-    FileField,
     SelectField,
-    TextAreaField
+    TextAreaField,
+    HiddenField
 )
 from wtforms.validators import (
     Required,
@@ -33,12 +36,16 @@ from wtforms.validators import (
 )
 
 from app.database import db
-from app.models.item import GoodsCategories
+
 from app.helpers import (
     render_template, 
     log_info,
     toint
 )
+
+from app.forms import Form
+
+from app.models.item import GoodsCategories
 
 
 class ItemForm(FlaskForm):
@@ -97,19 +104,24 @@ class ItemGalleriesForm(FlaskForm):
     goods_id = IntegerField()
 
 
-class CategoryForm(FlaskForm):
+class CategoryForm(Form):
     """分类form"""
-    cat_id   = IntegerField()
+    cat_id   = HiddenField(default=0)
+
     cat_name = StringField(
-                    _(u'分类名称'), 
+                    _(u'分类名称'),
                     render_kw={'placeholder':_(u'请输入分类名称')},
                     validators=[
-                        InputRequired(message=_(u'必填项'))]
+                        Required(message=_(u'必填项'))
+                    ]
                 )
-    """cat_img   = FileField(
+
+    cat_img   = FileField(
                     _(u'分类图片'),
+                    description=_(u'图片文件'),
                     validators=[
                         FileRequired(_(u'文件未上传')), 
-                        FileAllowed(IMAGES, message=_(u'只能上传图片'))]
-                )"""
+                        FileAllowed(UploadSet('images', IMAGES), message=_(u'只允许上传图片'))
+                    ]
+                )
 

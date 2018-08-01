@@ -15,15 +15,19 @@ from flask_wtf.file import (
     FileRequired, 
     FileStorage
 )
-from flask_uploads import IMAGES
+from flask_uploads import (
+    UploadSet,
+    IMAGES
+)
 from wtforms import (
     IntegerField,
     StringField,
     DecimalField,
-    FileField,
     SelectField,
     TextAreaField,
-    DateField
+    DateField,
+    HiddenField,
+    BooleanField
 )
 from wtforms.validators import (
     Required,
@@ -35,11 +39,14 @@ from wtforms.validators import (
 )
 
 from app.database import db
+
 from app.helpers import (
     render_template, 
     log_info,
     toint
 )
+
+from app.forms import Form
 
 
 class checkTtype(object):
@@ -69,17 +76,31 @@ class checkUrl(object):
             raise ValidationError(self.message)
 
 
-class AdvForm(FlaskForm):
+class AdvForm(Form):
     """广告form"""
-    adv_id  = IntegerField()
+    adv_id  = HiddenField(default=0)
+
     ac_id   = SelectField(
+                    _(u'分类'),
                     coerce=int,
                     choices=[(1, _(u'首页Banner'))],
                     validators=[
                         Required(message=_(u'请选择分类'))]
                 )
-    desc    = StringField()
+
+    img     = FileField(
+                    _(u'封面原图'),
+                    description=_(u'图片文件'),
+                    validators=[
+                        FileRequired(_(u'文件未上传')), 
+                        FileAllowed(UploadSet('images', IMAGES), message=_(u'只允许上传图片'))
+                    ]
+                )
+
+    desc    = StringField(_(u'简介'))
+
     ttype   = SelectField(
+                    _(u'跳转类型'),
                     coerce=int,
                     choices=[(0, _(u'请选择')),
                         (1, _(u'商品详情页')),
@@ -89,8 +110,12 @@ class AdvForm(FlaskForm):
                     validators=[
                         checkTtype()]
                 )
-    tid     = IntegerField(validators=[checkTid()])
-    url     = StringField(validators=[checkUrl()])
-    sorting = StringField()
-    is_show = SelectField(coerce=int, choices=[(0, _(u'否')), (1, _(u'是'))])
+
+    tid     = IntegerField(_(u'跳转目标'), default=0, validators=[checkTid()])
+
+    url     = StringField(_(u'外部链接'), validators=[checkUrl()])
+
+    sorting = StringField(_(u'排序'))
+
+    is_show = BooleanField(_(u'是否显示'), false_values=(0, '0', ''))
 

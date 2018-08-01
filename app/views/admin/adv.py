@@ -17,12 +17,15 @@ from flask import (
 )
 from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
+from werkzeug.datastructures import CombinedMultiDict
 
 from app.database import db
 from app.helpers import (
     render_template,
     log_info,
     toint,
+    model_create,
+    model_update,
     model_delete
 )
 from app.helpers.date_time import current_timestamp
@@ -30,6 +33,7 @@ from app.helpers.date_time import current_timestamp
 from app.forms.admin.adv import AdvForm
 
 from app.services.response import ResponseJson
+from app.services.uploads import FileUploadService
 
 from app.models.adv import Adv
 
@@ -65,9 +69,9 @@ def create():
     """添加广告"""
     g.page_title = _(u'添加广告')
 
-    wtf_form = AdvForm()
+    form = AdvForm()
 
-    return render_template('admin/adv/detail.html.j2', wtf_form=wtf_form, adv={})
+    return render_template('admin/adv/detail.html.j2', form=form)
 
 
 @adv.route('/detail/<int:adv_id>')
@@ -75,14 +79,11 @@ def detail(adv_id):
     """广告详情"""
     g.page_title = _(u'广告详情')
 
-    adv = Adv.query.get_or_404(adv_id)
+    adv  = Adv.query.get_or_404(adv_id)
+    form = AdvForm()
+    form.fill_form(adv)
 
-    wtf_form               = AdvForm()
-    wtf_form.ac_id.data    = adv.ac_id
-    wtf_form.ttype.data    = adv.ttype
-    wtf_form.is_show.data  = adv.is_show
-
-    return render_template('admin/adv/detail.html.j2', wtf_form=wtf_form, adv=adv)
+    return render_template('admin/adv/detail.html.j2', form=form)
 
 
 @adv.route('/save', methods=['POST'])
@@ -90,31 +91,34 @@ def save():
     """保存广告"""
     g.page_title = _(u'保存广告')
 
-    wtf_form     = AdvForm()
+    form         = AdvForm(CombinedMultiDict((request.files, request.form)))
     current_time = current_timestamp()
 
-    if wtf_form.validate_on_submit():
-        adv_id = wtf_form.adv_id.data
-        if adv_id:
-            adv = Adv.query.get_or_404(adv_id)
-        else:
-            adv          = Adv()
-            adv.add_time = current_time
-            db.session.add(adv)
+    if not form.validate_on_submit():
+        return render_template('admin/adv/detail.html.j2', form=form)
 
-        adv.ac_id   = wtf_form.ac_id.data
-        adv.desc    = wtf_form.desc.data
-        adv.ttype   = wtf_form.ttype.data
-        adv.tid     = wtf_form.tid.data
-        adv.sorting = wtf_form.sorting.data
-        adv.is_show = wtf_form.is_show.data
-        db.session.commit()
+    img = ''
+    if form.img.data:
+        fus = FileUploadService()
+        try:
+            img = fus.save_storage(form.img.data, 'adv')
+        except Exception as e:
+            form.img.errors = (_(u'上传失败，请检查云存储配置'))
+            return render_template('admin/adv/detail.html.j2', form=form)
 
-        return redirect(url_for('admin.adv.index'))
+    adv_id = toint(form.adv_id.data)
+    if adv_id:
+        adv = Adv.query.get_or_404(adv_id)
+    else:
+        adv = model_create(Adv, {'add_time':current_time})
 
-    adv = wtf_form.data
+    img = img if img else adv.img
+    data = {'ac_id':form.ac_id.data, 'img':img, 'desc':form.desc.data,
+            'ttype':form.ttype.data, 'tid':form.tid.data, 'url':form.url.data,
+            'sorting':form.sorting.data, 'is_show':form.is_show.data}
+    model_update(adv, data, commit=True)
 
-    return render_template('admin/adv/detail.html.j2', wtf_form=wtf_form, adv=adv)
+    return redirect(url_for('admin.adv.index'))
 
 
 @adv.route('/remove')

@@ -21,6 +21,7 @@ from flask import (
 )
 from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
+from werkzeug.datastructures import CombinedMultiDict
 
 from app.database import db
 
@@ -287,9 +288,9 @@ def category_create():
     """添加分类"""
     g.page_title = _(u'添加分类')
 
-    wtf_form = CategoryForm()
+    form = CategoryForm()
 
-    return render_template('admin/item/category_detail.html.j2', wtf_form=wtf_form, category={})
+    return render_template('admin/item/category_detail.html.j2', form=form)
 
 
 @item.route('/category/detail/<int:cat_id>')
@@ -297,10 +298,11 @@ def category_detail(cat_id):
     """分类详情"""
     g.page_title = _(u'分类详情')
 
-    wtf_form = CategoryForm()
     category = GoodsCategories.query.get_or_404(cat_id)
+    form = CategoryForm()
+    form.fill_form(category)
 
-    return render_template('admin/item/category_detail.html.j2', wtf_form=wtf_form, category=category)
+    return render_template('admin/item/category_detail.html.j2', form=form)
 
 
 @item.route('/category/save', methods=['POST'])
@@ -308,23 +310,28 @@ def category_save():
     """保存分类"""
     g.page_title = _(u'保存分类')
 
-    wtf_form = CategoryForm()
+    form = CategoryForm(CombinedMultiDict((request.files, request.form)))
 
-    if wtf_form.validate_on_submit():
-        cat_id = wtf_form.cat_id.data
-        if cat_id:
-            category = GoodsCategories.query.get_or_404(cat_id)
-        else:
-            category          = GoodsCategories()
-            category.add_time = current_timestamp()
-            db.session.add(category)
+    if not form.validate_on_submit():
+        return render_template('admin/item/category_detail.html.j2', form=form)
 
-        category.cat_name = wtf_form.cat_name.data
-        db.session.commit()
+    cat_img = ''
+    if form.cat_img.data:
+        fus = FileUploadService()
+        try:
+            cat_img = fus.save_storage(form.cat_img.data, 'category')
+        except Exception as e:
+            form.cat_img.errors = (_(u'上传失败，请检查云存储配置'))
+            return render_template('admin/item/category_detail.html.j2', form=form)
 
-        return redirect(url_for('admin.item.categories'))
+    cat_id = toint(form.cat_id.data)
+    if cat_id:
+        category = GoodsCategories.query.get_or_404(cat_id)
+    else:
+        category = model_create(GoodsCategories, {'add_time':current_timestamp()})
 
-    category = wtf_form.data
+    cat_img = cat_img if cat_img else category.cat_img
+    model_update(category, {'cat_name':form.cat_name.data, 'cat_img':cat_img}, commit=True)
 
-    return render_template('admin/item/category_detail.html.j2', wtf_form=wtf_form, category=category)
+    return redirect(url_for('admin.item.categories'))
 
