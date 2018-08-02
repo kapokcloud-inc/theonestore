@@ -3,7 +3,7 @@
 
 {% block head %}
 <title>{{_('我的订单 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/pc/css/me.css">
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
 {% endblock %}
 
 {% block body %}
@@ -23,23 +23,29 @@
           <div class="allPad">
             <div class="order-hd">
               <ul class="order-hd_list">
-                <li class="order-hd_item allOn">
-                  <a href="">{{_('全部订单')}}</a>
+                <li class="order-hd_item">
+                  {% set on = 'allOn' if tab_status == 0 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('全部订单')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  <a href="">{{_('待付款')}}</a>
+                  {% set on = 'allOn' if tab_status == 1 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=1) }}">{{_('待付款')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  <a href="">{{_('待收货')}}</a>
+                  {% set on = 'allOn' if tab_status == 2 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=2) }}">{{_('待收货')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  <a href="">{{_('已完成')}}</a>
+                  {% set on = 'allOn' if tab_status == 3 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=3) }}">{{_('已完成')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  <a href="">{{_('已取消')}}</a>
+                  {% set on = 'allOn' if tab_status == 4 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=4) }}">{{_('已取消')}}</a>
                 </li>
               </ul>
             </div>
+            <!-- 有订单 -->
             <div class="order-bd">
               <div class="order-box">
                 <ul class="order-box_list">
@@ -47,16 +53,19 @@
                     <li class="order-box_item">
                       <div class="order-item_detail">
                         <div class="item-datail_hd">
-                          <div class="order-add">{{ order.add_time|timestamp2str }}</div>
-                          <div class="order-num">
-                            <span>{{_('订单号：')}}</span>
-                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">{{ order.order_sn }}</a>
+                          <div class="order-type">{{ texts[order.order_id] }}</div>
+                          <div class="order-desc">
+                            <div class="order-fl">{{ order.add_time|timestamp2str }}</div>
+                            <div class="order-fl">
+                              <span>{{_('服务单号：')}}</span>
+                              <a class="orderID" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">{{ order.order_sn}} </a>
+                            </div>
+                            <div class="order-fl">{{_('微信支付')}}</div>
+                            <div class="order-price">
+                              {{_('订单金额：')}}￥
+                              <span class="price-num">{{ order.order_amount }}</span>
+                            </div>
                           </div>
-                          <div class="order-price">
-                            {{_('总额：')}}￥
-                            <span class="price-num">{{ order.order_amount }}</span>
-                          </div>
-                          <div class="order-type allOn">{{ texts[order.order_id] }}</div>
                         </div>
                         <div class="item-datail_bd clearfix">
                           {% set goods_data = (order.goods_data)|json_loads %}
@@ -116,10 +125,11 @@
                 <a href="" class="page-num">{{_('下一页')}}</a>
               </div>
             </div>
+            <!-- 有订单 end -->
           </div>
           <!-- 有订单 end -->
-          <!-- 没有订单 -->
           {% else %}
+          <!-- 没有订单 -->
           <div class="not-one">
             <p class="not-one_text">{{_('您暂时没有订单!')}}</p>
             <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>

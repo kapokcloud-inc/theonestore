@@ -13,3 +13,6 @@ from .category import category
 from .item import item
 from .cart import cart
 from .order import order
+from .aftersales import aftersales
+from .pay import pay
+from .me import me

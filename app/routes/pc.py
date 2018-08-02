@@ -15,4 +15,7 @@ PC_ROUTES = (
     (pc.item,           '/pc/item'),
     (pc.cart,           '/pc/cart'),
     (pc.order,          '/pc/order'),
+    (pc.aftersales,     '/pc/aftersales'),
+    (pc.pay,            '/pc/pay'),
+    (pc.me,             '/pc/me'),
 )

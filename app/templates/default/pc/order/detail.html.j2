@@ -3,7 +3,7 @@
 
 {% block head %}
 <title>{{_('订单详情 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/pc/css/me.css">
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
 <link rel="stylesheet" href="/static/default/pc/css/cart.css">
 <link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
@@ -25,7 +25,7 @@
           <div class="order-detail_hd">
             <div class="order-num">
               <span>{{_('订单号：')}}</span>
-              <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+              <span>{{ order.order_sn }}<span>
             </div>
             <div class="type-btn">
               <!-- 未支付订单，有取消订单按钮 -->
@@ -118,21 +118,22 @@
                 </a>
               </div>
             </div>
+            <!-- 收货信息 -->
             <div class="order-det_info">
               <div class="info-hd">{{_('收货信息')}}</div>
               <table class="info-table">
                 <tbody>
                   <tr>
                     <th>{{_('姓名：')}}</th>
-                    <td>李炬明</td>
+                    <td>{{ order_address.name }}</td>
                   </tr>
                   <tr>
                     <th>{{_('联系电话：')}}</th>
-                    <td>13794489108</td>
+                    <td>{{ order_address.mobile }}</td>
                   </tr>
                   <tr>
                     <th>{{_('收货地址：')}}</th>
-                    <td>广东 深圳市 龙华新区 民治大道南景新村c12</td>
+                    <td>{{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -142,6 +143,9 @@
               </div>
               <!-- 订单未支付状态，有修改按钮 end -->
             </div>
+            <!-- 收货信息 end -->
+
+            <!-- 支付信息 -->
             <div class="order-det_info">
               <div class="info-hd">{{_('支付信息')}}</div>
               <table class="info-table">
@@ -161,34 +165,38 @@
                   </tr>
                   <tr>
                     <th>{{_('支付时间：')}}</th>
-                    <td>2016.05.14 22:43</td>
+                    <td>{{ order.paid_time|timestamp2str }}</td>
                   </tr>
                   <!-- 未支付时不显示 end -->
                 </tbody>
               </table>
             </div>
+            <!-- 支付信息 end -->
+
+            <!-- 付款信息 -->
             <div class="order-detail-total">
               <table class="total-table">
                 <tbody>
                   <tr>
                     <th>{{_('商品总价：')}}</th>
-                    <td>￥88</td>
+                    <td>￥{{ order.goods_amount }}</td>
                   </tr>
                   <tr>
                     <th>{{_('运费：')}}</th>
-                    <td>+￥10</td>
+                    <td>￥{{ order.shipping_amount }}</td>
                   </tr>
                   <tr>
                     <th>{{_('优惠：')}}</th>
-                    <td>-￥10</td>
+                    <td>-￥{{ order.discount_amount }}</td>
                   </tr>
                   <tr class="total-table_tl">
-                    <th>{{_('应付金额：')}}</th>
-                    <td>￥88</td>
+                    <th>{{_('实际付款：')}}</th>
+                    <td>￥{{ order.pay_amount }}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
+            <!-- 付款信息 end -->
           </div>
         </div>
       </div>
@@ -203,7 +211,7 @@
           <i class="icon-cancel"></i>
         </a>
       </div>
-      <div class="editAdd-section_bd">
+      <div class="allPad">
         <div class="bd-flex">
           <label class="bd-label">{{_('姓名：')}}</label>
           <input class="bd-input" type="text" placeholder="{{_('请填写收件人姓名')}}">
@@ -229,7 +237,7 @@
   </div>
   <!-- 修改收货地址弹窗 end -->
 
-  <!-- 修改收货地址弹窗 -->
+  <!-- 确认收货弹窗 -->
   <div class="hide-mask hide" id="confRet">
     <div class="editAdd-section">
       <div class="editAdd-section_hd">
@@ -244,13 +252,13 @@
       </div>
     </div>
   </div>
-  <!-- 修改收货地址弹窗 end -->
+  <!-- 确认收货弹窗 end -->
 </div>
 {% endblock %}
 
 {% block script %}
 <script type="text/javascript">
-//确定收货弹窗
+//确认收货弹窗
 function okey(order_id) {
   var conf = confirm('确认收到此订单的商品了么？');
   if(conf){

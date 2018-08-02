@@ -37,7 +37,7 @@
               </div>
               <div class="user-about">
                 <span>
-                  <a href="{{ url_for('pc.order.index') }}">{{_('我的订单')}}</a>
+                  <a href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
                 </span>
                 <span>
                   <a href="">{{_('优惠券')}}</a>
@@ -53,7 +53,7 @@
             </div>
           </li>
           <li class="top-nav_item">
-            <a href="{{ url_for('pc.order.index') }}" class="mouseon">{{_('我的订单')}}</a>
+            <a href="{{ url_for('pc.order.index', tab_status=0) }}" class="mouseon">{{_('我的订单')}}</a>
           </li>
           <li class="top-nav_item">
             <a href="" class="mouseon">{{_('优惠券')}}</a>

@@ -1,0 +1,15 @@
+{% for like in likes %}
+  <div id="item_{{ like.tid }}" class="weui-cell" onclick="to_item({{ like.tid }})">
+    <div class="weui-cell__hd avatar mar-right">
+      <img src="{{ like.timg }}" alt="">
+    </div>
+    <div class="weui-cell__bd">
+      <div class="all_title mar-bottom">{{ like.tname }}</div>
+      {% set ext_data = like.ext_data|json_loads %}
+      <div class="all_desc">{{ ext_data.get('goods_desc', '') }}</div>
+    </div>
+    <div class="weui-cell__ft mar-left width46">
+      <span class="delete" onClick="remove({{ like.tid }})">{{_('删除')}}</span>
+    </div>
+  </div>
+{% endfor %}

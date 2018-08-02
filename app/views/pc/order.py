@@ -148,34 +148,6 @@ def deliver():
     return render_template('pc/order/order.html.j2', order=ods.order, text=text, code=code)
 
 
-@order.route('/track')
-def track():
-    """查询物流"""
-
-    if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
-    uid = get_uid()
-
-    args     = request.args
-    order_id = toint(args.get('order_id', 0))
-
-    order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
-
-    shipping     = None
-    express_msg  = ''
-    express_data = []
-    if order and order.shipping_status == 2:
-        shipping = Shipping.query.get(order.shipping_id)
-
-        express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
-        if express_msg == 'ok':
-            express_data = _express_data
-
-    data = {'express_msg':express_msg, 'express_data':express_data, 'order':order, 'shipping':shipping}
-    return render_template('pc/order/track.html.j2', **data)
-
-
 @order.route('/create-comment/<int:og_id>')
 def create_comment(og_id):
     """pc站 - 发表评价"""
@@ -219,7 +191,7 @@ def comment():
     completed = [order.order_id for order in completed]
 
     q = db.session.query(OrderGoods.og_id, OrderGoods.goods_id, OrderGoods.goods_name, OrderGoods.goods_img,
-                        OrderGoods.goods_desc, OrderGoods.comment_id).\
+                        OrderGoods.goods_desc, OrderGoods.goods_price, OrderGoods.comment_id).\
             filter(OrderGoods.order_id.in_(completed))
     
     pending_count   = get_count(q.filter(OrderGoods.comment_id == 0))
