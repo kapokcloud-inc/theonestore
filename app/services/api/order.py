@@ -748,7 +748,7 @@ class OrderStaticMethodsService(object):
         ps           = toint(params.get('ps', '10'))
         tab_status   = toint(params.get('tab_status', '0'))     # 标签状态: 0.全部; 1.待付款; 2.待收货; 3.已完成; 4.已取消;
 
-        q = db.session.query(Order.order_id, Order.order_status, Order.order_amount, Order.pay_status,
+        q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.order_amount, Order.pay_status,
                             Order.shipping_amount, Order.shipping_status, Order.deliver_status,
                             Order.goods_quantity, Order.goods_data, Order.add_time).\
                 filter(Order.uid == uid).\
@@ -777,7 +777,7 @@ class OrderStaticMethodsService(object):
             text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
             texts[order.order_id] = text
             codes[order.order_id] = code
-
+            
         return {'orders':orders, 'texts':texts, 'codes':codes}
 
 
