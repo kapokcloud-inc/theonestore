@@ -1,0 +1,66 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
+
+{% block head %}
+<title>{{_('我的收藏 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+{% endblock %} 
+
+{% block body %}
+<div class="user_wrap">
+  {% if likes %}
+    <div id="paging-data-list" class="weui-cells weui-cells_form">
+      {% for like in likes %}
+        <div id="item_{{ like.tid }}" class="weui-cell" onclick="to_item({{ like.tid }})">
+          <div class="weui-cell__hd avatar mar-right">
+            <img src="{{ like.timg }}" alt="">
+          </div>
+          <div class="weui-cell__bd">
+            <div class="all_title mar-bottom">{{ like.tname }}</div>
+            {% set ext_data = like.ext_data|json_loads %}
+            <div class="all_desc">{{ ext_data.get('goods_desc', '') }}</div>
+          </div>
+          <div class="weui-cell__ft mar-left width46">
+            <span class="delete" onClick="remove({{ like.tid }})">{{_('删除')}}</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="not-product">
+      <div class="not-product_img">
+        <img class="notproduct" src="/static/default/mobile/img/notcollect.png" alt="">
+      </div>
+      <div class="not-product_text">{{_('您暂无收藏商品')}}</div>
+      <div class="reg_btn">
+        <a href="{{ url_for('mobile.index.root') }}">
+          <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
+        </a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block script %}
+{{ libs.paging_js(paging_url, 0) }}
+
+<script type="text/javascript">
+function to_item(tid) {
+  window.location.href = "/mobile/item/"+tid;
+}
+
+function remove(tid) {
+  event.stopPropagation();
+
+  $.get("{{ url_for('api.like.action') }}", {'like_type':2, 'ttype':1, 'tid':tid}, function(json) {
+    if (json.ret != 0) {
+      $.toast(json.msg, "text");
+      return false;
+    }
+
+    $("#item_"+tid).remove();
+  });
+}
+</script> 
+{% endblock %}

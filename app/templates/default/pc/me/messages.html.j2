@@ -1,0 +1,36 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
+
+{% block head %}
+<title>{{_('消息- 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+{% endblock %} 
+
+{% block body %}
+<div id="paging-data-list" class="user_wrap">
+  {% for message in messages %}
+    <div style="margin:15px">
+      <div class="weui-cell bg-white">
+        <div class="weui-cell__bd">
+          <div class="all_add height25">{{ message.add_time|timestamp2str }}</div>
+          <div class="nicktitle">
+            {{ message.content }}
+            {% if message.ttype == 1 %}
+              {% set url = url_for('mobile.order.detail', order_id=message.tid) %}
+            {% elif message.ttype == 2 %}
+              {% set url = url_for('mobile.order.comment_detail', og_id=message.tid) %}
+            {% else %}
+              {% set url = 'javascript:void(0);' %}
+            {% endif %}
+            <a href="{{ url }}" style="color:#2a6496">{{_('查看详情>>')}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block script %}
+{{ libs.paging_js(paging_url, 0) }}
+{% endblock %}

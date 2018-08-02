@@ -1,0 +1,74 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+
+
+{% block head %}
+<title>{{_('申请售后服务-第三步 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/css/aftersales.css">
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+<link rel="stylesheet" href="/static/default/pc/css/city-picker.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('申请售后服务')}}</span>
+      </p>
+    </div>
+  </div>
+  <div class="user-main">
+    <div class="head-inner clearfix">
+      {%include 'default/pc/layout/nav_left.html.j2'%}
+      <div class="order-wrap">
+        <div class="allPad">
+          <div class="order-detail_bd">
+            <div class="order-summary">
+                <div class="order-progress">
+                  <!-- 申请售后服务进度条 -->
+                  <ul class="progress-list clearfix">
+                    <li class="step step-first step-done">{{_('选择产品和服务')}}</li>
+                    <li class="step step-done">{{_('填写申请单')}}</li>
+                    <li class="step step-last step-active">{{_('完成申请')}}</li>
+                  </ul>
+                  <!-- 申请售后服务进度条 end -->
+                </div>
+              </div>
+              <div class="goods-section_box">
+                <div class="aftersales-goods_box">
+                  <div class="one-cell not-oneCell">
+                    <div class="one-cell_hd avatar80">
+                      <img src="/static/default/pc/img/complete.png" alt="">
+                    </div>
+                    <div class="one-cell_bd">
+                      <p class="blackGap" style="font-size: 20px !important;">申请成功！仅退款|退货退款|换货服务</p>
+                      <p class="blackGap mar-top">温馨提示：客服会在3个工作日对您的申请进行审核，届时将通过
+                        短信/微信/站内信等形式将审核结果发送给您。（注：快递面单信息需填写完整且需与您售后申请单
+                        信息一致，务必请将服务单号备注在快递面单上再行邮寄！一个服务申请单邮寄一个包裹）</p>
+                    </div>
+                    <div class="one-cell_ft mar-left25">
+                      <button class="order-type_btn btn-primary" type="button">查看服务单详情</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/static/default/pc/js/city-picker.data.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/default/pc/js/city-picker.min.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+$('.order-type_btn').click(function(){
+  var url = "/pc/aftersales/47";
+  window.location.href = url; 
+});
+</script>
+{% endblock%}

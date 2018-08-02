@@ -7,7 +7,7 @@
 
 {% block body %}
 <div class="user_wrap">
-  <a class="weui-cell bg-white" href="{{ url_for('mobile.item.detail', goods_id=9) }}">
+  <a class="weui-cell bg-white" href="{{ url_for('mobile.item.detail', goods_id=order_goods.goods_id) }}">
     <div class="weui-cell__hd avatar mar-right">
       <img src="{{ order_goods.goods_img }}" alt="">
     </div>

@@ -97,7 +97,7 @@
   line-height: 50px;
   z-index: 20;
   background-color: #f5f5f5;
-  box-shadow: 0 -3px 5px #e5e5e5;
+  box-shadow: 0 -3px 5px #eee;
 }
 .cart-footer_left {
   float: left;
@@ -238,7 +238,7 @@
   height: 50px;
   line-height: 50px;
   margin-bottom: 30px;
-  background-color: #e5e5e5;
+  background-color: #eee;
   color: #333;
   font-size: 14px;
   text-align: center;
@@ -261,7 +261,7 @@
 .show-more_text::after {
   content: "";
   position: absolute;
-  border-color: #e5e5e5 transparent transparent transparent;
+  border-color: #eee transparent transparent transparent;
   border-style: solid;
   border-width: 6px 6px 6px 6px;
   transform: translate(100%, 50%);
@@ -285,7 +285,7 @@
 .hide-more_text::after {
   content: "";
   position: absolute;
-  border-color: transparent transparent #e5e5e5 transparent;
+  border-color: transparent transparent #eee transparent;
   border-style: solid;
   border-width: 6px 6px 6px 6px;
   transform: translate(100%, 50%);
@@ -356,7 +356,7 @@
 .select-wrap {
   cursor: pointer;
   padding: 0 10px;
-  box-shadow: 0px 3px 5px #e5e5e5;
+  box-shadow: 0px 3px 5px #eee;
 }
 .select-wrap li {
   overflow: hidden;
@@ -528,9 +528,6 @@
   font-size: 18px;
   background-color: #f3f4f5;
 }
-.editAdd-section_bd {
-  padding: 40px;
-}
 .editAdd-section_ft {
   padding: 15px 0;
   text-align: center;
@@ -651,7 +648,7 @@
   line-height: 30px;
   padding-bottom: 20px;
   overflow: hidden;
-  border-bottom: 2px solid #e5e5e5;
+  border-bottom: 2px solid #eee;
 }
 .coupon-box_bd {
   margin: 20px 25px 0;
@@ -816,4 +813,24 @@
 .bd-weixin img {
   height: 30px;
   vertical-align: middle;
+}
+.compl-img {
+  width: 100px;
+  height: 100px;
+  margin: 40px auto 0;
+}
+.compl-img img {
+  width: 100%;
+  height: 100%;
+}
+.comp-box {
+  padding: 40px;
+  background-color: #fff;
+  text-align: center;
+}
+.compl-text {
+  color: #666;
+  font-size: 26px;
+  margin-top: 30px;
+  margin-bottom: 60px;
 }

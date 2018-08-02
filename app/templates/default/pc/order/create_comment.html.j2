@@ -2,7 +2,7 @@
 
 {% block head %}
 <title>{{_('发表评价 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/pc/css/me.css">
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
 <link rel="stylesheet" href="/static/default/pc/css/index.css">
 {% endblock %}
 
@@ -17,14 +17,14 @@
     <div class="user-main">
       <div class="head-inner">
         <div class="allPad bg-white clearfix">
-          <div class="goods-info_block">
+          <div class="goods-info_block" style="margin:-40px 0 0 -40px;">
             <li class="list-item">
               <div class="item-product">
-                <img src="http://i1.mifile.cn/a1/pms_1522666970.27937468!185x185.jpg" alt="">
+                <img src="{{ order_goods.goods_img }}" alt="">
               </div>
               <div class="item-detail">
-                <div class="all-title"> 小米AI音箱 白</div>
-                <div class="all-price mar-top">￥299</div>
+                <div class="all-title"> {{ order_goods.goods_name }}</div>
+                <div class="all-price mar-top">￥{{ order_goods.goods_price }}</div>
               </div>
             </li>
           </div>
@@ -79,6 +79,7 @@ function submit() {
   var params = {'og_id':og_id, 'rating':rating, 'content':content}
   $.post("{{ url_for('api.order.save_comment') }}", params, function(json) {
     if (json.ret == 0) {
+      alert('您已发表评价成功，返回评价中心');
       window.location.href = "{{ url_for('pc.order.comment', is_pending=1) }}";
     } else {
       alert(json.msg, "text");
