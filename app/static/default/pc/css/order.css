@@ -41,7 +41,7 @@
   float: left;
   color: #666;
   padding: 0 20px;
-  border-right: 1px solid #e5e5e5;
+  border-right: 1px solid #eee;
 }
 .order-hd_item:first-child {
   padding-left: 0;
@@ -59,7 +59,7 @@
 }
 .item-datail_hd {
   padding: 25px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
   font-size: 14px;
   color: #666;
 }
@@ -122,7 +122,7 @@
   height: 32px;
   line-height: 32px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
 }
 .type-btn {
   float: right;
@@ -177,7 +177,7 @@
   height: auto;
   margin-bottom: 30px;
   padding-bottom: 30px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
 }
 .step-active {
   border-top-right-radius: 20px;
@@ -237,14 +237,14 @@
 }
 .order-delivery {
   padding: 0 20px 20px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #eee;
   color: #666;
   font-size: 12px;
 }
 .delivery-num {
   margin: 10px 0;
   line-height: 30px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
 }
 .delivery-list_box {
   height: 120px;
@@ -296,7 +296,7 @@
   margin-top: -1px;
   margin-bottom: 20px;
   padding: 8px 20px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #eee;
   text-align: center;
   color: #333;
   font-size: 14px;
@@ -326,7 +326,7 @@
 }
 .comment-cnt {
   padding: 15px 20px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #eee;
 }
 .comment-cnt_text {
   width: 100%;
@@ -398,7 +398,7 @@
   margin: 0 0 0 auto;
 }
 .box-hd {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
 }
 .box-hd_list {
   font-size: 16px;
@@ -408,7 +408,7 @@
   display: inline-block;
   padding: 0 20px;
   color: #666;
-  border-left: 1px solid #e5e5e5;
+  border-left: 1px solid #eee;
 }
 .box-hd_item:first-child {
   padding-left: 0;
@@ -423,7 +423,7 @@
   padding-bottom: 0;
   margin-bottom: 0;
   margin-right: 30px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
 }
 .all-list .list-item:nth-child(3n) {
   margin-right: 0;

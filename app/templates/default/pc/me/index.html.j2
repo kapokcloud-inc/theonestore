@@ -12,7 +12,7 @@
   <div class="type-head">
     <div class="head-inner">
       <p class="type-head_text">
-        <span>{{_('个人中心')}}</span>
+        <span>{{_('我的个人中心')}}</span>
       </p>
     </div>
     <div class="user-main">
@@ -22,13 +22,80 @@
           <div class="allPad">
             <div class="one-cell">
               <div class="one-cell_hd avatar160">
-                <img class="ava" src="https://s1.mi-img.com/mfsv2/avatar/fdsc3/p01XG074QZsd/srSPb8CLq7UEOL_320.jpg" alt="">
+                <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/fdsc3/p01XG074QZsd/srSPb8CLq7UEOL_320.jpg" alt="">
               </div>
               <div class="one-cell_bd">
                 <div class="user-name">老犁</div>
                 <a class="changeInfo" href="{{ url_for('pc.me.profile') }}">{{_('修改个人信息 >')}}</a>
               </div>
-              <div class="one-cell_ft"></div>
+            </div>
+            <div class="portal-sub">
+              <ul class="sub-info_list clearfix">
+                <li class="sub-info_item">
+                  <div class="one-cell">
+                    <div class="one-cell_hd avatar80">
+                      <img class="ava" src="http://s01.mifile.cn/i/user/portal-icon-1.png" alt="">
+                    </div>
+                    <div class="one-cell_bd">
+                      <p class="sub-item_hd">
+                        <span>{{_('待支付的订单：')}}</span>
+                        <span class="allOn">0</span>
+                      </p>
+                      <div style="position: relative;">
+                        <a class="sub-item_link" href="{{ url_for('pc.order.index', tab_status=1) }}">{{_('查看待支付订单 >')}}</a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="sub-info_item">
+                  <div class="one-cell">
+                    <div class="one-cell_hd avatar80">
+                      <img class="ava" src="http://s01.mifile.cn/i/user/portal-icon-2.png" alt="">
+                    </div>
+                    <div class="one-cell_bd">
+                      <p class="sub-item_hd">
+                        <span>{{_('待收货的订单：')}}</span>
+                        <span class="allOn">2</span>
+                      </p>
+                      <div style="position: relative;">
+                        <a class="sub-item_link" href="{{ url_for('pc.order.index', tab_status=2) }}">{{_('查看待收货订单 >')}}</a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="sub-info_item">
+                  <div class="one-cell">
+                    <div class="one-cell_hd avatar80">
+                      <img class="ava" src="http://s01.mifile.cn/i/user/portal-icon-3.png" alt="">
+                    </div>
+                    <div class="one-cell_bd">
+                      <p class="sub-item_hd">
+                        <span>{{_('待评价商品数：')}}</span>
+                        <span class="allOn">4</span>
+                      </p>
+                      <div style="position: relative;">
+                        <a class="sub-item_link" href="{{ url_for('pc.order.comment', is_pending=1) }}">{{_('查看待评价商品 >')}}</a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="sub-info_item">
+                  <div class="one-cell">
+                    <div class="one-cell_hd avatar80">
+                      <img class="ava" src="http://s01.mifile.cn/i/user/portal-icon-4.png" alt="">
+                    </div>
+                    <div class="one-cell_bd">
+                      <p class="sub-item_hd">
+                        <span>{{_('收藏的商品：')}}</span>
+                        <span class="allOn">3</span>
+                      </p>
+                      <div style="position: relative;">
+                        <a class="sub-item_link" href="{{ url_for('pc.me.collect', tab_status=2) }}">{{_('查看收藏的商品 >')}}</a>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>

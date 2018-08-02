@@ -44,7 +44,7 @@
 }
 .cart-goods_item {
   padding: 25px;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #eee;
   height: 80px;
 }
 .cart-goods_item .col {
@@ -121,7 +121,7 @@
 .cart-total_num {
   margin-left: 16px;
   padding-left: 16px;
-  border-left: 1px solid #e5e5e5;
+  border-left: 1px solid #eee;
   color: #666;
   font-size: 14px;
 }
@@ -147,7 +147,7 @@
   margin-left: 40px;
   text-align: center;
   cursor: pointer;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #eee;
 }
 .checkout-box {
   position: relative;
@@ -297,7 +297,7 @@
   padding-top: 25px;
   padding-bottom: 25px;
   line-height: 35px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
 }
 .shipment-section_header {
   width: 100px;
@@ -422,7 +422,7 @@
 .goods-body_list {
   position: relative;
   padding-bottom: 20px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
 }
 .goods-body_item {
   width: 100%;
@@ -637,7 +637,7 @@
   left: 0;
   width: 586px;
   padding: 20px 0;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #eee;
   background-color: #fff;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.18);
   z-index: 100;
@@ -727,7 +727,7 @@
   padding-top: 30px;
   color: #333;
   font-size: 14px;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #eee;
 }
 .order-info_fl {
   float: left;
@@ -788,7 +788,7 @@
   height: 50px;
   line-height: 50px;
   font-size: 18px;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eee;
   color: #333;
   margin-bottom: 30px;
 }
