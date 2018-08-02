@@ -6,10 +6,51 @@
   display: block;
   font-size: @font-size12;
   color: @main-color;
-  margin-top: 10px;
 }
 .user-name{
   font-size: 24px;
   font-weight: @font-weight400;
   color: @black-color;
+  margin-bottom: 20px;
+}
+.portal-sub{
+  margin-top: 20px;
+  border-top: @border5;
+  padding-top: 40px;
+  padding-bottom: 30px;
+}
+.sub-info{
+  &_list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: hidden;
+  }
+  &_item{
+    position: relative;
+    flex: 0 1 calc(50% - 8px);
+    margin-right: 16px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    overflow: hidden;
+    box-sizing: border-box;
+    &:nth-child(2n){
+      margin-right: 0;
+    }
+  }
+}
+.sub-item{
+  &_hd{
+    color: @grey-color6;
+    font-size:@font-size18;
+    font-weight: @font-weight400;
+  }
+  &_link{
+    display: block;
+    color: @grey-color6;
+    font-size:@font-size14;
+    &:hover{
+      color: @main-color;
+    }
+  }
 }

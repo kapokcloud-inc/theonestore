@@ -3,10 +3,47 @@
   display: block;
   font-size: 12px;
   color: #f33155;
-  margin-top: 10px;
 }
 .user-name {
   font-size: 24px;
   font-weight: 400;
   color: #333;
+  margin-bottom: 20px;
+}
+.portal-sub {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 40px;
+  padding-bottom: 30px;
+}
+.sub-info_list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+.sub-info_item {
+  position: relative;
+  flex: 0 1 calc(50% - 8px);
+  margin-right: 16px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.sub-info_item:nth-child(2n) {
+  margin-right: 0;
+}
+.sub-item_hd {
+  color: #666;
+  font-size: 18px;
+  font-weight: 400;
+}
+.sub-item_link {
+  display: block;
+  color: #666;
+  font-size: 14px;
+}
+.sub-item_link:hover {
+  color: #f33155;
 }
