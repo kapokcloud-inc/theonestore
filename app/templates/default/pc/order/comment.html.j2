@@ -2,41 +2,75 @@
 
 {% block head %}
 <title>{{_('评价中心 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/pc/css/me.css">
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
 <link rel="stylesheet" href="/static/default/pc/css/index.css">
 {% endblock %}
 
 {% block body %}
 <div class="index_wrap clearfix">
   <div class="type-head">
-    <div class="head-inner">
+    <div class="head-inner clearfix">
       <p class="type-head_text">
         <span>{{_('评价中心')}}</span>
       </p>
     </div>
     <div class="user-main">
       <div class="head-inner">
-        <div class="allPad bg-white clearfix">
-          <ul style="display:flex;">
-            <li class="list-item">
-              <div class="item-product">
-                <img src="http://i1.mifile.cn/a1/pms_1522666970.27937468!185x185.jpg" alt="">
+        {%include 'default/pc/layout/nav_left.html.j2'%}
+        <div class="order-wrap">
+          <div class="allPad bg-white clearfix">
+            <div class="box-hd">
+              <ul class="box-hd_list">
+                <li class="box-hd_item">
+                  {% set all_On = 'allOn' if is_pending == 1 else '' %}
+                  <a class="{{ all_On }}" href="{{ url_for('pc.order.comment', is_pending=1) }}">{{_('待评价商品')}}（{{ pending_count }}）</a>
+                </li>
+                <li class="box-hd_item">
+                  {% set all_On = 'allOn' if is_pending == 0 else '' %}
+                  <a class="{{ all_On }}" href="{{ url_for('pc.order.comment', is_pending=0) }}">{{_('已评价商品')}}（{{ unpending_count }}）</a>
+                </li>
+              </ul>
+            </div>
+            {% if uncomments: %}
+              <!-- 有评价商品 -->
+              <ul class="all-list clearfix">
+                {% for uncomment in uncomments %}
+                <li class="list-item">
+                  <a href="{{ url_for('pc.item.detail', goods_id=uncomment.goods_id) }}">
+                    <div class="item-product">
+                      <img src="{{ uncomment.goods_img }}" alt="">
+                    </div>
+                    <div class="item-detail">
+                      <div class="all-title">{{ uncomment.goods_name }}</div>
+                      <div class="all-price mar-top">￥{{ uncomment.goods_price }}</div>
+                    </div>
+                  </a>
+                  {% if uncomment.comment_id == 0 %}
+                  <!-- 未评价的商品，此按钮显示 -->
+                  <div class="review-btn_wrap" data-value="{{ uncomment.og_id }}"> 
+                    <a class="review-btn_link btn-primary" href="{{ url_for('pc.order.create_comment', og_id=uncomment.og_id) }}">{{_('去评价')}}</a>
+                  </div>
+                  <!-- 未评价的商品，此按钮显示 end -->
+                  {% else %}
+                  <!-- 已评价的商品，此按钮显示 -->
+                  <div class="review-btn_wrap" data-value="{{ uncomment.og_id }}">
+                    <a class="review-btn_link btn-primary" href="{{ url_for('pc.order.comment_detail', og_id=uncomment.og_id) }}">{{_('查看评价')}}</a>
+                  </div>
+                  <!-- 已评价的商品，此按钮显示 end -->
+                  {% endif %}
+                </li>
+                {% endfor %}
+              </ul>
+              <!-- 有评价商品 end -->
+            {% else %}
+              <!-- 没有评价商品 -->
+              <div class="not-one">
+                <p class="not-one_text">{{_('暂时没有符合条件的商品')}}</p>
+                <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
               </div>
-              <div class="item-detail">
-                <div class="all-title"> 小米AI音箱 白</div>
-                <div class="all-price mar-top">￥299</div>
-              </div>
-            </li>
-            <li class="list-item">
-              <div class="item-product">
-                <img src="http://i1.mifile.cn/a1/pms_1522666970.27937468!185x185.jpg" alt="">
-              </div>
-              <div class="item-detail">
-                <div class="all-title"> 小米AI音箱 白</div>
-                <div class="all-price mar-top">￥299</div>
-              </div>
-            </li>
-          </ul>
+              <!-- 没有评价商品 end -->
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>

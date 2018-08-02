@@ -1,0 +1,86 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+{% import '/default/mobile/libs/const.html.j2' as const %}
+
+{% block head %}
+<title>{{_('修改个人信息 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
+{% endblock %} 
+
+{% block body %}
+<div class="user_wrap">
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+      <div class="weui-cell__hd">
+        <label class="weui-label blackGap">{{_('头像')}}</label>
+      </div>
+      <div class="weui-cell__bd all-ava">
+        <input class="weui-uploader__input" type="file" accept="image/*">
+        <img src="{{ user.avatar }}" alt="" class="all-ava_img">
+      </div>
+    </div>
+    <div class="weui-cell">
+      <div class="weui-cell__hd">
+        <label class="weui-label blackGap">{{_('昵称')}}</label>
+      </div>
+      <div class="weui-cell__bd">
+        <input id="nickname" class="weui-input greykGap" type="text" placeholder="{{_('请填写昵称')}}" value="{{ user.nickname }}">
+      </div>
+    </div>
+    <div class="weui-cell">
+      <div class="weui-cell__hd">
+        <label class="weui-label blackGap">{{_('性别')}}</label>
+      </div>
+      <div class="weui-cell__bd">
+        {% set gender = const.GENDER.get(user.gender) %}
+        <input id="gender" class="weui-input greykGap" type="text" value="{{ gender }}">
+      </div>
+    </div>
+  </div>
+  <div class="footer" style="display:block;height:65px">
+    {{ wtf_form.csrf_token }}
+    <a class="weui-cell weui-cell_access" href="javascript:void(0);" style="padding:10px" onclick="submit()">
+      <button type="button" class="weui-btn weui-btn_red">{{_('保存')}}</button>
+    </a>
+  </div>
+</div>
+{% endblock %}  
+
+{% block script %}
+<script type="text/javascript">
+var csrftoken = $('#csrf_token').val();
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
+// 保存
+function submit() {
+  var gender_arr = {'男':1, '女':2};
+  var nickname = $("#nickname").val();
+  var gender = $("#gender").val();
+  var gender = gender_arr[gender];
+  // var avatar = ??
+
+  var params = {'nickname':nickname, 'gender':gender}
+  $.post("{{ url_for('api.me.update') }}", params, function(json) {
+    if (json.ret != 0) {
+      $.toast(json.msg, "text");
+      return false;
+    }
+
+    window.location.href="{{ url_for('mobile.me.index') }}";
+  });
+}
+
+$(document).ready(function () {
+  $("#gender").picker({
+    title: "请选择您的性别",
+    cols: [
+      {
+        textAlign: 'center',
+        values: ['男', '女']
+      }
+    ]
+  });
+});
+</script>
+{% endblock %}

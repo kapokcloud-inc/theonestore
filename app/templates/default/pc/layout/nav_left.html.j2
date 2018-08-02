@@ -3,17 +3,14 @@
     <div class="navL-box">
       <div class="navL-box_hd">{{_('订单中心')}}</div>
       <ul class="navL-box_bd">
-        <li class="allOn">
-          <a href="">{{_('我的订单')}}</a>
+        <li>
+          <a class="allOn" href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
         </li>
         <li>
-          <a href="">{{_('评价晒单')}}</a>
+          <a href="{{ url_for('pc.order.comment', is_pending=1) }}">{{_('评价晒单')}} (1)</a>
         </li>
         <li>
-          <a href="">{{_('申请售后服务')}}</a>
-        </li>
-        <li>
-          <a href="">{{_('售后服务记录')}}</a>
+          <a href="{{ url_for('pc.aftersales.root') }}">{{_('售后服务记录')}}</a>
         </li>
       </ul>
     </div>
@@ -21,10 +18,10 @@
       <div class="navL-box_hd">{{_('个人中心')}}</div>
       <ul class="navL-box_bd">
         <li>
-          <a href="">{{_('个人信息')}}</a>
+          <a href="{{ url_for('pc.me.index') }}">{{_('我的个人中心')}}</a>
         </li>
         <li>
-          <a href="">{{_('消息通知')}}</a>
+          <a href="">{{_('消息通知')}} (1)</a>
         </li>
         <li>
           <a href="">{{_('钱包')}}</a>

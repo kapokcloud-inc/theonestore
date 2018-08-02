@@ -62,7 +62,7 @@
 <script type="text/javascript">
   //点击进入商品详情
   function enter(goods_id) {
-    var url = "/mobile/item/9";
+    var url = "/mobile/item/" + goods_id;
     window.location.href = url;
   }
 
@@ -71,7 +71,7 @@
     event.stopPropagation();                        //停止事件冒泡
 
     var og_id = $(this).attr('data-value');
-    var url = "/mobile/order/create-comment/"+og_id;
+    var url = "/mobile/order/create-comment/" + og_id;
     window.location.href = url;
   });
 

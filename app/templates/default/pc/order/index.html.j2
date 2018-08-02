@@ -3,7 +3,7 @@
 
 {% block head %}
 <title>{{_('我的订单 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/pc/css/me.css">
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
 {% endblock %}
 
 {% block body %}
@@ -18,43 +18,58 @@
       <div class="head-inner clearfix">
         {%include 'default/pc/layout/nav_left.html.j2'%}
         <div class="order-wrap">
-          <!-- 有订单 -->
           <div class="allPad">
             <div class="order-hd">
               <ul class="order-hd_list">
-                <li class="order-hd_item allOn">
-                  <a href="">{{_('全部订单')}}</a>
+                <li class="order-hd_item">
+                  {% set on = 'allOn' if tab_status == 0 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('全部订单')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  <a href="">{{_('待付款')}}</a>
+                  {% set on = 'allOn' if tab_status == 1 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=1) }}">{{_('待付款')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  <a href="">{{_('待收货')}}</a>
+                  {% set on = 'allOn' if tab_status == 2 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=2) }}">{{_('待收货')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  <a href="">{{_('已完成')}}</a>
+                  {% set on = 'allOn' if tab_status == 3 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=3) }}">{{_('已完成')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  <a href="">{{_('已取消')}}</a>
+                  {% set on = 'allOn' if tab_status == 4 else '' %}
+                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=4) }}">{{_('已取消')}}</a>
                 </li>
               </ul>
             </div>
+            <!-- 没有订单 -->
+            <!-- <div class="not-one">
+              <p class="not-one_text">{{_('您暂无相关订单!')}}</p>
+              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+            </div> -->
+            <!-- 没有订单 end -->
+
+            <!-- 有订单 -->
             <div class="order-bd">
               <div class="order-box">
                 <ul class="order-box_list">
                   <li class="order-box_item">
                     <div class="order-item_detail">
                       <div class="item-datail_hd">
-                        <div class="order-add">2018-07-12 22:21:22</div>
-                        <div class="order-num">
-                          <span>{{_('订单号：')}}</span>
-                          <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                        <div class="order-type allOn">待支付</div>
+                        <div class="order-desc">
+                          <div class="order-fl">2018-07-12 22:21:22</div>
+                          <div class="order-fl">
+                            <span>{{_('服务单号：')}}</span>
+                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                          </div>
+                          <div class="order-fl">{{_('微信支付')}}</div>
+                          <div class="order-price">
+                            {{_('订单金额：')}}￥
+                            <span class="price-num">500</span>
+                          </div>
                         </div>
-                        <div class="order-price">
-                          {{_('总额：')}}￥
-                          <span class="price-num">500</span>
-                        </div>
-                        <div class="order-type allOn">待付款</div>
                       </div>
                       <div class="item-datail_bd clearfix">
                         <div class="item-bd_fl">
@@ -90,7 +105,7 @@
                           <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
                             <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
                           </a>
-                          <!-- <a class="btn-link" href="">
+                          <!-- <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step0') }}">
                             <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
                           </a> -->
                         </div>
@@ -100,16 +115,19 @@
                   <li class="order-box_item">
                     <div class="order-item_detail">
                       <div class="item-datail_hd">
-                        <div class="order-add">2018-07-12 22:21:22</div>
-                        <div class="order-num">
-                          <span>{{_('订单号：')}}</span>
-                          <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                        <div class="order-type">待收货</div>
+                        <div class="order-desc">
+                          <div class="order-fl">2018-07-12 22:21:22</div>
+                          <div class="order-fl">
+                            <span>{{_('服务单号：')}}</span>
+                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                          </div>
+                          <div class="order-fl">{{_('微信支付')}}</div>
+                          <div class="order-price">
+                            {{_('订单金额：')}}￥
+                            <span class="price-num">199</span>
+                          </div>
                         </div>
-                        <div class="order-price">
-                          {{_('总额：')}}￥
-                          <span class="price-num">199</span>
-                        </div>
-                        <div class="order-type allOn">待收货</div>
                       </div>
                       <div class="item-datail_bd clearfix">
                         <div class="item-bd_fl">
@@ -133,7 +151,7 @@
                           <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
                             <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
                           </a>
-                          <a class="btn-link" href="">
+                          <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step0') }}">
                             <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
                           </a>
                         </div>
@@ -143,16 +161,19 @@
                   <li class="order-box_item">
                     <div class="order-item_detail">
                       <div class="item-datail_hd">
-                        <div class="order-add">2018-07-12 22:21:22</div>
-                        <div class="order-num">
-                          <span>{{_('订单号：')}}</span>
-                          <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                        <div class="order-type">已完成</div>
+                        <div class="order-desc">
+                          <div class="order-fl">2018-07-12 22:21:22</div>
+                          <div class="order-fl">
+                            <span>{{_('服务单号：')}}</span>
+                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                          </div>
+                          <div class="order-fl">{{_('微信支付')}}</div>
+                          <div class="order-price">
+                            {{_('订单金额：')}}￥
+                            <span class="price-num">158</span>
+                          </div>
                         </div>
-                        <div class="order-price">
-                          {{_('总额：')}}￥
-                          <span class="price-num">158</span>
-                        </div>
-                        <div class="order-type allOn">已完成</div>
                       </div>
                       <div class="item-datail_bd clearfix">
                         <div class="item-bd_fl">
@@ -188,7 +209,7 @@
                           <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
                             <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
                           </a>
-                          <a class="btn-link" href="">
+                          <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step0') }}">
                             <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
                           </a>
                         </div>
@@ -198,16 +219,19 @@
                   <li class="order-box_item">
                     <div class="order-item_detail">
                       <div class="item-datail_hd">
-                        <div class="order-add">2018-07-12 22:21:22</div>
-                        <div class="order-num">
-                          <span>{{_('订单号：')}}</span>
-                          <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                        <div class="order-type">已取消</div>
+                        <div class="order-desc">
+                          <div class="order-fl">2018-07-12 22:21:22</div>
+                          <div class="order-fl">
+                            <span>{{_('服务单号：')}}</span>
+                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                          </div>
+                          <div class="order-fl">{{_('微信支付')}}</div>
+                          <div class="order-price">
+                            {{_('订单金额：')}}￥
+                            <span class="price-num">299</span>
+                          </div>
                         </div>
-                        <div class="order-price">
-                          {{_('总额：')}}￥
-                          <span class="price-num">299</span>
-                        </div>
-                        <div class="order-type allOn">已取消</div>
                       </div>
                       <div class="item-datail_bd clearfix">
                         <div class="item-bd_fl">
@@ -225,15 +249,9 @@
                           </a>
                         </div>
                         <div class="item-bd_fr">
-                          <!-- <a class="btn-link" href="{{ url_for('pc.cart.pay') }}">
-                            <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
-                          </a> -->
                           <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
                             <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
                           </a>
-                          <!-- <a class="btn-link" href="">
-                            <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
-                          </a> -->
                         </div>
                       </div>
                     </div>
@@ -241,16 +259,19 @@
                   <li class="order-box_item">
                     <div class="order-item_detail">
                       <div class="item-datail_hd">
-                        <div class="order-add">2018-07-12 22:21:22</div>
-                        <div class="order-num">
-                          <span>{{_('订单号：')}}</span>
-                          <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                        <div class="order-type">已退款</div>
+                        <div class="order-desc">
+                          <div class="order-fl">2018-07-12 22:21:22</div>
+                          <div class="order-fl">
+                            <span>{{_('服务单号：')}}</span>
+                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                          </div>
+                          <div class="order-fl">{{_('微信支付')}}</div>
+                          <div class="order-price">
+                            {{_('订单金额：')}}￥
+                            <span class="price-num">299</span>
+                          </div>
                         </div>
-                        <div class="order-price">
-                          {{_('总额：')}}￥
-                          <span class="price-num">299</span>
-                        </div>
-                        <div class="order-type allOn">已退款</div>
                       </div>
                       <div class="item-datail_bd clearfix">
                         <div class="item-bd_fl">
@@ -268,15 +289,9 @@
                           </a>
                         </div>
                         <div class="item-bd_fr">
-                          <!-- <a class="btn-link" href="{{ url_for('pc.cart.pay') }}">
-                            <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
-                          </a> -->
                           <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
                             <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
                           </a>
-                          <!-- <a class="btn-link" href="">
-                            <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
-                          </a> -->
                         </div>
                       </div>
                     </div>
@@ -296,16 +311,8 @@
                 <a href="" class="page-num">{{_('下一页')}}</a>
               </div>
             </div>
+            <!-- 有订单 end -->
           </div>
-          <!-- 有订单 end -->
-
-          <!-- 没有订单 -->
-          <!-- <div class="not-one">
-            <p class="not-one_text">{{_('您暂时没有订单!')}}</p>
-            <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-          </div> -->
-          <!-- 没有订单 end -->
-
         </div>
       </div>
     </div>

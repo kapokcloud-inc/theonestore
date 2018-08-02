@@ -1,0 +1,196 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+
+
+{% block head %}
+<title>{{_('服务单详情 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('服务单详情')}}</span>
+      </p>
+    </div>
+  </div>
+  <div class="user-main">
+    <div class="head-inner clearfix">
+      {%include 'default/pc/layout/nav_left.html.j2'%}
+      <div class="order-wrap">
+        <div class="allPad">
+          <div class="order-detail_hd">
+            <div class="order-num">
+              <span>{{_('订单号：')}}</span>
+              <span>AS1807314500105<span>
+            </div>
+          </div>
+          <div class="order-detail_bd">
+            <div class="order-goods_det">
+              <div class="order-summary">
+                <div class="order-status">审核中</div>
+                <div class="order-progress">
+                  <!-- 商品仅退款的时候显示的状态 -->
+                  <ul class="progress-list clearfix">
+                    <li class="step step-first step-done">
+                      <div>{{_('申请服务')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step step-active">
+                      <div>{{_('审核通过')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step ">
+                      <div>{{_('退款')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step step-last">
+                      <div>{{_('完成')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                  </ul>
+                  <!-- 商品仅退款的时候显示的状态 end -->
+
+                  <!-- 商品退货退款的时候显示的状态 -->
+                  <!-- <ul class="progress-list clearfix">
+                    <li class="step step-first step-done">
+                      <div>{{_('申请服务')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step step-active">
+                      <div>{{_('审核通过')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step ">
+                      <div>{{_('商家已收到货')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step">
+                      <div>{{_('退款')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step step-last">
+                      <div>{{_('完成')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                  </ul> -->
+                  <!-- 商品退货退款的时候显示的状态 end -->
+
+                  <!-- 商品仅换货的时候显示的状态 -->
+                  <!-- <ul class="progress-list clearfix">
+                    <li class="step step-first step-done">
+                      <div>{{_('申请服务')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step step-active">
+                      <div>{{_('审核通过')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step ">
+                      <div>{{_('商家已收到货')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step">
+                      <div>{{_('出库')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                    <li class="step step-last">
+                      <div>{{_('完成')}}</div>
+                      <div class="progress-info">2018-07-31 21:06:05</div>
+                    </li>
+                  </ul> -->
+                  <!-- 商品仅换货的时候显示的状态 end -->
+                </div>
+                <div class="order-delivery hide">
+                  <div class="delivery-list_box">
+                    <ul class="delivery-list mar-top">
+                      <li class="delivery-list_item firstOn last">您的服务申请已提交，等待确认。 2018-07-31 21:06:05</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="delivery-more" id="more">
+                  <span class="show-more_text" id="moreText">{{_('展开服务详情')}}</span>
+                </div>
+              </div>
+              <div class="order-goods bd-bottom5">
+                <div class="one-cell">
+                  <div class="one-cell_hd avatar80">
+                    <img src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
+                  </div>
+                  <div class="one-cell_bd">
+                    <p class="blackGap">红米手机2A 移动4G双卡版 绿色 8GB</p>
+                    <p class="blackGap mar-top">数量：1</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 服务信息 -->
+            <div class="order-det_info">
+              <div class="info-hd">{{_('服务信息')}}</div>
+              <table class="info-table">
+                <tbody>
+                  <tr>
+                    <th>{{_('服务类型：')}}</th>
+                    <td>退货退款</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('问题描述：')}}</th>
+                    <td>有问题，质量问题</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('图片：')}}</th>
+                    <td>
+                      <img style="width:80px;height:80px" src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>{{_('收货信息：')}}</th>
+                    <td>广东 深圳市 南山区 大园工业园8栋510</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('联系人：')}}</th>
+                    <td>heheheh</td>
+                  </tr>
+                  <tr>
+                    <th>{{_('联系电话：')}}</th>
+                    <td>13592829302</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- 服务信息 end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+//点击more显示服务详情
+$('#more').click(function(){
+  var $moreText = $('#moreText');
+  if($moreText.text()=='展开服务详情' && $moreText.hasClass('show-more_text')){
+    $('.order-delivery').removeClass('hide').addClass('show');
+    $moreText.removeClass('show-more_text');
+    $moreText.text('收起服务详情');
+    if (!$moreText.hasClass('hide-more_text')) {
+      $moreText.addClass('hide-more_text');
+    }
+  } else{
+    $('.order-delivery').removeClass('show').addClass('hide');
+    $moreText.removeClass('hide-more_text');
+    $moreText.text('展开服务详情');
+    if (!$moreText.hasClass('show-more_text')) {
+      $moreText.addClass('show-more_text');
+    }
+  }
+});
+</script>
+{% endblock%}

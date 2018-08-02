@@ -1,0 +1,104 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+
+
+{% block head %}
+<title>{{_('申请售后服务-第一步 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/css/aftersales.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('申请售后服务')}}</span>
+      </p>
+    </div>
+  </div>
+  <div class="user-main">
+    <div class="head-inner clearfix">
+      {%include 'default/pc/layout/nav_left.html.j2'%}
+      <div class="order-wrap">
+        <div class="allPad">
+          <div class="order-detail_bd">
+            <div class="order-summary">
+                <div class="order-progress">
+                  <!-- 申请售后服务进度条 -->
+                  <ul class="progress-list clearfix">
+                    <li class="step step-first step-active">{{_('选择产品和服务')}}</li>
+                    <li class="step">{{_('填写申请单')}}</li>
+                    <li class="step step-last">{{_('完成申请')}}</li>
+                  </ul>
+                  <!-- 申请售后服务进度条 end -->
+                </div>
+              </div>
+              <div class="goods-section_box">
+                <div class="choice-goods">
+                  <p class="choice-goods_title">选择进行售后的商品</p>
+                </div>
+                <div class="aftersales-goods_box">
+                  <div class="one-cell not-oneCell">
+                    <div class="one-cell_hd avatar80">
+                      <img src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
+                    </div>
+                    <div class="one-cell_bd">
+                      <p class="blackGap">红米手机2A 移动4G双卡版 绿色 8GB</p>
+                      <p class="blackGap mar-top">数量：1</p>
+                    </div>
+                    <div class="one-cell_ft">
+                      <a class="change-other" href="{{ url_for('pc.aftersales.apply_step0') }}">换其他产品>></a>
+                    </div>
+                  </div>
+                </div>
+                <div class="choice-goods">
+                  <p class="choice-goods_title">为您的产品选择服务类型</p>
+                </div>
+                <div class="section-bd">
+                  <ul class="aftersales-type_list clearfix">
+                    <li class="aftersales-type_item allActive" data-value="">{{_('退货退款')}}</li>
+                    <li class="aftersales-type_item" data-value="">{{_('仅退款')}}</li>
+                    <li class="aftersales-type_item" data-value="">{{_('仅换货')}}</li>
+                  </ul>
+                  <p class="greyGap">* 您的商品支持退货退款、仅换货服务</p>
+                </div>
+                <div class="choice-goods">
+                  <p class="choice-goods_title">产品问题描述</p>
+                </div>
+                <div class="section-bd">
+                  <div>
+                    <textarea class="aftersales-reason" name="" id="" placeholder="请输入具体问题..."></textarea>
+                  </div>
+                  <p class="label-title">{{_('上传商品图片（单张不超过3MB。请注意拍摄画质尽量清晰，突出商品问题。非必填项）')}}</p>
+                  <div class="one-uploader">
+                    <div class="one-uploader_bd">
+                      <ul class="one-uploader_files" id="uploaderFiles">
+                        <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531116730.76137577!200x200.jpg')"></li>
+                        <li class="one-uploader_file" style="background-image:url('https://i1.mifile.cn/a1/pms_1531116947.09778771!200x200.jpg')"></li>
+                        <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531878001.22998509!200x200.jpg')"></li>
+                      </ul>
+                      <div class="one-uploader_input-box">
+                        <input id="uploaderInput" class="one-uploader_input" type="file" accept="image/*" multiple="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="reg-btn">
+                  <a class="one-btn btn-primary" href="{{ url_for('pc.aftersales.apply_step2') }}">{{_('下一步')}}</a>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+$(".aftersales-type_item").click(function () {
+  $(this).addClass('allActive').siblings().removeClass('allActive');
+});
+</script>
+{% endblock%}
