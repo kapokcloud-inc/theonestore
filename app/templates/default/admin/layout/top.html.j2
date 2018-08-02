@@ -32,7 +32,7 @@
     <ul class="nav navbar-top-links navbar-right pull-right">
       <li>
         <form role="search" class="app-search hidden-sm hidden-xs m-r-10">
-          <input type="text" placeholder="Search..." class="form-control">
+          <input type="text" placeholder="{{ _('搜索订单号') }}" class="form-control">
           <a href="">
             <i class="fa fa-search"></i>
           </a>
@@ -40,45 +40,36 @@
       </li>
       <li class="dropdown">
         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
-          <img src="/static/default/admin/plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle">
-          <b class="hidden-xs">Steave</b>
+          <img src="{{session['avatar']}}-square.small" alt="user-img" width="36" class="img-circle">
+          <b class="hidden-xs">{{ session['username'] }}</b>
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu dropdown-user animated flipInY" style="animation-duration:0s;">
           <li>
             <div class="dw-user-box">
               <div class="u-img">
-                <img src="/static/default/admin/plugins/images/users/varun.jpg" alt="user" />
+                <img src="{{session['avatar']}}-square.middle" alt="user" />
               </div>
               <div class="u-text">
-                <h4>Steave Jobs</h4>
-                <p class="text-muted">varun@gmail.com</p>
-                <a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                <h4>{{ session['username'] }}</h4>
+                <p class="text-muted">{{ session['mobile'] }}</p>
+                <a href="profile.html" class="btn btn-rounded btn-danger btn-sm">{{ _('个人资料') }}</a>
               </div>
             </div>
           </li>
           <li role="separator" class="divider"></li>
           <li>
-            <a href="#">
-              <i class="ti-user"></i> My Profile</a>
+            <a href="{{ url_for('admin.auth.edit', admin_uid=session['admin_uid']) }}">
+              <i class="fa fa-gear"></i> {{ _('帐户设置') }}</a>
           </li>
           <li>
-            <a href="#">
-              <i class="ti-wallet"></i> My Balance</a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="ti-email"></i> Inbox</a>
+            <a href="{{ url_for('admin.auth.password') }}">
+              <i class="fa fa-key"></i> {{ _('修改密码') }}</a>
           </li>
           <li role="separator" class="divider"></li>
           <li>
             <a href="#">
-              <i class="ti-settings"></i> Account Setting</a>
-          </li>
-          <li role="separator" class="divider"></li>
-          <li>
-            <a href="#">
-              <i class="fa fa-power-off"></i> Logout</a>
+              <i class="fa fa-power-off"></i> {{ _('安全退出') }}</a>
           </li>
         </ul>
         <!-- /.dropdown-user -->
