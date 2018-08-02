@@ -15,223 +15,390 @@
 {% block body %}
 <div class="cart-wrap">
   <div class="head-inner">
-    <!-- 购物车有商品时显示 -->
-    <div class="cart-goods" id="cart-goods">
-      <div class="cart-goods_box">
-        <div class="cart-head clearfix">
-          <div class="col cart-check">
-            <i class="icon-dagou icon-checkbox"></i>
-            <span style="margin-left:15px">{{_('全选')}}</span>
+    {% if carts %}
+      <div class="cart-goods" id="cart-goods">
+        <div class="cart-goods_box">
+          <div class="cart-head clearfix">
+            <div class="col cart-check">
+              {% set checked = 'icon-checkbox_selected' if cart_valid_total == items_quantity else '' %}
+              <i id="all" class="icon-dagou icon-checkbox {{ checked }}"></i>
+              <span style="margin-left:15px">{{_('全选')}}</span>
+            </div>
+            <div class="col cart-goods_img">&nbsp;</div>
+            <div class="col cart-goods_name">商品名称</div>
+            <div class="col cart-goods_price">单价</div>
+            <div class="col cart-goods_num">数量</div>
+            <div class="col cart-goods_total">小计</div>
+            <div class="col cart-goods_action">操作</div>
           </div>
-          <div class="col cart-goods_img">&nbsp;</div>
-          <div class="col cart-goods_name">商品名称</div>
-          <div class="col cart-goods_price">单价</div>
-          <div class="col cart-goods_num">数量</div>
-          <div class="col cart-goods_total">小计</div>
-          <div class="col cart-goods_action">操作</div>
+          <ul class="cart-goods_list">
+            <!--
+            <li class="cart-goods_item">
+              <div class="col cart-check">
+                <i class="icon-dagou icon-checkbox icon-checkbox_selected"></i>
+              </div>
+              <div class="col cart-goods_img">
+                <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
+              </div>
+              <div class="col cart-goods_name">
+                <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                  <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
+                </a>
+              </div>
+              <div class="col cart-goods_price">
+                <span class="all-text">￥89</span>
+              </div>
+              <div class="col cart-goods_num">
+                <div class="apply-service_num">
+                  <i class="num_minus"></i>
+                  <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="1" minnum="1">
+                  <i class="num_add"></i>
+                </div>
+              </div>
+              <div class="col cart-goods_total">
+                <span class="all-text" style="color:#f33155 !important">￥89</span>
+              </div>
+              <div class="col cart-goods_action">
+                <a class="del" href="javascript:;">
+                  <i class="icon-cancel"></i>
+                </a>
+              </div>
+            </li>
+            <li class="cart-goods_item">
+              <div class="col cart-check">
+                <i class="icon-dagou icon-checkbox"></i>
+              </div>
+              <div class="col cart-goods_img">
+                <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
+              </div>
+              <div class="col cart-goods_name">
+                <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                  <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
+                </a>
+              </div>
+              <div class="col cart-goods_price">
+                <span class="all-text">￥89</span>
+              </div>
+              <div class="col cart-goods_num">
+                <div class="apply-service_num">
+                  <i class="num_minus"></i>
+                  <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="3" minnum="1">
+                  <i class="num_add"></i>
+                </div>
+              </div>
+              <div class="col cart-goods_total">
+                <span class="all-text" style="color:#f33155 !important">￥89</span>
+              </div>
+              <div class="col cart-goods_action">
+                <a class="del" href="javascript:;">
+                  <i class="icon-cancel"></i>
+                </a>
+              </div>
+            </li>
+            <li class="cart-goods_item">
+              <div class="col cart-check">
+                <i class="icon-dagou icon-checkbox"></i>
+              </div>
+              <div class="col cart-goods_img">
+                <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
+              </div>
+              <div class="col cart-goods_name">
+                <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                  <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
+                </a>
+              </div>
+              <div class="col cart-goods_price">
+                <span class="all-text">￥89</span>
+              </div>
+              <div class="col cart-goods_num">
+                <div class="apply-service_num">
+                  <i class="num_minus"></i>
+                  <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="3" minnum="1">
+                  <i class="num_add"></i>
+                </div>
+              </div>
+              <div class="col cart-goods_total">
+                <span class="all-text" style="color:#f33155 !important">￥89</span>
+              </div>
+              <div class="col cart-goods_action">
+                <a class="del" href="javascript:;">
+                  <i class="icon-cancel"></i>
+                </a>
+              </div>
+            </li>
+            <li class="cart-goods_item">
+              <div class="col cart-check">
+                <i class="icon-dagou icon-checkbox"></i>
+              </div>
+              <div class="col cart-goods_img">
+                <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
+              </div>
+              <div class="col cart-goods_name">
+                <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                  <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
+                </a>
+              </div>
+              <div class="col cart-goods_price">
+                <span class="all-text">￥89</span>
+              </div>
+              <div class="col cart-goods_num">
+                <div class="apply-service_num">
+                  <i class="num_minus"></i>
+                  <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="3" minnum="1">
+                  <i class="num_add"></i>
+                </div>
+              </div>
+              <div class="col cart-goods_total">
+                <span class="all-text" style="color:#f33155 !important">￥89</span>
+              </div>
+              <div class="col cart-goods_action">
+                <a class="del" href="javascript:;">
+                  <i class="icon-cancel"></i>
+                </a>
+              </div>
+            </li>
+            -->
+            <!-- <li class="cart-goods_item">
+              <div class="col cart-check">
+                <i class="icon-dagou icon-checkbox"></i>
+              </div>
+              <div class="col cart-goods_img">
+                <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
+              </div>
+              <div class="col cart-goods_name">
+                <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                  <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
+                </a>
+              </div>
+              <div class="col cart-goods_price">
+                <span class="all-text">￥89</span>
+              </div>
+              <div class="col cart-goods_num">
+                <div class="apply-service_num">
+                  <i class="num_minus"></i>
+                  <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="3" minnum="1">
+                  <i class="num_add"></i>
+                </div>
+              </div>
+              <div class="col cart-goods_total">
+                <span class="all-text" style="color:#f33155 !important">￥89</span>
+              </div>
+              <div class="col cart-goods_action">
+                <a class="del" href="javascript:;">
+                  <i class="icon-cancel"></i>
+                </a>
+              </div>
+            </li> -->
+            {% for cart in carts %}
+              <li class="cart-goods_item">
+                <div class="col cart-check">
+                  {% set checked = 'icon-checkbox_selected' if cart.cart.is_checked == 1 else '' %}
+                  {% set checked = checked if cart.is_valid == 1 else 'icon-notsel' %}
+                  {% set is_valid = 'is_valid' if cart.is_valid == 1 else '' %}
+                  <i class="icon-dagou icon-checkbox {{ checked }} {{ is_valid }}" id="cart{{cart.cart.cart_id}}" data-cart-id="{{ cart.cart.cart_id }}" data-quantity="{{ cart.cart.quantity }}" data-is-valid="{{ cart.is_valid }}"></i>
+                </div>
+                <div class="col cart-goods_img">
+                  <img src="{{ cart.item.goods_img }}" alt="">
+                </div>
+                <div class="col cart-goods_name">
+                  <a href="{{ url_for('pc.item.detail', goods_id=cart.item.goods_id) }}">
+                    <p class="all-text">{{ cart.item.goods_name }}</p>
+                  </a>
+                </div>
+                <div class="col cart-goods_price">
+                  <span class="all-text">￥{{ cart.item.goods_price }}</span>
+                </div>
+                <div class="col cart-goods_num">
+                  <div class="apply-service_num">
+                    <i class="num_minus" onclick="update_cart_quantity({{ cart.cart.cart_id }}, 0)"></i>
+                    <input class="num_ipt change_cart_quantity" type="text" id="quantity{{cart.cart.cart_id}}" name="quantity{{cart.cart.cart_id}}" value="{{ cart.cart.quantity }}" data-cart-id="{{cart.cart.cart_id}}" data-value="{{ cart.cart.quantity }}" minnum="1">
+                    <i class="num_add" onclick="update_cart_quantity({{ cart.cart.cart_id }}, 1)"></i>
+                  </div>
+                </div>
+                <div class="col cart-goods_total">
+                  <span id="items_amount{{ cart.cart.cart_id }}" class="all-text" style="color:#f33155 !important">￥{{ cart.items_amount }}</span>
+                </div>
+                <div class="col cart-goods_action">
+                  <a class="del" href="javascript:;">
+                    <i class="icon-cancel"></i>
+                  </a>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
         </div>
-        <ul class="cart-goods_list">
-          <li class="cart-goods_item">
-            <div class="col cart-check">
-              <i class="icon-dagou icon-checkbox icon-checkbox_selected"></i>
-            </div>
-            <div class="col cart-goods_img">
-              <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
-            </div>
-            <div class="col cart-goods_name">
-              <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
-              </a>
-            </div>
-            <div class="col cart-goods_price">
-              <span class="all-text">￥89</span>
-            </div>
-            <div class="col cart-goods_num">
-              <div class="apply-service_num">
-                <i class="num_minus"></i>
-                <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="1" minnum="1">
-                <i class="num_add"></i>
-              </div>
-            </div>
-            <div class="col cart-goods_total">
-              <span class="all-text" style="color:#f33155 !important">￥89</span>
-            </div>
-            <div class="col cart-goods_action">
-              <a class="del" href="javascript:;">
-                <i class="icon-cancel"></i>
-              </a>
-            </div>
-          </li>
-          <li class="cart-goods_item">
-            <div class="col cart-check">
-              <i class="icon-dagou icon-checkbox"></i>
-            </div>
-            <div class="col cart-goods_img">
-              <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
-            </div>
-            <div class="col cart-goods_name">
-              <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
-              </a>
-            </div>
-            <div class="col cart-goods_price">
-              <span class="all-text">￥89</span>
-            </div>
-            <div class="col cart-goods_num">
-              <div class="apply-service_num">
-                <i class="num_minus"></i>
-                <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="3" minnum="1">
-                <i class="num_add"></i>
-              </div>
-            </div>
-            <div class="col cart-goods_total">
-              <span class="all-text" style="color:#f33155 !important">￥89</span>
-            </div>
-            <div class="col cart-goods_action">
-              <a class="del" href="javascript:;">
-                <i class="icon-cancel"></i>
-              </a>
-            </div>
-          </li>
-          <li class="cart-goods_item">
-            <div class="col cart-check">
-              <i class="icon-dagou icon-checkbox"></i>
-            </div>
-            <div class="col cart-goods_img">
-              <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
-            </div>
-            <div class="col cart-goods_name">
-              <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
-              </a>
-            </div>
-            <div class="col cart-goods_price">
-              <span class="all-text">￥89</span>
-            </div>
-            <div class="col cart-goods_num">
-              <div class="apply-service_num">
-                <i class="num_minus"></i>
-                <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="3" minnum="1">
-                <i class="num_add"></i>
-              </div>
-            </div>
-            <div class="col cart-goods_total">
-              <span class="all-text" style="color:#f33155 !important">￥89</span>
-            </div>
-            <div class="col cart-goods_action">
-              <a class="del" href="javascript:;">
-                <i class="icon-cancel"></i>
-              </a>
-            </div>
-          </li>
-          <li class="cart-goods_item">
-            <div class="col cart-check">
-              <i class="icon-dagou icon-checkbox icon-notsel"></i>
-            </div>
-            <div class="col cart-goods_img">
-              <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
-            </div>
-            <div class="col cart-goods_name">
-              <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
-              </a>
-            </div>
-            <div class="col cart-goods_price">
-              <span class="all-text">￥89</span>
-            </div>
-            <div class="col cart-goods_num">
-              <div class="apply-service_num">
-                <i class="num_minus"></i>
-                <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="3" minnum="1">
-                <i class="num_add"></i>
-              </div>
-            </div>
-            <div class="col cart-goods_total">
-              <span class="all-text" style="color:#f33155 !important">￥89</span>
-            </div>
-            <div class="col cart-goods_action">
-              <a class="del" href="javascript:;">
-                <i class="icon-cancel"></i>
-              </a>
-            </div>
-          </li>
-          <!-- <li class="cart-goods_item">
-            <div class="col cart-check">
-              <i class="icon-dagou icon-checkbox"></i>
-            </div>
-            <div class="col cart-goods_img">
-              <img src="http://i1.mifile.cn/a1/pms_1522636275.74216007!80x80.jpg" alt="">
-            </div>
-            <div class="col cart-goods_name">
-              <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                <p class="all-text">小米短袖T恤 两件装 黑色+白色 S小米短袖T恤 两件装 黑色+白色 S</p>
-              </a>
-            </div>
-            <div class="col cart-goods_price">
-              <span class="all-text">￥89</span>
-            </div>
-            <div class="col cart-goods_num">
-              <div class="apply-service_num">
-                <i class="num_minus"></i>
-                <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="3" minnum="1">
-                <i class="num_add"></i>
-              </div>
-            </div>
-            <div class="col cart-goods_total">
-              <span class="all-text" style="color:#f33155 !important">￥89</span>
-            </div>
-            <div class="col cart-goods_action">
-              <a class="del" href="javascript:;">
-                <i class="icon-cancel"></i>
-              </a>
-            </div>
-          </li> -->
-        </ul>
+        <!-- 用ft-active来控制结算条的位置 -->
+        <div class="cart-footer ft-active clearfix" id="footer">
+          <div class="cart-footer_left">
+            <a class="back-shopping" href="{{ url_for('pc.index.root') }}">{{_('继续购物')}}</a>
+            <span class="cart-total_num">
+              {{_('共')}}
+              <i id="cart_total">{{ cart_total }}</i>
+              {{_('件商品，已选择')}}
+              <i id="items_quantity">{{ items_quantity }}</i>
+              {{_('件')}}
+            </span>
+          </div>
+          <div class="cart-footer_right">
+            <span class="cart-total_price">
+              {{_('合计：')}}￥
+              <em id="items_amount">{{ items_amount }}</em>
+            </span>
+            <a class="cart-checkout_btn btn-primary" href="{{ url_for('pc.cart.checkout') }}">{{_('去结算')}}</a>
+          </div>
+        </div>
       </div>
-      <!-- 用ft-active来控制结算条的位置 -->
-      <div class="cart-footer ft-active clearfix" id="footer">
-        <div class="cart-footer_left">
-          <a class="back-shopping" href="{{ url_for('pc.index.root') }}">{{_('继续购物')}}</a>
-          <span class="cart-total_num">
-            共
-            <i>6</i>
-            件商品，已选择
-            <i>1</i>
-            件
-          </span>
-        </div>
-        <div class="cart-footer_right">
-          <span class="cart-total_price">
-            {{_('合计：')}}￥
-            <em>366</em>
-          </span>
-          <a class="cart-checkout_btn btn-primary" href="{{ url_for('pc.cart.checkout') }}">{{_('去结算')}}</a>
-        </div>
+    {% else %}
+      <div class="not-one">
+        <p class="not-one_text">{{_('您的购物车空空如也!')}}</p>
+        <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
       </div>
-    </div>
-    <!-- 购物车有商品时显示 end -->
-
-    <!-- 购物车没有商品时显示 -->
-    <!-- <div class="not-one">
-      <p class="not-one_text">{{_('您的购物车空空如也!')}}</p>
-      <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-    </div> -->
-    <!-- 购物车没有商品时显示 end -->
+    {% endif %}
   </div>
 </div>
 {% endblock %}
 
 {% block script %}
 <script type="text/javascript">
-  $(function(){
-    var actualH = (window.screen.availHeight-242) + 'px';      //实际剩余的高度
-    var listH = $('#cart-goods').css('height');     //获取cart-goods的高度
+function get_carts() {
+  var carts = [];
 
-    if(actualH <= listH){
-      $('#footer').removeClass('ft-active');
-    } else{
-      $('#footer').addClass('ft-active');
+  $(".is_valid").each(function(){
+    var cart = {};
+    cart.cart_id = $(this).attr('data-cart-id');
+    cart.is_checked = $(this).hasClass('icon-checkbox_selected') ? 1 : 0;
+
+    carts.push(cart);
+  });
+
+  return JSON.stringify(carts);
+}
+
+
+function checked(carts) {
+  $.get("{{ url_for('api.cart.checked') }}", {'carts':carts}, function(json) {
+    if (json.ret != 0) {
+      $.toast(json.msg, "text");
+      return false;
+    }
+
+    $("#items_amount").text("￥"+json.data.items_amount);
+    $("#checkout").text("{{_('结算')}}("+json.data.items_quantity+")");
+    return true;
+  });
+}
+
+
+function update_cart(cart_id, quantity) {
+  $.get("{{ url_for('api.cart.update') }}", {'cart_id':cart_id, 'quantity':quantity}, function(json) {
+    if (json.ret == 0) {
+      $("#cart_total").text(json.data.cart_total);
+      $("#items_quantity").text(json.data.items_quantity);
+      $("#items_amount").text(json.data.items_amount);
+      $("#items_amount"+cart_id).text("￥"+json.data._items_amount);
+
+      return true;
+    } else {
+      alert(json.msg);
+      return false;
     }
   });
+}
+
+
+function update_cart_quantity(cart_id, is_add) {
+  var quantity = parseInt($("#quantity"+cart_id).val());
+
+  if (is_add) {
+    quantity += 1;
+  } else {
+    quantity -= 1;
+    quantity = quantity > 1 ? quantity : 1;
+  }
+
+  var ret = update_cart(cart_id, quantity);
+  if (ret) {
+    $("#quantity"+cart_id).val(quantity);
+    $("#quantity"+cart_id).attr('data-value', quantity);
+  }
+}
+
+
+function checkout() {
+  var carts_id = [];
+
+  $(".is_valid").each(function(){
+    if ($(this).hasClass('icon-checkbox_selected')) {
+      var cart_id = parseInt($(this).attr('data-cart-id'));
+      carts_id.push(cart_id);
+    }
+  });
+
+  if (carts_id.length == 0) {
+    alert("{{_('请选择结算商品')}}");
+    return false;
+  }
+
+  var carts_id_json = JSON.stringify(carts_id);
+  window.location.href="{{ url_for('pc.cart.checkout') }}?carts_id="+carts_id_json;
+}
+
+
+$(function(){
+  var actualH = (window.screen.availHeight-242) + 'px';      //实际剩余的高度
+  var listH = $('#cart-goods').css('height');     //获取cart-goods的高度
+
+  if(actualH <= listH){
+    $('#footer').removeClass('ft-active');
+  } else{
+    $('#footer').addClass('ft-active');
+  }
+
+
+  $(".change_cart_quantity").focusout(function(){
+    var quantity = parseInt($(this).val());
+    var cart_id = parseInt($(this).attr('data-cart-id'));
+
+    if (cart_id <= 0) {
+      $(this).val($this.attr('data-value'));
+      return false;
+    }
+
+    var ret = update_cart(cart_id, quantity);
+    if (ret) {
+      $(this).attr('data-value', quantity);
+    }
+  });
+
+
+  $("#all").click(function(){
+    if ($(this).hasClass('icon-checkbox_selected')) {
+      $(".is_valid").removeClass('icon-checkbox_selected');
+      $(this).removeClass('icon-checkbox_selected');
+    } else {
+      $(".is_valid").addClass('icon-checkbox_selected');
+      $(this).addClass('icon-checkbox_selected');
+    }
+
+    var carts = get_carts();
+    checked(carts);
+  });
+
+
+  $(".is_valid").click(function(){
+    var is_all = 1;
+  
+    $(".is_valid").each(function(){
+      if (!$(this).is(':checked')) {
+        is_all = 0;
+      }
+    });
+
+    (is_all == 1) ? $("#all").prop('checked', true) : $("#all").prop('checked', false);
+
+    var carts = get_carts();
+    checked(carts);
+  });
+});
 </script>
 {% endblock%}
