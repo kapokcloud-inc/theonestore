@@ -30,7 +30,12 @@ from app.helpers import (
     randomstr
 )
 from app.database import db
-from app.forms.admin.auth import AdminUsersForm, AdminUsersEditForm
+from app.forms.admin.auth import (
+    AdminLoginForm,
+    AdminUsersForm, 
+    AdminUsersEditForm,
+    AdminUsersPasswordForm
+)
 from app.models.auth import AdminUsers
 from app.services.admin.auth import AuthLoginService
 from app.services.uploads import FileUploadService
@@ -41,15 +46,19 @@ auth = Blueprint('admin.auth', __name__)
 def login():
     """登陆"""
     if request.method == 'GET':
-        return render_template('admin/auth/login.html.j2', f={}, errmsg={})
+        form = AdminLoginForm()
+        return render_template('admin/auth/login.html.j2', f=form, errmsg={})
 
-    form = request.form
-    mobile = form.get('mobile', '')
-    password = form.get('password', '')
+    form = AdminLoginForm(request.form)
+    if not form.validate_on_submit():
+        return render_template('admin/auth/login.html.j2', f=form)
+
+    account = form.account.data
+    password = form.password.data
     als = AuthLoginService()
-    ret = als.login(mobile, password)
+    ret = als.login(account, password)
     if not ret:
-        return render_template('admin/auth/login.html.j2', f=form, errmsg=als.username)
+        return render_template('admin/auth/login.html.j2', f=form, errmsg=als.errmsg)
 
     # 登录成功
     als.write_session(session)
@@ -116,7 +125,7 @@ def save():
         au.salt = randomstr(random_len=32)
         password = sha256(form.password.data.encode('utf8')).hexdigest()
         sha256_password_salt = sha256((password+au.salt).encode('utf8')).hexdigest()
-        au.password = sha256(sha256_password_salt.encode('utf8')).hexdigest()
+        au.password = sha256_password_salt
 
     avatar = ''
     if form.avatar.data:
@@ -136,4 +145,33 @@ def save():
     db.session.commit()
 
     return redirect(url_for('admin.auth.index'))
+
+
+@auth.route('/password', methods=['GET', 'POST'])
+def password():
+    """修改密码"""
+    g.page_title = _(u'修改密码')
+    
+    if request.method == 'GET':
+        form = AdminUsersPasswordForm()
+        return render_template('admin/auth/password.html.j2', form=form)
+
+    form = AdminUsersPasswordForm(request.form)
+    if not form.validate_on_submit():
+        return render_template('admin/auth/password.html.j2', form=form)
+
+    sha256_password = sha256(form.password.data.encode('utf8')).hexdigest()
+
+    admin_user = form.admin_user
+    admin_user.salt = randomstr(32)
+    admin_user.password = sha256((sha256_password+admin_user.salt).encode('utf8')).hexdigest()
+    db.session.commit()
+
+    return redirect(
+                url_for(
+                    'admin.index.success', 
+                    title=_(u'修改密码成功'), 
+                    back_url=url_for('admin.auth.password')
+                )
+            )
 

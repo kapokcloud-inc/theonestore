@@ -61,7 +61,6 @@ def index():
     data               = OrderStaticMethodsService.orders(uid, request.args.to_dict())
     data['paging_url'] = url_for('mobile.order.paging', **request.args)
     data['tab_status'] = request.args.get('tab_status', '0')
-
     return render_template('pc/order/index.html.j2', **data)
 
 
