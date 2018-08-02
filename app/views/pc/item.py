@@ -25,10 +25,8 @@ from app.helpers import (
 )
 from app.helpers.user import get_uid
 
-from app.services.api.comment import CommentStaticMethodsService
 from app.services.api.item import ItemStaticMethodsService
 
-from app.models.like import Like
 from app.models.item import (
     Goods,
     GoodsCategories,
@@ -40,65 +38,53 @@ item = Blueprint('pc.item', __name__)
 
 @item.route('/')
 def index():
-    """pc - 商品列表页"""
+    """商品列表页"""
 
-    items, pagination = ItemStaticMethodsService.items(request.args.to_dict())
-    paging_url        = url_for('pc.item.paging', **request.args)
+    data               = ItemStaticMethodsService.items(request.args.to_dict())
+    data['paging_url'] = url_for('pc.item.paging', **request.args)
 
-    return render_template('pc/item/index.html.j2', items=items, paging_url=paging_url)
+    return render_template('pc/item/index.html.j2', **data)
 
 
 @item.route('/paging')
 def paging():
     """加载分页"""
 
-    items, pagination = ItemStaticMethodsService.items(request.args.to_dict())
+    data = ItemStaticMethodsService.items(request.args.to_dict())
 
-    return render_template('pc/item/paging.html.j2', items=items)
+    return render_template('pc/item/paging.html.j2', **data)
 
 
 @item.route('/<int:goods_id>')
 def detail(goods_id):
-    """ pc - 商品详情页 """
+    """商品详情页"""
 
     uid = get_uid()
     if not uid:
         session['weixin_login_url'] = request.url
 
-    item      = Goods.query.get_or_404(goods_id)
-    galleries = db.session.query(GoodsGalleries.img).filter(GoodsGalleries.goods_id == goods_id).all()
+    data = ItemStaticMethodsService.detail_page(goods_id, uid)
 
-    is_fav = db.session.query(Like.like_id).\
-                filter(Like.like_type == 2).\
-                filter(Like.ttype == 1).\
-                filter(Like.tid == goods_id).\
-                filter(Like.uid == uid).first()
-    is_fav = 1 if is_fav else 0
-
-    comments = []
-    if item.comment_count > 0:
-        comments = CommentStaticMethodsService.comments({'p':1, 'ps':2, 'ttype':1, 'tid':goods_id})
-
-    return render_template('pc/item/detail.html.j2', item=item, galleries=galleries, is_fav=is_fav, comments=comments)
+    return render_template('pc/item/detail.html.j2', **data)
 
 
 @item.route('/recommend')
 def recommend():
-    """pc - 推荐"""
+    """推荐"""
 
-    params            = {'is_recommend':1}
-    items, pagination = ItemStaticMethodsService.items(params)
-    paging_url        = url_for('pc.item.paging', **params)
+    params             = {'is_recommend':1}
+    data               = ItemStaticMethodsService.items(params)
+    data['paging_url'] = url_for('pc.item.paging', **params)
 
-    return render_template('pc/item/recommend.html.j2', items=items, paging_url=paging_url)
+    return render_template('pc/item/recommend.html.j2', **data)
 
 
 @item.route('/hot')
 def hot():
-    """pc - 热卖"""
+    """热卖"""
 
-    params            = {'is_hot':1}
-    items, pagination = ItemStaticMethodsService.items(params)
-    paging_url        = url_for('pc.item.paging', **params)
+    params             = {'is_hot':1}
+    data               = ItemStaticMethodsService.items(params)
+    data['paging_url'] = url_for('pc.item.paging', **params)
 
-    return render_template('pc/item/hot.html.j2', items=items, paging_url=paging_url)
+    return render_template('pc/item/hot.html.j2', **data)

@@ -183,14 +183,23 @@
 {% endmacro %}
 
 
-{# 构造form表单 #}
-{% macro render_form(form, action='', method='POST', enctype='') %}
+{# 
+  构造form表单
+  :param form: FlaskForm对象
+  :param action: 表单url
+  :param method: POST|GET
+  :param enctype: multipart/form-data|application/x-www-form-urlencoded|text/plain
+  :param primary_key:主键，如果主键为0或者空值则认为是新添加数据，其它具体值则认为是编辑
+#}
+{% macro render_form(form, action='', method='POST', enctype='', primary_key='') %}
 <form class="form-horizontal" action="{{ action }}" method="{{ method }}"{% if enctype %} enctype="{{ enctype }}"{% endif %}>
+  <input type="hidden" name="primary_key" id="primary_key" value="{{ primary_key }}">
 {%- for field in form -%}
 {% if field.name != 'csrf_token' and field.type != 'HiddenField'  %}
   <div class="form-group">
     <label for="{{ field.name }}" class="control-label col-xs-12 col-sm-4 col-md-3 col-lg-2">{{ get_required_star(field) }}{{ field.label|safe }}</label>
     <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3{%if field.errors%} has-error{%endif%}">
+    {# 布尔类型 #}
     {% if field.type == 'BooleanField' %}
       <div class="checkbox checkbox-success `">
           {{ field(**kwargs) }}
@@ -198,9 +207,19 @@
       </div>
     {% else %}
       {% set class_ = 'form-control' %}
-      {% if field.type in ('TextField', 'TextAreaField', 'PasswordField', 
+      {# 文件类型 #}
+      {% if field.type == 'FileField' %}
+        {% set class_ = class_ + ' input-file' %}
+        {% set uploadtype = field|get_file_uploadtype %}
+        {% if field.flags.required and not field.data %}
+          {{ field(class_=class_, required='', uploadtype=uploadtype, **kwargs) }}
+        {% else %}
+          {{ field(class_=class_, uploadtype=uploadtype, **kwargs) }}
+        {% endif %}
+
+      {% elif field.type in ('TextField', 'TextAreaField', 'PasswordField', 
             'DecimalField', 'SelectField', 'IntegerField', 
-            'StringField', 'FileField') %}
+            'StringField') %}
         {% if field.flags.required %}
           {{ field(class_=class_, required='', **kwargs) }}
         {% else %}
@@ -212,6 +231,18 @@
     {# 描述 #}
     {%- if field.description and field.type != 'BooleanField' -%}
       <span class="help-block m-b-none">{{ field.description|safe }}</span>
+    {%- endif -%}
+
+    {# 显示图片 #}
+    {%- if field.type == 'FileField' and field.data -%}
+      {% set uploadtype = field|get_file_uploadtype %}
+      <a href="{{ field.data }}" target="_blank">
+      {%- if uploadtype == 'images' -%}
+        <img src="{{ field.data }}-rectangle.middle" alt="" style="width:200px;padding-left:0px;">
+      {%-else-%}
+        下载文件
+      {%- endif -%}
+      </a>
     {%- endif -%}
     
     {# 错误提示 #}
@@ -237,6 +268,7 @@
 {%- macro get_required_star(field) -%}
 {%- if field.flags.required -%} <span style="color:#f33155;padding-right:5px;">*</span>{%- endif -%}
 {%- endmacro -%}
+
 
 
 {# 其它 - 面包屑html #}

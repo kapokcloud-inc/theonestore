@@ -38,9 +38,11 @@
         {% endif %}
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('图片')}}</label>
-          <!-- ?? -->
           <span class="weui-form-preview__value">
-            <img class="applyImg" src="" alt="">
+            {% set img_data = aftersales.img_data|json_loads %}
+            {% for img in img_data %}
+              <img class="applyImg" src="{{ img }}" alt="">
+            {% endfor %}
           </span>
         </div>
         <div class="weui-form-preview__item">

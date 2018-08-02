@@ -34,9 +34,9 @@ def to_json(ret=0, msg='ok', data=None):
 def json_encode(data):
     def _any(data):
         ret = None
-        if type(data) is types.ListType:
+        if isinstance(data, (list, tuple, range)):
             ret = _list(data)
-        elif type(data) is types.DictType:
+        elif isinstance(data, dict):
             ret = _dict(data)
         elif isinstance(data, Decimal):
             ret = str(data)

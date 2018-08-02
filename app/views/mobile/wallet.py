@@ -49,7 +49,7 @@ def root():
     uid = get_uid()
 
     funds      = Funds.query.filter(Funds.uid == uid).first()
-    details    = FundsStaticMethodsService.details({'uid':uid})
+    details    = FundsStaticMethodsService.details(uid, {})
     log_info('details:%s' % details)
     paging_url = url_for('mobile.wallet.paging', **request.args)
 
@@ -65,9 +65,7 @@ def paging():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    params        = request.args.to_dict()
-    params['uid'] = uid
-    details       = FundsStaticMethodsService.details(params)
+    details = FundsStaticMethodsService.details(uid, request.args.to_dict())
 
     return render_template('mobile/wallet/paging.html.j2', details=details)
 

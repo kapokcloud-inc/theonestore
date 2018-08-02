@@ -15,14 +15,18 @@ from flask_wtf.file import (
     FileRequired, 
     FileStorage
 )
-from flask_uploads import IMAGES
+from flask_uploads import (
+    UploadSet,
+    IMAGES
+)
 from wtforms import (
     IntegerField,
     StringField,
     DecimalField,
-    FileField,
     SelectField,
-    TextAreaField
+    TextAreaField,
+    HiddenField,
+    BooleanField
 )
 from wtforms.validators import (
     Required,
@@ -33,51 +37,74 @@ from wtforms.validators import (
 )
 
 from app.database import db
-from app.models.item import GoodsCategories
+
 from app.helpers import (
     render_template, 
     log_info,
     toint
 )
 
+from app.forms import Form
 
-class ItemForm(FlaskForm):
+from app.models.item import GoodsCategories
+
+
+class ItemForm(Form):
     """商品form"""
-    goods_id       = IntegerField()
+    goods_id       = HiddenField(default=0)
+
     cat_id         = SelectField(
+                        _(u'分类'),
                         coerce=int,
                         validators=[
-                            Required(message=_(u'请选择商品分类'))]
+                            Required(message=_(u'请选择商品分类'))
+                        ]
                     )
+
     goods_name     = StringField(
+                        _(u'商品名称'),
                         validators=[
-                            Required(message=_(u'请填写商品名称'))]
+                            Required(message=_(u'请填写商品名称'))
+                        ]
                     )
-    goods_desc     = TextAreaField()
+
+    goods_img      = FileField(
+                    _(u'封面原图'),
+                    description=_(u'图片文件'),
+                    validators=[
+                        FileRequired(_(u'文件未上传')), 
+                        FileAllowed(UploadSet('images', IMAGES), message=_(u'只允许上传图片'))
+                    ]
+                )
+
+    goods_desc     = TextAreaField(_(u'商品简介'))
+
     goods_price    = DecimalField(
+                        _(u'商品金额'),
                         validators=[
-                            NumberRange(min=0, message=_(u'金额不能小于0'))]
+                            NumberRange(min=0, message=_(u'金额不能小于0'))
+                        ]
                     )
+
     market_price   = DecimalField(
+                        _(u'市场价格'),
                         validators=[
-                            NumberRange(min=0, message=_(u'金额不能小于0'))]
+                            NumberRange(min=0, message=_(u'金额不能小于0'))
+                        ]
                     )
-    is_sale        = SelectField(
-                        coerce=int,
-                        choices=[(0, _(u'否')), (1, _(u'是'))]
-                    )
+
+    is_sale        = BooleanField(_(u'是否在售'), false_values=(0, '0', ''))
+
     stock_quantity = IntegerField(
+                        _(u'库存数量'),
                         validators=[
-                            NumberRange(min=0, message=_(u'商品库存不能小于0'))]
+                            NumberRange(min=0, message=_(u'商品库存不能小于0'))
+                        ]
                     )
-    is_hot         = SelectField(
-                        coerce=int,
-                        choices=[(0, _(u'否')), (1, _(u'是'))]
-                    )
-    is_recommend   = SelectField(
-                        coerce=int,
-                        choices=[(0, _(u'否')), (1, _(u'是'))]
-                    )
+
+    is_hot         = BooleanField(_(u'是否热门商品'), false_values=(0, '0', ''))
+
+    is_recommend   = BooleanField(_(u'是否推荐'), false_values=(0, '0', ''))
 
     def __init__(self, *args, **kwargs):
         super(ItemForm, self).__init__(*args, **kwargs)
@@ -97,19 +124,24 @@ class ItemGalleriesForm(FlaskForm):
     goods_id = IntegerField()
 
 
-class CategoryForm(FlaskForm):
+class CategoryForm(Form):
     """分类form"""
-    cat_id   = IntegerField()
+    cat_id   = HiddenField(default=0)
+
     cat_name = StringField(
-                    _(u'分类名称'), 
+                    _(u'分类名称'),
                     render_kw={'placeholder':_(u'请输入分类名称')},
                     validators=[
-                        InputRequired(message=_(u'必填项'))]
+                        Required(message=_(u'必填项'))
+                    ]
                 )
-    """cat_img   = FileField(
+
+    cat_img   = FileField(
                     _(u'分类图片'),
+                    description=_(u'图片文件'),
                     validators=[
                         FileRequired(_(u'文件未上传')), 
-                        FileAllowed(IMAGES, message=_(u'只能上传图片'))]
-                )"""
+                        FileAllowed(UploadSet('images', IMAGES), message=_(u'只允许上传图片'))
+                    ]
+                )
 

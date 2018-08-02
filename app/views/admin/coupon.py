@@ -20,6 +20,7 @@ from flask import (
 from sqlalchemy import (
     and_, or_, func
 )
+from werkzeug.datastructures import CombinedMultiDict
 from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
 
@@ -27,7 +28,9 @@ from app.database import db
 from app.helpers import (
     render_template, 
     log_info,
-    toint
+    toint,
+    model_create,
+    model_update
 )
 from app.helpers.date_time import (
     current_timestamp,
@@ -78,9 +81,9 @@ def create():
     """添加优惠券"""
     g.page_title = _(u'添加优惠券')
 
-    wtf_form = CouponBatchForm()
+    form = CouponBatchForm()
 
-    return render_template('admin/coupon/detail.html.j2', wtf_form=wtf_form, batch={})
+    return render_template('admin/coupon/detail.html.j2', form=form)
 
 
 @coupon.route('/detail/<int:cb_id>')
@@ -90,13 +93,13 @@ def detail(cb_id):
 
     batch = CouponBatch.query.get_or_404(cb_id)
 
-    wtf_form               = CouponBatchForm()
-    wtf_form.is_valid.data = batch.is_valid
-
     batch.begin_time = timestamp2str(batch.begin_time, 'YYYY-MM-DD') if batch.begin_time else ''
     batch.end_time   = timestamp2str(batch.end_time, 'YYYY-MM-DD') if batch.end_time else ''
 
-    return render_template('admin/coupon/detail.html.j2', wtf_form=wtf_form, batch=batch)
+    form = CouponBatchForm()
+    form.fill_form(batch)
+
+    return render_template('admin/coupon/detail.html.j2', form=form)
 
 
 @coupon.route('/save', methods=['POST'])
@@ -104,36 +107,29 @@ def save():
     """保存优惠券"""
     g.page_title = _(u'保存优惠券')
 
-    wtf_form     = CouponBatchForm()
+    form         = CouponBatchForm(CombinedMultiDict((request.files, request.form)))
     current_time = current_timestamp()
 
-    if wtf_form.validate_on_submit():
-        cb_id = wtf_form.cb_id.data
-        if cb_id:
-            batch = CouponBatch.query.get_or_404(cb_id)
-        else:
-            batch          = CouponBatch()
-            batch.add_time = current_time
-            db.session.add(batch)
+    if not form.validate_on_submit():
+        return render_template('admin/coupon/detail.html.j2', form=form)
 
-        batch.cb_name       = wtf_form.cb_name.data
-        batch.begin_time    = str2timestamp(wtf_form.begin_time.data, 'YYYY-MM-DD') if wtf_form.begin_time.data else 0
-        batch.end_time      = str2timestamp(wtf_form.end_time.data, 'YYYY-MM-DD') if wtf_form.end_time.data else 0
-        batch.coupon_name   = wtf_form.coupon_name.data
-        batch.is_valid      = wtf_form.is_valid.data
-        batch.publish_num   = wtf_form.publish_num.data
-        batch.limit_amount  = wtf_form.limit_amount.data
-        batch.coupon_amount = wtf_form.coupon_amount.data
-        batch.date_num      = wtf_form.date_num.data
-        batch.coupon_from   = wtf_form.coupon_from.data
-        batch.update_time   = current_time
-        db.session.commit()
+    cb_id = toint(form.cb_id.data)
+    if cb_id:
+        batch = CouponBatch.query.get_or_404(cb_id)
+    else:
+        batch = model_create(CouponBatch, {'add_time':current_time})
 
-        return redirect(url_for('admin.coupon.index'))
+    begin_time = str2timestamp(form.begin_time.data, 'YYYY-MM-DD') if form.begin_time.data else 0
+    end_time   = str2timestamp(form.end_time.data, 'YYYY-MM-DD') if form.end_time.data else 0
+    data = {'cb_name':form.cb_name.data, 'begin_time':begin_time,
+            'end_time':end_time, 'coupon_name':form.coupon_name.data,
+            'is_valid':form.is_valid.data, 'publish_num':form.publish_num.data,
+            'limit_amount':form.limit_amount.data, 'coupon_amount':form.coupon_amount.data,
+            'date_num':form.date_num.data, 'coupon_from':form.coupon_from.data,
+            'update_time':current_time}
+    model_update(batch, data, commit=True)
 
-    batch = wtf_form.data
-
-    return render_template('admin/coupon/detail.html.j2', wtf_form=wtf_form, batch=batch)
+    return redirect(url_for('admin.coupon.index'))
 
 
 @coupon.route('/coupons')

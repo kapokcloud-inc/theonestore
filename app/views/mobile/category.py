@@ -37,9 +37,8 @@ category = Blueprint('mobile.category', __name__)
 
 @category.route('/')
 def root():
-    """手机站 - 分类页"""
+    """分类页"""
 
-    categories = db.session.query(GoodsCategories.cat_id, GoodsCategories.cat_name, GoodsCategories.cat_img).\
-        filter(GoodsCategories.is_show == 1).order_by(GoodsCategories.sorting.desc(), GoodsCategories.cat_id.desc()).all()
+    categories = ItemStaticMethodsService.categories()
 
     return render_template('mobile/category/index.html.j2', categories=categories)

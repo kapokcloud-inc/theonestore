@@ -12,32 +12,10 @@
           <h3 class="box-title m-b-0">{{_('优惠券基本信息填写')}}</h3>
           <p class="text-muted m-b-30 font-13">{{_('输入下面的详细信息')}}</p>
 
-          <form action="{{ url_for('admin.coupon.save') }}" method="POST">
-            <div class="row">
-              {{ libs.wtf_input(wtf_form.cb_name, _('批次名称'), _value=batch.cb_name, _class="form-control") }}
-              {{ libs.wtf_input(wtf_form.coupon_name, _('优惠券名称'), _value=batch.coupon_name, _class="form-control") }}
-            </div>
-            <div class="row">
-              {{ libs.wtf_input(wtf_form.begin_time, _('开始时间'), _value=batch.begin_time, _class="form-control datepicker-autoclose", _help=_('*留空代表无限制')) }}
-              {{ libs.wtf_input(wtf_form.end_time, _('结束时间'), _value=batch.end_time, _class="form-control datepicker-autoclose", _help=_('*留空代表无限制')) }}
-            </div>
-            <div class="row">
-              {{ libs.wtf_select(wtf_form.is_valid, _('是否有效'), _class="form-control") }}
-              {{ libs.wtf_input(wtf_form.publish_num, _('发行数量'), _value=batch.publish_num, _class="form-control", _help=_('*0.没有限制')) }}
-            </div>
-            <div class="row">
-              {{ libs.wtf_input(wtf_form.coupon_amount, _('优惠券金额'), _value=batch.coupon_amount, _class="form-control") }}
-              {{ libs.wtf_input(wtf_form.limit_amount, _('满减额度'), _value=batch.limit_amount, _class="form-control") }}
-            </div>
-            <div class="row">
-              {{ libs.wtf_input(wtf_form.date_num, _('每天最大赠送数'), _value=batch.date_num, _class="form-control", _help=_('*0.没有限制')) }}
-              {{ libs.wtf_input(wtf_form.coupon_from, _('优惠券来源说明'), _value=batch.coupon_from, _class="form-control") }}
-            </div>
-            {% set cb_id = batch.cb_id if batch.cb_id else 0 %}
-            {{ libs.wtf_input(wtf_form.cb_id, '', _value=cb_id, _type="hidden") }}
-            {{ wtf_form.csrf_token }}
-            {{ libs.wtf_submit() }}
-          </form>
+          {{ libs.render_form(form,
+              action=url_for('admin.coupon.save'),
+              enctype="multipart/form-data",
+              primary_key=form.cb_id.data) }}
         </div>
       </div>
     </div>

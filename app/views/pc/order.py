@@ -29,7 +29,6 @@ from app.helpers.user import (
     check_login,
     get_uid
 )
-from app.helpers.date_time import current_timestamp
 
 from app.services.api.order import (
     OrderStaticMethodsService,
@@ -59,19 +58,25 @@ def index():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    orders     = OrderStaticMethodsService.orders(uid, request.args.to_dict())
+    data               = OrderStaticMethodsService.orders(uid, request.args.to_dict())
+    data['paging_url'] = url_for('mobile.order.paging', **request.args)
+    data['tab_status'] = request.args.get('tab_status', '0')
 
-    texts = {}
-    codes = {}
-    for order in orders:
-        text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
-        texts[order.order_id] = text
-        codes[order.order_id] = code
-    
-    tab_status = toint(request.args.get('tab_status', '0'))
-
-    data = {'tab_status':tab_status, 'orders':orders, 'texts':texts, 'codes':codes}
     return render_template('pc/order/index.html.j2', **data)
+
+
+@order.route('/paging')
+def paging():
+    """加载分页"""
+
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+
+    data = OrderStaticMethodsService.orders(uid, request.args.to_dict())
+
+    return render_template('pc/order/paging.html.j2', **data)
 
 
 @order.route('/<int:order_id>')
@@ -83,23 +88,8 @@ def detail(order_id):
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
-    if not order:
-        return redirect(request.headers['Referer'])
+    data = OrderStaticMethodsService.detail_page(order_id, uid)
 
-    items         = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
-    order_address = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
-
-    text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
-
-    express_data = None
-    if order.shipping_status == 2:
-        _express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
-        if _express_msg == 'ok':
-            express_data = _express_data[0] if len(_express_data) > 0 else {}
-
-    data = {'order':order, 'items':items, 'order_address':order_address, 'text':text, 'code':code, 'express_data':express_data,
-            'current_time':current_timestamp()}
     return render_template('pc/order/detail.html.j2', **data)
 
 

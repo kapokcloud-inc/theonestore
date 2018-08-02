@@ -173,11 +173,6 @@ class AfterSalesCreateService(object):
         self.goods_data.append(data)
 
         return True
-    
-    def _check_img_data(self):
-        """检查图片数据 ??"""
-
-        return True
 
     def check(self):
         """检查"""

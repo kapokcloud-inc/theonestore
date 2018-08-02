@@ -36,17 +36,13 @@
         </a>
       </div>
     </div>
-    <!-- ?? -->
     <div class="weui-cell uploader_wrap">
       <div class="weui-cell__bd">
         <div class="weui-uploader">
           <div class="weui-uploader__bd">
-            <ul class="weui-uploader__files" id="uploaderFiles">
-              <li class="weui-uploader__file" style="background-image:url('http://i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg')"></li>
-              <li class="weui-uploader__file" style="background-image:url('https://i8.mifile.cn/b2c-mimall-media/10c6f6ede2fcfa2ad162d2869a716c14.jpg')"></li>
-            </ul>
+            <ul class="weui-uploader__files" id="uploaderFiles"></ul>
             <div class="weui-uploader__input-box">
-              <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">
+              <input id="uploaderInput" name="image" class="weui-uploader__input" type="file" accept="image/*" multiple="">
             </div>
           </div>
         </div>
@@ -56,16 +52,35 @@
   <div class="reg_btn">
     {{ wtf_form.csrf_token }}
     <input id="og_id" type="hidden" value="{{ order_goods.og_id }}" />
+    <input id="img_data" name="img_data" type="hidden" value="[]" />
     <button type="button" class="weui-btn weui-btn_red" onclick="submit()">{{_('提交')}}</button>
   </div>
 </div>
 {% endblock %} 
 
 {% block script %}
+<!-- 异步上传 -->
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.iframe-transport.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
 <script type="text/javascript">
 var csrftoken = $('#csrf_token').val();
 $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
+});
+
+$('#uploaderInput').fileupload({
+    url: "{{ url_for('api.upload.image') }}",
+    dataType: 'json',
+    formData:{'prefix':'comment'},
+    done: function (e, data) {
+      if(data.result.ret == 0) {
+        var image = data.result.data.image;
+
+        var html_text = '<li class="weui-uploader__file" style="background-image:url(' + image + ')" data-value="'+image+'"></li>';
+        $("#uploaderFiles").append(html_text);
+      }
+    }
 });
 
 function submit() {
@@ -73,7 +88,13 @@ function submit() {
   var rating = $(".tag_btn-on").attr('data-value');
   var content = $("#content").val();
 
-  var params = {'og_id':og_id, 'rating':rating, 'content':content}
+  var images = [];
+  $(".weui-uploader__file").each(function(i){
+    images.push($(this).attr('data-value'));
+  });
+  var img_data = JSON.stringify(images);
+
+  var params = {'og_id':og_id, 'rating':rating, 'content':content, 'img_data':img_data}
   $.post("{{ url_for('api.order.save_comment') }}", params, function(json) {
     if (json.ret == 0) {
       window.location.href = "{{ url_for('mobile.order.comment', is_pending=1) }}";

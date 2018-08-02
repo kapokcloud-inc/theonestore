@@ -11,16 +11,10 @@
         <div class="white-box">
           <h3 class="box-title m-b-0">{{_('商品分类基本信息填写')}}</h3>
           <p class="text-muted m-b-30 font-13">{{_('输入下面的详细信息')}}</p>
-
-          <form action="{{ url_for('admin.item.category_save') }}" method="POST">
-            <div class="row">
-              {{ libs.wtf_input(wtf_form.cat_name, _('分类名称'), _value=category.cat_name, _class="form-control") }}
-            </div>
-            {% set cat_id = category.cat_id if category.cat_id else 0 %}
-            {{ libs.wtf_input(wtf_form.cat_id, '', _value=cat_id, _type="hidden") }}
-            {{ wtf_form.csrf_token }}
-            {{ libs.wtf_submit() }}
-          </form>
+          {{ libs.render_form(form,
+              action=url_for('admin.item.category_save'),
+              enctype="multipart/form-data",
+              primary_key=form.cat_id.data) }}
         </div>
       </div>
     </div>
