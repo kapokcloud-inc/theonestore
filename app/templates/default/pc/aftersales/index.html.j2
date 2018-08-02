@@ -1,0 +1,155 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+
+
+{% block head %}
+<title>{{_('售后服务记录 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('售后服务记录')}}</span>
+      </p>
+    </div>
+    <div class="user-main">
+      <div class="head-inner clearfix">
+        {%include 'default/pc/layout/nav_left.html.j2'%}
+        <div class="order-wrap">
+          <div class="allPad">
+            <!-- 没有申请 -->
+            <!-- <div class="not-one">
+              <p class="not-one_text">{{_('您暂无相关申请!')}}</p>
+              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+            </div> -->
+            <!-- 没有申请 end -->
+
+            <!-- 有申请 -->
+            <div class="order-bd">
+              <div class="order-box">
+                <ul class="order-box_list">
+                  <li class="order-box_item">
+                    <div class="order-item_detail">
+                      <div class="item-datail_hd">
+                        <div class="order-type">审核中</div>
+                        <div class="order-desc">
+                          <div class="order-fl">2018-07-12 22:21:22</div>
+                          <div class="order-fl">
+                            <span>{{_('服务单号：')}}</span>
+                            <a class="orderID" href="{{ url_for('pc.aftersales.detail', aftersales_id=47) }}">AS1807314500105</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="item-datail_bd clearfix">
+                        <div class="item-bd_fl">
+                          <div class="one-cell">
+                            <div class="one-cell_hd avatar80">
+                              <img src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
+                            </div>
+                            <div class="one-cell_bd">
+                              <p class="blackGap">红米手机2A 移动4G双卡版 绿色 8GB</p>
+                              <p class="blackGap mar-top">数量：1</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="item-bd_fr">
+                          <a class="btn-link" href="{{ url_for('pc.aftersales.detail', aftersales_id=47) }}">
+                            <button class="order-type_btn" type="button">{{_('服务单详情')}}</button>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="order-box_item">
+                    <div class="order-item_detail">
+                      <div class="item-datail_hd">
+                        <div class="order-type">审核不通过</div>
+                        <div class="order-desc">
+                          <div class="order-fl">2018-07-12 22:21:22</div>
+                          <div class="order-fl">
+                            <span>{{_('服务单号：')}}</span>
+                            <a class="orderID" href="{{ url_for('pc.aftersales.detail', aftersales_id=47) }}">AS1807314500105</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="item-datail_bd clearfix">
+                        <div class="item-bd_fl">
+                          <div class="one-cell not-oneCell">
+                            <div class="one-cell_hd avatar80">
+                              <img src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
+                            </div>
+                            <div class="one-cell_bd">
+                              <p class="blackGap">红米手机2A 移动4G双卡版 绿色 8GB</p>
+                              <p class="blackGap mar-top">数量：2</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="item-bd_fr">
+                          <a class="btn-link" href="{{ url_for('pc.aftersales.detail', aftersales_id=47) }}">
+                            <button class="order-type_btn" type="button">{{_('服务单详情')}}</button>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="order-box_item">
+                    <div class="order-item_detail">
+                      <div class="item-datail_hd">
+                        <div class="order-type">退款成功，已完成</div>
+                        <div class="order-desc">
+                          <div class="order-fl">2018-07-12 22:21:22</div>
+                          <div class="order-fl">
+                            <span>{{_('服务单号：')}}</span>
+                            <a class="orderID" href="{{ url_for('pc.aftersales.detail', aftersales_id=47) }}">AS1807314500105</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="item-datail_bd clearfix">
+                        <div class="item-bd_fl">
+                          <div class="one-cell not-oneCell">
+                            <div class="one-cell_hd avatar80">
+                              <img src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
+                            </div>
+                            <div class="one-cell_bd">
+                              <p class="blackGap">红米手机2A 移动4G双卡版 绿色 8GB</p>
+                              <p class="blackGap mar-top">数量：2</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="item-bd_fr">
+                          <a class="btn-link" href="{{ url_for('pc.aftersales.detail', aftersales_id=47) }}">
+                            <button class="order-type_btn" type="button">{{_('服务单详情')}}</button>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="page-box">
+                <a href="" class="page-num">{{_('上一页')}}</a>
+                <span class="page-num btn-primary">1</span>
+                <a href="" class="page-num">2</a>
+                <a href="" class="page-num">3</a>
+                <a href="" class="page-num">4</a>
+                <a href="" class="page-num">5</a>
+                <a href="" class="page-num">6</a>
+                <span class="page-more">...</span>
+                <a href="" class="page-num">12</a>
+                <a href="" class="page-num">{{_('下一页')}}</a>
+              </div>
+            </div>
+            <!-- 有申请 end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript"></script>
+{% endblock%}

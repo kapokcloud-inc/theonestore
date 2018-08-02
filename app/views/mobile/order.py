@@ -29,7 +29,6 @@ from app.helpers.user import (
     check_login,
     get_uid
 )
-from app.helpers.date_time import current_timestamp
 
 from app.services.api.order import (
     OrderStaticMethodsService,
@@ -39,7 +38,6 @@ from app.services.api.order import (
 
 from app.forms.api.comment import CommentOrderGoodsForm
 
-from app.models.aftersales import Aftersales
 from app.models.comment import Comment
 from app.models.shipping import Shipping
 from app.models.order import (
@@ -60,19 +58,10 @@ def index():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    orders     = OrderStaticMethodsService.orders(uid, request.args.to_dict())
-    paging_url = url_for('mobile.order.paging', **request.args)
+    data               = OrderStaticMethodsService.orders(uid, request.args.to_dict())
+    data['paging_url'] = url_for('mobile.order.paging', **request.args)
+    data['tab_status'] = request.args.get('tab_status', '0')
 
-    texts = {}
-    codes = {}
-    for order in orders:
-        text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
-        texts[order.order_id] = text
-        codes[order.order_id] = code
-    
-    tab_status = toint(request.args.get('tab_status', '0'))
-
-    data = {'tab_status':tab_status, 'orders':orders, 'texts':texts, 'codes':codes, 'paging_url':paging_url}
     return render_template('mobile/order/index.html.j2', **data)
 
 
@@ -85,16 +74,9 @@ def paging():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    orders = OrderStaticMethodsService.orders(uid, request.args.to_dict())
+    data = OrderStaticMethodsService.orders(uid, request.args.to_dict())
 
-    texts = {}
-    codes = {}
-    for order in orders:
-        text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
-        texts[order.order_id] = text
-        codes[order.order_id] = code
-
-    return render_template('mobile/order/paging.html.j2', orders=orders, texts=texts, codes=codes)
+    return render_template('mobile/order/paging.html.j2', **data)
 
 
 @order.route('/<int:order_id>')
@@ -106,25 +88,8 @@ def detail(order_id):
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
-    if not order:
-        return redirect(request.headers['Referer'])
+    data = OrderStaticMethodsService.detail_page(order_id, uid)
 
-    items         = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
-    order_address = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
-
-    text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
-
-    express_data = None
-    if order.shipping_status == 2:
-        _express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
-        if _express_msg == 'ok':
-            express_data = _express_data[0] if len(_express_data) > 0 else {}
-
-    aftersale = Aftersales.query.filter(Aftersales.order_id == order_id).filter(Aftersales.status.in_([1,2])).first()
-
-    data = {'order':order, 'items':items, 'order_address':order_address, 'text':text, 'code':code, 'express_data':express_data,
-            'aftersale':aftersale, 'current_time':current_timestamp()}
     return render_template('mobile/order/detail.html.j2', **data)
 
 

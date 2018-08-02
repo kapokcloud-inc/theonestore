@@ -12,6 +12,7 @@ import json
 import random
 from decimal import Decimal
 
+from flask import abort
 from flask_babel import gettext as _
 from sqlalchemy import or_
 
@@ -36,6 +37,7 @@ from app.services.message import MessageCreateService
 from app.services.api.cart import CheckoutService
 from app.services.api.funds import FundsService
 
+from app.models.aftersales import Aftersales
 from app.models.coupon import Coupon
 from app.models.shipping import Shipping
 from app.models.user import UserAddress
@@ -769,7 +771,14 @@ class OrderStaticMethodsService(object):
 
         orders = q.order_by(Order.order_id.desc()).offset((p-1)*ps).limit(ps).all()
 
-        return orders
+        texts = {}
+        codes = {}
+        for order in orders:
+            text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
+            texts[order.order_id] = text
+            codes[order.order_id] = code
+
+        return {'orders':orders, 'texts':texts, 'codes':codes}
 
 
     @staticmethod
@@ -842,3 +851,28 @@ class OrderStaticMethodsService(object):
             return (_(u'查询失败'), [])
 
         return ('ok', data['data'])
+
+    @staticmethod
+    def detail_page(order_id, uid):
+        """详情页面"""
+
+        order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
+        if not order:
+            return abort(404)
+
+        items         = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
+        order_address = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
+        text, code    = OrderStaticMethodsService.order_status_text_and_action_code(order)
+
+        express_data = None
+        if order.shipping_status == 2:
+            _express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
+            if _express_msg == 'ok':
+                express_data = _express_data[0] if len(_express_data) > 0 else {}
+
+        aftersale = Aftersales.query.filter(Aftersales.order_id == order_id).filter(Aftersales.status.in_([1,2])).first()
+
+        data = {'order':order, 'items':items, 'order_address':order_address,
+                'text':text, 'code':code, 'express_data':express_data,
+                'aftersale':aftersale, 'current_time':current_timestamp()}
+        return data

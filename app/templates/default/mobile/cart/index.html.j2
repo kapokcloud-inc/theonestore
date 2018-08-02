@@ -8,82 +8,84 @@
 
 {% block body %}
 <div class="cart_wrap">
-  <div class="content_wrap">
-    {% for cart in carts %}
-      <div class="weui-cells weui-cells_checkbox flex_wrap">
-        <label class="weui-check__label" for="cart{{cart.cart.cart_id}}">
-          <div class="col-check">
-            {% set checked = 'checked' if cart.cart.is_checked == 1 else '' %}
-            {% set checked = checked if cart.is_valid == 1 else 'disabled' %}
-            {% set is_valid = 'is_valid' if cart.is_valid == 1 else '' %}
-            <input type="checkbox" class="weui-check {{ is_valid }}" name="checkbox1" 
-              id="cart{{cart.cart.cart_id}}" value="{{ cart.cart.cart_id }}" {{ checked }}  
-              data-cart-id="{{ cart.cart.cart_id }}" data-quantity="{{ cart.cart.quantity }}" 
-              data-is-valid="{{ cart.is_valid }}">
-            <i class="weui-icon-checked icon-checked"></i>
-          </div>
-        </label>
-        <a class="weui-cell" style="overflow:hidden;width:100%" href="{{ url_for('mobile.cart.edit', cart_id=cart.cart.cart_id) }}">
-          <div class="weui-cell__hd cart_phone">
-            <img alt="" src="{{ cart.item.goods_img }}">
-          </div>
-          {% if cart.is_valid == 1 %}
-            <div class="weui-cell__bd">
-              <div class="all_title mar-bottom">{{ cart.item.goods_name }}</div>
-              <div class="cart_count">
-                <span>x {{ cart.cart.quantity }}</span>
+  {% if carts %}
+    <div class="content_wrap">
+      {% for cart in carts %}
+        <div class="weui-cells weui-cells_checkbox flex_wrap">
+          <label class="weui-check__label" for="cart{{cart.cart.cart_id}}">
+            <div class="col-check">
+              {% set checked = 'checked' if cart.cart.is_checked == 1 else '' %}
+              {% set checked = checked if cart.is_valid == 1 else 'disabled' %}
+              {% set is_valid = 'is_valid' if cart.is_valid == 1 else '' %}
+              <input type="checkbox" class="weui-check {{ is_valid }}" name="checkbox1" 
+                id="cart{{cart.cart.cart_id}}" value="{{ cart.cart.cart_id }}" {{ checked }}  
+                data-cart-id="{{ cart.cart.cart_id }}" data-quantity="{{ cart.cart.quantity }}" 
+                data-is-valid="{{ cart.is_valid }}">
+              <i class="weui-icon-checked icon-checked"></i>
+            </div>
+          </label>
+          <a class="weui-cell" style="overflow:hidden;width:100%" href="{{ url_for('mobile.cart.edit', cart_id=cart.cart.cart_id) }}">
+            <div class="weui-cell__hd cart_phone">
+              <img alt="" src="{{ cart.item.goods_img }}">
+            </div>
+            {% if cart.is_valid == 1 %}
+              <div class="weui-cell__bd">
+                <div class="all_title mar-bottom">{{ cart.item.goods_name }}</div>
+                <div class="cart_count">
+                  <span>x {{ cart.cart.quantity }}</span>
+                </div>
               </div>
-            </div>
-            <div class="weui-cell__ft mar-left width46">
-              <span class="all_price">￥{{ cart.item.goods_price }}</span>
-            </div>
-          {% else %}
-            <div class="weui-cell__bd">
-              <div class="invalid_title mar-bottom">{{ cart.item.goods_name }}</div>
-              <div class="cart_count">
-                {% set status = _('已下架') if cart.valid_status == 1 else _('库存不足') %}
-                <span class="mar-left">{{ status }}</span>
+              <div class="weui-cell__ft mar-left width46">
+                <span class="all_price">￥{{ cart.item.goods_price }}</span>
               </div>
+            {% else %}
+              <div class="weui-cell__bd">
+                <div class="invalid_title mar-bottom">{{ cart.item.goods_name }}</div>
+                <div class="cart_count">
+                  {% set status = _('已下架') if cart.valid_status == 1 else _('库存不足') %}
+                  <span class="mar-left">{{ status }}</span>
+                </div>
+              </div>
+              <div class="weui-cell__ft mar-left width46">
+                <span class="invalid_price">￥{{ cart.item.goods_price }}</span>
+              </div>
+            {% endif %}
+          </a>
+        </div>
+      {% endfor %}
+      <div class="settlement_wrap">
+        <div class="weui-cells weui-cells_checkbox cart_bar">
+          <label class="weui-check__label" for="all">
+            <div class="col-check">
+              {% set checked = 'checked' if cart_valid_total == items_quantity else '' %}
+              <input type="checkbox" class="weui-check" name="checkbox1" id="all" {{ checked }}>
+              <i class="weui-icon-checked" style="margin-left:10px !important"></i>
+              <p class="all_check">{{_('全选')}}</p>
             </div>
-            <div class="weui-cell__ft mar-left width46">
-              <span class="invalid_price">￥{{ cart.item.goods_price }}</span>
+          </label>
+          <div class="total">
+            <div class="total-price">
+              <span>{{_('合计')}}：</span>
+              <span id="items_amount" class="all_price" style="font-size:18px">￥{{ items_amount }}</span>
             </div>
-          {% endif %}
-        </a>
-      </div>
-    {% endfor %}
-    <div class="settlement_wrap">
-      <div class="weui-cells weui-cells_checkbox cart_bar">
-        <label class="weui-check__label" for="all">
-          <div class="col-check">
-            {% set checked = 'checked' if total_quantity == items_quantity else '' %}
-            <input type="checkbox" class="weui-check" name="checkbox1" id="all" {{ checked }}>
-            <i class="weui-icon-checked" style="margin-left:10px !important"></i>
-            <p class="all_check">{{_('全选')}}</p>
+            <a id="checkout" href="javascript:void(0);" class="btn_primary" onclick="checkout()">{{_('结算(%s)' % items_quantity)}}</a>
           </div>
-        </label>
-        <div class="total">
-          <div class="total-price">
-            <span>{{_('合计')}}：</span>
-            <span id="items_amount" class="all_price" style="font-size:18px">￥{{ items_amount }}</span>
-          </div>
-          <a id="checkout" href="javascript:void(0);" class="btn_primary" onclick="checkout()">{{_('结算(%s)' % items_quantity)}}</a>
         </div>
       </div>
     </div>
-  </div>
-  <!-- 购物车没有商品时显示 -->
-  <!-- <div class="not-product">
-    <div class="not-product_img">
-      <img class="notproduct" src="/static/default/mobile/img/notcart.png" alt="">
+  {% else %}
+    <div class="not-product">
+      <div class="not-product_img">
+        <img class="notproduct" src="/static/default/mobile/img/notcart.png" alt="">
+      </div>
+      <div class="not-product_text">{{_('您的购物车空空如也')}}</div>
+      <div class="reg_btn">
+        <a href="{{ url_for('mobile.index.root') }}">
+          <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
+        </a>
+      </div>
     </div>
-    <div class="not-product_text">{{_('您的购物车空空如也')}}</div>
-    <div class="reg_btn">
-      <a href="{{ url_for('mobile.index.root') }}">
-        <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
-      </a>
-    </div>
-  </div> -->
+  {% endif %}
 
   {{ libs.bottom_navigation_bar() }}
 </div>

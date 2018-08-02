@@ -39,6 +39,6 @@ category = Blueprint('pc.category', __name__)
 def root():
     """分类页"""
 
-    categories = ItemStaticMethodsService.categories(None)
+    categories = ItemStaticMethodsService.categories()
 
     return render_template('pc/category/index.html.j2', categories=categories)

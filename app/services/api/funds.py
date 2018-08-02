@@ -93,12 +93,11 @@ class FundsStaticMethodsService(object):
     """资金静态方法Service"""
 
     @staticmethod
-    def details(params):
+    def details(uid, params):
         """获取资金流水列表"""
 
-        p      = toint(params.get('p', '1'))
-        ps     = toint(params.get('ps', '10'))
-        uid    = toint(params.get('uid', '0'))
+        p  = toint(params.get('p', '1'))
+        ps = toint(params.get('ps', '10'))
 
         details = db.session.query(FundsDetail.fd_id, FundsDetail.funds_change, FundsDetail.event, FundsDetail.add_time).\
                         filter(FundsDetail.uid == uid).\
