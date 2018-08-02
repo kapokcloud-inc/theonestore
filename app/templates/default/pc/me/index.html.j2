@@ -4,6 +4,7 @@
 {% block head %}
 <title>{{_('我的个人中心 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/css/me.css">
 {% endblock %}
 
 {% block body %}
@@ -20,8 +21,13 @@
         <div class="order-wrap">
           <div class="allPad">
             <div class="one-cell">
-              <div class="one-cell_hd"></div>
-              <div class="one-cell_bd"></div>
+              <div class="one-cell_hd avatar160">
+                <img class="ava" src="https://s1.mi-img.com/mfsv2/avatar/fdsc3/p01XG074QZsd/srSPb8CLq7UEOL_320.jpg" alt="">
+              </div>
+              <div class="one-cell_bd">
+                <div class="user-name">老犁</div>
+                <a class="changeInfo" href="{{ url_for('pc.me.profile') }}">{{_('修改个人信息 >')}}</a>
+              </div>
               <div class="one-cell_ft"></div>
             </div>
           </div>
