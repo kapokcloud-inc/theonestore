@@ -141,13 +141,11 @@
                     <span>{{_('满意度 ')}}({{ item.comment_good_rate }}%)</span>
                   </div>
                   <!--   点击收藏按钮，未登录则先登录，已登陆则执行收藏操作  -->
-                  {% set uid = session.get('uid',0) %}
-                  {% set action = 'login()' if uid == 0 else 'fav(this)' %}
                   {% set src = "/static/default/pc/img/like.png" if is_fav==1 else "/static/default/pc/img/notlike.png" %}
-                 <div class="goods-scroll" data-tid="{{ item.goods_id }}" onclick="{{ action }}">
-                    <img class="goods-scroll_img" src="{{ src }}" alt="">
-                    <span>{{_('收藏')}}</span>
-                </div>
+                  <div class="goods-scroll" data-tid="{{ item.goods_id }}" onclick="fav(this)">
+                      <img class="goods-scroll_img" src="{{ src }}" alt="">
+                      <span>{{_('收藏')}}</span>
+                  </div>
               </div>
             </div>
           </div>
@@ -273,16 +271,16 @@
 
 {% block script %}
 <script type="text/javascript">
-//点击切换图片
-$('.small-pic_item').on("click","img", function(){
-  index = $(this).index();
-  var imgurl = this.getAttribute("src");
-  $('#bigpic').attr("src", imgurl);
-  $('.goods-big_pic').fadeIn(100);
-  $(this).parent().addClass('current').siblings().removeClass('current');
-});
+  //点击切换图片
+  $('.small-pic_item').on("click","img", function(){
+    index = $(this).index();
+    var imgurl = this.getAttribute("src");
+    $('#bigpic').attr("src", imgurl);
+    $('.goods-big_pic').fadeIn(100);
+    $(this).parent().addClass('current').siblings().removeClass('current');
+  });
 
- //购买数量计数器
+  //购买数量计数器
   var MIN = 1;
   $('.num_minus').click(function (e) {
     var $input = $(e.currentTarget).parent().find('#goods_quantity');
@@ -299,7 +297,7 @@ $('.small-pic_item').on("click","img", function(){
     $input.val(number);
   })
 
- //加入购物车
+  //加入购物车
   function cartTo() {
     var goods_id = parseInt($('#goods_id').val());
     var quantity = parseInt($("#goods_quantity").val());
@@ -333,12 +331,19 @@ $('.small-pic_item').on("click","img", function(){
   }
 
 
-//收藏
+ //收藏
  function fav(dom) {
     var $dom = $(dom);
     var tid = $dom.attr('data-tid');
     var params = {'like_type':2, 'ttype':1, 'tid':tid}
 
+    /* 登陆检测
+    var uid = {{ session.get('uid',0) }};
+    if (uid <= 0){
+      //跳转登录页面
+      return false;
+    }
+    */
     $.get("{{ url_for('api.like.action') }}", params, function(json) {
       if (json.ret != 0) {
         $.toast(json.msg, "text");
@@ -346,45 +351,36 @@ $('.small-pic_item').on("click","img", function(){
       }
 
       if (json.data.action_code == 1) {
-        $dom.children().first().attr('src', '/static/default/mobile/img/like.png');
+        $dom.children().first().attr('src', '/static/default/pc/img/like.png');
       } else {
-        $dom.children().first().attr('src', '/static/default/mobile/img/notlike.png');
-      }
-    });
-  }
-  
-  function login(){
-     $.get("{{ url_for('api.like.test') }}",function(json) {
-      if (json.ret != 0) {
-        $.toast(json.msg, "text");
-        return false;
+        $dom.children().first().attr('src', '/static/default/pc/img/notlike.png');
       }
     });
   }
 
-//点击切换商品详情和商品评价
-$(function () {
-  $(".detail-nav_list li").off("click").on("click", function () {
-    var index = $(this).index();
-    $(this).addClass("allOn").siblings().removeClass("allOn");
-    $("#cntBox .allCnt").eq(index).addClass("show").siblings().removeClass("show");
+  //点击切换商品详情和商品评价
+  $(function () {
+    $(".detail-nav_list li").off("click").on("click", function () {
+      var index = $(this).index();
+      $(this).addClass("allOn").siblings().removeClass("allOn");
+      $("#cntBox .allCnt").eq(index).addClass("show").siblings().removeClass("show");
+    });
   });
-});
 
-//点击评论跳到评论版块
-function comment(){
-  $('#comment').addClass("show").removeClass("hide");
-  $('#detail').addClass("hide").removeClass("show");
-  $('#navCom').addClass("allOn");
-  $('#navDatail').removeClass("allOn");
-}
+  //点击评论跳到评论版块
+  function comment(){
+    $('#comment').addClass("show").removeClass("hide");
+    $('#detail').addClass("hide").removeClass("show");
+    $('#navCom').addClass("allOn");
+    $('#navDatail').removeClass("allOn");
+  }
 
-//点击满意度跳到评论的好评版块
-function goodCom() {
-  $('#comment').addClass("show").removeClass("hide");
-  $('#detail').addClass("hide").removeClass("show");
-  $('#navCom').addClass("allOn");
-  $('#navDatail').removeClass("allOn");
-}
+  //点击满意度跳到评论的好评版块
+  function goodCom() {
+    $('#comment').addClass("show").removeClass("hide");
+    $('#detail').addClass("hide").removeClass("show");
+    $('#navCom').addClass("allOn");
+    $('#navDatail').removeClass("allOn");
+  }
 </script>
 {% endblock %}
