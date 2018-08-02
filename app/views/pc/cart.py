@@ -69,7 +69,7 @@ def root():
     cs.check()
 
     data = {'msg':msg, 'carts':cs.carts, 'items_amount':cs.items_amount, 'items_quantity':cs.items_quantity,
-            'total_quantity':cs.total_quantity}
+            'cart_total':cs.cart_total, 'cart_valid_total':cs.cart_valid_total}
     return render_template('pc/cart/index.html.j2', **data)
 
 

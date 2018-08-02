@@ -35,8 +35,7 @@ from app.helpers.user import (
 from app.services.response import ResponseJson
 from app.services.api.cart import (
     CartService,
-    CheckoutService,
-    CartStaticMethodsService
+    CheckoutService
 )
 
 from app.models.order import (
@@ -112,10 +111,11 @@ def add():
 
     db.session.commit()
 
-    cart_total            = CartStaticMethodsService.cart_total(uid, session_id)
-    session['cart_total'] = cart_total
+    cs = CartService(uid, session_id)
+    cs.check()
+    session['cart_total'] = cs.cart_total
 
-    return resjson.print_json(0, u'ok', {'cart_total':cart_total})
+    return resjson.print_json(0, u'ok', {'cart_total':cs.cart_total})
 
 
 @cart.route('/update')
@@ -149,10 +149,17 @@ def update():
     data = {'quantity':quantity, 'update_time':current_time}
     model_update(cart, data, commit=True)
 
-    cart_total            = CartStaticMethodsService.cart_total(uid, session_id)
-    session['cart_total'] = cart_total
+    cs = CartService(uid, session_id)
+    cs.check()
+    session['cart_total'] = cs.cart_total
 
-    return resjson.print_json(0, u'ok')
+    for _cart in cs.carts:
+        if _cart['cart'].cart_id == cart_id:
+            _items_amount = _cart['items_amount']
+
+    data = {'cart_total':cs.cart_total, 'items_quantity':cs.items_quantity,
+            'items_amount':cs.items_amount, '_items_amount':_items_amount}
+    return resjson.print_json(0, u'ok', data)
 
 
 @cart.route('/remove')
@@ -186,8 +193,9 @@ def remove():
 
     db.session.commit()
 
-    cart_total            = CartStaticMethodsService.cart_total(uid, session_id)
-    session['cart_total'] = cart_total
+    cs = CartService(uid, session_id)
+    cs.check()
+    session['cart_total'] = cs.cart_total
 
     return resjson.print_json(0, u'ok')
 
