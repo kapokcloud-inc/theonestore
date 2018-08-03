@@ -41,7 +41,7 @@ from app.models.auth import AdminUsers
 
 class AdminLoginForm(Form):
     """管理员登录form"""
-    account = StringField(_(u'手机号码/帐号'), validators=[
+    account = StringField(_(u'手机号码/帐号'), default='', validators=[
                     Required(message=_(u'必填项'))
                 ])
     
@@ -139,4 +139,3 @@ class AdminUsersPasswordForm(Form):
                 self.old_password.errors = (_(u'旧密码错误'),)
         
         return ret
-        

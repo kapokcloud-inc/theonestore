@@ -51,7 +51,7 @@ def login():
 
     form = AdminLoginForm(request.form)
     if not form.validate_on_submit():
-        return render_template('admin/auth/login.html.j2', f=form)
+        return render_template('admin/auth/login.html.j2', f=form, errmsg={})
 
     account = form.account.data
     password = form.password.data
@@ -64,7 +64,7 @@ def login():
     als.write_session(session)
 
     # 跳转到目标url
-    return_url = request.args.get('return_url', '/admin/dashboard/')
+    return_url = request.args.get('return_url', '/admin/dashboard')
     return redirect(return_url)
 
 
