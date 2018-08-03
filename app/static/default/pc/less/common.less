@@ -9,7 +9,7 @@
   padding: 0;
   margin: 0;
   outline: none !important;
-  font-family: tahoma, arial, "Hiragino Sans GB", "WenQuanYi Micro Hei", "微软雅黑", "宋体", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
 }
 body{background: #f3f4f5;}
 
@@ -780,7 +780,7 @@ header img{
   background-color: @main-color;
   font-style: inherit;
 }
-.icon-dagou,.icon-cancel{
+.icon-dagou,.icon-cancel,.icon-dayu,.icon-xiaoyu{
   font-family: "iconfont" !important;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -912,6 +912,7 @@ header img{
   font-size: @font-size14;
   color: @grey-color6;
   text-align: center;
+  background-color: @white-color;
 }
 .comment-page_list{
   height: 30px;
@@ -919,25 +920,36 @@ header img{
   padding-bottom: 40px;
   text-align: center;
 }
+.page-box{
+  padding: 10px 0;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+}
 .page-num{
   display: inline-block;
-  width: 50px;
-  height: 20px;
-  padding: 4px 0;
-  margin: 0 5px;
-  font-size: @font-size16;
-  font-weight: @font-weight400;
-  line-height: 20px;
-  color: @black-color;
-  border: @border;
+  width: 48px;
+  height: 24px;
+  padding: 3px 0;
+  margin: 0 7px;
+  font-size: @font-size18;
+  font-weight: 200;
+  line-height: 24px;
+  color: @grey-color6;
 }
 .page-more{
   display: inline-block;
-  height: 33px;
-  font-size: @font-size16;
-  font-weight: @font-weight400;
-  line-height: 25px;
-  color: @black-color;
+  height: 30px;
+  font-size: @font-size18;
+  font-weight: 200;
+  line-height: 30px;
+  color: @grey-color6;
+}
+
+.btn-current{
+  cursor: default;
+  background-color: @main-color;
+  color: @white-color;
 }
 .goodsName{
   border-right: none !important;

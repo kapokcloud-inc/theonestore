@@ -46,7 +46,7 @@
                   <a href="">{{_('收藏')}}</a>
                 </span>
                 <span>
-                  <a  href="">{{_('消息')}}</a>
+                  <a  href="{{ url_for('pc.me.messages') }}">{{_('消息')}}</a>
                   <i class="user-badge">1</i>
                 </span>
               </div>
@@ -62,7 +62,7 @@
             <a href="" class="mouseon">{{_('收藏')}}</a>
           </li>
           <li class="top-nav_item">
-            <a href="" class="mouseon">{{_('消息')}}</a>
+            <a href="{{ url_for('pc.me.messages') }}" class="mouseon">{{_('消息')}}</a>
             <span class="news-badge">1</span>
           </li>
         </ul>

@@ -244,7 +244,7 @@ def coupon():
 
 @me.route('/messages')
 def messages():
-    """pc站 - 消息"""
+    """pc站 - 消息通知"""
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']

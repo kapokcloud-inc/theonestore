@@ -4,6 +4,7 @@
 {% block head %}
 <title>{{_('售后服务记录 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
 
 {% block body %}
@@ -129,8 +130,10 @@
                 </ul>
               </div>
               <div class="page-box">
-                <a href="" class="page-num">{{_('上一页')}}</a>
-                <span class="page-num btn-primary">1</span>
+                <span class="page-num page-first">
+                  <i class="icon-xiaoyu"></i>
+                </span>
+                <span class="page-num btn-current">1</span>
                 <a href="" class="page-num">2</a>
                 <a href="" class="page-num">3</a>
                 <a href="" class="page-num">4</a>
@@ -138,7 +141,9 @@
                 <a href="" class="page-num">6</a>
                 <span class="page-more">...</span>
                 <a href="" class="page-num">12</a>
-                <a href="" class="page-num">{{_('下一页')}}</a>
+                <a href="" class="page-num page-last">
+                  <i class="icon-dayu"></i>
+                </a>
               </div>
             </div>
             <!-- 有申请 end -->

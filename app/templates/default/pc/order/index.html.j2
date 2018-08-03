@@ -4,6 +4,7 @@
 {% block head %}
 <title>{{_('我的订单 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
 
 {% block body %}
@@ -18,8 +19,6 @@
       <div class="head-inner clearfix">
         {%include 'default/pc/layout/nav_left.html.j2'%}
         <div class="order-wrap">
-          <!-- 有订单 -->
-          {% if orders %}
           <div class="allPad">
             <div class="order-hd">
               <ul class="order-hd_list">
@@ -46,6 +45,7 @@
               </ul>
             </div>
             <!-- 有订单 -->
+            {% if orders %}
             <div class="order-bd">
               <div class="order-box">
                 <ul class="order-box_list">
@@ -57,7 +57,7 @@
                           <div class="order-desc">
                             <div class="order-fl">{{ order.add_time|timestamp2str }}</div>
                             <div class="order-fl">
-                              <span>{{_('服务单号：')}}</span>
+                              <span>{{_('订单号：')}}</span>
                               <a class="orderID" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">{{ order.order_sn}} </a>
                             </div>
                             <div class="order-fl">{{_('微信支付')}}</div>
@@ -113,8 +113,10 @@
                 </ul>
               </div>
               <div class="page-box">
-                <a href="" class="page-num">{{_('上一页')}}</a>
-                <span class="page-num btn-primary">1</span>
+                <span class="page-num page-first">
+                  <i class="icon-xiaoyu"></i>
+                </span>
+                <span class="page-num btn-current">1</span>
                 <a href="" class="page-num">2</a>
                 <a href="" class="page-num">3</a>
                 <a href="" class="page-num">4</a>
@@ -122,20 +124,21 @@
                 <a href="" class="page-num">6</a>
                 <span class="page-more">...</span>
                 <a href="" class="page-num">12</a>
-                <a href="" class="page-num">{{_('下一页')}}</a>
+                <a href="" class="page-num page-last">
+                  <i class="icon-dayu"></i>
+                </a>
               </div>
             </div>
             <!-- 有订单 end -->
+            {% else %}
+            <!-- 没有订单 -->
+            <div class="not-one">
+              <p class="not-one_text">{{_('您暂时没有订单!')}}</p>
+              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+            </div>
+            <!-- 没有订单 end -->
+            {% endif %}
           </div>
-          <!-- 有订单 end -->
-          {% else %}
-          <!-- 没有订单 -->
-          <div class="not-one">
-            <p class="not-one_text">{{_('您暂时没有订单!')}}</p>
-            <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-          </div>
-          <!-- 没有订单 end -->
-          {% endif %}
         </div>
       </div>
     </div>
