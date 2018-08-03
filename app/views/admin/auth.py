@@ -46,12 +46,14 @@ auth = Blueprint('admin.auth', __name__)
 def login():
     """登陆"""
     if request.method == 'GET':
+        return_url = request.args.get('return_url', '/admin/dashboard')
+        session['return_url'] = return_url
         form = AdminLoginForm()
         return render_template('admin/auth/login.html.j2', f=form, errmsg={})
 
     form = AdminLoginForm(request.form)
     if not form.validate_on_submit():
-        return render_template('admin/auth/login.html.j2', f=form)
+        return render_template('admin/auth/login.html.j2', f=form, errmsg={})
 
     account = form.account.data
     password = form.password.data
@@ -64,7 +66,7 @@ def login():
     als.write_session(session)
 
     # 跳转到目标url
-    return_url = request.args.get('return_url', '/admin/dashboard/')
+    return_url = session.get('return_url', '/admin/dashboard')
     return redirect(return_url)
 
 

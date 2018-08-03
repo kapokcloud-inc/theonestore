@@ -50,7 +50,6 @@ class AuthLoginService(object):
                     self.errmsg['password'] = _(u'密码错误')
 
         ret = (False if self.errmsg else True)
-        log_info(self.admin_user)
         log_info(u'[AuthLoginService] [login] mobile/username:%s, return:%s, errmsg:%s, admin_user:%s' % (
             account, ret, self.errmsg, self.admin_user))
 
