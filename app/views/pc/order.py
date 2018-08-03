@@ -59,6 +59,15 @@ def index():
     uid = get_uid()
 
     data               = OrderStaticMethodsService.orders(uid, request.args.to_dict())
+    log_info(request.args.to_dict())
+    # pc端订单列表支持，支付、详情、售后3个指令，其余指令排除，即排除[2,3,4,5,6]
+    if data.get("orders"):
+        excel_code = [2,3,4,5,6]
+        action_code = data.get('codes')
+        for order in data.get("orders"):
+            temp = set(action_code[order.order_id])-set(excel_code)
+            action_code[order.order_id] = list(temp)
+
     data['paging_url'] = url_for('mobile.order.paging', **request.args)
     data['tab_status'] = request.args.get('tab_status', '0')
     return render_template('pc/order/index.html.j2', **data)
@@ -88,7 +97,9 @@ def detail(order_id):
     uid = get_uid()
 
     data = OrderStaticMethodsService.detail_page(order_id, uid)
-
+    #pc端订单详情不支持再次购买，排除掉指令[5]
+    data['code']= list(set(data['code'])-set([5]))
+    
     return render_template('pc/order/detail.html.j2', **data)
 
 
