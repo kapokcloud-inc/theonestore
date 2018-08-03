@@ -128,7 +128,7 @@
 }
 .order-status {
   font-size: 18px;
-  color: #666;
+  color: #b0b0b0;
   margin-bottom: 25px;
 }
 .order-progress {
@@ -348,6 +348,7 @@
   height: 100px;
   background: no-repeat 50%;
   background-size: cover;
+  cursor: pointer;
 }
 .one-uploader_input-box {
   float: left;
@@ -387,6 +388,7 @@
   height: 100%;
   opacity: 0;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
 }
 .reg-btn {
   width: 200px;

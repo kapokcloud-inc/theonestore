@@ -1,66 +1,95 @@
-{% extends '/default/mobile/layout/base.html.j2' %}
-{% import '/default/mobile/libs/libs.html.j2' as libs %}
+{% extends '/default/pc/layout/base.html.j2' %}
+
 
 {% block head %}
 <title>{{_('我的收藏 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
-{% endblock %} 
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/css/index.css">
+<link rel="stylesheet" href="/static/default/pc/css/me.css">
+<link rel="stylesheet" href="/static/default/pc/css/aftersales.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
+{% endblock %}
 
 {% block body %}
-<div class="user_wrap">
-  {% if likes %}
-    <div id="paging-data-list" class="weui-cells weui-cells_form">
-      {% for like in likes %}
-        <div id="item_{{ like.tid }}" class="weui-cell" onclick="to_item({{ like.tid }})">
-          <div class="weui-cell__hd avatar mar-right">
-            <img src="{{ like.timg }}" alt="">
-          </div>
-          <div class="weui-cell__bd">
-            <div class="all_title mar-bottom">{{ like.tname }}</div>
-            {% set ext_data = like.ext_data|json_loads %}
-            <div class="all_desc">{{ ext_data.get('goods_desc', '') }}</div>
-          </div>
-          <div class="weui-cell__ft mar-left width46">
-            <span class="delete" onClick="remove({{ like.tid }})">{{_('删除')}}</span>
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('我的收藏')}}</span>
+      </p>
+    </div>
+    <div class="user-main">
+      <div class="head-inner clearfix">
+        {%include 'default/pc/layout/nav_left.html.j2'%}
+        <div class="order-wrap">
+          <div class="allPad">
+            <!-- 有收藏 -->
+            <div class="order-bd">
+              <div class="order-box">
+                <ul class="all-list clearfix">
+                  <li class="list-item2">
+                    <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                      <div class="item-product">
+                        <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
+                      </div>
+                      <div class="item-detail">
+                        <div class="all-title">小米短袖T恤 两件装 黑色+白色</div>
+                        <div class="all-price mar-top">￥89</div>
+                      </div>
+                    </a>
+                    <div class="review-btn_wrap" data-value="">
+                      <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
+                    </div>
+                  </li>
+                  <li class="list-item2">
+                    <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                      <div class="item-product">
+                        <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
+                      </div>
+                      <div class="item-detail">
+                        <div class="all-title">小米短袖T恤 两件装 黑色+白色</div>
+                        <div class="all-price mar-top">￥89</div>
+                      </div>
+                    </a>
+                    <div class="review-btn_wrap" data-value="">
+                      <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="page-box" style="margin-top:30px;">
+                <span class="page-num page-first">
+                  <i class="icon-xiaoyu"></i>
+                </span>
+                <span class="page-num btn-current">1</span>
+                <a href="" class="page-num">2</a>
+                <a href="" class="page-num">3</a>
+                <a href="" class="page-num">4</a>
+                <a href="" class="page-num">5</a>
+                <a href="" class="page-num">6</a>
+                <span class="page-more">...</span>
+                <a href="" class="page-num">12</a>
+                <a href="" class="page-num page-last">
+                  <i class="icon-dayu"></i>
+                </a>
+              </div>
+            </div>
+            <!-- 有收藏 end -->
+
+            <!-- 没有收藏 -->
+            <!-- <div class="not-one">
+              <p class="not-one_text">{{_('您暂时没有收藏商品!')}}</p>
+              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+            </div> -->
+            <!-- 没有收藏 end -->
           </div>
         </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <div class="not-product">
-      <div class="not-product_img">
-        <img class="notproduct" src="/static/default/mobile/img/notcollect.png" alt="">
-      </div>
-      <div class="not-product_text">{{_('您暂无收藏商品')}}</div>
-      <div class="reg_btn">
-        <a href="{{ url_for('mobile.index.root') }}">
-          <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
-        </a>
       </div>
     </div>
-  {% endif %}
+  </div>
 </div>
 {% endblock %}
 
 {% block script %}
-{{ libs.paging_js(paging_url, 0) }}
-
-<script type="text/javascript">
-function to_item(tid) {
-  window.location.href = "/mobile/item/"+tid;
-}
-
-function remove(tid) {
-  event.stopPropagation();
-
-  $.get("{{ url_for('api.like.action') }}", {'like_type':2, 'ttype':1, 'tid':tid}, function(json) {
-    if (json.ret != 0) {
-      $.toast(json.msg, "text");
-      return false;
-    }
-
-    $("#item_"+tid).remove();
-  });
-}
-</script> 
-{% endblock %}
+<script type="text/javascript"></script>
+{% endblock%}
