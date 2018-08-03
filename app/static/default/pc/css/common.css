@@ -51,10 +51,10 @@ table {
   border-top: 1px solid #ccc !important;
 }
 .bd-bottom5 {
-  border-bottom: 1px solid #e5e5e5 !important;
+  border-bottom: 1px solid #eee !important;
 }
 .bd-top5 {
-  border-top: 1px solid #e5e5e5 !important;
+  border-top: 1px solid #eee !important;
 }
 .not-before::before {
   right: 15px !important;
@@ -106,6 +106,15 @@ table {
   margin-right: 25px;
 }
 .avatar80 img {
+  width: 100%;
+  height: 100%;
+}
+.avatar100 {
+  width: 100px;
+  height: 100px;
+  margin-right: 25px;
+}
+.avatar100 img {
   width: 100%;
   height: 100%;
 }
@@ -583,7 +592,7 @@ header img {
   top: 0;
   right: 0;
   height: 1px;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #eee;
   color: #eee;
   transform-origin: 0 0;
   transform: scaleY(0.5);
@@ -654,7 +663,7 @@ header img {
   z-index: 11;
   width: 1px;
   height: 14px;
-  border-right: 1px solid #e5e5e5;
+  border-right: 1px solid #eee;
 }
 .user-about span:last-child::after {
   border-right: none;
@@ -666,7 +675,7 @@ header img {
   right: 0;
   left: 15px;
   z-index: 11;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #eee;
 }
 .type-head {
   position: relative;
@@ -820,7 +829,7 @@ header img {
   text-align: center;
   margin-bottom: 70px;
   cursor: pointer;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #eee;
 }
 .btn-primary {
   border-color: #f33155 !important;

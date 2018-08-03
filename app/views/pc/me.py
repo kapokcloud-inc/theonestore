@@ -129,7 +129,7 @@ def index():
 
 @me.route('/profile')
 def profile():
-    """pc站 - 修改用户信息"""
+    """pc站 - 修改个人信息"""
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']
