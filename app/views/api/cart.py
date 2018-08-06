@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for more details.
 """
 import json
+from decimal import Decimal
 
 from flask import (
     Blueprint,
@@ -197,7 +198,9 @@ def remove():
     cs.check()
     session['cart_total'] = cs.cart_total
 
-    return resjson.print_json(0, u'ok')
+    data = {'cart_total':cs.cart_total, 'items_quantity':cs.items_quantity,
+            'items_amount':cs.items_amount}
+    return resjson.print_json(0, u'ok', data)
 
 
 @cart.route('/checked')
@@ -243,7 +246,9 @@ def checked():
     cs = CartService(uid, session_id)
     cs.check()
 
-    return resjson.print_json(0, u'ok', {'items_amount':cs.items_amount, 'items_quantity':cs.items_quantity})
+    data = {'cart_total':cs.cart_total, 'items_quantity':cs.items_quantity,
+            'items_amount':cs.items_amount}
+    return resjson.print_json(0, u'ok', data)
 
 
 @cart.route('/checkout/amounts')
@@ -271,6 +276,8 @@ def checkout_amounts():
     if not cs.check():
         return resjson.print_json(11, cs.msg)
 
-    data = {'items_amount':cs.items_amount, 'shipping_amount':cs.shipping_amount,
-            'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount}
+    data = {'items_amount':cs.items_amount,
+            'shipping_amount':cs.shipping_amount.quantize(Decimal('0.00')),
+            'discount_amount':cs.discount_amount.quantize(Decimal('0.00')),
+            'pay_amount':cs.pay_amount}
     return resjson.print_json(0, u'ok', data)

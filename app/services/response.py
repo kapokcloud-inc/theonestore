@@ -34,7 +34,7 @@ def to_json(ret=0, msg='ok', data=None):
 def json_encode(data):
     def _any(data):
         ret = None
-        if isinstance(data, (list, tuple, range)):
+        if isinstance(data, (list, tuple)):
             ret = _list(data)
         elif isinstance(data, dict):
             ret = _dict(data)
