@@ -29,18 +29,30 @@
       <div class="white-box">
         <h3 class="box-title m-b-0">{{ _('登录一店管理后台') }}</h3>
         <small>{{ _('请输入帐号/手机和密码') }}</small>
-        <form class="form-horizontal new-lg-form" id="loginform" action="index.html">
-
+        <form class="form-horizontal new-lg-form" id="loginform" action="{{ url_for('admin.auth.login') }}" method="POST">
+          {{ f.csrf_token }}
           <div class="form-group  m-t-20">
-            <div class="col-xs-12">
-              <label>{{ _('手机号码/帐号') }}</label>
-              <input class="form-control" type="text" required="" placeholder="{{ _('请输入手机号码/帐号') }}">
+            <div class="col-xs-12 {%if f.account.errors or errmsg.get('account')%}has-error{%endif%}">
+              {{ f.account.label|safe }}
+              <input name="{{ f.account.name }}" value="{{ f.account.data }}" class="form-control" type="text" required="" placeholder="{{ _('请输入手机号码/帐号') }}">
+              {%- for error in f.account.errors -%}
+                <span class="help-block m-b-none">{{ error|safe }}</span>
+              {%- endfor -%}
+              {%- if errmsg.get('account') -%}
+                <span class="help-block m-b-none">{{ errmsg['account']|safe }}</span>
+              {%- endif -%}
             </div>
           </div>
           <div class="form-group">
-            <div class="col-xs-12">
-              <label>{{ _('密码') }}</label>
-              <input class="form-control" type="password" required="" placeholder="{{ _('请输入密码') }}">
+            <div class="col-xs-12 {%if f.password.errors or errmsg.get('password')%}has-error{%endif%}">
+              <label>{{ f.password.label }}</label>
+              <input name="password" class="form-control" type="password" required="" placeholder="{{ _('请输入密码') }}" minlength="6" maxlength="20">
+              {%- for error in f.password.errors -%}
+                <span class="help-block m-b-none">{{ error|safe }}</span>
+              {%- endfor -%}
+              {%- if errmsg.get('password') -%}
+                <span class="help-block m-b-none">{{ errmsg['password']|safe }}</span>
+              {%- endif -%}
             </div>
           </div>
           <div class="form-group">
@@ -63,12 +75,12 @@
           <div class="form-group ">
             <div class="col-xs-12">
               <h3>{{ _('找回密码') }}</h3>
-              <p class="text-muted">{{ _('操作方法将会发送到你所输入的邮箱上') }}</p>
+              <p class="text-muted">{{ _('将会发送验证码到您的手机上') }}</p>
             </div>
           </div>
           <div class="form-group ">
             <div class="col-xs-12">
-              <input class="form-control" type="text" required="" placeholder="{{ _('请输入你的邮箱') }}">
+              <input class="form-control" type="text" required="" placeholder="{{ _('请输入你的手机号码') }}">
             </div>
           </div>
           <div class="form-group text-center m-t-20">

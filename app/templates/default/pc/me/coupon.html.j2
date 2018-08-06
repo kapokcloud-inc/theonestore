@@ -1,117 +1,109 @@
-{% extends '/default/mobile/layout/base.html.j2' %} 
+{% extends '/default/pc/layout/base.html.j2' %}
+
 
 {% block head %}
-<title>{{_('我的优惠券- 一店')}}</title>
-<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
-{% endblock %} 
+<title>{{_('我的优惠券 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
+{% endblock %}
 
 {% block body %}
-<div class="weui-tab">
-  <div class="weui-navbar">
-    <a class="weui-navbar__item weui-bar__item--on" href="#couponType_1">
-      {{_('未使用')}} ({{ valid_count }})
-    </a>
-    <a class="weui-navbar__item" href="#couponType_2">
-      {{_('已使用')}} ({{ used_count }})
-    </a>
-    <a class="weui-navbar__item" href="#couponType_3">
-      {{_('已失效')}} ({{ invalid_count }})
-    </a>
-  </div>
-  <div class="weui-tab__bd">
-    <div id="couponType_1" class="weui-tab__bd-item weui-tab__bd-item--active">
-      {% if valid_count == 0 %}
-        <div class="not-product">
-          <div class="not-product_img">
-            <img class="notproduct" src="/static/default/mobile/img/notcoupons.png" alt="">
-          </div>
-          <div class="not-product_text">{{_('您暂无相关优惠券')}}</div>
-        </div>
-      {% else %}
-        {% for coupon in valid_coupons %}
-          <div class="coupon_list">
-            <div class="bg-white coupon_item weui-cell">
-              <div class="off_money weui-cell__hd">
-                <div class="wave"></div>
-                <span class="symbol">￥</span>
-                <span class="money_num">{{ coupon.coupon_amount }}</span>
-                <p class="money_text">{{_('满￥%s减' % coupon.limit_amount)}}</p>
-              </div>
-              <div class="coupon_right weui-cell__bd">
-                <div class="all_title height25">{{_('全品类(特例商品除外)')}}</div>
-                <div class="all_desc height20">{{ coupon.begin_time|timestamp2str('YYYY.MM.DD') }}~{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</div>
-                <div class="mminentExpiry height25"></div>
-              </div>
-              <div class="weui-cell__ft coupon_btn">
-                <a href="{{ url_for('mobile.index.root') }}" style="color:#f33155">{{_('立即使用')}}</a>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('我的优惠券')}}</span>
+      </p>
     </div>
-    <div id="couponType_2" class="weui-tab__bd-item">
-      {% if used_count == 0 %}
-        <div class="not-product">
-          <div class="not-product_img">
-            <img class="notproduct" src="/static/default/mobile/img/notcoupons.png" alt="">
-          </div>
-          <div class="not-product_text">{{_('您暂无相关优惠券')}}</div>
-        </div>
-      {% else %}
-        {% for coupon in used_coupons %}
-          <div class="coupon_list">
-            <div class="bg-white coupon_item weui-cell">
-              <div class="off_money weui-cell__hd off_money-on">
-                <div class="wave wave-on"></div>
-                <span class="symbol">￥</span>
-                <span class="money_num">{{ coupon.coupon_amount }}</span>
-                <p class="money_text">{{_('满￥%s减' % coupon.limit_amount)}}</p>
-              </div>
-              <div class="coupon_right weui-cell__bd">
-                <div class="all_title height25">{{_('全品类(特例商品除外)')}}</div>
-                <div class="all_desc height20">{{ coupon.begin_time|timestamp2str('YYYY.MM.DD') }}~{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</div>
-                <div class="mminentExpiry height25"></div>
-              </div>
-              <div class="weui-cell__ft coupon_btn coupon_btn-on">{{_('已使用')}}</div>
+    <div class="user-main">
+      <div class="head-inner clearfix">
+        {%include 'default/pc/layout/nav_left.html.j2'%}
+        <div class="order-wrap">
+          <div class="allPad">
+            <div class="box-hd">
+              <ul class="box-hd_list">
+                <li class="box-hd_item">
+                  <a class="allOn" href="">{{_('未使用')}}</a>
+                </li>
+                <li class="box-hd_item">
+                  <a class="" href="">{{_('已使用')}}</a>
+                </li>
+                <li class="box-hd_item">
+                  <a class="" href="">{{_('已失效')}}</a>
+                </li>
+              </ul>
             </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-    </div>
-    <div id="couponType_3" class="weui-tab__bd-item">
-      {% if invalid_coupons == 0 %}
-        <div class="not-product">
-          <div class="not-product_img">
-            <img class="notproduct" src="/static/default/mobile/img/notcoupons.png" alt="">
-          </div>
-          <div class="not-product_text">{{_('您暂无相关优惠券')}}</div>
-        </div>
-      {% else %}
-        {% for coupon in invalid_coupons %}
-          <div class="coupon_list">
-            <div class="bg-white coupon_item weui-cell">
-              <div class="off_money weui-cell__hd off_money-on">
-                <div class="wave wave-on"></div>
-                <span class="symbol">￥</span>
-                <span class="money_num">{{ coupon.coupon_amount }}</span>
-                <p class="money_text">{{_('满￥%s减' % coupon.limit_amount)}}</p>
+            <!-- 有优惠券 -->
+            <div class="order-bd">
+              <ul class="clearfix">
+                <li class="coupon-list_item">
+                  <div class="coupon-info">
+                    <div class="wave"></div>
+                    <p>
+                      <span class="coupon-amount">￥20</span>
+                      满100减20
+                    </p>
+                    <p>{{_('有效期')}}：2018.07.12</p>
+                  </div>
+                  <div class="all-store">{{_('[全场通用]')}}</div>
+                </li>
+                <li class="coupon-list_item">
+                  <div class="coupon-info">
+                    <div class="wave"></div>
+                    <p>
+                      <span class="coupon-amount">￥10</span>
+                      满100减10
+                    </p>
+                    <p>{{_('有效期')}}：2018.07.12</p>
+                  </div>
+                  <div class="all-store">{{_('[全场通用]')}}</div>
+                </li>
+                <li class="coupon-list_item border-eee">
+                  <div class="coupon-info bg-eee">
+                    <div class="wave"></div>
+                    <p>
+                      <span class="coupon-amount">￥20</span>
+                      满200减20
+                    </p>
+                    <p>{{_('有效期')}}：2018.07.12</p>
+                  </div>
+                  <div class="all-store color-eee">{{_('[全场通用]')}}</div>
+                </li>
+              </ul>
+              <div class="page-box" style="margin-top:30px;">
+                <span class="page-num page-first">
+                  <i class="icon-xiaoyu"></i>
+                </span>
+                <span class="page-num btn-current">1</span>
+                <a href="" class="page-num">2</a>
+                <a href="" class="page-num">3</a>
+                <a href="" class="page-num">4</a>
+                <a href="" class="page-num">5</a>
+                <a href="" class="page-num">6</a>
+                <span class="page-more">...</span>
+                <a href="" class="page-num">12</a>
+                <a href="" class="page-num page-last">
+                  <i class="icon-dayu"></i>
+                </a>
               </div>
-              <div class="coupon_right weui-cell__bd">
-                <div class="all_title height25">{{_('全品类(特例商品除外)')}}</div>
-                <div class="all_desc height20">{{ coupon.begin_time|timestamp2str('YYYY.MM.DD') }}~{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</div>
-                <div class="mminentExpiry height25"></div>
-              </div>
-              <div class="weui-cell__ft coupon_btn coupon_btn-on">{{_('已失效')}}</div>
             </div>
+            <!-- 有优惠券 end -->
+
+            <!-- 没有优惠券 -->
+            <div class="not-one">
+              <p class="not-one_text">{{_('未找到相应优惠券!')}}</p>
+              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+            </div>
+            <!-- 没有优惠券 end -->
           </div>
-        {% endfor %}
-      {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 </div>
-{% endblock %} 
+{% endblock %}
 
 {% block script %}
-<script type="text/javascript"></script> 
-{% endblock %}
+<script type="text/javascript"></script>
+{% endblock%}

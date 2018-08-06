@@ -7,6 +7,9 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+from hashlib import sha256
+
+from flask import session
 from flask_babel import gettext as _
 from flask_wtf.file import (
     FileField, 
@@ -35,6 +38,18 @@ from flask_uploads import UploadSet, IMAGES
 from app.helpers import toint, log_info
 from app.forms import Form
 from app.models.auth import AdminUsers
+
+class AdminLoginForm(Form):
+    """管理员登录form"""
+    account = StringField(_(u'手机号码/帐号'), default='', validators=[
+                    Required(message=_(u'必填项'))
+                ])
+    
+    password = PasswordField(_(u'密码'), validators=[
+                    Required(message=_(u'必填项')), 
+                    Length(min=6, max=20, message=_(u'密码长度在6位至20位')),
+                ])
+
 
 class AdminUsersEditForm(Form):
     """编辑管理员form"""
@@ -89,3 +104,38 @@ class AdminUsersForm(AdminUsersEditForm):
                     Length(min=6, max=20, message=_(u'密码长度在6位至20位')),
                     EqualTo('password', message=_(u'密码不相同'))
                 ])
+
+
+class AdminUsersPasswordForm(Form):
+    """管理员修改密码form"""
+    old_password = PasswordField(_(u'旧密码'), validators=[
+                    Required(message=_(u'必填项')), 
+                    Length(min=6, max=20, message=_(u'密码长度在6位至20位'))
+                ])
+
+    password = PasswordField(_(u'新密码'), validators=[
+                    Required(message=_(u'必填项')), 
+                    Length(min=6, max=20, message=_(u'密码长度在6位至20位'))
+                ])
+
+    password2 = PasswordField(_(u'重复新密码'), validators=[
+                    Required(message=_(u'必填项')), 
+                    Length(min=6, max=20, message=_(u'密码长度在6位至20位')),
+                    EqualTo('password', message=_(u'密码不相同'))
+                ])
+
+    admin_user = None
+
+    def validate_on_submit(self):
+        """校验表单"""
+        ret = super(AdminUsersPasswordForm, self).validate_on_submit()
+        if ret is True:
+            admin_uid = session['admin_uid']
+            self.admin_user = AdminUsers.query.get_or_404(admin_uid)
+            sha256_old_password = sha256(self.old_password.data.encode('utf8')).hexdigest()
+            password_salt = sha256((sha256_old_password+self.admin_user.salt).encode('utf8')).hexdigest()
+            if self.admin_user.password != password_salt:
+                ret = False
+                self.old_password.errors = (_(u'旧密码错误'),)
+        
+        return ret

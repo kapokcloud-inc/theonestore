@@ -19,38 +19,39 @@ from app.models.auth import AdminUsers
 
 class AuthLoginService(object):
     """授权登录服务"""
-    def _init_(self):
+    def __init__(self):
         """初始化"""
         self.errmsg = {}
         self.admin_user = None
 
-        pass
-
-    def login(self, mobile, password):
+    def login(self, account, password):
         """登录"""
         self.errmsg = {}
-        if not mobile:
-            self.errmsg['mobile'] = _(u'手机号码/帐号不能为空')
+        if not account:
+            self.errmsg['account'] = _(u'手机号码/帐号不能为空')
         if not password:
             self.errmsg['password'] = _(u'密码不能为空')
-        if password and len(password) != 64:
-            self.errmsg['password'] = _(u'密码哈希值长度错误')
+        if password and len(password) < 6 and len(password) > 20:
+            self.errmsg['password'] = _(u'密码长度错误')
 
         if not self.errmsg:
-            self.admin_user = AdminUsers.query.filter(AdminUsers.mobile == mobile).first()
+            self.admin_user = AdminUsers.query.filter(AdminUsers.mobile == account).first()
             if not self.admin_user:
-                self.admin_user = AdminUsers.query.filter(AdminUsers.username == mobile).first()
+                self.admin_user = AdminUsers.query.filter(AdminUsers.username == account).first()
 
             if not self.admin_user:
-                self.errmsg['mobile'] = _(u'手机号码/帐号不存在')
+                self.errmsg['account'] = _(u'手机号码/帐号不存在')
             else:
-                sha_password = sha256(password + self.admin_user.salt).hexdigest()
+                password = sha256(password.encode('utf8')).hexdigest()
+                password_salt = password + self.admin_user.salt
+                sha_password = sha256(password_salt.encode('utf8')).hexdigest()
                 if sha_password != self.admin_user.password:
+                    log_info('sha_password:%s, admin_user.password:%s' % (sha_password, self.admin_user.password))
                     self.errmsg['password'] = _(u'密码错误')
 
         ret = (False if self.errmsg else True)
         log_info(u'[AuthLoginService] [login] mobile/username:%s, return:%s, errmsg:%s, admin_user:%s' % (
-            mobile, ret, self.errmsg, self.admin_user))
+            account, ret, self.errmsg, self.admin_user))
 
         return ret
 
@@ -66,11 +67,3 @@ class AuthLoginService(object):
             session['avatar'] = self.admin_user.avatar
 
 
-class SaveAdminUsersService(object):
-    """保存管理员用户service"""
-    def __init__(self):
-        self.admin_user = None
-        self.current_time = current_timestamp()
-
-    
-    

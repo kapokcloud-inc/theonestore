@@ -1,0 +1,52 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+
+{% block body %}
+<!-- Page Content -->
+<div id="page-wrapper">
+  {% set breadcrumbs = [
+      {'title':_('主面板'), 'href':'/admin/dashboard'}, 
+      {'title':_('上一个页面'), 'href':request.args.get('back_url', request.headers['Referer'])},
+      {'title':_('操作成功'), 'href':''},
+    ] 
+  %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <!--.row-->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="white-box">
+          <center><i class="mdi mdi-check-circle" style="font-size:120px;color:#83c44e;"></i></center>
+          <center><p style="font-size:24px;">{{ request.args.get('title', '操作成功') }}</p></center>
+          <center><p style="font-size:24px;" id="times">3秒</p></center>
+          <center>
+            <a href="/admin/dashboard">[返回主面板]</a>
+            <a id="back_url" style="margin-left:20px;" href="{{ request.args.get('back_url', request.headers['Referer']) }}">[返回上一个页面]</a>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /#page-wrapper -->
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+$(document).ready(function(){
+  var back_url = $('#back_url').attr('href');
+  if (back_url == '' || back_url.indexOf('/admin/success') != -1) {
+    back_url = '/admin/dashboard';
+  }
+  var times = 3;
+  setInterval(function(){
+    if (times == 0) {
+      window.location.href = back_url;
+      return;
+    }
+    times--;
+    $('#times').text(times+'秒');
+  }, 1000);
+});
+</script>
+{% endblock %}

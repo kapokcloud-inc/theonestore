@@ -3,6 +3,7 @@
 {% block head %}
 <title>{{_('商品详情页 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/item.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
 
 {% block body %}
@@ -233,8 +234,10 @@
         
               <!-- 分页 每20条一页 -->
               <div class="comment-page_list">
-                <a href="" class="page-num">{{_('上一页')}}</a>
-                <span class="page-num btn-primary">1</span>
+                <span class="page-num page-first">
+                  <i class="icon-xiaoyu"></i>
+                </span>
+                <span class="page-num btn-current">1</span>
                 <a href="" class="page-num">2</a>
                 <a href="" class="page-num">3</a>
                 <a href="" class="page-num">4</a>
@@ -242,7 +245,9 @@
                 <a href="" class="page-num">6</a>
                 <span class="page-more">...</span>
                 <a href="" class="page-num">12</a>
-                <a href="" class="page-num">{{_('下一页')}}</a>
+                <a href="" class="page-num page-last">
+                  <i class="icon-dayu"></i>
+                </a>
               </div>
               <!-- 分页 end -->
             </div>

@@ -41,18 +41,8 @@ def index():
     """商品列表页"""
 
     data               = ItemStaticMethodsService.items(request.args.to_dict())
-    data['paging_url'] = url_for('pc.item.paging', **request.args)
 
     return render_template('pc/item/index.html.j2', **data)
-
-
-@item.route('/paging')
-def paging():
-    """加载分页"""
-
-    data = ItemStaticMethodsService.items(request.args.to_dict())
-
-    return render_template('pc/item/paging.html.j2', **data)
 
 
 @item.route('/<int:goods_id>')
@@ -74,7 +64,6 @@ def recommend():
 
     params             = {'is_recommend':1}
     data               = ItemStaticMethodsService.items(params)
-    data['paging_url'] = url_for('pc.item.paging', **params)
 
     return render_template('pc/item/recommend.html.j2', **data)
 
@@ -85,6 +74,5 @@ def hot():
 
     params             = {'is_hot':1}
     data               = ItemStaticMethodsService.items(params)
-    data['paging_url'] = url_for('pc.item.paging', **params)
 
     return render_template('pc/item/hot.html.j2', **data)

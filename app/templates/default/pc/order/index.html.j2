@@ -4,6 +4,7 @@
 {% block head %}
 <title>{{_('我的订单 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
 
 {% block body %}
@@ -22,285 +23,94 @@
             <div class="order-hd">
               <ul class="order-hd_list">
                 <li class="order-hd_item">
-                  {% set on = 'allOn' if tab_status == 0 else '' %}
-                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('全部订单')}}</a>
+                  {% set all_on = 'allOn' if tab_status == '0' else '' %}
+                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('全部订单')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  {% set on = 'allOn' if tab_status == 1 else '' %}
-                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=1) }}">{{_('待付款')}}</a>
+                  {% set all_on = 'allOn' if tab_status == '1' else '' %}
+                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=1) }}">{{_('待付款')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  {% set on = 'allOn' if tab_status == 2 else '' %}
-                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=2) }}">{{_('待收货')}}</a>
+                  {% set all_on = 'allOn' if tab_status == '2' else '' %}
+                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=2) }}">{{_('待收货')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  {% set on = 'allOn' if tab_status == 3 else '' %}
-                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=3) }}">{{_('已完成')}}</a>
+                  {% set all_on = 'allOn' if tab_status == '3' else '' %}
+                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=3) }}">{{_('已完成')}}</a>
                 </li>
                 <li class="order-hd_item">
-                  {% set on = 'allOn' if tab_status == 4 else '' %}
-                  <a class="{{ on }}" href="{{ url_for('pc.order.index', tab_status=4) }}">{{_('已取消')}}</a>
+                  {% set all_on = 'allOn' if tab_status == '4' else '' %}
+                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=4) }}">{{_('已取消')}}</a>
                 </li>
               </ul>
             </div>
-            <!-- 没有订单 -->
-            <!-- <div class="not-one">
-              <p class="not-one_text">{{_('您暂无相关订单!')}}</p>
-              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-            </div> -->
-            <!-- 没有订单 end -->
-
             <!-- 有订单 -->
+            {% if orders %}
             <div class="order-bd">
               <div class="order-box">
                 <ul class="order-box_list">
-                  <li class="order-box_item">
-                    <div class="order-item_detail">
-                      <div class="item-datail_hd">
-                        <div class="order-type allOn">待支付</div>
-                        <div class="order-desc">
-                          <div class="order-fl">2018-07-12 22:21:22</div>
-                          <div class="order-fl">
-                            <span>{{_('服务单号：')}}</span>
-                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
-                          </div>
-                          <div class="order-fl">{{_('微信支付')}}</div>
-                          <div class="order-price">
-                            {{_('订单金额：')}}￥
-                            <span class="price-num">500</span>
+                  {% for order in orders %}
+                    <li class="order-box_item">
+                      <div class="order-item_detail">
+                        <div class="item-datail_hd">
+                          <div class="order-type">{{ texts[order.order_id] }}</div>
+                          <div class="order-desc">
+                            <div class="order-fl">{{ order.add_time|timestamp2str }}</div>
+                            <div class="order-fl">
+                              <span>{{_('订单号：')}}</span>
+                              <a class="orderID" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">{{ order.order_sn}} </a>
+                            </div>
+                            <div class="order-fl">{{_('微信支付')}}</div>
+                            <div class="order-price">
+                              {{_('订单金额：')}}￥
+                              <span class="price-num">{{ order.order_amount }}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="item-datail_bd clearfix">
-                        <div class="item-bd_fl">
-                          <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                            <div class="one-cell_hd avatar80">
-                              <img src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
-                            </div>
-                            <div class="one-cell_bd">
-                              <p class="blackGap">红米手机2A 移动4G双卡版 绿色 8GB</p>
-                              <p class="greyGap mar-top">
-                                <span>￥499</span>
-                                <span>x1</span>
-                              </p>
-                            </div>
-                          </a>
-                          <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                            <div class="one-cell_hd avatar80">
-                              <img src="http://i1.mifile.cn/a1/T1QtxTBvET1RXrhCrK!80x80.jpg" alt="">
-                            </div>
-                            <div class="one-cell_bd">
-                              <p class="blackGap">小米礼品袋 透明</p>
-                              <p class="greyGap mar-top">
-                                <span>￥1</span>
-                                <span>x1</span>
-                              </p>
-                            </div>
-                          </a>
-                        </div>
-                        <div class="item-bd_fr">
-                          <a class="btn-link" href="{{ url_for('pc.cart.pay') }}">
-                            <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
-                          </a>
-                          <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
-                            <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
-                          </a>
-                          <!-- <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step0') }}">
-                            <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
-                          </a> -->
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="order-box_item">
-                    <div class="order-item_detail">
-                      <div class="item-datail_hd">
-                        <div class="order-type">待收货</div>
-                        <div class="order-desc">
-                          <div class="order-fl">2018-07-12 22:21:22</div>
-                          <div class="order-fl">
-                            <span>{{_('服务单号：')}}</span>
-                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
+                        <div class="item-datail_bd clearfix">
+                          {% set goods_data = (order.goods_data)|json_loads %}
+                          <div class="item-bd_fl">
+                            {% for good in goods_data %}
+                              <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=good.goods_id) }}">
+                                <div class="one-cell_hd avatar80">
+                                  <img src="{{ good.goods_img }}" alt="">
+                                </div>
+                                <div class="one-cell_bd">
+                                  <p class="blackGap">{{ good.goods_name }}</p>
+                                  <p class="greyGap mar-top">
+                                    <span>￥{{ good.goods_price }}</span>
+                                    <span>x{{ good.quantity }}</span>
+                                  </p>
+                                </div>
+                              </a>
+                            {% endfor %}
                           </div>
-                          <div class="order-fl">{{_('微信支付')}}</div>
-                          <div class="order-price">
-                            {{_('订单金额：')}}￥
-                            <span class="price-num">199</span>
+                          <div class="item-bd_fr">
+                            {% if 1 in codes[order.order_id] %}
+                              <a class="btn-link" href="{{ url_for('pc.cart.pay') }}">
+                                <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
+                              </a>
+                            {% endif %}
+                            <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">
+                              <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
+                            </a>
+                            {% if 7 in codes[order.order_id] %}
+                            <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step0',order_id=order.order_id) }}">
+                              <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
+                            </a>
+                            {% endif %}
                           </div>
                         </div>
                       </div>
-                      <div class="item-datail_bd clearfix">
-                        <div class="item-bd_fl">
-                          <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                            <div class="one-cell_hd avatar80">
-                              <img src="http://i1.mifile.cn/a1/pms_1498564154.53184175!80x80.jpg" alt="">
-                            </div>
-                            <div class="one-cell_bd">
-                              <p class="blackGap">米家声波电动牙刷 白色</p>
-                              <p class="greyGap mar-top">
-                                <span>￥199</span>
-                                <span>x1</span>
-                              </p>
-                            </div>
-                          </a>
-                        </div>
-                        <div class="item-bd_fr">
-                          <!-- <a class="btn-link" href="{{ url_for('pc.cart.pay') }}">
-                            <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
-                          </a> -->
-                          <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
-                            <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
-                          </a>
-                          <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step0') }}">
-                            <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="order-box_item">
-                    <div class="order-item_detail">
-                      <div class="item-datail_hd">
-                        <div class="order-type">已完成</div>
-                        <div class="order-desc">
-                          <div class="order-fl">2018-07-12 22:21:22</div>
-                          <div class="order-fl">
-                            <span>{{_('服务单号：')}}</span>
-                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
-                          </div>
-                          <div class="order-fl">{{_('微信支付')}}</div>
-                          <div class="order-price">
-                            {{_('订单金额：')}}￥
-                            <span class="price-num">158</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="item-datail_bd clearfix">
-                        <div class="item-bd_fl">
-                          <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                            <div class="one-cell_hd avatar80">
-                              <img src="http://i1.mifile.cn/a1/pms_1504498936.11861982!80x80.jpg" alt="">
-                            </div>
-                            <div class="one-cell_bd">
-                              <p class="blackGap">米家电水壶 白色</p>
-                              <p class="greyGap mar-top">
-                                <span>￥99</span>
-                                <span>x1</span>
-                              </p>
-                            </div>
-                          </a>
-                          <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                            <div class="one-cell_hd avatar80">
-                              <img src="http://i1.mifile.cn/a1/pms_1526532545.37854625!80x80.jpg" alt="">
-                            </div>
-                            <div class="one-cell_bd">
-                              <p class="blackGap">米家驱蚊器 白色</p>
-                              <p class="greyGap mar-top">
-                                <span>￥59</span>
-                                <span>x1</span>
-                              </p>
-                            </div>
-                          </a>
-                        </div>
-                        <div class="item-bd_fr">
-                          <!-- <a class="btn-link" href="{{ url_for('pc.cart.pay') }}">
-                            <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
-                          </a> -->
-                          <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
-                            <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
-                          </a>
-                          <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step0') }}">
-                            <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="order-box_item">
-                    <div class="order-item_detail">
-                      <div class="item-datail_hd">
-                        <div class="order-type">已取消</div>
-                        <div class="order-desc">
-                          <div class="order-fl">2018-07-12 22:21:22</div>
-                          <div class="order-fl">
-                            <span>{{_('服务单号：')}}</span>
-                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
-                          </div>
-                          <div class="order-fl">{{_('微信支付')}}</div>
-                          <div class="order-price">
-                            {{_('订单金额：')}}￥
-                            <span class="price-num">299</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="item-datail_bd clearfix">
-                        <div class="item-bd_fl">
-                          <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                            <div class="one-cell_hd avatar80">
-                              <img src="http://i1.mifile.cn/a1/pms_1522666970.27937468!80x80.jpg" alt="">
-                            </div>
-                            <div class="one-cell_bd">
-                              <p class="blackGap">小米AI音箱</p>
-                              <p class="greyGap mar-top">
-                                <span>￥299</span>
-                                <span>x1</span>
-                              </p>
-                            </div>
-                          </a>
-                        </div>
-                        <div class="item-bd_fr">
-                          <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
-                            <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="order-box_item">
-                    <div class="order-item_detail">
-                      <div class="item-datail_hd">
-                        <div class="order-type">已退款</div>
-                        <div class="order-desc">
-                          <div class="order-fl">2018-07-12 22:21:22</div>
-                          <div class="order-fl">
-                            <span>{{_('服务单号：')}}</span>
-                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=79) }}">1150614350040274</a>
-                          </div>
-                          <div class="order-fl">{{_('微信支付')}}</div>
-                          <div class="order-price">
-                            {{_('订单金额：')}}￥
-                            <span class="price-num">299</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="item-datail_bd clearfix">
-                        <div class="item-bd_fl">
-                          <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                            <div class="one-cell_hd avatar80">
-                              <img src="http://i1.mifile.cn/a1/pms_1522666970.27937468!80x80.jpg" alt="">
-                            </div>
-                            <div class="one-cell_bd">
-                              <p class="blackGap">小米AI音箱</p>
-                              <p class="greyGap mar-top">
-                                <span>￥299</span>
-                                <span>x1</span>
-                              </p>
-                            </div>
-                          </a>
-                        </div>
-                        <div class="item-bd_fr">
-                          <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
-                            <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
+                    </li>
+                  {% endfor %}
                 </ul>
               </div>
               <div class="page-box">
-                <a href="" class="page-num">{{_('上一页')}}</a>
-                <span class="page-num btn-primary">1</span>
+                <span class="page-num page-first">
+                  <i class="icon-xiaoyu"></i>
+                </span>
+                <span class="page-num btn-current">1</span>
                 <a href="" class="page-num">2</a>
                 <a href="" class="page-num">3</a>
                 <a href="" class="page-num">4</a>
@@ -308,10 +118,20 @@
                 <a href="" class="page-num">6</a>
                 <span class="page-more">...</span>
                 <a href="" class="page-num">12</a>
-                <a href="" class="page-num">{{_('下一页')}}</a>
+                <a href="" class="page-num page-last">
+                  <i class="icon-dayu"></i>
+                </a>
               </div>
             </div>
             <!-- 有订单 end -->
+            {% else %}
+            <!-- 没有订单 -->
+            <div class="not-one">
+              <p class="not-one_text">{{_('您暂时没有订单!')}}</p>
+              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+            </div>
+            <!-- 没有订单 end -->
+            {% endif %}
           </div>
         </div>
       </div>

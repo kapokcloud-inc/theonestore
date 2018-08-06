@@ -45,6 +45,7 @@
   color: #666;
   text-align: center;
   font-size: 16px;
+  cursor: pointer;
 }
 .aftersales-type_item:last-child {
   margin-right: 0;
@@ -58,7 +59,7 @@
   font-size: 14px;
   color: #666;
   line-height: 18px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #eee;
   background-color: #fff;
   transition: border-color 0.2s linear;
   overflow: auto;

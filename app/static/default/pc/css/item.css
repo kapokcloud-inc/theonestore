@@ -104,8 +104,8 @@
   height: 65px;
   line-height: 65px;
   font-size: 30px;
-  border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
   color: #f33155;
   font-weight: 400;
 }
@@ -127,8 +127,8 @@
 }
 .serve-cell {
   margin-top: 10px;
-  border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
 }
 .tagImg {
   width: 15px;
@@ -178,7 +178,7 @@
   color: #999;
   font-size: 12px;
   text-align: center;
-  border-left: 1px solid #e5e5e5;
+  border-left: 1px solid #eee;
   overflow: hidden;
 }
 .goods-scroll:hover {
@@ -204,7 +204,7 @@
   width: 300px;
   background-color: #f3f4f5;
   z-index: 30;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #eee;
 }
 .service-head {
   line-height: 30px;
@@ -225,7 +225,7 @@
 .goods-detail_nav {
   width: 100%;
   background-color: #fff;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #eee;
 }
 .detail-nav_list {
   width: 680px;
@@ -242,7 +242,7 @@
   text-align: center;
   font-size: 16px;
   color: #333;
-  border-right: 1px solid #e5e5e5;
+  border-right: 1px solid #eee;
 }
 .detail-nav_item:last-of-type {
   border-right: none;
@@ -273,7 +273,7 @@
 .border-line {
   margin-top: 30px;
   height: 0px;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #eee;
 }
 .head-text {
   width: 300px;
@@ -316,7 +316,7 @@
   top: 0;
   right: 0;
   height: 1px;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #eee;
   color: #e5e5e5;
   transform-origin: 0 0;
   transform: scaleY(0.5);

@@ -31,7 +31,7 @@
                   <img class="ava" src="http://u.vpimg1.com/upload/myi/2017/06/01/84/avatar_89373029_1496285287409_38x38_90.jpg" alt="">
                 </div>
                 <div class="one-cell_bd username">
-                  <a href="">135****229</a>
+                  <a href="{{ url_for('pc.me.index') }}">135****229</a>
                 </div>
                 <div class="one-cell_ft signout" onclick="signout()">{{_('[退出]')}}</div>
               </div>
@@ -40,13 +40,13 @@
                   <a href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
                 </span>
                 <span>
-                  <a href="">{{_('优惠券')}}</a>
+                  <a href="{{ url_for('pc.me.coupon') }}">{{_('优惠券')}}</a>
                 </span>
                 <span>
-                  <a href="">{{_('收藏')}}</a>
+                  <a href="{{ url_for('pc.me.collect') }}">{{_('收藏')}}</a>
                 </span>
                 <span>
-                  <a  href="">{{_('消息')}}</a>
+                  <a  href="{{ url_for('pc.me.messages') }}">{{_('消息')}}</a>
                   <i class="user-badge">1</i>
                 </span>
               </div>
@@ -56,13 +56,13 @@
             <a href="{{ url_for('pc.order.index', tab_status=0) }}" class="mouseon">{{_('我的订单')}}</a>
           </li>
           <li class="top-nav_item">
-            <a href="" class="mouseon">{{_('优惠券')}}</a>
+            <a href="{{ url_for('pc.me.coupon') }}" class="mouseon">{{_('优惠券')}}</a>
           </li>
           <li class="top-nav_item">
-            <a href="" class="mouseon">{{_('收藏')}}</a>
+            <a href="{{ url_for('pc.me.collect') }}" class="mouseon">{{_('收藏')}}</a>
           </li>
           <li class="top-nav_item">
-            <a href="" class="mouseon">{{_('消息')}}</a>
+            <a href="{{ url_for('pc.me.messages') }}" class="mouseon">{{_('消息')}}</a>
             <span class="news-badge">1</span>
           </li>
         </ul>

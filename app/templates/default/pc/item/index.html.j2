@@ -3,6 +3,7 @@
 {% block head %}
 <title>{{_('商品分类页 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/index.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
 
 {% block body %}
@@ -50,83 +51,26 @@
               </div>
             </div>
           </a>
-        </li>
-        <li class="list-item">
-          <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-            <div class="item-product">
-              <img src="http://img13.360buyimg.com/n1/jfs/t17044/288/1586645515/123948/82f07edf/5ad065a8Nbacd92b9.jpg" alt="">
-            </div>
-            <div class="item-detail">
-              <p class="all-title">周黑鸭 鸭锁骨</p>
-              <p class="all-desc">麻辣 450gx2</p>
-              <div class="all-price mar-top">
-                <span>￥69</span>
-                <span class="price-del">￥79</span>
-              </div>
-            </div>
-          </a>
-        </li>
-        <li class="list-item">
-          <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-            <div class="item-product">
-              <img src="http://img13.360buyimg.com/n1/jfs/t17254/276/1614852193/175061/bb439ac5/5ad0652dN13df83b9.jpg" alt="">
-            </div>
-            <div class="item-detail">
-              <p class="all-title">周黑鸭 鸭舌</p>
-              <p class="all-desc">麻辣 150gx2</p>
-              <div class="all-price mar-top">
-                <span>￥69</span>
-                <span class="price-del">￥79</span>
-              </div>
-            </div>
-          </a>
-        </li>
-        <li class="list-item">
-          <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-            <div class="item-product">
-              <img src="http://img11.360buyimg.com/n1/jfs/t19480/153/1584776172/138508/ed82c1/5ad065ccNdd42304e.jpg" alt="">
-            </div>
-            <div class="item-detail">
-              <p class="all-title">周黑鸭 鸭翅</p>
-              <p class="all-desc">微辣 250gx2</p>
-              <div class="all-price mar-top">
-                <span>￥69</span>
-                <span class="price-del">￥79</span>
-              </div>
-            </div>
-          </a>
-        </li>
-        <li class="list-item">
-          <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-            <div class="item-product">
-              <img src="http://img11.360buyimg.com/n1/jfs/t17503/9/1575140787/124435/7795a32d/5ad06507Nf7c4c1b7.jpg" alt="">
-            </div>
-            <div class="item-detail">
-              <p class="all-title">周黑鸭 鸭翅尖</p>
-              <p class="all-desc">原味 280gx2</p>
-              <div class="all-price mar-top">
-                <span>￥69</span>
-                <span class="price-del">￥79</span>
-              </div>
-            </div>
-          </a>
-        </li>
-        <li class="list-item">
-          <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-            <div class="item-product">
-              <img src="http://img14.360buyimg.com/n1/jfs/t17647/116/1595293574/162884/6125bfaf/5ad06551Nb33247b4.jpg" alt="">
-            </div>
-            <div class="item-detail">
-              <p class="all-title">周黑鸭 鸭翅尖+鸭掌</p>
-              <p class="all-desc">微辣 280g+245g</p>
-              <div class="all-price mar-top">
-                <span>￥69</span>
-                <span class="price-del">￥79</span>
-              </div>
-            </div>
-          </a>
         </li> -->
       </ul>
+      <!-- 分页 每20条一页 -->
+      <div class="comment-page_list">
+        <span class="page-num page-first">
+          <i class="icon-xiaoyu"></i>
+        </span>
+        <span class="page-num btn-current">1</span>
+        <a href="" class="page-num">2</a>
+        <a href="" class="page-num">3</a>
+        <a href="" class="page-num">4</a>
+        <a href="" class="page-num">5</a>
+        <a href="" class="page-num">6</a>
+        <span class="page-more">...</span>
+        <a href="" class="page-num">12</a>
+        <a href="" class="page-num page-last">
+          <i class="icon-dayu"></i>
+        </a>
+      </div>
+      <!-- 分页 end -->
     </div>
   </div>
 </div>
