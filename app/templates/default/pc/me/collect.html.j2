@@ -5,8 +5,6 @@
 <title>{{_('我的收藏 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/order.css">
 <link rel="stylesheet" href="/static/default/pc/css/index.css">
-<link rel="stylesheet" href="/static/default/pc/css/me.css">
-<link rel="stylesheet" href="/static/default/pc/css/aftersales.css">
 <link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
 
@@ -25,38 +23,36 @@
           <div class="allPad">
             <!-- 有收藏 -->
             <div class="order-bd">
-              <div class="order-box">
-                <ul class="all-list clearfix">
-                  <li class="list-item2">
-                    <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                      <div class="item-product">
-                        <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
-                      </div>
-                      <div class="item-detail">
-                        <div class="all-title">小米短袖T恤 两件装 黑色+白色</div>
-                        <div class="all-price mar-top">￥89</div>
-                      </div>
-                    </a>
-                    <div class="review-btn_wrap" data-value="">
-                      <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
+              <ul class="all-list clearfix">
+                <li class="list-item2">
+                  <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                    <div class="item-product">
+                      <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
                     </div>
-                  </li>
-                  <li class="list-item2">
-                    <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                      <div class="item-product">
-                        <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
-                      </div>
-                      <div class="item-detail">
-                        <div class="all-title">小米短袖T恤 两件装 黑色+白色</div>
-                        <div class="all-price mar-top">￥89</div>
-                      </div>
-                    </a>
-                    <div class="review-btn_wrap" data-value="">
-                      <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
+                    <div class="item-detail">
+                      <div class="all-title">小米短袖T恤 两件装 黑色+白色</div>
+                      <div class="all-price mar-top">￥89</div>
                     </div>
-                  </li>
-                </ul>
-              </div>
+                  </a>
+                  <div class="review-btn_wrap" data-value="">
+                    <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
+                  </div>
+                </li>
+                <li class="list-item2">
+                  <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
+                    <div class="item-product">
+                      <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
+                    </div>
+                    <div class="item-detail">
+                      <div class="all-title">小米短袖T恤 两件装 黑色+白色</div>
+                      <div class="all-price mar-top">￥89</div>
+                    </div>
+                  </a>
+                  <div class="review-btn_wrap" data-value="">
+                    <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
+                  </div>
+                </li>
+              </ul>
               <div class="page-box" style="margin-top:30px;">
                 <span class="page-num page-first">
                   <i class="icon-xiaoyu"></i>
@@ -77,10 +73,10 @@
             <!-- 有收藏 end -->
 
             <!-- 没有收藏 -->
-            <!-- <div class="not-one">
+            <div class="not-one">
               <p class="not-one_text">{{_('您暂时没有收藏商品!')}}</p>
               <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-            </div> -->
+            </div>
             <!-- 没有收藏 end -->
           </div>
         </div>

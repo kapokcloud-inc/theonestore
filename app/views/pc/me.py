@@ -158,7 +158,7 @@ def addresses():
 
 @me.route('/address/<int:ua_id>')
 def address(ua_id):
-    """pc站 - 收货地址管理"""
+    """pc站 - 添加收货地址"""
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']
@@ -186,25 +186,8 @@ def collect():
     uid = get_uid()
 
     likes      = LikeStaticMethodsService.likes({'uid':uid})
-    paging_url = url_for('pc.me.collect_paging', **request.args)
 
-    return render_template('pc/me/collect.html.j2', likes=likes, paging_url=paging_url)
-
-
-@me.route('/collect-paging')
-def collect_paging():
-    """我的收藏 - 加载分页"""
-
-    if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
-    uid = get_uid()
-
-    params        = request.args.to_dict()
-    params['uid'] = uid
-    likes         = LikeStaticMethodsService.likes(params)
-
-    return render_template('pc/me/collect_paging.html.j2', likes=likes)
+    return render_template('pc/me/collect.html.j2', likes=likes)
 
 
 @me.route('/coupon')
@@ -252,22 +235,5 @@ def messages():
     uid = get_uid()
 
     messages   = MessageStaticMethodsService.messages({'uid':uid})
-    paging_url = url_for('pc.me.messages_paging', **request.args)
 
-    return render_template('pc/me/messages.html.j2', messages=messages, paging_url=paging_url)
-
-
-@me.route('/messages-paging')
-def messages_paging():
-    """消息 - 加载分页"""
-
-    if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
-    uid = get_uid()
-
-    params        = request.args.to_dict()
-    params['uid'] = uid
-    messages      = MessageStaticMethodsService.messages(params)
-
-    return render_template('pc/me/messages_paging.html.j2', messages=messages)
+    return render_template('pc/me/messages.html.j2', messages=messages)

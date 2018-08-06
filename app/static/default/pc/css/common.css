@@ -56,6 +56,15 @@ table {
 .bd-top5 {
   border-top: 1px solid #eee !important;
 }
+.bg-eee {
+  background-color: #eee !important;
+}
+.border-eee {
+  border: 1px solid #eee !important;
+}
+.color-eee {
+  color: #eee !important;
+}
 .not-before::before {
   right: 15px !important;
   border-top-color: #ccc;
@@ -755,7 +764,7 @@ header img {
   border-radius: 7px;
   height: 14px;
   width: 14px;
-  line-height: 13px;
+  line-height: 14px;
   color: #fff;
   font-size: 12px;
   text-align: center;
@@ -769,7 +778,7 @@ header img {
   border-radius: 7px;
   height: 14px;
   width: 14px;
-  line-height: 13px;
+  line-height: 14px;
   color: #fff;
   font-size: 12px;
   text-align: center;
@@ -975,4 +984,11 @@ header img {
   background-color: #f33155;
   color: #fff;
   border: none;
+}
+.aftersales-goods_box {
+  position: relative;
+  margin-bottom: 28px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-left: 2px solid #b0b0b0;
 }

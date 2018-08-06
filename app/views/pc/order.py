@@ -68,23 +68,8 @@ def index():
             temp = set(action_code[order.order_id])-set(excel_code)
             action_code[order.order_id] = list(temp)
 
-    data['paging_url'] = url_for('mobile.order.paging', **request.args)
     data['tab_status'] = request.args.get('tab_status', '0')
     return render_template('pc/order/index.html.j2', **data)
-
-
-@order.route('/paging')
-def paging():
-    """加载分页"""
-
-    if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
-    uid = get_uid()
-
-    data = OrderStaticMethodsService.orders(uid, request.args.to_dict())
-
-    return render_template('pc/order/paging.html.j2', **data)
 
 
 @order.route('/<int:order_id>')

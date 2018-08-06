@@ -158,7 +158,7 @@ def addresses():
 
 @me.route('/address/<int:ua_id>')
 def address(ua_id):
-    """手机站 - 收货地址管理"""
+    """手机站 - 添加收货地址"""
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']
