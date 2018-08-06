@@ -210,7 +210,7 @@ class CartStaticMethodsService(object):
     """购物车静态方法Service"""
 
     @staticmethod
-    def pay_page(order_id, uid):
+    def pay_page(order_id, uid, client):
         """订单支付页面"""
 
         is_weixin = toint(request.args.get('is_weixin', '0'))
@@ -218,7 +218,7 @@ class CartStaticMethodsService(object):
         # 检查
         order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
         if not order:
-            return (False, u'', {}, request.headers['Referer'])
+            return (False, u'', {}, url_for('%s.order.index' % client, msg=_(u'订单不存在')))
         
         order_address = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
         coupon        = Coupon.query.filter(Coupon.order_id == order_id).first()
@@ -335,5 +335,6 @@ class CartStaticMethodsService(object):
                 'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount,
                 'addresses':addresses, 'default_address':default_address,
                 'shipping_list':shipping_list, 'default_shipping':default_shipping,
-                'shipping_title':shipping_title, 'coupons':coupons, 'funds':funds.funds}
+                'shipping_title':shipping_title, 'coupons':coupons, 'funds':funds.funds,
+                'buy_now':buy_now}
         return (True, u'', data, u'')

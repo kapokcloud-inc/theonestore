@@ -87,9 +87,10 @@
         <div class="head-cart">
           <div class="tool">
             <a href="{{ url_for('pc.cart.root') }}">
+              {% set cart_total = session.get('cart_total', 0) %}
               <img class="cart-bag" src="/static/default/pc/img/cart.png" alt="">
               <span class="cart-text">{{_('购物车')}}</span>
-              <span class="cart-badge">0</span>
+              <span id="navs_cart_total" class="cart-badge">{{ cart_total }}</span>
             </a>
           </div>
           <div class="tool-cnt">
@@ -110,7 +111,7 @@
             </div>
 
             <!-- 已登录时，购物车有商品时下拉框显示-->
-            <div class="cart-cnt">
+            <div id="navs_carts" class="cart-cnt">
               <a class="one-cell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
                 <div class="one-cell_hd avatar">
                   <img src="http://i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg" alt="">

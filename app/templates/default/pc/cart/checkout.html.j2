@@ -80,9 +80,11 @@
       <div class="goods-section clearfix">
         <div class="goods-section_header">
           <span class="goods-info">{{_('商品及优惠券')}}</span>
-          <div class="back-cart">
-            <a href="{{ url_for('pc.cart.root') }}">{{_('返回购物车')}}</a>
-          </div>
+          {% if buy_now == 0 %}
+            <div class="back-cart">
+              <a href="{{ url_for('pc.cart.root') }}">{{_('返回购物车')}}</a>
+            </div>
+          {% endif %}
         </div>
         <div class="goods-section_body">
           <ul class="goods-body_list">
@@ -152,7 +154,7 @@
               {% else %}
                 <div class="not-coupon">{{_('您暂时没有可用的优惠券')}}</div>
               {% endif %}
-            <input id="coupon_id" type="hidden" value="0" />
+              <input id="coupon_id" type="hidden" value="0" />
             </div>
           </div>
           <!-- 优惠券弹窗 end -->
@@ -470,7 +472,7 @@ function submit() {
   $.post("{{ url_for('api.order.create') }}", params, function(json) {
     if (json.ret == 0) {
       var order_id = json.data.order_id;
-      window.location.href = "{{ url_for('pc.cart.pay') }}?order_id=" + order_id;
+      window.location.href = "/pc/cart/pay/" + order_id;
     } else {
       $.toast(json.msg, "text");
       return false;

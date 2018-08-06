@@ -101,7 +101,10 @@ def checkout():
 
     # 订单付款页面
     if order_id > 0:
-        data = CartStaticMethodsService.pay_page(order_id, uid)
+        ret, msg, data, url = CartStaticMethodsService.pay_page(order_id, uid, 'mobile')
+        if not ret:
+            return redirect(url)
+
         return render_template('mobile/cart/pay.html.j2', **data)
 
     # 结算页面

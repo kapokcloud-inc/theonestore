@@ -78,7 +78,17 @@ def checkout():
     return render_template('pc/cart/checkout.html.j2', **data)
 
 
-@cart.route('/pay')
-def pay():
+@cart.route('/pay/<int:order_id>')
+def pay(order_id):
     """支付订单"""
-    return render_template('pc/cart/pay.html.j2')
+
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+
+    ret, msg, data, url = CartStaticMethodsService.pay_page(order_id, uid, 'pc')
+    if not ret:
+        return redirect(url)
+
+    return render_template('pc/cart/pay.html.j2', **data)
