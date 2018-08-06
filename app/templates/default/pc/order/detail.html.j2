@@ -38,7 +38,7 @@
               {% endif %}
               <!-- 未支付订单，有立即支付按钮 -->
               {% if 1 in code %}
-              <a class="order-type_btn btn-primary mar-right" href="{{ url_for('pc.cart.pay') }}">{{_('立即支付')}}</a>
+              <a class="order-type_btn btn-primary mar-right" href="{{ url_for('pc.cart.pay',order_id=order.order_id) }}">{{_('立即支付')}}</a>
               {% endif %}
               <!-- 已发货/未收货订单，有确认收货按钮 -->
               {% if 4 in code %}

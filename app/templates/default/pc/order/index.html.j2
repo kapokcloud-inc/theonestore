@@ -87,7 +87,7 @@
                           </div>
                           <div class="item-bd_fr">
                             {% if 1 in codes[order.order_id] %}
-                              <a class="btn-link" href="{{ url_for('pc.cart.pay') }}">
+                              <a class="btn-link" href="{{ url_for('pc.cart.pay',order_id=order.order_id) }}">
                                 <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
                               </a>
                             {% endif %}
