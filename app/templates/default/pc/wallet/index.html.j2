@@ -26,7 +26,7 @@
                 {{_('可用余额：')}}￥
                 <span class="balance-num">99.00</span>
               </div>
-              <a class="recharge" href="">
+              <a class="recharge" href="{{ url_for('pc.wallet.recharge') }}">
                 <img src="/static/default/pc/img/recharge.png" alt="">
                 <span>{{_('充值')}}</span>
               </a>

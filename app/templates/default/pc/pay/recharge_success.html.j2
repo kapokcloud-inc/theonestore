@@ -1,0 +1,31 @@
+{% extends '/default/pc/layout/cart_base.html.j2' %}
+
+{% block head %}
+<title>{{_('支付成功 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+{% endblock %}
+
+{% block nav %} 
+<div class="one-nav_header">
+  <span class="nav-header_type">{{_('充值成功')}}</span>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="cart-wrap">
+  <div class="head-inner">
+    <div class="comp-box">
+      <div class="compl-img">
+        <img src="/static/default/pc/img/complete.png" alt="">
+      </div>
+      <p class="compl-text">{{_('充值成功')}}</p>
+      <a class="not-one_btn btn-primary" href="{{ url_for('pc.wallet.root') }}">{{_('查看我的钱包')}}</a>
+      <a class="not-one_btn btn-grey mar-left" href="{{ url_for('pc.index.root') }}">{{_('继续购物')}}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript"></script>
+{% endblock%}
