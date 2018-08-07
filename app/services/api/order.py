@@ -14,6 +14,7 @@ from decimal import Decimal
 
 from flask import abort
 from flask_babel import gettext as _
+from flask_sqlalchemy import Pagination
 from sqlalchemy import or_
 
 from app.database import db
@@ -741,7 +742,7 @@ class OrderStaticMethodsService(object):
         return order_sn
 
     @staticmethod
-    def orders(uid, params):
+    def orders(uid, params, is_pagination=False):
         """获取订单列表"""
 
         p            = toint(params.get('p', '1'))
@@ -771,6 +772,10 @@ class OrderStaticMethodsService(object):
 
         orders = q.order_by(Order.order_id.desc()).offset((p-1)*ps).limit(ps).all()
 
+        pagination = None
+        if is_pagination:
+            pagination = Pagination(None, p, ps, q.count(), None)
+
         texts = {}
         codes = {}
         for order in orders:
@@ -778,7 +783,7 @@ class OrderStaticMethodsService(object):
             texts[order.order_id] = text
             codes[order.order_id] = code
             
-        return {'orders':orders, 'texts':texts, 'codes':codes}
+        return {'orders':orders, 'pagination':pagination, 'texts':texts, 'codes':codes}
 
 
     @staticmethod
@@ -786,7 +791,7 @@ class OrderStaticMethodsService(object):
         """获取订单状态和订单指令"""
 
         status_text = u''   # 订单状态: 已取消; 待付款; 待收货; 待评价; 已完成;
-        action_code = []    # 订单指令: 0.无指令; 1.付款; 2.取消订单; 3.查看物流; 4.确认收货; 5.再次购买; 6.删除订单;
+        action_code = []    # 订单指令: 0.无指令; 1.付款; 2.取消订单; 3.查看物流; 4.确认收货; 5.再次购买; 6.删除订单; 7.申请售后;
 
         current_time = current_timestamp()
         min_pay_time = min_pay_time if min_pay_time else before_after_timestamp(current_time, {'days':1})
@@ -808,19 +813,19 @@ class OrderStaticMethodsService(object):
             if order.pay_status == 2:
                 if order.shipping_status == 1:
                     status_text = _(u'待收货')
-                    action_code = [5]
+                    action_code = [5,7]
 
                     return (status_text, action_code)
 
                 if order.shipping_status == 2 and order.deliver_status == 1:
                     status_text = _(u'待收货')
-                    action_code = [3,4,5]
+                    action_code = [3,4,5,7]
 
                     return (status_text, action_code)
 
         if order.order_status == 2:
             status_text = _(u'已完成')
-            action_code = [3,5,6]
+            action_code = [3,5,6,7]
 
             return (status_text, action_code)
 

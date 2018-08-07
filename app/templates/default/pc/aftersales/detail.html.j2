@@ -25,89 +25,93 @@
           <div class="order-detail_hd">
             <div class="order-num">
               <span>{{_('服务单号：')}}</span>
-              <span>AS1807314500105<span>
+              <span>{{ aftersales.aftersales_sn }}<span>
             </div>
           </div>
           <div class="order-detail_bd">
             <div class="order-goods_det">
               <div class="order-summary">
-                <div class="order-status">审核中</div>
+                <div class="order-status">{{ status_text }}</div>
                 <div class="order-progress">
-                  <!-- 商品仅退款的时候显示的状态 -->
-                  <ul class="progress-list clearfix">
-                    <li class="step step-first step-done">
-                      <div>{{_('申请服务')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step step-active">
-                      <div>{{_('审核通过')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step ">
-                      <div>{{_('退款')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step step-last">
-                      <div>{{_('完成')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                  </ul>
-                  <!-- 商品仅退款的时候显示的状态 end -->
-
-                  <!-- 商品退货退款的时候显示的状态 -->
-                  <!-- <ul class="progress-list clearfix">
-                    <li class="step step-first step-done">
-                      <div>{{_('申请服务')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step step-active">
-                      <div>{{_('审核通过')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step ">
-                      <div>{{_('商家已收到货')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step">
-                      <div>{{_('退款')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step step-last">
-                      <div>{{_('完成')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                  </ul> -->
-                  <!-- 商品退货退款的时候显示的状态 end -->
-
-                  <!-- 商品仅换货的时候显示的状态 -->
-                  <!-- <ul class="progress-list clearfix">
-                    <li class="step step-first step-done">
-                      <div>{{_('申请服务')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step step-active">
-                      <div>{{_('审核通过')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step ">
-                      <div>{{_('商家已收到货')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step">
-                      <div>{{_('出库')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                    <li class="step step-last">
-                      <div>{{_('完成')}}</div>
-                      <div class="progress-info">2018-07-31 21:06:05</div>
-                    </li>
-                  </ul> -->
-                  <!-- 商品仅换货的时候显示的状态 end -->
+                  {% if aftersales.aftersales_type == 1 %}
+                    <!-- 商品仅退款的时候显示的状态 -->
+                    <ul class="progress-list clearfix">
+                      <li class="step step-first step-done">
+                        <div>{{_('申请服务')}}</div>
+                        <div class="progress-info">{{ aftersales.add_time|timestamp2str }}</div>
+                      </li>
+                      <li class="step step-active">
+                        <div>{{_('审核通过')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step ">
+                        <div>{{_('退款')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step step-last">
+                        <div>{{_('完成')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                    </ul>
+                    <!-- 商品仅退款的时候显示的状态 end -->
+                  {% elif aftersales.aftersales_type == 2 %}
+                    <!-- 商品退货退款的时候显示的状态 -->
+                    <!-- <ul class="progress-list clearfix">
+                      <li class="step step-first step-done">
+                        <div>{{_('申请服务')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step step-active">
+                        <div>{{_('审核通过')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step ">
+                        <div>{{_('商家已收到货')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step">
+                        <div>{{_('退款')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step step-last">
+                        <div>{{_('完成')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                    </ul> -->
+                    <!-- 商品退货退款的时候显示的状态 end -->
+                  {% elif aftersales.aftersales_type == 3 %}
+                    <!-- 商品仅换货的时候显示的状态 -->
+                    <!-- <ul class="progress-list clearfix">
+                      <li class="step step-first step-done">
+                        <div>{{_('申请服务')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step step-active">
+                        <div>{{_('审核通过')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step ">
+                        <div>{{_('商家已收到货')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step">
+                        <div>{{_('出库')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                      <li class="step step-last">
+                        <div>{{_('完成')}}</div>
+                        <div class="progress-info">2018-07-31 21:06:05</div>
+                      </li>
+                    </ul> -->
+                    <!-- 商品仅换货的时候显示的状态 end -->
+                  {% endif %}
                 </div>
                 <div class="order-delivery hide">
                   <div class="delivery-list_box">
                     <ul class="delivery-list mar-top">
-                      <li class="delivery-list_item firstOn last">您的服务申请已提交，等待确认。 2018-07-31 21:06:05</li>
+                      {% for log_item in log if log %}
+                        <li class="delivery-list_item firstOn last">{{ log_item.content }} {{ log_item.add_time|timestamp2str }}</li>
+                      {% endfor %}
                     </ul>
                   </div>
                 </div>
@@ -116,15 +120,18 @@
                 </div>
               </div>
               <div class="order-goods bd-bottom5">
-                <div class="one-cell">
-                  <div class="one-cell_hd avatar80">
-                    <img src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
+                {% set goods = (aftersales.goods_data)|json_loads %}
+                {% for good in goods if goods %}
+                  <div class="one-cell">
+                    <div class="one-cell_hd avatar80">
+                      <img src="{{ good.goods_img }}" alt="">
+                    </div>
+                    <div class="one-cell_bd">
+                      <p class="blackGap">{{ good.goods_name }}</p>
+                      <p class="blackGap mar-top">数量：{{ good.goods_quantity }}</p>
+                    </div>
                   </div>
-                  <div class="one-cell_bd">
-                    <p class="blackGap">红米手机2A 移动4G双卡版 绿色 8GB</p>
-                    <p class="blackGap mar-top">数量：1</p>
-                  </div>
-                </div>
+                {% endfor %}
               </div>
             </div>
 
@@ -135,30 +142,48 @@
                 <tbody>
                   <tr>
                     <th>{{_('服务类型：')}}</th>
-                    <td>退货退款</td>
+                    {% if aftersales.aftersales_type == 1 %}
+                      <td>仅退款</td>
+                    {% elif aftersales.aftersales_type == 2 %}
+                      <td>退货退款</td>
+                    {% elif aftersales.aftersales_type == 3 %}
+                      <td>仅换货</td>
+                    {% endif %}
                   </tr>
                   <tr>
                     <th>{{_('问题描述：')}}</th>
-                    <td>有问题，质量问题</td>
+                    <td>{{ aftersales.content }}</td>
                   </tr>
+                  {% if aftersales.aftersales_type in [1,2] %}
+                    <tr>
+                      <th>{{_('退款金额：')}}</th>
+                      <td>￥{{ aftersales.refunds_amount }}</td>
+                    </tr>
+                  {% endif %}
                   <tr>
                     <th>{{_('图片：')}}</th>
-                    <td>
-                      <img style="width:80px;height:80px" src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
-                    </td>
+                    {% set imgdatas = aftersales.img_data|json_loads if aftersales.img_data %}
+                    {% for img_item in imgdatas if imgdatas %}
+                      <td>
+                        <img  class="aftersales_img" src="{{ img_item }}" alt="">
+                      </td>
+                    {% endfor %}
                   </tr>
-                  <tr>
-                    <th>{{_('收货信息：')}}</th>
-                    <td>广东 深圳市 南山区 大园工业园8栋510</td>
-                  </tr>
-                  <tr>
-                    <th>{{_('联系人：')}}</th>
-                    <td>heheheh</td>
-                  </tr>
-                  <tr>
-                    <th>{{_('联系电话：')}}</th>
-                    <td>13592829302</td>
-                  </tr>
+                  <!-- 只有换货的时候才显示收货信息 -->
+                  {% if aftersales.aftersales_type == 3 %}
+                    <tr>
+                      <th>{{_('收货信息：')}}</th>
+                      <td>广东 深圳市 南山区 大园工业园8栋510</td>
+                    </tr>
+                    <tr>
+                      <th>{{_('联系人：')}}</th>
+                      <td>heheheh</td>
+                    </tr>
+                    <tr>
+                      <th>{{_('联系电话：')}}</th>
+                      <td>13592829302</td>
+                    </tr>
+                  {% endif %}
                 </tbody>
               </table>
             </div>

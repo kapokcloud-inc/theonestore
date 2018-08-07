@@ -49,11 +49,11 @@ def root():
     uid = get_uid()
 
     funds      = Funds.query.filter(Funds.uid == uid).first()
-    details    = FundsStaticMethodsService.details(uid, {})
-    log_info('details:%s' % details)
+    _data      = FundsStaticMethodsService.details(uid, {})
     paging_url = url_for('mobile.wallet.paging', **request.args)
 
-    return render_template('mobile/wallet/index.html.j2', funds=funds, details=details, paging_url=paging_url)
+    data = {'funds':funds, 'details':_data['details'], 'paging_url':paging_url}
+    return render_template('mobile/wallet/index.html.j2', **data)
 
 
 @wallet.route('/paging')
@@ -65,9 +65,9 @@ def paging():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    details = FundsStaticMethodsService.details(uid, request.args.to_dict())
+    _data = FundsStaticMethodsService.details(uid, request.args.to_dict())
 
-    return render_template('mobile/wallet/paging.html.j2', details=details)
+    return render_template('mobile/wallet/paging.html.j2', details=_data['details'])
 
 
 @wallet.route('/recharge')

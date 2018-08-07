@@ -25,13 +25,13 @@
               <span class="allOn">24时</span>
               {{_('内完成支付, 超时后将取消订单')}}
             </p>
-            <p id="userAdd"> {{_('收货信息：')}}大头 135****5229 广东 深圳市 龙华新区 民治街道 南景新村c12</p>
+            <p id="userAdd"> {{_('收货信息：')}}{{ order_address.name }} {{ order_address.mobile }} {{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address }}</p>
           </div>
           <div class="order-info_fr">
             <p class="order-info_total">
               {{_(' 应付总额：')}}
               <span class="allOn">￥</span>
-              <span class="allOn" style="font-size:24px;">1499</span>
+              <span class="allOn" style="font-size:24px;">{{ order.pay_amount }}</span>
             </p>
             <div class="order-info_detail" onclick="detail()">{{_('订单详情')}}</div>
           </div>
@@ -39,42 +39,46 @@
         <ul class="order-section_detail hide">
           <li class="order-detail_item">
             <label class="detail-label">{{_('订单号：')}}</label>
-            <div class="detail-cnt allOn">5180724570906637</div>
+            <div class="detail-cnt allOn">{{ order.order_sn }}</div>
           </li>
           <li class="order-detail_item">
             <label class="detail-label">{{_('收货信息：')}}</label>
             <div class="detail-cnt">
-              <p>大头</p>
-              <p>135****5229</p>
-              <p>广东 深圳市 龙华新区 民治街道 南景新村c12</p>
+              <p>{{ order_address.name }}</p>
+              <p>{{ order_address.mobile }}</p>
+              <p>{{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address }}</p>
             </div>
           </li>
           <li class="order-detail_item">
             <label class="detail-label">{{_('商品名称：')}}</label>
             <div class="detail-cnt">
-              <p> 米家空气净化器Pro 白色</p>
-              <p> 米家空气净化器Pro 白色</p>
+              {% set goods_data = order.goods_data|json_loads %}
+              {% for goods in goods_data %}
+                <p>{{ goods.goods_name }}</p>
+              {% endfor %}
             </div>
           </li>
           <li class="order-detail_item">
             <label class="detail-label">{{_('配送方式：')}}</label>
-            <div class="detail-cnt">申通 ￥10.0(满￥1000.0免运费)</div>
+            <div class="detail-cnt">{{ shipping_title }}</div>
           </li>
         </ul>
       </div>
-      <div class="payment-section">
-        <p class="pay-hd">{{_('余额支付')}}</p>
-        <div class="pay-bd">
-          <div class="bd-weixin">
-            <img src="/static/default/pc/img/recharge.png" alt="">
-            <span>{{_('我的余额')}}</span>
-            <span style="font-size:12px;margin-left:5px">(￥11.99)</span>
-          </div>
-          <div style="margin-top:30px;">
-            <button class="order-type_btn btn-primary" type="button">{{_('使用余额支付')}}</button>
+      {% if funds >= order.pay_amount %}
+        <div class="payment-section">
+          <p class="pay-hd">余额支付</p>
+          <div class="pay-bd">
+            <div class="bd-weixin">
+              <img src="/static/default/pc/img/recharge.png" alt="">
+              <span>{{_('我的余额')}}</span>
+              <span style="font-size:12px;margin-left:5px">(￥{{ funds }})</span>
+            </div>
+            <div style="margin-top:30px;">
+              <button class="order-type_btn btn-primary" type="button" onclick="funds_pay({{ order.order_id }})">使用余额支付</button>
+            </div>
           </div>
         </div>
-      </div>
+      {% endif %}
       <div class="payment-section">
         <p class="pay-hd">{{_('微信支付')}}</p>
         <div class="pay-bd">
@@ -101,6 +105,28 @@
 
 {% block script %}
 <script type="text/javascript">
+//余额支付
+function funds_pay(order_id) {
+  // 检查
+  if ( !order_id ) {
+    // 优化alert ??
+    alert("{{_('创建订单失败，请刷新页面重试。')}}");
+    return false;
+  }
+
+  var order_id_list = '[' + order_id + ']';
+  $.get("{{ url_for('api.pay.fundspay_req') }}", {'order_id_list':order_id_list}, function(res) {
+    if (res.ret != 0) {
+      // 优化alert ??
+      alert(res.msg);
+      return false;
+    }
+
+    window.location.href = "/pc/pay/success/"+order_id;
+    return true;
+  });
+}
+
 // 点击收起或显示订单详情
 function detail(){
   if($('.order-section_detail').hasClass('hide')){

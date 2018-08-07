@@ -13,7 +13,8 @@ from decimal import Decimal
 from flask import (
     Blueprint,
     request,
-    url_for
+    url_for,
+    redirect
 )
 from flask_babel import gettext as _
 
@@ -104,6 +105,10 @@ def weixinjspay_openid():
     jos = JsapiOpenidService(redirect_url)
     if not jos.check():
         return resjson.print_json(10, jos.msg)
+
+    redirect_url = jos.set_openid()
+    if redirect_url:
+        return redirect(redirect_url)
 
     openid = jos.openid
 

@@ -112,7 +112,7 @@ class JsapiOpenidService(object):
             # 创建获取code的url
             self._code_url()
 
-            return redirect(self.code_url)
+            return self.code_url
 
         # 根据微信code获取openid
         if self.code and (not self.openid or is_expire_opentime):
@@ -121,10 +121,9 @@ class JsapiOpenidService(object):
             session['jsapi_weixin_openid']   = self.openid
             session['jsapi_weixin_opentime'] = self.current_time
 
-            redirect_url = request.args.get('redirect_url')
-            return redirect(redirect_url)
+            return request.args.get('redirect_url')
 
-        return True
+        return ''
 
 
 class JsapiPayParamsService():

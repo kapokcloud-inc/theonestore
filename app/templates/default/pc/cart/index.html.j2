@@ -190,7 +190,7 @@
               </div>
             </li> -->
             {% for cart in carts %}
-              <li class="cart-goods_item">
+              <li id="li{{cart.cart.cart_id}}" class="cart-goods_item">
                 <div class="col cart-check">
                   {% set checked = 'icon-checkbox_selected' if cart.cart.is_checked == 1 else '' %}
                   {% set checked = checked if cart.is_valid == 1 else 'icon-notsel' %}
@@ -219,7 +219,7 @@
                   <span id="items_amount{{ cart.cart.cart_id }}" class="all-text" style="color:#f33155 !important">￥{{ cart.items_amount }}</span>
                 </div>
                 <div class="col cart-goods_action">
-                  <a class="del" href="javascript:;">
+                  <a class="del" href="javascript:void(0);" onclick="remove({{cart.cart.cart_id}})">
                     <i class="icon-cancel"></i>
                   </a>
                 </div>
@@ -244,7 +244,7 @@
               {{_('合计：')}}￥
               <em id="items_amount">{{ items_amount }}</em>
             </span>
-            <a class="cart-checkout_btn btn-primary" href="{{ url_for('pc.cart.checkout') }}">{{_('去结算')}}</a>
+            <a class="cart-checkout_btn btn-primary" href="javascript:void(0);" onclick="checkout()">{{_('去结算')}}</a>
           </div>
         </div>
       </div>
@@ -282,14 +282,15 @@ function checked(carts) {
       return false;
     }
 
-    $("#items_amount").text("￥"+json.data.items_amount);
-    $("#checkout").text("{{_('结算')}}("+json.data.items_quantity+")");
-    return true;
+    $("#cart_total").text(json.data.cart_total);
+    $("#items_quantity").text(json.data.items_quantity);
+    $("#items_amount").text(json.data.items_amount);
   });
 }
 
 
 function update_cart(cart_id, quantity) {
+  var ret = true;
   $.get("{{ url_for('api.cart.update') }}", {'cart_id':cart_id, 'quantity':quantity}, function(json) {
     if (json.ret == 0) {
       $("#cart_total").text(json.data.cart_total);
@@ -297,12 +298,15 @@ function update_cart(cart_id, quantity) {
       $("#items_amount").text(json.data.items_amount);
       $("#items_amount"+cart_id).text("￥"+json.data._items_amount);
 
-      return true;
+      ret = false;
     } else {
+      // 优化alert ??
       alert(json.msg);
-      return false;
+      ret = true;
     }
   });
+
+  return ret;
 }
 
 
@@ -324,6 +328,25 @@ function update_cart_quantity(cart_id, is_add) {
 }
 
 
+function remove(cart_id) {
+  // 优化confirm
+  var r = confirm("{{_('确认删除？')}}");
+  if (r==true) {
+    $.get("{{ url_for('api.cart.remove') }}", {'carts_id':cart_id}, function(json) {
+      if (json.ret == 0) {
+        $("#cart_total").text(json.data.cart_total);
+        $("#items_quantity").text(json.data.items_quantity);
+        $("#items_amount").text(json.data.items_amount);
+        $("#li"+cart_id).remove();
+      } else {
+        // 优化alert ??
+        alert(json.msg);
+      }
+    });
+  }
+}
+
+
 function checkout() {
   var carts_id = [];
 
@@ -335,6 +358,7 @@ function checkout() {
   });
 
   if (carts_id.length == 0) {
+    // 优化alert ??
     alert("{{_('请选择结算商品')}}");
     return false;
   }
@@ -359,8 +383,8 @@ $(function(){
     var quantity = parseInt($(this).val());
     var cart_id = parseInt($(this).attr('data-cart-id'));
 
-    if (cart_id <= 0) {
-      $(this).val($this.attr('data-value'));
+    if (isNaN(quantity) || quantity <= 0) {
+      $(this).val($(this).attr('data-value'));
       return false;
     }
 
@@ -387,14 +411,20 @@ $(function(){
 
   $(".is_valid").click(function(){
     var is_all = 1;
+
+    if ($(this).hasClass('icon-checkbox_selected')) {
+      $(this).removeClass('icon-checkbox_selected');
+    } else {
+      $(this).addClass('icon-checkbox_selected');
+    }
   
     $(".is_valid").each(function(){
-      if (!$(this).is(':checked')) {
+      if (!$(this).hasClass('icon-checkbox_selected')) {
         is_all = 0;
       }
     });
 
-    (is_all == 1) ? $("#all").prop('checked', true) : $("#all").prop('checked', false);
+    (is_all == 1) ? $("#all").addClass('icon-checkbox_selected') : $("#all").removeClass('icon-checkbox_selected');
 
     var carts = get_carts();
     checked(carts);

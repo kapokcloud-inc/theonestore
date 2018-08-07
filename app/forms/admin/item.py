@@ -82,12 +82,15 @@ class ItemForm(Form):
     goods_price    = DecimalField(
                         _(u'商品金额'),
                         validators=[
+                            Required(message=_(u'请填写商品金额')),
                             NumberRange(min=0, message=_(u'金额不能小于0'))
                         ]
                     )
 
     market_price   = DecimalField(
                         _(u'市场价格'),
+                        default=0.00,
+                        description=_(u'设置为0不显示'),
                         validators=[
                             NumberRange(min=0, message=_(u'金额不能小于0'))
                         ]
@@ -98,6 +101,7 @@ class ItemForm(Form):
     stock_quantity = IntegerField(
                         _(u'库存数量'),
                         validators=[
+                            Required(message=_(u'请填写库存数量')),
                             NumberRange(min=0, message=_(u'商品库存不能小于0'))
                         ]
                     )
@@ -140,7 +144,7 @@ class CategoryForm(Form):
                     _(u'分类图片'),
                     description=_(u'图片文件'),
                     validators=[
-                        FileRequired(_(u'文件未上传')), 
+                        FileRequired(_(u'文件未上传')),
                         FileAllowed(UploadSet('images', IMAGES), message=_(u'只允许上传图片'))
                     ]
                 )

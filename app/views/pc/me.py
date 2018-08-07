@@ -149,9 +149,9 @@ def collect():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    likes      = LikeStaticMethodsService.likes({'uid':uid})
+    data      = LikeStaticMethodsService.likes({'uid':uid})
 
-    return render_template('pc/me/collect.html.j2', likes=likes)
+    return render_template('pc/me/collect.html.j2', likes=data['likes'])
 
 
 @me.route('/coupon')

@@ -102,8 +102,11 @@ def address_save():
         if not user_address:
             return resjson.print_json(12, _(u'收货地址不存在'))
     else:
-        data         = {'uid':uid, 'add_time':current_time}
+        data         = {'uid':uid, 'is_default':1, 'add_time':current_time}
         user_address = model_create(UserAddress, data)
+
+    if is_default == -1:
+        is_default = user_address.is_default
 
     data = {'name':wtf_form.name.data, 'mobile':wtf_form.mobile.data, 'province':wtf_form.province.data,
             'city':wtf_form.city.data, 'district':wtf_form.district.data, 'address':wtf_form.address.data,

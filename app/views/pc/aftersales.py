@@ -53,14 +53,14 @@ def root():
 
     params        = request.args.to_dict()
     params['uid'] = uid
-    aftersales    = AfterSalesStaticMethodsService.aftersales(params)
+    _data         = AfterSalesStaticMethodsService.aftersales(params)
 
     aftersales_status_text = {}
-    for aftersale in aftersales:
+    for aftersale in _data['aftersales']:
         status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersale)
         aftersales_status_text[aftersale.aftersales_id] = status_text
 
-    data = {'aftersales':aftersales, 'aftersales_status_text':aftersales_status_text}
+    data = {'aftersales':_data['aftersales'], 'aftersales_status_text':aftersales_status_text}
     return render_template('pc/aftersales/index.html.j2', **data)
 
 

@@ -1,5 +1,5 @@
 {% extends '/default/pc/layout/base.html.j2' %}
-
+{% import '/default/pc/libs/libs.html.j2' as libs %}
 
 {% block head %}
 <title>{{_('我的订单 - 一店')}}</title>
@@ -87,7 +87,7 @@
                           </div>
                           <div class="item-bd_fr">
                             {% if 1 in codes[order.order_id] %}
-                              <a class="btn-link" href="{{ url_for('pc.cart.pay') }}">
+                              <a class="btn-link" href="{{ url_for('pc.cart.pay',order_id=order.order_id) }}">
                                 <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
                               </a>
                             {% endif %}
@@ -106,22 +106,7 @@
                   {% endfor %}
                 </ul>
               </div>
-              <div class="page-box">
-                <span class="page-num page-first">
-                  <i class="icon-xiaoyu"></i>
-                </span>
-                <span class="page-num btn-current">1</span>
-                <a href="" class="page-num">2</a>
-                <a href="" class="page-num">3</a>
-                <a href="" class="page-num">4</a>
-                <a href="" class="page-num">5</a>
-                <a href="" class="page-num">6</a>
-                <span class="page-more">...</span>
-                <a href="" class="page-num">12</a>
-                <a href="" class="page-num page-last">
-                  <i class="icon-dayu"></i>
-                </a>
-              </div>
+              {{ libs.pagination_html(pagination) }}
             </div>
             <!-- 有订单 end -->
             {% else %}
