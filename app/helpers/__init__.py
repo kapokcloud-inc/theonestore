@@ -327,3 +327,18 @@ def get_file_uploadtype(field):
         if isinstance(validator, FileAllowed):
             uploadtype = validator.upload_set.name
     return uploadtype
+
+def request_args_to_query_string(args, p, ps):
+    """分页url转换"""
+
+    _dict       = args.to_dict()
+    _dict['p']  = p
+    _dict['ps'] = ps
+
+    _list = []
+    for key, value in _dict.items():
+        _list.append('%s=%s' % (key, value))
+
+    query_string = '&'.join(_list)
+
+    return query_string

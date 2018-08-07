@@ -14,6 +14,7 @@ from decimal import Decimal
 
 from flask import abort
 from flask_babel import gettext as _
+from flask_sqlalchemy import Pagination
 from sqlalchemy import or_
 
 from app.database import db
@@ -741,7 +742,7 @@ class OrderStaticMethodsService(object):
         return order_sn
 
     @staticmethod
-    def orders(uid, params):
+    def orders(uid, params, is_pagination=False):
         """获取订单列表"""
 
         p            = toint(params.get('p', '1'))
@@ -771,6 +772,10 @@ class OrderStaticMethodsService(object):
 
         orders = q.order_by(Order.order_id.desc()).offset((p-1)*ps).limit(ps).all()
 
+        pagination = None
+        if is_pagination:
+            pagination = Pagination(None, p, ps, q.count(), None)
+
         texts = {}
         codes = {}
         for order in orders:
@@ -778,7 +783,7 @@ class OrderStaticMethodsService(object):
             texts[order.order_id] = text
             codes[order.order_id] = code
             
-        return {'orders':orders, 'texts':texts, 'codes':codes}
+        return {'orders':orders, 'pagination':pagination, 'texts':texts, 'codes':codes}
 
 
     @staticmethod

@@ -58,7 +58,7 @@ def index():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    data               = OrderStaticMethodsService.orders(uid, request.args.to_dict())
+    data               = OrderStaticMethodsService.orders(uid, request.args.to_dict(), True)
     log_info(request.args.to_dict())
     # pc端订单列表支持，支付、详情、售后3个指令，其余指令排除，即排除[2,3,4,5,6]
     if data.get("orders"):
