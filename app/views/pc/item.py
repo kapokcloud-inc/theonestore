@@ -25,6 +25,7 @@ from app.helpers import (
 )
 from app.helpers.user import get_uid
 
+from app.services.api.comment import CommentStaticMethodsService
 from app.services.api.item import ItemStaticMethodsService
 
 from app.models.item import (
@@ -76,3 +77,23 @@ def hot():
     data               = ItemStaticMethodsService.items(params)
 
     return render_template('pc/item/hot.html.j2', **data)
+
+
+@item.route('/comments-paging')
+def comments_paging():
+    """加载评论分页"""
+
+    query_string = request.args.get('query_string')
+    query_list = query_string.split('&')
+
+    params = {}
+    for _str in query_list:
+        _list = _str.split('=')
+        params[_list[0]] = _list[1]
+
+    _data      = CommentStaticMethodsService.comments(params, True)
+    comments   = _data['comments']
+    pagination = _data['pagination']
+
+    data = {'comments':comments, 'pagination':pagination, 'params':params}
+    return render_template('pc/item/comments_paging.html.j2', **data)

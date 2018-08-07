@@ -17,6 +17,7 @@ import uuid
 import urllib
 import types
 import random
+import json
 try:
     import urlparse
 except Exception as e:
@@ -328,17 +329,11 @@ def get_file_uploadtype(field):
             uploadtype = validator.upload_set.name
     return uploadtype
 
-def request_args_to_query_string(args, p, ps):
+
+def request_args_to_query_string(params, p, ps):
     """分页url转换"""
 
-    _dict       = args.to_dict()
-    _dict['p']  = p
-    _dict['ps'] = ps
+    params['p']  = p
+    params['ps'] = ps
 
-    _list = []
-    for key, value in _dict.items():
-        _list.append('%s=%s' % (key, value))
-
-    query_string = '&'.join(_list)
-
-    return query_string
+    return urllib.urlencode(params)
