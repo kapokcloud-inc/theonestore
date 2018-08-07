@@ -21,12 +21,22 @@
         <div class="order-wrap">
           <div class="allPad">
             <div class="one-cell">
-              <div class="one-cell_hd avatar160">
+              <div class="one-cell_hd avatar160" style="position: relative;">
+                <input id="uploaderInput" class="one-uploader_input" type="file" accept="image/*" multiple="">
                 <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/fdsc3/p01XG074QZsd/srSPb8CLq7UEOL_320.jpg" alt="">
               </div>
               <div class="one-cell_bd">
-                <div class="user-name">老犁</div>
-                <a class="changeInfo" href="{{ url_for('pc.me.profile') }}">{{_('修改个人信息 >')}}</a>
+                <div class="user-name">
+                  <span id="username">老犁</span>
+                  <input class="changeIpu hide" type="text" data-value="" value="">
+                </div>
+                <div class="changeInfo">
+                  <span id="change">{{_('修改昵称')}}</span>
+                  <div class="hide" id="saveCal">
+                    <span id="save">{{_('保存')}}</span>
+                    <span class="cancel" id="cancel">{{_('取消')}}</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="portal-sub">
@@ -106,5 +116,35 @@
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript"></script>
+<script type="text/javascript">
+//点击修改昵称进行修改
+$('#change').click(function(){
+  if(!$('.changeIpu').hasClass('show')){
+    $('#username').addClass('hide');
+    $('.changeIpu').addClass('show').removeClass('hide');
+    $('#change').addClass('hide');
+    $('#saveCal').addClass('show').removeClass('hide');
+  }
+});
+
+//点击保存
+$('#save').click(function(){
+  if(!$('.changeIpu').hasClass('hide')){
+    $('.changeIpu').addClass('hide').removeClass('show');
+    $('#username').removeClass('hide');
+    $('#saveCal').addClass('hide').removeClass('show');
+    $('#change').removeClass('hide');
+  }
+});
+
+//点击取消
+$('#cancel').click(function(){
+  if(!$('.changeIpu').hasClass('hide')){
+    $('.changeIpu').addClass('hide').removeClass('show');
+    $('#username').removeClass('hide');
+    $('#saveCal').addClass('hide').removeClass('show');
+    $('#change').removeClass('hide');
+  }
+});
+</script>
 {% endblock%}

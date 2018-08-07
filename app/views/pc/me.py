@@ -37,7 +37,6 @@ from app.services.message import MessageStaticMethodsService
 from app.services.api.like import LikeStaticMethodsService
 
 from app.forms.api.me import (
-    ProfileForm,
     AddressForm
 )
 
@@ -127,24 +126,9 @@ def index():
     return render_template('pc/me/index.html.j2', **data)
 
 
-@me.route('/profile')
-def profile():
-    """pc站 - 修改个人信息"""
-
-    if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
-    uid = get_uid()
-    
-    user     = User.query.get(uid)
-    wtf_form = ProfileForm()
-
-    return render_template('pc/me/profile.html.j2', user=user, wtf_form=wtf_form)
-
-
 @me.route('/addresses')
 def addresses():
-    """pc站 - 收货地址管理"""
+    """pc站 - 收货地址"""
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']
@@ -154,26 +138,6 @@ def addresses():
     addresses = UserAddress.query.filter(UserAddress.uid == uid).order_by(UserAddress.is_default.desc()).all()
 
     return render_template('pc/me/addresses.html.j2', addresses=addresses)
-
-
-@me.route('/address/<int:ua_id>')
-def address(ua_id):
-    """pc站 - 添加收货地址"""
-
-    if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
-    uid = get_uid()
-
-    address = {}
-    if ua_id > 0:
-        address = UserAddress.query.filter(UserAddress.ua_id == ua_id).filter(UserAddress.uid == uid).first()
-        if not address:
-            return redirect(request.headers['Referer'])
-
-    wtf_form = AddressForm()
-
-    return render_template('pc/me/address.html.j2', ua_id=ua_id, address=address, wtf_form=wtf_form)
 
 
 @me.route('/collect')

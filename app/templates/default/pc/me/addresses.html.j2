@@ -1,54 +1,196 @@
-{% extends '/default/mobile/layout/base.html.j2' %} 
+{% extends '/default/pc/layout/base.html.j2' %}
+
 
 {% block head %}
-<title>{{_('收货地址管理 - 一店')}}</title>
-<link rel="stylesheet" href="/static/default/mobile/css/user.css"> 
-{% endblock %} 
+<title>{{_('收货地址 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
+<link rel="stylesheet" href="/static/default/pc/css/city-picker.css">
+{% endblock %}
 
 {% block body %}
-<div class="user_wrap">
-  {% if addresses %}
-    <div class="weui-cells weui-cells_form">
-      {% for address in addresses %}
-        <div class="weui-cell">
-          <div class="weui-cell__bd">
-            <span class="all_title">{{ address.name }}</span>
-            <span class="phone_num mar-left">{{ address.mobile }}</span>
-            <div class="address">
-              {% if address.is_default == 1 %}
-                <span class="add_tag">{{_('[默认]')}}</span>
-              {% endif %}
-              <span>{{ address.province }} {{ address.city }} {{ address.district }} {{ address.address }}</span>
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('收货地址')}}</span>
+      </p>
+    </div>
+    <div class="user-main">
+      <div class="head-inner clearfix">
+        {%include 'default/pc/layout/nav_left.html.j2'%}
+        <div class="order-wrap">
+          <div class="allPad">
+            <!-- 收货地址部分 -->
+            <div class="address-section">
+              <ul class="address-section_body clearfix">
+                <div class="address-body_item" onclick="add()">
+                  <div class="add-new_address">
+                    <img src="/static/default/pc/img/add.png" alt="">
+                    <p>{{_('添加新地址')}}</p>
+                  </div>
+                </div>
+                <li class="address-body_item">
+                  <div class="address-item_cnt">
+                    <p class="item-cnt_name">大头</p>
+                    <p class="item-cnt_mobile">13510515229</p>
+                    <p class="item-cnt_address">
+                      广东 深圳市 南山区 西丽街道
+                      <br> 留仙大道平山一路大园工业区
+                    </p>
+                  </div>
+                  <div class="item-cnt_edit">
+                    <button class="edit-btn" type="button" onclick="dele()">删除</button>
+                    <button class="edit-btn" type="button" onclick="edit()">修改</button>
+                  </div>
+                </li>
+                <li class="address-body_item">
+                  <div class="address-item_cnt">
+                    <p class="item-cnt_name">da头</p>
+                    <p class="item-cnt_mobile">13510515229</p>
+                    <p class="item-cnt_address">
+                      广东 深圳市 龙岗区 坂田街道
+                      <br> 长坑路西五巷1号
+                    </p>
+                  </div>
+                  <div class="item-cnt_edit">
+                    <button class="edit-btn" type="button" onclick="dele()">删除</button>
+                    <button class="edit-btn" type="button" onclick="edit()">修改</button>
+                  </div>
+                </li>
+                <li class="address-body_item">
+                  <div class="address-item_cnt">
+                    <p class="item-cnt_name">xiao头</p>
+                    <p class="item-cnt_mobile">13510515229</p>
+                    <p class="item-cnt_address">
+                      广东 深圳市 龙华新区 民治大道
+                      <br> 南京新村c12
+                    </p>
+                  </div>
+                  <div class="item-cnt_edit">
+                    <button class="edit-btn" type="button" onclick="dele()">删除</button>
+                    <button class="edit-btn" type="button" onclick="edit()">修改</button>
+                  </div>
+                </li>
+                <li class="address-body_item">
+                  <div class="address-item_cnt">
+                    <p class="item-cnt_name">da头</p>
+                    <p class="item-cnt_mobile">13510515229</p>
+                    <p class="item-cnt_address">
+                      广东 深圳市 龙岗区 坂田街道
+                      <br> 长坑路西五巷1号
+                    </p>
+                  </div>
+                  <div class="item-cnt_edit">
+                    <button class="edit-btn" type="button" onclick="dele()">删除</button>
+                    <button class="edit-btn" type="button" onclick="edit()">修改</button>
+                  </div>
+                </li>
+                <li class="address-body_item">
+                  <div class="address-item_cnt">
+                    <p class="item-cnt_name">xiao头</p>
+                    <p class="item-cnt_mobile">13510515229</p>
+                    <p class="item-cnt_address">
+                      广东 深圳市 龙华新区 民治大道
+                      <br> 南京新村c12
+                    </p>
+                  </div>
+                  <div class="item-cnt_edit">
+                    <button class="edit-btn" type="button" onclick="dele()">删除</button>
+                    <button class="edit-btn" type="button" onclick="edit()">修改</button>
+                  </div>
+                </li>
+              </ul>
+              <div class="address-show-more hide" id="more">
+                <span class="show-more_text" id="moreText">{{_('显示更多收货地址')}}</span>
+              </div>
             </div>
-          </div>
-          <div class="weui-cell__ft mar-left width46">
-            <a class="edit" href="{{ url_for('mobile.me.address', ua_id=address.ua_id) }}">{{_('编辑')}}</a>
+            <!-- 收货地址部分 end -->
           </div>
         </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <div class="not-product">
-      <div class="not-product_img">
-        <img class="notproduct" src="/static/default/mobile/img/notaddress.png" alt="">
       </div>
-      <div class="not-product_text">{{_('您暂无收货地址，请添加')}}</div>
+      <!-- 添加收货地址弹窗 -->
+      <div class="hide-mask hide">
+        <div class="editAdd-section">
+          <div class="editAdd-section_hd">
+            <span>{{_('添加收货地址')}}</span>
+            <a class="add-del" href="javascript:;" onclick="cancel()">
+              <i class="icon-cancel"></i>
+            </a>
+          </div>
+          <div class="allPad">
+            <div class="bd-flex">
+              <label class="bd-label">{{_('姓名：')}}</label>
+              <input class="bd-input" type="text" placeholder="{{_('请填写收件人姓名')}}">
+            </div>
+            <div class="bd-flex">
+              <label class="bd-label">{{_('手机号码：')}}</label>
+              <input class="bd-input" type="text" placeholder="{{_('请填写收件人手机号码')}}">
+            </div>
+            <div class="bd-flex">
+              <label class="bd-label">{{_('地区：')}}</label>
+              <input readonly class="bd-input city-picker-input" type="text" data-toggle="city-picker" placeholder="{{_('请选择省/市/区')}}">
+            </div>
+            <div class="bd-flex">
+              <label class="bd-label">{{_('详细地址：')}}</label>
+              <input class="bd-input" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}">
+            </div>
+          </div>
+          <div class="editAdd-section_ft">
+            <button class="save-btn btn-primary mar-right" type="button" onclick="save()">{{_('保存')}}</button>
+            <button class="cancel-btn" type="button" onclick="cancel()">{{_('取消')}}</button>
+          </div>
+        </div>
+      </div>
+      <!-- 添加收货地址弹窗 end -->
     </div>
-  {% endif %}
-  <div style="height:75px"></div>
-  <div class="footer" style="display:block;height:65px">
-    <a href="{{ url_for('mobile.me.address', ua_id=0) }}" class="weui-cell weui-cell_access" style="padding:10px">
-      <button type="button" class="weui-btn weui-btn_red">{{_('添加收货地址')}}</button>
-    </a>
   </div>
 </div>
-{% endblock %} 
+{% endblock %}
 
 {% block script %}
+<script type="text/javascript" src="/static/default/pc/js/city-picker.data.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/default/pc/js/city-picker.min.js" charset="utf-8"></script>
+
 <script type="text/javascript">
-function edit(){
-  var url = "/mobile/user/add";
-  window.location.href = url;
+var $mask = $('.hide-mask');
+
+// 选中地址
+$('.address-section_body > li').click(function () {
+  $(this).addClass('selected').siblings().removeClass('selected');
+});
+
+//点击edit()打开添加新地址弹窗
+function edit() {
+  $mask.removeClass('hide');
+  if (!$mask.hasClass('show')) {
+    $mask.addClass('show');
+  }
+}
+
+//点击add()打开添加新地址弹窗
+function add() {
+  $mask.removeClass('hide');
+  if (!$mask.hasClass('show')) {
+    $mask.addClass('show');
+  }
+}
+
+//点击cancel()关闭添加新地址弹窗
+function cancel() {
+  $mask.removeClass('show');
+  if (!$mask.hasClass('hide')) {
+    $mask.addClass('hide');
+  } 
+}
+
+//点击save()关闭添加新地址弹窗，并保存新添加的地址
+function save() {
+  $mask.removeClass('show');
+  if (!$mask.hasClass('hide')) {
+    $mask.addClass('hide');
+  }
 }
 </script>
-{% endblock %}
+{% endblock%}

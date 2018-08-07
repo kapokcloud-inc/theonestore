@@ -1,0 +1,133 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+
+{% block head %}
+<title>{{_('钱包充值 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/mobile/css/pay.css">
+{% endblock %}
+
+{% block body %}
+<div class="recharge-wrap">
+  <div class="weui-cell" style="padding:33px 15px">
+    <div class="weui-cell__hd">
+      <label class="weui-label">{{_('充值金额：')}}</label>
+    </div>
+    <div class="weui-cell__bd recharge_money">
+      {% set recharge_amount = recharge_amount if recharge_amount > 0 else '' %}
+      <input id="recharge_amount" name="recharge_amount" class="weui-input " type="number" min="1" max="10000" step="1" value="{{ recharge_amount }}" placeholder="{{_('请输入充值金额')}}">
+    </div>
+  </div>
+</div>
+<div class="weui-cells weui-cells_radio">
+  <div class="weui-panel__hd">
+    <strong>{{_('支付方式')}}</strong>
+  </div>
+  <label class="weui-cell weui-check__label">
+    <div class="weui-cell__hd">
+      <img class="weixin" src="/static/default/mobile/img/weixin.png" alt="">
+    </div>
+    <div class="weui-cell__bd blackGap">{{_('微信支付')}}</div>
+    <div class="weui-cell__ft mar-left">
+      <input class="weui-check" type="radio" name="pay_type" value="weixin" checked="checked">
+      <span class="weui-icon-checked"></span>
+    </div>
+  </label>
+</div>
+<div class="reg_btn">
+  <input id="order_id" type="hidden" value="{{ order_id }}" />
+  <button id="weui-btn" type="button" class="weui-btn weui-btn_red" onclick="submit()">{{_('确认支付')}}</button>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+var is_weixin = {{ is_weixin }};
+var redirect_url = '{{ redirect_url }}';
+
+var csrftoken = $('#csrf_token').val();
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
+//微信支付
+function weixin_pay(order_id) {
+  var openid = '';
+
+  //检查
+  if ( !order_id ) {
+    $.toast("{{_('创建订单失败，请刷新页面重试。')}}", "text");
+    return false;
+  }
+
+  //获取openid
+  $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'redirect_url':redirect_url}, function(res) {
+    if (res.ret != 0) {
+      $.toast(res.msg, "text");
+      return false;
+    }
+
+    openid = res.data.openid;
+  });
+
+  //检查
+  if ( !openid ) {
+    $.toast("{{_('获取openid失败，请刷新页面重试。')}}", "text");
+    return false;
+  }
+
+  var order_id_list = '[' + order_id + ']';
+  $.get("{{ url_for('api.pay.weixinjspay_req') }}", {'order_id_list':order_id_list}, function(res) {
+    if (res.ret != 0) {
+      $.toast(res.msg, "text");
+      return false;
+    }
+
+    //调起支付
+    WeixinJSBridge.invoke(
+        'getBrandWCPayRequest', res.data.info, function(res){
+            //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+            if (res.err_msg == "get_brand_wcpay_request:ok" ) {
+                window.location.href = "/mobile/pay/success/"+order_id;
+                return true;
+            }
+        }
+    );
+  });
+
+  return false;
+}
+
+//提交订单
+function submit() {
+  var order_id = parseInt($("#order_id").val());
+
+  if (order_id == 0) {
+    var recharge_amount = parseFloat($("#recharge_amount").val());
+
+    if (recharge_amount <= 0) {
+      $.toast("{{_('请填写有效的充值金额')}}", "text");
+      return false;
+    }
+
+    var params = {'recharge_amount':recharge_amount}
+    $.post("{{ url_for('api.order.recharge') }}", params, function(json) {
+      if (json.ret == 0) {
+        order_id = json.data.order_id;
+        $("#order_id").val(order_id);
+      } else {
+        $.toast(json.msg, "text");
+        return false;
+      }
+    });
+  }
+
+  weixin_pay(order_id);
+}
+
+//立即调起微信支付
+if (is_weixin == 1) {
+  var order_id = parseInt($("#order_id").val());
+
+  weixin_pay(order_id);
+}
+</script>
+{% endblock %}

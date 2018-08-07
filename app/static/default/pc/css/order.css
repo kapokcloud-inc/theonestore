@@ -521,3 +521,87 @@
   color: #f33155;
   font-size: 16px;
 }
+.cash-overall {
+  padding: 20px 0;
+  color: #333;
+  font-size: 14px;
+}
+.balance {
+  float: left;
+  line-height: 1;
+}
+.balance-num {
+  font-size: 32px;
+  color: #f33155;
+  font-weight: 400;
+}
+.recharge {
+  float: right;
+  line-height: 32px;
+}
+.recharge:hover {
+  color: #f33155 !important;
+}
+.recharge img {
+  height: 20px;
+  vertical-align: middle;
+  margin-top: -3px;
+  margin-right: 5px;
+}
+.fundsChu {
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  color: #EA8D42;
+  margin-bottom: 5px;
+}
+.fundsRu {
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  color: #f33155;
+  margin-bottom: 5px;
+}
+.transaction-add {
+  height: 25px;
+  line-height: 25px;
+  font-size: 14px;
+  color: #666;
+}
+.transaction-btn {
+  position: relative;
+  height: 25px;
+  line-height: 25px;
+  padding-right: 20px;
+  font-size: 14px;
+  color: #666;
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
+}
+.transaction-btn::before {
+  content: "";
+  position: absolute;
+  border-color: #666 transparent transparent transparent;
+  border-style: solid;
+  border-width: 6px 6px 6px 6px;
+  transform: translate(0%, -30%);
+  top: 50%;
+  right: 4px;
+}
+.transaction-btn::after {
+  content: "";
+  position: absolute;
+  border-color: #fff transparent transparent transparent;
+  border-style: solid;
+  border-width: 6px 6px 6px 6px;
+  transform: translate(0%, -50%);
+  top: 50%;
+  right: 4px;
+}
+.transaction-detail {
+  padding: 25px;
+  color: #333;
+  font-size: 14px;
+  border-top: 1px solid #eee;
+}

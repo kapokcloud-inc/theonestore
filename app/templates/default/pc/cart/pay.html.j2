@@ -63,24 +63,24 @@
         </ul>
       </div>
       <div class="payment-section">
-        <p class="pay-hd">余额支付</p>
+        <p class="pay-hd">{{_('余额支付')}}</p>
         <div class="pay-bd">
           <div class="bd-weixin">
-            <img src="/static/default/pc/img/yue.png" alt="">
-            <span>我的余额</span>
-            <span>￥11.99</span>
+            <img src="/static/default/pc/img/recharge.png" alt="">
+            <span>{{_('我的余额')}}</span>
+            <span style="font-size:12px;margin-left:5px">(￥11.99)</span>
           </div>
           <div style="margin-top:30px;">
-            <button class="order-type_btn btn-primary" type="button">使用余额支付</button>
+            <button class="order-type_btn btn-primary" type="button">{{_('使用余额支付')}}</button>
           </div>
         </div>
       </div>
       <div class="payment-section">
-        <p class="pay-hd">微信支付</p>
+        <p class="pay-hd">{{_('微信支付')}}</p>
         <div class="pay-bd">
           <div class="bd-weixin">
             <img src="/static/default/pc/img/weixin.png" alt="">
-          <span>微信支付</span>
+          <span>{{_('微信支付')}}</span>
           </div>
           <div class="bd-QRcode">
             <img src="http://i.huodong.mi.com/qrcode/wxget?code=weixin%3A%2F%2Fwxpay%2Fbizpayurl%3Fpr%3DAnUWbUU&key=93cca3325e17f353ed46462f77c19aaa" alt="">
@@ -88,9 +88,9 @@
 
           <!-- 微信扫码成功之后跳转到支付成功页面 /pc/pay/success + order_id -->
           <p>
-            请用
-            <span class="allOn">微信</span>
-            扫一扫二维码完成支付
+            {{_('请用')}}
+            <span class="allOn">{{_('微信')}}</span>
+            {{_('扫一扫二维码完成支付')}}
           </p>
         </div>
       </div>
