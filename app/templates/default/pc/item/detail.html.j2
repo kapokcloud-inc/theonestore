@@ -1,4 +1,5 @@
-{% extends '/default/pc/layout/base.html.j2' %} 
+{% extends '/default/pc/layout/base.html.j2' %}
+{% import '/default/pc/libs/libs.html.j2' as libs %}
 
 {% block head %}
 <title>{{_('商品详情页 - 一店')}}</title>
@@ -118,11 +119,11 @@
                     {% else %}
                       <!-- 加入购物车 -->
                       <div class="one-cell_bd" style="margin-right:15px">
-                        <button type="button" class="cartTo">{{_('加入购物车')}}</button>
+                        <button type="button" class="cartTo" onclick="cartTo()">{{_('加入购物车')}}</button>
                       </div>
                       <!-- 立即购买 -->
                       <div class="one-cell_bd">
-                        <a href="">
+                        <a href="{{ url_for('pc.cart.checkout', buy_now=1, goods_id=item.goods_id) }}">
                           <button type="button" class="buyTo">{{_('立即购买')}}</button>
                         </a>
                       </div>
@@ -184,86 +185,64 @@
             </div>
           </div>
         
-          <!-- 商品有评论时显示 -->
           {% if item.comment_count > 0 %}
-          <div class="goods-detail_comment">
-            <div class="head-inner">
-              <div class="goods-comment_groom bg-white">
-                <div class="percent-block">
-                  <p class="percent">{{ item.comment_good_rate }}%</p>
-                  <p class="percent-type">{{_('满意度')}}</p>
+            <div class="goods-detail_comment">
+              <div class="head-inner">
+                <div class="goods-comment_groom bg-white">
+                  <div class="percent-block">
+                    <p class="percent">{{ item.comment_good_rate }}%</p>
+                    <p class="percent-type">{{_('满意度')}}</p>
+                  </div>
+                </div>
+                <div class="rate-wrap">
+                  <a href="javascript:void(0);" class="rate-type rateON" onclick="change_comment_tabs(this, 1)">{{_('全部评论 ')}}{{ item.comment_count }}</a>
+                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 2)">{{_('好评 ')}}</a>
+                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 3)">{{_('中评 ')}}</a>
+                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 4)">{{_('差评 ')}}</a>
+                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 5)">{{_('有图 ')}}</a>
+                </div>
+                <div id="paging">
+                  <ul class="goods-comment_cnt bg-white">
+                    {% for commentItem in comments %}
+                      <li class="comment-cnt_item">
+                        <div class="cnt-item_hd">
+                          {% set avatar = commentItem.avatar if commentItem.avatar else "" %}
+                          <img class="ava" src="{{ avatar }}" alt="">
+                        </div>
+                        <div class="cnt-item_bd">
+                          <div class="review-title">
+                            {{ commentItem.nickname|default(_('匿名')) }}
+                            <span class="rate-text">{{_('好评')}}</span>
+                          </div>
+                          <div class="review-add mar-top">{{ commentItem.add_time|timestamp2str }}</div>
+                          <div class="review_cnt">{{ commentItem.content }}</div>
+                          {% if commentItem.img_data %}
+                          <ul class="comment-img_wrap">
+                            {% set imgs = commentItem.img_data|json_loads %}
+                            {% for img in imgs %}
+                              <li class="commentImg">
+                                <img src="{{ img }}" alt="">
+                              </li>
+                            {% endfor %}   
+                          </ul>
+                          {% endif %}
+                        </div>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                  {{ libs.pagination_html_js(pagination, {'ttype':1, 'tid':item.goods_id}) }}
                 </div>
               </div>
-              <div class="rate-wrap">
-                <a href="" class="rate-type rateON">{{_('全部评论 ')}}{{ item.comment_count }}</a>
-                <a href="" class="rate-type">{{_('好评 ')}}</a>
-                <a href="" class="rate-type">{{_('中评 ')}}</a>
-                <a href="" class="rate-type">{{_('差评 ')}}</a>
-                <a href="" class="rate-type">{{_('有图 ')}}</a>
-              </div>
-              <!-- 评论内容 -->
-              <ul class="goods-comment_cnt bg-white">
-                  {% for commentItem in comments %}
-                      <li class="comment-cnt_item">
-                          <div class="cnt-item_hd">
-                               {% set avatar = commentItem.avatar if commentItem.avatar else "" %}
-                              <img class="ava" src="{{ avatar }}" alt="">
-                          </div>
-                          <div class="cnt-item_bd">
-                              <div class="review-title">
-                                    {{ commentItem.nickname|default('匿名') }}
-                                    <span class="rate-text">好评</span>
-                              </div>
-                              <div class="review-add mar-top">{{ commentItem.add_time|timestamp2str }}</div>
-                              <div class="review_cnt">{{ commentItem.content }}</div>
-                              {% if commentItem.img_data %}
-                              <ul class="comment-img_wrap">
-                                  {% set imgs = commentItem.img_data|json_loads %}
-                                  {% for img in imgs %}
-                                      <li class="commentImg">
-                                          <img src="{{ img }}" alt="">
-                                      </li>
-                                  {% endfor %}   
-                              </ul>
-                              {% endif %}
-                          </div>
-                      </li>
-                  {% endfor %}
-              </ul>
-              <!-- 评论内容 end -->
-        
-              <!-- 分页 每20条一页 -->
-              <div class="comment-page_list">
-                <span class="page-num page-first">
-                  <i class="icon-xiaoyu"></i>
-                </span>
-                <span class="page-num btn-current">1</span>
-                <a href="" class="page-num">2</a>
-                <a href="" class="page-num">3</a>
-                <a href="" class="page-num">4</a>
-                <a href="" class="page-num">5</a>
-                <a href="" class="page-num">6</a>
-                <span class="page-more">...</span>
-                <a href="" class="page-num">12</a>
-                <a href="" class="page-num page-last">
-                  <i class="icon-dayu"></i>
-                </a>
-              </div>
-              <!-- 分页 end -->
             </div>
-          </div>
-          <!-- 商品有评论时显示 end -->
           {% else %}
-          <!-- 商品没有评论时显示 -->
-          <div class="goods-null_comment">
-              <div class="head-inner">
-                  <div class="null-comment_cnt">
-                      <p>暂时还没有评价</p>
-                      <p>期待你分享对产品的印象</p>
-                  </div>
-              </div>
-          </div>
-          <!-- 商品没有评论时显示 end -->
+            <div class="goods-null_comment">
+                <div class="head-inner">
+                    <div class="null-comment_cnt">
+                        <p>暂时还没有评价</p>
+                        <p>期待你分享对产品的印象</p>
+                    </div>
+                </div>
+            </div>
           {% endif %}
         </div>
         <!-- 商品评价 -->
@@ -276,6 +255,35 @@
 
 {% block script %}
 <script type="text/javascript">
+  function jump_page(query_string) {
+    $.get("{{ url_for('pc.item.comments_paging') }}", {'query_string':query_string}, function(res) {
+      $("#paging").empty().append(res);
+    });
+  }
+
+  function change_comment_tabs(dom, tab) {
+    $(".rate-type").each(function(i){
+      $(this).removeClass('rateON');
+    });
+
+    $(dom).addClass('rateON');
+
+    var query_string = '';
+    if (tab == 1) {
+      query_string = 'ttype=1&tid={{ item.goods_id }}&p=1&ps=12';
+    } else if (tab == 2) {
+      query_string = 'ttype=1&tid={{ item.goods_id }}&rating=3&p=1&ps=12';
+    } else if (tab == 3) {
+      query_string = 'ttype=1&tid={{ item.goods_id }}&rating=2&p=1&ps=12';
+    } else if (tab == 4) {
+      query_string = 'ttype=1&tid={{ item.goods_id }}&rating=1&p=1&ps=12';
+    } else if (tab == 5) {
+      query_string = 'ttype=1&tid={{ item.goods_id }}&is_img=1&p=1&ps=12';
+    }
+
+    jump_page(query_string);
+  }
+
   //点击切换图片
   $('.small-pic_item').on("click","img", function(){
     index = $(this).index();
@@ -317,8 +325,8 @@
         $.toast(res.msg, "text");
         return false;
       }
-      $("#cart-badge").text(json.data.cart_total);
-      $.toast("{{_('已加入购物车')}}", "text");
+
+      $("#navs_cart_total").text(json.data.cart_total);
     });
   }
 

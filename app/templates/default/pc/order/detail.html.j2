@@ -30,23 +30,26 @@
             <div class="type-btn">
               <!-- 未支付订单，有取消订单按钮 -->
               {% if 2 in code %}
-              <a class="order-type_btn mar-right" href="javascript:;" onclick="calOrder({{ order.order_id }})">{{_('取消订单')}}</a>
+                <a class="order-type_btn mar-right" href="javascript:;" onclick="calOrder({{ order.order_id }})">{{_('取消订单')}}</a>
               {% endif %}
               <!-- 已取消订单/已完成订单，有删除订单按钮 -->
               {% if 6 in code %}
-              <a class="order-type_btn mar-right" href="javascript:;" onclick="del({{ order.order_id }})">{{_('删除订单')}}</a>
+                <a class="order-type_btn mar-right" href="javascript:;" onclick="del({{ order.order_id }})">{{_('删除订单')}}</a>
               {% endif %}
               <!-- 未支付订单，有立即支付按钮 -->
               {% if 1 in code %}
-              <a class="order-type_btn btn-primary mar-right" href="{{ url_for('pc.cart.pay',order_id=order.order_id) }}">{{_('立即支付')}}</a>
+                <a class="order-type_btn btn-primary mar-right" href="{{ url_for('pc.cart.pay',order_id=order.order_id) }}">{{_('立即支付')}}</a>
               {% endif %}
               <!-- 已发货/未收货订单，有确认收货按钮 -->
               {% if 4 in code %}
-              <a class="order-type_btn btn-primary mar-right" href="javascript:;" onclick="okey({{ order.order_id }})">{{_('确认收货')}}</a>
+                <a class="order-type_btn btn-primary mar-right" href="javascript:;" onclick="okey({{ order.order_id }})">{{_('确认收货')}}</a>
               {% endif %}
               <!-- 已支付订单，有申请售后按钮 -->
               {% if 7 in code %}
-              <a class="order-type_btn mar-right" href="{{ url_for('pc.aftersales.apply_step0',order_id=order.order_id) }}">{{_('申请售后')}}</a>
+                <!-- 发货前只支持退款，发货后可以退货退款或换货 -->
+                {% set btn_text = "申请退款" if order.shipping_status == 1 else "申请售后" %}
+                {% set btn_href =  url_for('pc.aftersales.apply_step1',order_id=order.order_id)  if order.shipping_status == 1 else url_for('pc.aftersales.apply_step0',order_id=order.order_id) %}
+                <a class="order-type_btn mar-right" href="{{ btn_href }}">{{ btn_text }}</a>
               {% endif %}
             </div>
           </div>
@@ -160,6 +163,8 @@
             </div>
             <!-- 收货信息 end -->
 
+            <!-- 已支付的订单才显示支付信息 -->
+            {% if order.pay_status == 2 %}
             <!-- 支付信息 -->
             <div class="order-det_info">
               <div class="info-hd">{{_('支付信息')}}</div>
@@ -167,7 +172,10 @@
                 <tbody>
                   <tr>
                     <th>{{_('支付方式：')}}</th>
-                    <td>{{_('微信支付')}}</td>
+                    {% set paymethod = '微信支付' if order.pay_method == 'weixin' %}
+                    {% set paymethod = '余额支付' if order.pay_method == 'funds' %}
+                    {% set paymethon = '支付宝支付' if order.pay_method == 'alipay' %}
+                    <td>{{ paymethod }}</td>
                   </tr>
                   <tr>
                     <th>{{_('配送时间：')}}</th>
@@ -189,7 +197,7 @@
               </table>
             </div>
             <!-- 支付信息 end -->
-
+            {% endif %}
             <!-- 付款信息 -->
             <div class="order-detail-total">
               <table class="total-table">

@@ -1,0 +1,80 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+
+
+{% block head %}
+<title>{{_('钱包充值 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{_('钱包充值')}}</span>
+      </p>
+    </div>
+    <div class="user-main">
+      <div class="head-inner">
+        <form action="#" id="">
+          <div class="order-section">
+            <div class="recharge-item">
+              <span>{{_('充值账户：')}}</span>
+              <span>13510515229</span>
+            </div>
+            <div class="recharge-item">
+              <span>{{_('充值金额：')}}</span>
+              <input class="recharge-input" type="number" min="10" max="10000" placeholder="{{_('请输入充值金额')}}">
+            </div>
+            <div class="recharge-item" style="margin:25px 0 25px 73px">
+              <button class="order-type_btn btn-primary" onclick="pay()" type="button">{{_('确认充值')}}</button>
+            </div>
+            <div class="recharge-tips">
+              <p>温馨提示：</p>
+              <p> 
+                1. 充值成功后，余额可能存在延迟现象，一般1到5分钟内到账，如有问题，请咨询客服；
+                <br>
+                2. 充值金额输入值必须是不小于10且不大于10000的正整数；
+                <br>
+                3. 您只能用微信进行充值，如遇到任何支付问题可以查看在线支付帮助；
+                <br>
+                4. 充值完成后，您可以进入钱包充值记录页面进行查看余额充值状态。
+              </p>
+            </div>
+          </div>
+          <div class="payment-section hide" id="weixinPay">
+            <p class="pay-hd">{{_('微信支付')}}</p>
+            <div class="pay-bd">
+              <div class="bd-weixin">
+                <img src="/static/default/pc/img/weixin.png" alt="">
+                <span>{{_('微信支付')}}</span>
+              </div>
+              <div class="bd-QRcode">
+                <img src="http://i.huodong.mi.com/qrcode/wxget?code=weixin%3A%2F%2Fwxpay%2Fbizpayurl%3Fpr%3DAnUWbUU&key=93cca3325e17f353ed46462f77c19aaa"
+                  alt="">
+              </div>
+        
+              <!-- 微信扫码成功之后跳转到支付成功页面 /pc/pay/recharge_success -->
+              <p>
+                {{_('请用')}}
+                <span class="allOn">{{_('微信')}}</span>
+                {{_('扫一扫二维码完成支付')}}
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+function pay() {
+  if (!$('#weixinPay').hasClass('show')) {
+    $('#weixinPay').addClass('show').removeClass('hide');
+  }
+}
+</script>
+{% endblock%}

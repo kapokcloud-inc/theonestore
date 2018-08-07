@@ -1,0 +1,103 @@
+{# 分页 - 分页html #}
+{% macro pagination_html(pagination) -%}
+  <div class="page-box">
+    {{ build_pagination_html(pagination) }}
+  </div>
+{% endmacro %}
+
+{# 分页 - 生成分页html #}
+{% macro build_pagination_html(pagination) %}
+  {% if pagination.total > 0 %}
+    {% set has_prev = 1 if pagination.has_prev else 0 %}
+    {% set href = pagination_href(pagination.prev_num) if pagination.has_prev else 'javascript:;' %}
+    {% if has_prev == 1 %}
+      <a class="page-num page-first" href="{{ href }}">
+        <i class="icon-xiaoyu"></i>
+      </a>
+    {% else %}
+      <span class="page-num page-first">
+        <i class="icon-xiaoyu"></i>
+      </span>
+    {% endif %}
+
+    {% for page in pagination.iter_pages() %}
+      {% if page %}
+        {% set btn_current = 'btn-current' if page == pagination.page else '' %}
+        {% set href = 'javascript:;' if page == pagination.page else pagination_href(page) %}
+        <a class="page-num {{ btn_current }}" href="{{ href }}">{{ page }}</a>
+      {% else %}
+        <span class="page-more">...</span>
+      {% endif %}
+    {% endfor %}
+
+    {% set has_next = 1 if pagination.has_next else 0 %}
+    {% set href = pagination_href(pagination.next_num) if pagination.has_next else 'javascript:;' %}
+    {% if has_next == 1 %}
+      <a class="page-num page-last" href="{{ href }}">
+        <i class="icon-dayu"></i>
+      </a>
+    {% else %}
+      <span class="page-num page-last">
+        <i class="icon-dayu"></i>
+      </span>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
+{# 分页 - 分页URL #}
+{% macro pagination_href(page, page_size=12) %}
+  {% set page_size = page_size if page_size else request.view_args.get('page_size', 12) %}
+  {% set query_string = request.args.to_dict()|request_args_to_query_string(page, page_size) %}
+  {{ url_for(request.endpoint) }}?{{ query_string }}
+{% endmacro %}
+
+{# 分页 - js分页html #}
+{% macro pagination_html_js(pagination, params) -%}
+  <div class="page-box">
+    {{ build_pagination_html_js(pagination, params) }}
+  </div>
+{% endmacro %}
+
+{# 分页 - 生成js分页html #}
+{% macro build_pagination_html_js(pagination, params) %}
+  {% set page_size = page_size if page_size else request.view_args.get('page_size', 12) %}
+  {% if pagination.total > 0 %}
+    {% set has_prev = 1 if pagination.has_prev else 0 %}
+    {% if has_prev == 1 %}
+      {% set query_string = params|request_args_to_query_string(pagination.prev_num, page_size) %}
+      <a class="page-num page-first" href="javascript:void(0);" onclick="jump_page('{{ query_string }}')">
+        <i class="icon-xiaoyu"></i>
+      </a>
+    {% else %}
+      <span class="page-num page-first">
+        <i class="icon-xiaoyu"></i>
+      </span>
+    {% endif %}
+
+    {% for page in pagination.iter_pages() %}
+      {% if page %}
+        {% set btn_current = 'btn-current' if page == pagination.page else '' %}
+        {% if page == pagination.page %}
+          <a class="page-num {{ btn_current }}" href="javascript:void(0);">{{ page }}</a>
+        {% else %}
+          {% set query_string = params|request_args_to_query_string(page, page_size) %}
+          <a class="page-num {{ btn_current }}" href="javascript:void(0);" onclick="jump_page('{{ query_string }}')">{{ page }}</a>
+        {% endif %}
+      {% else %}
+        <span class="page-more">...</span>
+      {% endif %}
+    {% endfor %}
+
+    {% set has_next = 1 if pagination.has_next else 0 %}
+    {% if has_next == 1 %}
+      {% set query_string = params|request_args_to_query_string(pagination.next_num, page_size) %}
+      <a class="page-num page-last" href="javascript:void(0);" onclick="jump_page('{{ query_string }}')">
+        <i class="icon-dayu"></i>
+      </a>
+    {% else %}
+      <span class="page-num page-last">
+        <i class="icon-dayu"></i>
+      </span>
+    {% endif %}
+  {% endif %}
+{% endmacro %}

@@ -10,6 +10,7 @@
 from decimal import Decimal
 
 from flask_babel import gettext as _
+from flask_sqlalchemy import Pagination
 
 from app.database import db
 
@@ -93,14 +94,19 @@ class FundsStaticMethodsService(object):
     """资金静态方法Service"""
 
     @staticmethod
-    def details(uid, params):
+    def details(uid, params, is_pagination=False):
         """获取资金流水列表"""
 
         p  = toint(params.get('p', '1'))
         ps = toint(params.get('ps', '10'))
 
-        details = db.session.query(FundsDetail.fd_id, FundsDetail.funds_change, FundsDetail.event, FundsDetail.add_time).\
-                        filter(FundsDetail.uid == uid).\
-                        order_by(FundsDetail.fd_id.desc()).offset((p-1)*ps).limit(ps).all()
+        q       = db.session.query(FundsDetail.fd_id, FundsDetail.funds_change,
+                                    FundsDetail.event, FundsDetail.add_time).\
+                        filter(FundsDetail.uid == uid)
+        details = q.order_by(FundsDetail.fd_id.desc()).offset((p-1)*ps).limit(ps).all()
 
-        return details
+        pagination = None
+        if is_pagination:
+            pagination = Pagination(None, p, ps, q.count(), None)
+
+        return {'details':details, 'pagination':pagination}

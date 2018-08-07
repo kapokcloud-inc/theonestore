@@ -23,7 +23,8 @@ from app.helpers import (
     configure_uploads,
     static_uri,
     toint,
-    get_file_uploadtype
+    get_file_uploadtype,
+    request_args_to_query_string
 )
 from app.helpers.date_time import (
     timestamp2str,
@@ -70,6 +71,7 @@ jinja_filters = {
     'static_uri': static_uri,
     'toint': toint,
     'get_file_uploadtype':get_file_uploadtype,
+    'request_args_to_query_string':request_args_to_query_string
 }
 app.jinja_env.filters.update(jinja_filters)
 app.jinja_env.cache_size = 0

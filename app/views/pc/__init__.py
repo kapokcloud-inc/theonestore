@@ -16,3 +16,4 @@ from .order import order
 from .aftersales import aftersales
 from .pay import pay
 from .me import me
+from .wallet import wallet

@@ -7,7 +7,7 @@
 
 {% block nav %} 
 <div class="one-nav_header">
-  <span class="nav-header_type">{{_('支付成功')}}</span>
+  <span class="nav-header_type">{{_('充值成功')}}</span>
 </div>
 {% endblock %}
 
@@ -18,8 +18,8 @@
       <div class="compl-img">
         <img src="/static/default/pc/img/complete.png" alt="">
       </div>
-      <p class="compl-text">{{_('支付成功')}}</p>
-      <a class="not-one_btn btn-primary" href="{{ url_for('pc.order.detail', order_id=order_id) }}">{{_('查看订单详情')}}</a>
+      <p class="compl-text">{{_('充值成功')}}</p>
+      <a class="not-one_btn btn-primary" href="{{ url_for('pc.wallet.root') }}">{{_('查看我的钱包')}}</a>
       <a class="not-one_btn btn-grey mar-left" href="{{ url_for('pc.index.root') }}">{{_('继续购物')}}</a>
     </div>
   </div>

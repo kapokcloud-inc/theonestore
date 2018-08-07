@@ -1,0 +1,31 @@
+{% import '/default/pc/libs/libs.html.j2' as libs %}
+
+<ul class="goods-comment_cnt bg-white">
+  {% for commentItem in comments %}
+    <li class="comment-cnt_item">
+      <div class="cnt-item_hd">
+        {% set avatar = commentItem.avatar if commentItem.avatar else "" %}
+        <img class="ava" src="{{ avatar }}" alt="">
+      </div>
+      <div class="cnt-item_bd">
+        <div class="review-title">
+          {{ commentItem.nickname|default(_('匿名')) }}
+          <span class="rate-text">{{_('好评')}}</span>
+        </div>
+        <div class="review-add mar-top">{{ commentItem.add_time|timestamp2str }}</div>
+        <div class="review_cnt">{{ commentItem.content }}</div>
+        {% if commentItem.img_data %}
+        <ul class="comment-img_wrap">
+          {% set imgs = commentItem.img_data|json_loads %}
+          {% for img in imgs %}
+            <li class="commentImg">
+              <img src="{{ img }}" alt="">
+            </li>
+          {% endfor %}   
+        </ul>
+        {% endif %}
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+{{ libs.pagination_html_js(pagination, params) }}

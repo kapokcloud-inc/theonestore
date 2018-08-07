@@ -37,6 +37,9 @@ ul li {
 .weui-cell {
   padding: 15px;
 }
+.bd-bottom {
+  border-bottom: 1px solid #eee;
+}
 .weui-cell__bd {
   font-size: 14px;
   overflow: hidden;

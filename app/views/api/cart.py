@@ -52,10 +52,27 @@ cart = Blueprint('api.cart', __name__)
 resjson = ResponseJson()
 resjson.module_code = 12
 
+@cart.route('/')
+def index():
+    """购物车"""
+    resjson.action_code = 10
+
+    uid        = get_uid()
+    session_id = get_session_id()
+    is_login   = 1 if uid else 0
+
+    cs = CartService(uid, session_id)
+    cs.check()
+
+    data = {'is_login':is_login, 'carts':cs.carts, 'cart_total':cs.cart_total,
+            'cart_amount':cs.cart_amount}
+    return resjson.print_json(0, u'ok', data)
+
+
 @cart.route('/add')
 def add():
     """加入购物车"""
-    resjson.action_code = 10
+    resjson.action_code = 11
 
     uid        = get_uid()
     session_id = get_session_id()
@@ -122,7 +139,7 @@ def add():
 @cart.route('/update')
 def update():
     """更新购物车"""
-    resjson.action_code = 11
+    resjson.action_code = 12
 
     uid        = get_uid()
     session_id = get_session_id()
@@ -166,7 +183,7 @@ def update():
 @cart.route('/remove')
 def remove():
     """删除购物车商品"""
-    resjson.action_code = 12
+    resjson.action_code = 13
 
     uid        = get_uid()
     session_id = get_session_id()
@@ -206,7 +223,7 @@ def remove():
 @cart.route('/checked')
 def checked():
     """选中"""
-    resjson.action_code = 13
+    resjson.action_code = 14
 
     uid        = get_uid()
     session_id = get_session_id()
@@ -254,7 +271,7 @@ def checked():
 @cart.route('/checkout/amounts')
 def checkout_amounts():
     """结算金额"""
-    resjson.action_code = 13
+    resjson.action_code = 15
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']

@@ -3,12 +3,29 @@
   display: block;
   font-size: 12px;
   color: #f33155;
+  cursor: pointer;
+  margin-top: 20px;
 }
 .user-name {
+  position: relative;
+  height: 35px;
+  line-height: 35px;
   font-size: 24px;
   font-weight: 400;
   color: #333;
-  margin-bottom: 20px;
+}
+.changeIpu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  font-size: 24px;
+  font-weight: 400;
+  color: #666;
+}
+.cancel {
+  color: #666;
+  margin-left: 20px;
 }
 .portal-sub {
   margin-top: 20px;

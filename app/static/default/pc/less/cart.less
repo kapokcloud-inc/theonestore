@@ -669,6 +669,29 @@
     width: 516px;
     overflow: hidden;
   }
+  &_list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: hidden;
+  }
+  &_item{
+    position: relative;
+    flex: 0 1 calc(34% - 20px);
+    height: 96px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border-radius: 0px 0px 5px 5px;
+    border: 1px solid @main-color;
+    cursor: pointer;
+    &:nth-child(3n){
+      margin-right: 0 !important;
+    }
+    .wave{
+      background-position: -2px 5px !important;
+    }
+  }
 }
 .not-coupon{
   line-height: 220px;
@@ -827,8 +850,10 @@
   height: 30px;
   line-height: 30px;
   img{
-    height: 30px;
+    height: 25px;
     vertical-align: middle;
+    margin-top: -3px;
+    margin-right: 10px;
   }
 }
 .compl-img{
@@ -850,4 +875,37 @@
   font-size: 26px;
   margin-top: 30px;
   margin-bottom: 60px;
+}
+.recharge-item{
+  height: 30px;
+  line-height: 30px;
+  font-size: @font-size14;
+  color: @grey-color6;
+  margin-bottom: 8px;
+}
+.recharge-input{
+  width: 130px;
+  height: 26px;
+  line-height: 26px;
+  font-size: @font-size14;
+  color: @grey-color6;
+  text-align: center;
+  background-color: #fff;
+}
+input[type=number] {  
+    -moz-appearance:textfield;  
+}  
+input[type=number]::-webkit-inner-spin-button,  
+input[type=number]::-webkit-outer-spin-button {  
+    -webkit-appearance: none; 
+}  
+.recharge-tips{
+  width: 680px;
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  border: @border5;
+  font-size: @font-size12;
+  color: @grey-color6;
+  line-height: 1.5;
+  background-color: #f3f4f5;
 }

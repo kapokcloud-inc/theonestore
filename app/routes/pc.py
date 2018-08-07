@@ -18,4 +18,5 @@ PC_ROUTES = (
     (pc.aftersales,     '/pc/aftersales'),
     (pc.pay,            '/pc/pay'),
     (pc.me,             '/pc/me'),
+    (pc.wallet,         '/pc/wallet'),
 )

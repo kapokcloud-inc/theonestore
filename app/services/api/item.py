@@ -31,7 +31,7 @@ class ItemStaticMethodsService(object):
     """商品静态方法Service"""
 
     @staticmethod
-    def items(params):
+    def items(params, is_pagination=False):
         """获取商品列表"""
 
         p            = toint(params.get('p', '1'))
@@ -57,8 +57,11 @@ class ItemStaticMethodsService(object):
         if is_recommend in [0,1]:
             q = q.filter(Goods.is_recommend == is_recommend)
 
-        items      = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
-        pagination = Pagination(None, p, ps, q.count(), None)
+        items = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
+
+        pagination = None
+        if is_pagination:
+            pagination = Pagination(None, p, ps, q.count(), None)
 
         return {'items':items, 'category':category, 'pagination':pagination}
 
@@ -91,7 +94,13 @@ class ItemStaticMethodsService(object):
         is_fav = 1 if is_fav else 0
 
         comments = []
+        pagination = None
         if item.comment_count > 0:
-            comments = CommentStaticMethodsService.comments({'p':1, 'ps':2, 'ttype':1, 'tid':goods_id})
+            params     = {'p':1, 'ps':12, 'ttype':1, 'tid':goods_id}
+            data       = CommentStaticMethodsService.comments(params, True)
+            comments   = data['comments']
+            pagination = data['pagination']
 
-        return {'item':item, 'galleries':galleries, 'is_fav':is_fav, 'comments':comments}
+        data = {'item':item, 'galleries':galleries, 'is_fav':is_fav,
+                'comments':comments, 'pagination':pagination}
+        return data

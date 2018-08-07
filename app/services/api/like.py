@@ -10,6 +10,7 @@
 import json
 
 from flask_babel import gettext as _
+from flask_sqlalchemy import Pagination
 
 from app.database import db
 
@@ -158,18 +159,22 @@ class LikeStaticMethodsService(object):
     """赞静态方法Service"""
 
     @staticmethod
-    def likes(params):
+    def likes(params, is_pagination=False):
         """获取赞列表"""
 
         p   = toint(params.get('p', '1'))
         ps  = toint(params.get('ps', '10'))
         uid = toint(params.get('uid', '0'))
 
-        likes = db.session.query(Like.like_id, Like.like_type, Like.ttype, Like.tid, Like.tname, Like.timg,
+        q     = db.session.query(Like.like_id, Like.like_type, Like.ttype, Like.tid, Like.tname, Like.timg,
                                     Like.ext_data, Like.add_time).\
                     filter(Like.uid == uid).\
                     filter(Like.like_type == 2).\
-                    filter(Like.ttype == 1).\
-                    order_by(Like.like_id.desc()).offset((p-1)*ps).limit(ps).all()
+                    filter(Like.ttype == 1)
+        likes = q.order_by(Like.like_id.desc()).offset((p-1)*ps).limit(ps).all()
 
-        return likes
+        pagination = None
+        if is_pagination:
+            pagination = Pagination(None, p, ps, q.count(), None)
+
+        return {'likes':likes, 'pagination':pagination}
