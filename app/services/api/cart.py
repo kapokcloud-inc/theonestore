@@ -53,6 +53,7 @@ class CartService(object):
         self.items_amount     = Decimal('0.00')     # 选中商品项商品总价
         self.items_quantity   = 0                   # 选中商品项总件数
         self.cart_total       = 0                   # 商品项总件数
+        self.cart_amount      = Decimal('0.00')     # 商品项总价
         self.cart_valid_total = 0                   # 商品项有效的总件数
 
     def check(self):
@@ -97,9 +98,10 @@ class CartService(object):
 
                 self.cart_valid_total += cart.quantity
 
-            self.cart_total += cart.quantity
-
             items_amount = Decimal(item.goods_price) * cart.quantity
+
+            self.cart_total  += cart.quantity
+            self.cart_amount += items_amount
 
             self.carts.append({'cart':cart, 'item':item, 'is_valid':is_valid,
                                 'valid_status':valid_status, 'items_amount':items_amount})
