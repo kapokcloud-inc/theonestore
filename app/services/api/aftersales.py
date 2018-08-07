@@ -12,6 +12,7 @@ import json
 from decimal import Decimal
 
 from flask_babel import gettext as _
+from flask_sqlalchemy import Pagination
 from sqlalchemy import func
 
 from app.database import db
@@ -276,18 +277,21 @@ class AfterSalesStaticMethodsService(object):
         return aftersales_sn
 
     @staticmethod
-    def aftersales(params):
+    def aftersales(params, is_pagination=False):
         """获取售后列表"""
 
         p   = toint(params.get('p', '1'))
         ps  = toint(params.get('ps', '10'))
         uid = toint(params.get('uid', '0'))
 
-        aftersales = Aftersales.query.\
-                        filter(Aftersales.uid == uid).\
-                        order_by(Aftersales.aftersales_id.desc()).offset((p-1)*ps).limit(ps).all()
+        q          = Aftersales.query.filter(Aftersales.uid == uid)
+        aftersales = q.order_by(Aftersales.aftersales_id.desc()).offset((p-1)*ps).limit(ps).all()
 
-        return aftersales
+        pagination = None
+        if is_pagination:
+            pagination = Pagination(None, p, ps, q.count(), None)
+
+        return {'aftersales':aftersales, 'pagination':pagination}
 
     @staticmethod
     def maximum(order_goods):

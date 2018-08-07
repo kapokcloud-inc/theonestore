@@ -185,10 +185,10 @@ def collect():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    likes      = LikeStaticMethodsService.likes({'uid':uid})
+    data       = LikeStaticMethodsService.likes({'uid':uid})
     paging_url = url_for('mobile.me.collect_paging', **request.args)
 
-    return render_template('mobile/me/collect.html.j2', likes=likes, paging_url=paging_url)
+    return render_template('mobile/me/collect.html.j2', likes=data['likes'], paging_url=paging_url)
 
 
 @me.route('/collect-paging')
@@ -202,9 +202,9 @@ def collect_paging():
 
     params        = request.args.to_dict()
     params['uid'] = uid
-    likes         = LikeStaticMethodsService.likes(params)
+    data          = LikeStaticMethodsService.likes(params)
 
-    return render_template('mobile/me/collect_paging.html.j2', likes=likes)
+    return render_template('mobile/me/collect_paging.html.j2', likes=data['likes'])
 
 
 @me.route('/coupon')

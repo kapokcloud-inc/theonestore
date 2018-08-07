@@ -45,6 +45,6 @@ def index():
 def paging():
     """加载分页"""
 
-    comments = CommentStaticMethodsService.comments(request.args.to_dict())
+    data = CommentStaticMethodsService.comments(request.args.to_dict())
 
-    return render_template('mobile/comment/paging.html.j2', comments=comments)
+    return render_template('mobile/comment/paging.html.j2', comments=data['comments'])

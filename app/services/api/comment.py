@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for more details.
 """
 from flask_babel import gettext as _
+from flask_sqlalchemy import Pagination
 
 from app.database import db
 
@@ -25,7 +26,7 @@ class CommentStaticMethodsService(object):
     """评论静态方法Service"""
 
     @staticmethod
-    def comments(params):
+    def comments(params, is_pagination=False):
         """获取评论列表"""
 
         p      = toint(params.get('p', '1'))
@@ -49,14 +50,19 @@ class CommentStaticMethodsService(object):
 
         comments = q.order_by(Comment.comment_id.desc()).offset((p-1)*ps).limit(ps).all()
 
-        return comments
+        pagination = None
+        if is_pagination:
+            pagination = Pagination(None, p, ps, q.count(), None)
+
+        return {'comments':comments, 'pagination':pagination}
 
     @staticmethod
     def index_page(args):
         """评论首页"""
 
         data             = args.to_dict()
-        data['comments'] = CommentStaticMethodsService.comments(data)
+        _data            = CommentStaticMethodsService.comments(data)
+        data['comments'] = _data['comments']
 
         ttype  = toint(data.get('ttype', '0'))
         tid    = toint(data.get('tid', '0'))
