@@ -95,8 +95,11 @@ class ItemStaticMethodsService(object):
 
         comments = []
         if item.comment_count > 0:
-            params   = {'p':1, 'ps':2, 'ttype':1, 'tid':goods_id}
-            data     = CommentStaticMethodsService.comments(params)
-            comments = data['comments']
+            params     = {'p':1, 'ps':12, 'ttype':1, 'tid':goods_id}
+            data       = CommentStaticMethodsService.comments(params, True)
+            comments   = data['comments']
+            pagination = data['pagination']
 
-        return {'item':item, 'galleries':galleries, 'is_fav':is_fav, 'comments':comments}
+        data = {'item':item, 'galleries':galleries, 'is_fav':is_fav,
+                'comments':comments, 'pagination':pagination}
+        return data
