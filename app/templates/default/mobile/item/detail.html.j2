@@ -3,9 +3,13 @@
 
 {% block head %}
 <title>{{_('商品详情 - 一店')}}</title>
-<link rel="stylesheet" href="{{'/static/default/mobile/css/item.css'|static_uri}}">
-<link rel="stylesheet" href="{{'/static/default/mobile/css/index.css'|static_uri}}">
-<link rel="stylesheet" href="{{'/static/default/mobile/css/cart.css'|static_uri}}">
+<link rel="stylesheet" href="/static/default/mobile/css/item.css">
+<link rel="stylesheet" href="/static/default/mobile/css/index.css">
+<link rel="stylesheet" href="/static/default/mobile/css/cart.css">
+<style>
+#item-detail-h5 p {margin: 0px; padding: 0px;}
+#item-detail-h5 img{width: 100%; max-width: 100%; margin: 0px; padding: 0px; border: 0px;}
+</style>
 {% endblock %} 
 
 {% block body %}
@@ -186,7 +190,7 @@
     </div>
   {% endif %}
   <div id="nav3">
-    <div class="weui-cells">
+    <div class="weui-cells" id="item-detail-h5">
       <div class="pro-detail_tit">{{_('商品详情')}}</div>
       {{ item.detail }}
     </div>

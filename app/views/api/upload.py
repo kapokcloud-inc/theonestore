@@ -15,7 +15,8 @@ from flask import (
     Blueprint,
     request,
     session,
-    current_app
+    current_app,
+    make_response
 )
 from flask_babel import gettext as _
 
@@ -65,21 +66,21 @@ def image():
 @upload.route('/ueditor', methods=["GET", "POST"])
 def ueditor():
     """ueditor上传"""
-    resjson.action_code = 10
-
+    res = current_app.response_class(mimetype='application/json')
+    # res = make_response(mimetype='application/json')
     action = request.args.get('action')
 
     if action == 'config':
         # 解析JSON格式的配置文件
         # 这里使用PHP版本自带的config.json文件
-        with open(os.path.join(current_app.static_folder, 'default', 'admin', 'plugins', 'ue', 'php', 'config.json')) as fp:
-            try:
-                # 删除 `/**/` 之间的注释
-                CONFIG = json.loads(re.sub(r'\/\*.*\*\/', '', fp.read()))
-            except:
-                CONFIG = {}
-
-            return json.dumps(CONFIG)
+        with open(os.path.join(current_app.static_folder, 'default', 'admin', 'plugins', 'ue', 'php', 'config.json'),  encoding='UTF-8') as fp:
+            data = fp.read()
+            CONFIG = json.loads(re.sub(r'\/\*.*\*\/', '', data))
+            # log_info('##########:%s' % CONFIG)
+            res.data = json.dumps(CONFIG)
+        
+        log_info('-----------------')
+        return res
 
     # 获取上传文件
     upfile = request.files['upfile']
@@ -91,4 +92,5 @@ def ueditor():
         return json.dumps({'state':'FAIL'})
 
     data = {'state':'SUCCESS', 'source':image, 'url':image, 'title':image, 'original':image}
-    return json.dumps(data)
+    res.data = json.dumps(data)
+    return res

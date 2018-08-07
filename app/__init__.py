@@ -50,7 +50,7 @@ def configure_before(app):
     @app.errorhandler(404)
     def page_not_found(error):
         path = request.path
-        if (path.find('/admin/') == 0):
+        if (path.find('/admin/') == 0 or path.find('/static/') == 0):
             if not request.is_xhr:
                 return render_template('admin/404.html.j2')
 

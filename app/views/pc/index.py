@@ -13,7 +13,8 @@ from flask import (
     session,
     Blueprint,
     redirect,
-    url_for
+    url_for,
+    send_file
 )
 from flask_babel import gettext as _
 
@@ -40,3 +41,9 @@ def root():
 
     data = {'advs':advs, 'hot_items':data_hot['items'], 'recommend_items':data_recommend['items']}
     return render_template('pc/index/index.html.j2', **data)
+
+@index.route('/favicon.ico')
+def favicon():
+    """favicon图标"""
+    return send_file('static/favicon.ico')
+    
