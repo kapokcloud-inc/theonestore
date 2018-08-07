@@ -39,46 +39,45 @@
                   <p class="choice-goods_title">选择订单中的商品</p>
                 </div>
                 <ul class="all-list clearfix">
+                  {% for item in items %}
                   <li class="list-item2">
                     <div class="item-product">
-                      <img src="http://i1.mifile.cn/a1/pms_1522666970.27937468!200x200.jpg" alt="">
+                      <img src="{{ item.goods_img }}" alt="">
                     </div>
                     <div class="item-detail">
-                      <div class="all-title">小米AI音箱</div>
-                      <div class="greyGap mar-top">数量 x2</div>
+                      <div class="all-title">{{ item.goods_name }}</div>
+                      <div class="greyGap mar-top">数量 x{{ item.goods_quantity }}</div>
                     </div>
-                    <!-- 未申请的商品，此按钮显示 -->
-                    <div class="review-btn_wrap" data-value="">
-                      <a class="review-btn_link btn-primary" href="{{ url_for('pc.aftersales.apply_step1') }}">{{_('申请售后')}}</a>
-                    </div>
-                    <!-- 未申请的商品，此按钮显示 end -->
-                
-                    <!-- 已申请的商品，此按钮显示 -->
-                    <!-- <div class="review-btn_wrap" data-value="">
-                      <a class="review-btn_link" href="{{ url_for('pc.aftersales.detail', aftersales_id=47) }}">{{_('售后受理中')}}</a>
-                    </div> -->
-                    <!-- 已申请的商品，此按钮显示 end -->
+
+                    <!-- 默认0=不能操作  1=申请售后  2=售后处理中 -->
+                    {% set aftersale_type = 0 %}
+                    {% set limit_time = order.paid_time|before_after_timestamp({'days':15}) %}
+                    {% if order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 and limit_time >= current_time and item.goods_quantity > item.aftersales_goods_quantity %}
+                      {% set aftersale_type = 1 %}
+                    {% endif %}
+
+                    {% set aftersale_goods = (aftersale.goods_data)|json_loads if aftersale %}
+                    {% for afteritem in aftersale_goods if aftersale_goods %}
+                      {% if  afteritem.goods_id == item.goods_id %}
+                        {% set aftersale_type = 2 %}
+                      {% endif %}
+                    {% endfor %}
+
+                    {% if aftersale_type == 1 %}
+                      <!-- 未申请的商品，此按钮显示 -->
+                      <div class="review-btn_wrap" data-value="">
+                        <a class="review-btn_link btn-primary" href="{{ url_for('pc.aftersales.apply_step1') }}">{{_('申请售后')}}</a>
+                      </div>
+                      <!-- 未申请的商品，此按钮显示 end -->
+                    {% elif aftersale_type == 2 %}
+                      <!-- 已申请的商品，此按钮显示 -->
+                      <div class="review-btn_wrap" data-value="">
+                        <a class="review-btn_link" href="{{ url_for('pc.aftersales.detail', aftersales_id=aftersale.aftersales_id) }}">{{_('售后受理中')}}</a>
+                      </div>
+                      <!-- 已申请的商品，此按钮显示 end -->
+                    {% endif %}
                   </li>
-                  <li class="list-item2">
-                    <div class="item-product">
-                      <img src="http://i1.mifile.cn/a1/pms_1522666970.27937468!200x200.jpg" alt="">
-                    </div>
-                    <div class="item-detail">
-                      <div class="all-title">小米AI音箱</div>
-                      <div class="greyGap mar-top">数量 x1</div>
-                    </div>
-                    <!-- 未申请的商品，此按钮显示 -->
-                    <!-- <div class="review-btn_wrap" data-value="">
-                      <a class="review-btn_link btn-primary" href="{{ url_for('pc.aftersales.apply_step1') }}">{{_('申请售后')}}</a>
-                    </div> -->
-                    <!-- 未申请的商品，此按钮显示 end -->
-                
-                    <!-- 已申请的商品，此按钮显示 -->
-                    <div class="review-btn_wrap" data-value="">
-                      <a class="review-btn_link" href="{{ url_for('pc.aftersales.detail', aftersales_id=47) }}">{{_('售后受理中')}}</a>
-                    </div>
-                    <!-- 已申请的商品，此按钮显示 end -->
-                  </li>
+                  {% endfor %}
                 </ul>
               </div>
           </div>
@@ -90,5 +89,7 @@
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript"></script>
+<script type="text/javascript">
+
+</script>
 {% endblock%}

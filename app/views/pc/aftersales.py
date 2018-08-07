@@ -116,16 +116,6 @@ def apply_step0(order_id):
 def apply_step1():
     """pc站 - 申请售后服务-第一步"""
 
-    if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
-    uid = get_uid()
-
-    order_id = toint(request.args.get('order_id', '0'))
-    og_id    = toint(request.args.get('og_id', '0'))
-
-    
-
     return render_template('pc/aftersales/apply_step1.html.j2')
 
 
