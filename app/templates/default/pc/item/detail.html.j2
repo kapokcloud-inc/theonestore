@@ -30,7 +30,8 @@
                 <div class="goods-small_pic clearfix">
                   <ul class="small-pic_list">
                     {% for pic_item in galleries %}
-                      <li class="small-pic_item current">
+                      {% set selectclass = 'current' if current_big_pic == pic_item.img %}
+                      <li class="small-pic_item {{ selectclass }}">
                         <img src="{{ pic_item.img }}" alt="">
                       </li>
                     {% endfor %}
