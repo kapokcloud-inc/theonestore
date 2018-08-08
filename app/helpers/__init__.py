@@ -188,7 +188,12 @@ def urlencode(params):
         if isinstance(v, types.StringType) or isinstance(v, types.UnicodeType):
             _params[k] = v.encode('utf8')
 
-    return urllib.urlencode(_params)
+    try:
+        url = urllib.urlencode(_params)
+    except Exception as e:
+        url = urllib.parse.urlencode(params)
+
+    return url
 
 
 def url_push_query(url, key_value_str):
@@ -336,4 +341,9 @@ def request_args_to_query_string(params, p, ps):
     params['p']  = p
     params['ps'] = ps
 
-    return urllib.urlencode(params)
+    try:
+        url = urllib.urlencode(params)
+    except Exception as e:
+        url = urllib.parse.urlencode(params)
+
+    return url
