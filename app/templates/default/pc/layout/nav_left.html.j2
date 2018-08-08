@@ -34,7 +34,7 @@
         </li>
         <li>
           {% set all_on = 'allOn' if request.path == url_for('pc.me.collect') else '' %}
-          <a class="{{ all_on }}" href="{{ url_for('pc.me.collect') }}">{{_('我的收藏')}}</a>
+          <a class="{{ all_on }}" href="{{ url_for('pc.me.collect',p=1,ps=20) }}">{{_('我的收藏')}}</a>
         </li>
         <li>
           {% set all_on = 'allOn' if request.path == url_for('pc.me.coupon') else '' %}

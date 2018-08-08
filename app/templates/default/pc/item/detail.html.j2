@@ -351,13 +351,6 @@
     var tid = $dom.attr('data-tid');
     var params = {'like_type':2, 'ttype':1, 'tid':tid}
 
-    /* 登陆检测
-    var uid = {{ session.get('uid',0) }};
-    if (uid <= 0){
-      //跳转登录页面
-      return false;
-    }
-    */
     $.get("{{ url_for('api.like.action') }}", params, function(json) {
       if (json.ret != 0) {
         $.toast(json.msg, "text");
