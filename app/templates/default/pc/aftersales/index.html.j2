@@ -42,17 +42,18 @@
                         </div>
                         <div class="item-datail_bd clearfix">
                           {% set goods = (aftersale.goods_data)|json_loads %}
-                          {% set good = goods|first if goods %}
                           <div class="item-bd_fl">
-                            <div class="one-cell">
-                              <div class="one-cell_hd avatar80">
-                                <img src="{{ good.goods_img }}" alt="">
+                            {% for good in goods if goods %}
+                              <div class="one-cell">
+                                <div class="one-cell_hd avatar80">
+                                  <img src="{{ good.goods_img }}" alt="">
+                                </div>
+                                <div class="one-cell_bd">
+                                  <p class="blackGap">{{ good.goods_name }}</p>
+                                  <p class="blackGap mar-top">数量：{{ good.goods_quantity }}</p>
+                                </div>
                               </div>
-                              <div class="one-cell_bd">
-                                <p class="blackGap">{{ good.goods_name }}</p>
-                                <p class="blackGap mar-top">数量：{{ good.goods_quantity }}</p>
-                              </div>
-                            </div>
+                            {% endfor %}
                           </div>
                           <div class="item-bd_fr">
                             <a class="btn-link" href="{{ url_for('pc.aftersales.detail', aftersales_id=aftersale.aftersales_id) }}">

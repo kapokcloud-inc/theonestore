@@ -778,12 +778,16 @@ class OrderStaticMethodsService(object):
 
         texts = {}
         codes = {}
+        aftersales = {}
         for order in orders:
             text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
             texts[order.order_id] = text
             codes[order.order_id] = code
+            aftersale = Aftersales.query.filter(Aftersales.order_id == order.order_id).filter(Aftersales.status.in_([1,2])).first()
+            if aftersale:
+                aftersales[order.order_id] = aftersale
             
-        return {'orders':orders, 'pagination':pagination, 'texts':texts, 'codes':codes}
+        return {'orders':orders, 'pagination':pagination, 'texts':texts, 'codes':codes,'aftersales':aftersales}
 
 
     @staticmethod

@@ -47,8 +47,13 @@
               <!-- 已支付订单，有申请售后按钮 -->
               {% if 7 in code %}
                 <!-- 发货前只支持退款，发货后可以退货退款或换货 -->
-                {% set btn_text = "申请退款" if order.shipping_status == 1 else "申请售后" %}
-                {% set btn_href =  url_for('pc.aftersales.apply_step1',order_id=order.order_id)  if order.shipping_status == 1 else url_for('pc.aftersales.apply_step0',order_id=order.order_id) %}
+                {% if order.shipping_status == 1 %}
+                  {% set btn_text = "申请退款" %}
+                  {% set btn_href = url_for('pc.aftersales.detail',aftersales_id=aftersale.aftersales_id) if aftersale else url_for('pc.aftersales.apply_step1',order_id=order.order_id) %}
+                {% else %}
+                  {% set btn_text = "申请售后" %}
+                  {% set btn_href = url_for('pc.aftersales.apply_step0',order_id=order.order_id) %}
+                {% endif %}
                 <a class="order-type_btn mar-right" href="{{ btn_href }}">{{ btn_text }}</a>
               {% endif %}
             </div>
