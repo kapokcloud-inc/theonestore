@@ -60,14 +60,14 @@ def root():
 
     params        = request.args.to_dict()
     params['uid'] = uid
-    _data         = AfterSalesStaticMethodsService.aftersales(params)
+    _data         = AfterSalesStaticMethodsService.aftersales(params,True)
 
     aftersales_status_text = {}
     for aftersale in _data['aftersales']:
         status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersale)
         aftersales_status_text[aftersale.aftersales_id] = status_text
 
-    data = {'aftersales':_data['aftersales'], 'aftersales_status_text':aftersales_status_text}
+    data = {'aftersales':_data['aftersales'], 'aftersales_status_text':aftersales_status_text,'pagination':_data['pagination']}
     return render_template('pc/aftersales/index.html.j2', **data)
 
 
@@ -90,9 +90,8 @@ def detail(aftersales_id):
 
     status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersales)
 
-    order_address = OrderAddress.query.filter(OrderAddress.order_id == aftersales.order_id).first()
-
-    data = {'aftersales':aftersales, 'log':log, 'status_text':status_text, 'action_code':action_code,'order_address':order_address}
+    data = {'aftersales':aftersales, 'log':log, 'status_text':status_text, 'action_code':action_code}
+    log_info(data)
     return render_template('pc/aftersales/detail.html.j2', **data)
 
 

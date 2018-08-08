@@ -18,7 +18,7 @@
     <ul class="category-list">
       {% for item in categories %}
         <li class="category-list_item">
-          <a href="{{ url_for('pc.item.index', cat_id=item.cat_id) }}">
+          <a href="{{ url_for('pc.item.index', cat_id=item.cat_id,p=1,ps=20) }}">
             <div class="category-img">
              <img src="{{ item.cat_img }}" alt="">
             </div>

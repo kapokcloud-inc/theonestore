@@ -58,7 +58,7 @@
     <div class="head-inner">
       <div class="box-head">
         <p class="hd-title">{{_('推荐')}}</p>
-        <a class="hd-more" href="{{ url_for('pc.item.recommend') }}">
+        <a class="hd-more" href="{{ url_for('pc.item.recommend',is_recommend=1,p=1,ps=20) }}">
           <span>{{_('查看全部')}}</span>
         </a>
       </div>
@@ -89,7 +89,7 @@
     <div class="head-inner">
       <div class="box-head">
         <p class="hd-title">{{_('热卖')}}</p>
-        <a class="hd-more" href="{{ url_for('pc.item.hot') }}">
+        <a class="hd-more" href="{{ url_for('pc.item.hot',is_hot=1,p=1,ps=20) }}">
           <span>{{_('查看全部')}}</span>
         </a>
       </div>

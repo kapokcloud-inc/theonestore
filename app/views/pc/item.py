@@ -41,7 +41,7 @@ item = Blueprint('pc.item', __name__)
 def index():
     """商品列表页"""
 
-    data               = ItemStaticMethodsService.items(request.args.to_dict())
+    data               = ItemStaticMethodsService.items(request.args.to_dict(),True)
 
     return render_template('pc/item/index.html.j2', **data)
 
@@ -64,7 +64,7 @@ def recommend():
     """推荐"""
 
     params             = {'is_recommend':1}
-    data               = ItemStaticMethodsService.items(params)
+    data               = ItemStaticMethodsService.items(request.args.to_dict(),True)
 
     return render_template('pc/item/recommend.html.j2', **data)
 
@@ -74,7 +74,7 @@ def hot():
     """热卖"""
 
     params             = {'is_hot':1}
-    data               = ItemStaticMethodsService.items(params)
+    data               = ItemStaticMethodsService.items(request.args.to_dict(),True)
 
     return render_template('pc/item/hot.html.j2', **data)
 
