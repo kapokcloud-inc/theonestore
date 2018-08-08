@@ -149,3 +149,4 @@ class CategoryForm(Form):
                     ]
                 )
 
+    is_show   = BooleanField(_(u'是否显示'), false_values=(0, '0', ''), default=1)

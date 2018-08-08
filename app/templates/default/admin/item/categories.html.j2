@@ -18,26 +18,30 @@
                   <th>{{_('ID')}}</th>
                   <th>{{_('名称')}}</th>
                   <th>{{_('图片')}}</th>
+                  <th>{{_('是否显示')}}</th>
                   <th>{{_('添加时间')}}</th>
                   <th>{{_('操作')}}</th>
                 </tr>
               </thead>
                 <tbody>
                   {% for category in categories %}
-                    <tr>
+                    <tr id="category-{{category.cat_id}}">
                       <td>{{ category.cat_id }}</td>
                       <td>{{ category.cat_name }}</td>
                       <td> <img src="{{ category.cat_img }}" alt="" width="80"> </td>
+                      <td>
+                        <span class="label {{ const.YES_OR_NO_LABEL.get(category.is_show, 'label-danger') }} font-weight-100">
+                          {{ const.YES_OR_NO.get(category.is_show, _('未知错误')) }}
+                        </span>
+                      </td>
                       <td>{{ category.add_time|timestamp2str }}</td>
                       <td>
                         <a href="{{ url_for('admin.item.category_detail', cat_id=category.cat_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
                           <i class="ti-marker-alt"></i>
                         </a>
-                        <!--
-                        <a href="javascript:void(0)" class="text-inverse" title="Delete" data-toggle="tooltip">
+                        <a href="javascript:void(0);" class="text-inverse" data-toggle="tooltip" title="{{_('删除')}}" onclick="remove({{ category.cat_id }})">
                           <i class="ti-trash"></i>
                         </a>
-                        -->
                       </td>
                     </tr>
                   {% endfor %}
@@ -50,4 +54,31 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+function remove(cat_id) {
+  swal({
+    title: "{{_('确认删除')}}",
+    text: "{{_('确认删除分类？')}}",
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#DD6B55",
+    confirmButtonText: "{{_('删除')}}",
+    cancelButtonText: "{{_('取消')}}",
+    closeOnConfirm: false
+  }, function(){
+    $.get("{{ url_for('admin.item.category_remove') }}", {'cat_id':cat_id}, function(json) {
+      if (json.ret != 0) {
+        swal("{{_('删除失败')}}", json.msg, "error");
+        return false;
+      }
+
+      $("#category-"+cat_id).remove();
+      swal("{{_('删除成功')}}", "", "success");
+    });
+  });
+}
+</script>
 {% endblock %}
