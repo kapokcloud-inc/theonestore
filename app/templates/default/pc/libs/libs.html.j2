@@ -60,7 +60,7 @@
 
 {# 分页 - 生成js分页html #}
 {% macro build_pagination_html_js(pagination, params, page_size) %}
-  {% set page_size = page_size if page_size else request.view_args.get('page_size', 12) %}
+  {% set page_size = page_size if page_size else request.view_args.get('page_size', 20) %}
   {% if pagination.total > 0 %}
     {% set has_prev = 1 if pagination.has_prev else 0 %}
     {% if has_prev == 1 %}
