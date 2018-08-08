@@ -126,14 +126,19 @@ def weixinjspay_req():
 
     args          = request.args
     order_id_list = args.get('order_id_list', '[]').strip()
+    openid        = args.get('openid', '').strip()
+
     try:
         order_id_list = json.loads(order_id_list)
     except Exception as e:
         return resjson.print_json(11, _(u'支付订单ID列表数据格式错误'))
 
+    if not openid:
+        return resjson.print_json(12, _(u'openid不能为空'))
+
     ps = PayService(uid, order_id_list)
     if not ps.check():
-        return resjson.print_json(11, ps.msg)
+        return resjson.print_json(13, ps.msg)
 
     if not ps.tran:
         ps.create_tran()
@@ -143,9 +148,9 @@ def weixinjspay_req():
     nonce_str = str(tran.tran_id)
 
     # 创建支付参数
-    jpps = JsapiPayParamsService(tran.tran_id, subject, tran.pay_amount*100, nonce_str, request.remote_addr)
+    jpps = JsapiPayParamsService(tran.tran_id, openid, subject, tran.pay_amount*100, nonce_str, request.remote_addr)
     if not jpps.check():
-        return resjson.print_json(12, jpps.msg)
+        return resjson.print_json(14, jpps.msg)
 
     # 创建支付参数
     jpps.create()
