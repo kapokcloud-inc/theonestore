@@ -63,7 +63,6 @@ def detail(goods_id):
 def recommend():
     """推荐"""
 
-    params             = {'is_recommend':1}
     data               = ItemStaticMethodsService.items(request.args.to_dict(),True)
 
     return render_template('pc/item/recommend.html.j2', **data)
@@ -73,7 +72,6 @@ def recommend():
 def hot():
     """热卖"""
 
-    params             = {'is_hot':1}
     data               = ItemStaticMethodsService.items(request.args.to_dict(),True)
 
     return render_template('pc/item/hot.html.j2', **data)
