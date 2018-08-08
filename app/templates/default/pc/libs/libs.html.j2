@@ -9,7 +9,7 @@
 {% macro build_pagination_html(pagination, page_size) %}
   {% if pagination.total > 0 %}
     {% set has_prev = 1 if pagination.has_prev else 0 %}
-    {% set href = pagination_href(pagination.prev_num, page_size) if pagination.has_prev else 'javascript:;' %}
+    {% set href = pagination_href(pagination.prev_num, page_size) if pagination.has_prev else 'javascript:void(0);' %}
     {% if has_prev == 1 %}
       <a class="page-num page-first" href="{{ href }}">
         <i class="icon-xiaoyu"></i>
@@ -23,7 +23,7 @@
     {% for page in pagination.iter_pages() %}
       {% if page %}
         {% set btn_current = 'btn-current' if page == pagination.page else '' %}
-        {% set href = 'javascript:;' if page == pagination.page else pagination_href(page, page_size) %}
+        {% set href = 'javascript:void(0);' if page == pagination.page else pagination_href(page, page_size) %}
         <a class="page-num {{ btn_current }}" href="{{ href }}">{{ page }}</a>
       {% else %}
         <span class="page-more">...</span>
@@ -31,7 +31,7 @@
     {% endfor %}
 
     {% set has_next = 1 if pagination.has_next else 0 %}
-    {% set href = pagination_href(pagination.next_num, page_size) if pagination.has_next else 'javascript:;' %}
+    {% set href = pagination_href(pagination.next_num, page_size) if pagination.has_next else 'javascript:void(0);' %}
     {% if has_next == 1 %}
       <a class="page-num page-last" href="{{ href }}">
         <i class="icon-dayu"></i>
