@@ -9,7 +9,7 @@
         </li>
         <li>
           {% set all_on = 'allOn' if request.path == url_for('pc.order.comment') else '' %}
-          <a class="{{ all_on }}" href="{{ url_for('pc.order.comment', is_pending=1) }}">{{_('评价晒单')}} (1)</a>
+          <a class="{{ all_on }}" href="{{ url_for('pc.order.comment', ip=1,ps=20,is_pending=1) }}">{{_('评价晒单')}} (1)</a>
         </li>
         <li>
           {% set all_on = 'allOn' if request.path == url_for('pc.aftersales.root') else '' %}
