@@ -65,11 +65,8 @@ def index(page=1, page_size=20):
     g.page_title = _(u'商品')
 
     args       = request.args
+    tab_status = toint(args.get('tab_status', '0'))
     cat_id     = toint(args.get('cat_id', '0'))
-    is_sale    = args.get('is_sale', '-1')
-    is_sale    = toint(is_sale) if is_sale in ['-1', '0', '1'] else -1
-    is_hot     = args.get('is_hot', '-1')
-    is_hot     = toint(is_hot) if is_hot in ['-1', '0', '1'] else -1
     goods_name = args.get('goods_name', '').strip()
 
     q = db.session.query(Goods.goods_id, Goods.cat_id, Goods.goods_name, Goods.goods_img, Goods.goods_price, 
@@ -81,11 +78,17 @@ def index(page=1, page_size=20):
     if cat_id > 0:
         q = q.filter(Goods.cat_id == cat_id)
     
-    if is_sale in [0,1]:
-        q = q.filter(Goods.is_sale == is_sale)
+    if tab_status == 1:
+        q = q.filter(Goods.is_sale == 1)
     
-    if is_hot in [0,1]:
-        q = q.filter(Goods.is_hot == is_hot)
+    if tab_status == 2:
+        q = q.filter(Goods.is_sale == 0)
+
+    if tab_status == 3:
+        q = q.filter(Goods.is_hot == 1)
+
+    if tab_status == 4:
+        q = q.filter(Goods.is_recommend == 1)
     
     if goods_name:
         q = q.filter(Goods.goods_name.like('%%%s%%' % goods_name))

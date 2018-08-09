@@ -24,7 +24,6 @@ class Goods(BaseModel, db.Model):
     detail = db.Column(db.Text, default=None)
     is_sale = db.Column(db.Integer, default=0)
     stock_quantity = db.Column(db.Integer, default=0)
-    comments = db.Column(db.Integer, default=0)
     is_delete = db.Column(db.Integer, default=0)
     is_hot = db.Column(db.Integer, default=0)
     is_recommend = db.Column(db.Integer, default=0)
