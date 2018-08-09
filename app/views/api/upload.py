@@ -73,7 +73,7 @@ def ueditor():
     if action == 'config':
         # 解析JSON格式的配置文件
         # 这里使用PHP版本自带的config.json文件
-        with open(os.path.join(current_app.static_folder, 'default', 'admin', 'plugins', 'ue', 'php', 'config.json'),  encoding='UTF-8') as fp:
+        with open(os.path.join(current_app.static_folder, 'default', 'admin', 'plugins', 'ue', 'php', 'config.json')) as fp:
             data = fp.read()
             CONFIG = json.loads(re.sub(r'\/\*.*\*\/', '', data))
             # log_info('##########:%s' % CONFIG)

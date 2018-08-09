@@ -6,10 +6,6 @@
 <link rel="stylesheet" href="/static/default/mobile/css/item.css">
 <link rel="stylesheet" href="/static/default/mobile/css/index.css">
 <link rel="stylesheet" href="/static/default/mobile/css/cart.css">
-<style>
-#item-detail-h5 p {margin: 0px; padding: 0px;}
-#item-detail-h5 img{width: 100%; max-width: 100%; margin: 0px; padding: 0px; border: 0px;}
-</style>
 {% endblock %} 
 
 {% block body %}
@@ -151,8 +147,9 @@
       </div>
     </div>
   </div>
-  {% if item.comment_count > 0 %}
-    <div id="nav2">
+  
+  <div id="nav2">
+    {% if item.comment_count > 0 %}
       <div class="weui-cells">
         <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.comment.index', ttype=1, tid=item.goods_id, rating=3) }}">
           <div class="weui-cell__bd">
@@ -187,8 +184,9 @@
           </div>
         {% endfor %}
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
+  </div>
+  
   <div id="nav3">
     <div class="weui-cells" id="item-detail-h5">
       <div class="pro-detail_tit">{{_('商品详情')}}</div>
@@ -237,10 +235,11 @@
     $(window).scroll(function () {
       //为页面添加页面滚动监听事件
       var wst = $(window).scrollTop()+46 //滚动条距离顶端值
-      for (i = 1; i < 4; i++) {             //加循环
-        if ($("#nav" + i).offset().top <= wst) { //判断滚动条位置
-          $('.detail-top_item').removeClass("on"); //清除c类
-          $("#nav" + i + i).addClass("on");	//给当前导航加c类
+      for (var i = 1; i < 4; i++) {             //加循环
+        var top = $('#nav'+i).offset().top;
+        if (top <= wst) { //判断滚动条位置
+          $('.detail-top_item').removeClass("on"); //清除on类
+          $('#nav'+i+i).addClass("on");	//给当前导航加c类
         }
       }
     })

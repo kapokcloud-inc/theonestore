@@ -3,15 +3,13 @@
   position: relative;
 }
 .goods-detail_info {
-  background-color: #fff;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  height: 500px;
+  padding-bottom: 40px;
 }
 .detail-info_cnt {
   position: relative;
   overflow: hidden;
   margin-left: -15px;
+  padding-top: 40px;
 }
 .detail-info_left {
   position: relative;
@@ -23,8 +21,9 @@
 .detail-info_right {
   position: relative;
   width: 400px;
-  height: 500px;
+  min-height: 500px;
   margin-left: 15px;
+  margin-bottom: 25px;
   float: left;
 }
 .info-left_box {
@@ -82,7 +81,7 @@
 }
 .info-right_box {
   position: relative;
-  height: 500px;
+  min-height: 500px;
 }
 .goods-name {
   color: #333;
@@ -180,6 +179,7 @@
   text-align: center;
   border-left: 1px solid #eee;
   overflow: hidden;
+  cursor: pointer;
 }
 .goods-scroll:hover {
   color: #f33155;
@@ -259,6 +259,10 @@
   width: 100%;
   text-align: center;
 }
+.goods-detail-desc img {
+  width: 100%;
+  max-width: 100%;
+}
 .detailBlock img {
   width: 100%;
   display: block;
@@ -302,10 +306,13 @@
   line-height: 30px;
   color: #333;
 }
+.goods-comment_cnt {
+  margin-bottom: 40px;
+}
 .comment-cnt_item {
   position: relative;
   display: flex;
-  padding: 20px;
+  padding: 40px;
   border-bottom: 0px;
   -webkit-box-align: start !important;
   align-items: flex-start !important;

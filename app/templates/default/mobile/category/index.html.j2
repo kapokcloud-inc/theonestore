@@ -8,26 +8,18 @@
 
 {% block body %}
 <div class="category_wrap mar-top">
-  {% for category in categories %}
-    {% if loop.index0%3 == 0 %}
-      <ul class="category">
-    {% endif %}
-
-    <li class="flex34">
-      <a href="{{ url_for('mobile.item.index', cat_id=category.cat_id) }}">
-        <div class="category_phone">
-          <img src="{{ category.cat_img }}" alt="">
-        </div>
-        <p class="category_name">{{ category.cat_name }}</p>
-      </a>
-    </li>
-
-    {% if not loop.first and loop.index0%2 == 0 %}
-      </ul>
-    {% elif loop.last and loop.index0%2 != 0 %}
-      </ul>
-    {% endif %}
-  {% endfor %}
+  <ul class="category">
+    {% for category in categories %}
+      <li class="category_item">
+        <a href="{{ url_for('mobile.item.index', cat_id=category.cat_id) }}">
+          <div class="category_phone">
+            <img src="{{ category.cat_img }}-square.middle" alt="">
+          </div>
+          <p class="category_name">{{ category.cat_name }}</p>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
 
   {{ libs.bottom_navigation_bar() }}
 </div>

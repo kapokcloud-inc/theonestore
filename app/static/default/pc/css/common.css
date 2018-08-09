@@ -525,6 +525,7 @@ header img {
   text-align: center;
   z-index: 110;
   background-color: #fff;
+  cursor: pointer;
 }
 .back-top_img img {
   margin: 10px 5px;

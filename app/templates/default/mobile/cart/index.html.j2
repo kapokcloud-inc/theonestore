@@ -28,28 +28,19 @@
             <div class="weui-cell__hd cart_phone">
               <img alt="" src="{{ cart.item.goods_img }}">
             </div>
-            {% if cart.is_valid == 1 %}
-              <div class="weui-cell__bd">
-                <div class="all_title mar-bottom">{{ cart.item.goods_name }}</div>
-                <div class="cart_count">
-                  <span>x {{ cart.cart.quantity }}</span>
-                </div>
-              </div>
-              <div class="weui-cell__ft mar-left width46">
-                <span class="all_price">￥{{ cart.item.goods_price }}</span>
-              </div>
-            {% else %}
-              <div class="weui-cell__bd">
-                <div class="invalid_title mar-bottom">{{ cart.item.goods_name }}</div>
-                <div class="cart_count">
+            <div class="weui-cell__bd">
+              <div class="invalid_title mar-bottom">{{ cart.item.goods_name }}</div>
+              <div class="cart_count">
+                <span>x {{ cart.cart.quantity }}</span>
+                {% if cart.is_valid == 0 %}
                   {% set status = _('已下架') if cart.valid_status == 1 else _('库存不足') %}
-                  <span class="mar-left">{{ status }}</span>
-                </div>
+                  <span class="cart_status">{{ status }}</span>
+                {% endif %}
               </div>
-              <div class="weui-cell__ft mar-left width46">
-                <span class="invalid_price">￥{{ cart.item.goods_price }}</span>
-              </div>
-            {% endif %}
+            </div>
+            <div class="weui-cell__ft mar-left">
+              <span class="invalid_price">￥{{ cart.item.goods_price }}</span>
+            </div>
           </a>
         </div>
       {% endfor %}
