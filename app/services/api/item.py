@@ -20,6 +20,7 @@ from app.helpers import (
 
 from app.services.api.comment import CommentStaticMethodsService
 
+from app.models.comment import Comment
 from app.models.like import Like
 from app.models.item import (
     Goods,
@@ -104,6 +105,18 @@ class ItemStaticMethodsService(object):
 
         model_update(item, {'view_count':item.view_count+1}, commit=True)
 
+        q = db.session.query(Comment.comment_id).\
+                filter(Comment.ttype == 1).\
+                filter(Comment.tid == goods_id).\
+                filter(Comment.is_show == 1)
+
+        rating_1_count = q.filter(Comment.rating == 1).count()
+        rating_2_count = q.filter(Comment.rating == 2).count()
+        rating_3_count = q.filter(Comment.rating == 3).count()
+        img_count      = q.filter(Comment.img_data != '[]').count()
+
         data = {'item':item, 'galleries':galleries, 'is_fav':is_fav,
-                'comments':comments, 'pagination':pagination}
+                'comments':comments, 'rating_1_count':rating_1_count,
+                'rating_2_count':rating_2_count, 'rating_3_count':rating_3_count,
+                'img_count':img_count, 'pagination':pagination}
         return data
