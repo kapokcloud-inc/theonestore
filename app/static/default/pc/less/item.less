@@ -7,17 +7,15 @@
 .goods-detail{
   position: relative;
   &_info{
-    background-color: @white-color;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    height: @height500;
+    padding-bottom: 40px;
   }
 }
 .detail-info{
   &_cnt{
     position: relative;
     overflow: hidden;
-    margin-left: -15px
+    margin-left: -15px;
+    padding-top: 40px;
   }
   &_left{
     position: relative;
@@ -29,8 +27,9 @@
   &_right{
     position: relative;
     width: 400px;
-    height: @height500;
+    min-height: @height500;
     margin-left: 15px;
+    margin-bottom: 25px;
     float: left;
   }
 }
@@ -91,7 +90,7 @@
 }
 .info-right_box{
   position: relative;
-  height: @height500;
+  min-height: @height500;
 }
 .goods-name{
   color: @black-color;
@@ -187,6 +186,7 @@
   text-align: center;
   border-left: @border5;
   overflow: hidden;
+  cursor: pointer;
   &:hover{
     color: @main-color;
   }
@@ -267,6 +267,10 @@
 .goods-detail-desc{
   width: 100%;
   text-align: center;
+  img{
+    width: 100%;
+    max-width: 100%;
+  }
 }
 .detailBlock img{
   width: 100%;
@@ -311,10 +315,13 @@
   line-height: 30px;
   color: @black-color;
 }
+.goods-comment_cnt{
+  margin-bottom: 40px;
+}
 .comment-cnt_item{
   position: relative;
   display: flex;
-  padding: 20px;
+  padding: 40px;
   border-bottom: 0px;
   -webkit-box-align: start !important;
   align-items: flex-start !important;

@@ -19,104 +19,105 @@
     </div>
     <div class="goods-detail">
       <div class="goods-detail_info clearfix">
-        <div class="head-inner">
-          <div class="detail-info_cnt">
-            <div class="detail-info_left">
-              <div class="info-left_box">
-                <div class="goods-big_pic">
-                  {% set current_big_pic = (galleries|first).img if galleries and galleries|first else '' %}
-                  <img id="bigpic" src="{{ current_big_pic }}" alt="">
-                </div>
-                <div class="goods-small_pic clearfix">
-                  <ul class="small-pic_list">
-                    {% for pic_item in galleries %}
+        <div class="bg-white">
+          <div class="head-inner">
+            <div class="detail-info_cnt clearfix">
+              <div class="detail-info_left">
+                <div class="info-left_box">
+                  <div class="goods-big_pic">
+                    {% set current_big_pic = (galleries|first).img if galleries and galleries|first else '' %}
+                    <img id="bigpic" src="{{ current_big_pic }}" alt="">
+                  </div>
+                  <div class="goods-small_pic clearfix">
+                    <ul class="small-pic_list">
+                      {% for pic_item in galleries %}
                       <li class="small-pic_item current">
                         <img src="{{ pic_item.img }}" alt="">
                       </li>
-                    {% endfor %}
-                  </ul>
+                      {% endfor %}
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="detail-info_right">
-              <div class="info-right_box">
-                <div class="goods-name">{{ item.goods_name }}</div>
-                <div class="goods-desc mar-top">{{ item.goods_desc }}</div>
-                <div class="goods-price mar-top">
-                  <span>￥{{ item.goods_price }}</span>
-                  {% if item.market_price > 0 %}
-                  <span class="price-del">￥{{ item.market_price }}</span>
-                  {% endif %}
-                </div>
-                <div class="one-cell not-border mar-top">
-                  <div class="one-cell_bd">
-                    <span class="buycount">{{_('购买数量')}}</span>
+              <div class="detail-info_right">
+                <div class="info-right_box">
+                  <div class="goods-name">{{ item.goods_name }}</div>
+                  <div class="goods-desc mar-top">{{ item.goods_desc }}</div>
+                  <div class="goods-price mar-top">
+                    <span>￥{{ item.goods_price }}</span>
+                    {% if item.market_price > 0 %}
+                    <span class="price-del">￥{{ item.market_price }}</span>
+                    {% endif %}
                   </div>
-                  <div class="one-cell_ft mar-left">
-                    <div class="apply-service_num">
-                      <i class="num_minus"></i>
-                      <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="1" minnum="1">
-                      <i class="num_add"></i>
+                  <div class="one-cell not-border mar-top">
+                    <div class="one-cell_bd">
+                      <span class="buycount">{{_('购买数量')}}</span>
                     </div>
-                  </div>
-                </div>
-                <div class="one-cell not-border serve-cell">
-                  <ul class="detail_serve one-cell_bd">
-                    <li class="detail_serve_item">
-                      <img class="tagImg" src="/static/default/pc/img/tagicon.png" alt="">
-                      <span class="tagText">{{_('7天无理由退货')}}</span>
-                    </li>
-                    <li class="detail_serve_item">
-                      <img class="tagImg" src="/static/default/pc/img/tagicon.png" alt="">
-                      <span class="tagText">{{_('运费险')}}</span>
-                    </li>
-                    <li class="detail_serve_item">
-                      <img class="tagImg" src="/static/default/pc/img/tagicon.png" alt="">
-                      <span class="tagText">{{_('48小时内发货')}}</span>
-                    </li>
-                  </ul>
-                  <div class="one-cell_ft mar-left service-tips">
-                    <img class="tipsImg" src="/static/default/mobile/img/tips.png" alt="">
-
-                    <div class="service-all">
-                      <div class="service-head">
-                        <span>{{_('服务说明')}}</span>
-                      </div>
-                      <div class="one-cell">
-                        <div class="one-cell_bd">
-                          <p class="service-black">{{_('7天无理由退货')}}</p>
-                          <p class="service-grey">{{_('此商品支持7天无理由退货，换货')}}</p>
-                        </div>
-                      </div>
-                      <div class="one-cell">
-                        <div class="one-cell_bd">
-                          <p class="service-black">{{_('运费险')}}</p>
-                          <p class="service-grey">{{_('购买此商品赠送运费险')}}</p>
-                        </div>
-                      </div>
-                      <div class="one-cell">
-                        <div class="one-cell_bd">
-                          <p class="service-black">{{_('48小时内发货')}}</p>
-                          <p class="service-grey">{{_('商家承诺下单成功48小时内发货')}}</p>
-                        </div>
+                    <div class="one-cell_ft mar-left">
+                      <div class="apply-service_num">
+                        <i class="num_minus"></i>
+                        <input class="num_ipt" type="text" id="goods_quantity" name="goods_quantity" value="1" minnum="1">
+                        <i class="num_add"></i>
                       </div>
                     </div>
                   </div>
-                  
-                </div>
-                <div class="one-cell not-border mar-top">
+                  <div class="one-cell not-border serve-cell">
+                    <ul class="detail_serve one-cell_bd">
+                      <li class="detail_serve_item">
+                        <img class="tagImg" src="/static/default/pc/img/tagicon.png" alt="">
+                        <span class="tagText">{{_('7天无理由退货')}}</span>
+                      </li>
+                      <li class="detail_serve_item">
+                        <img class="tagImg" src="/static/default/pc/img/tagicon.png" alt="">
+                        <span class="tagText">{{_('运费险')}}</span>
+                      </li>
+                      <li class="detail_serve_item">
+                        <img class="tagImg" src="/static/default/pc/img/tagicon.png" alt="">
+                        <span class="tagText">{{_('48小时内发货')}}</span>
+                      </li>
+                    </ul>
+                    <div class="one-cell_ft mar-left service-tips">
+                      <img class="tipsImg" src="/static/default/mobile/img/tips.png" alt="">
+          
+                      <div class="service-all">
+                        <div class="service-head">
+                          <span>{{_('服务说明')}}</span>
+                        </div>
+                        <div class="one-cell">
+                          <div class="one-cell_bd">
+                            <p class="service-black">{{_('7天无理由退货')}}</p>
+                            <p class="service-grey">{{_('此商品支持7天无理由退货，换货')}}</p>
+                          </div>
+                        </div>
+                        <div class="one-cell">
+                          <div class="one-cell_bd">
+                            <p class="service-black">{{_('运费险')}}</p>
+                            <p class="service-grey">{{_('购买此商品赠送运费险')}}</p>
+                          </div>
+                        </div>
+                        <div class="one-cell">
+                          <div class="one-cell_bd">
+                            <p class="service-black">{{_('48小时内发货')}}</p>
+                            <p class="service-grey">{{_('商家承诺下单成功48小时内发货')}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+          
+                  </div>
+                  <div class="one-cell not-border mar-top">
                     <!-- 商品下架时显示 -->
                     {% if item.is_sale != 1 %}
-                        <div class="one-cell_bd">
-                          <button type="button" class="downOut">{{_('商品已下架')}}</button>
-                        </div>
-                      <!-- 商品没有下架时显示 -->
-                    {% elif item.stock_quantity <= 0 %}
-                      <!-- 商品缺货时显示 -->
+                    <div class="one-cell_bd">
+                      <button type="button" class="downOut">{{_('商品已下架')}}</button>
+                    </div>
+                    <!-- 商品没有下架时显示 -->
+                    {% elif item.stock_quantity
+                    <=0 %} <!-- 商品缺货时显示 -->
                       <div class="one-cell_bd">
                         <button type="button" class="buyTo">{{_('缺货')}}</button>
                       </div>
-                    {% else %}
+                      {% else %}
                       <!-- 加入购物车 -->
                       <div class="one-cell_bd" style="margin-right:15px">
                         <button type="button" class="cartTo" onclick="cartTo()">{{_('加入购物车')}}</button>
@@ -127,67 +128,65 @@
                           <button type="button" class="buyTo">{{_('立即购买')}}</button>
                         </a>
                       </div>
-                    {% endif %}
-                </div>
-
-                <div class="one-cell not-border serve-cell">
-                  <!-- 点击评价，跳到商品的全部评价，点击事件在下方 -->
-                  <div class="goods-scroll" style="border-left:none !important" onclick="comment()">
-                    <img class="goods-scroll_img" src="/static/default/pc/img/review.png" alt="">
-                    <span>{{_('评价 ')}}({{ item.comment_count }})</span>
+                      {% endif %}
                   </div>
-
-                  <!-- 点击满意度，跳到商品的好评，点击事件在下方 -->
-                  <div class="goods-scroll" onclick="goodCom()">
-                    <img class="goods-scroll_img" src="/static/default/pc/img/zan.png" alt="">
-                    <span>{{_('满意度 ')}}({{ item.comment_good_rate }}%)</span>
-                  </div>
-                  <!--   点击收藏按钮，未登录则先登录，已登陆则执行收藏操作  -->
-                  {% set src = "/static/default/pc/img/like.png" if is_fav==1 else "/static/default/pc/img/notlike.png" %}
-                  <div class="goods-scroll" data-tid="{{ item.goods_id }}" onclick="fav(this)">
+          
+                  <div class="one-cell not-border serve-cell">
+                    <!-- 点击评价，跳到商品的全部评价，点击事件在下方 -->
+                    <div class="goods-scroll" style="border-left:none !important" onclick="comment()">
+                      <img class="goods-scroll_img" src="/static/default/pc/img/review.png" alt="">
+                      <span>{{_('评价 ')}}({{ item.comment_count }})</span>
+                    </div>
+          
+                    <!-- 点击满意度，跳到商品的好评，点击事件在下方 -->
+                    <div class="goods-scroll" onclick="goodCom()">
+                      <img class="goods-scroll_img" src="/static/default/pc/img/zan.png" alt="">
+                      <span>{{_('满意度 ')}}({{ item.comment_good_rate }}%)</span>
+                    </div>
+                    <!--   点击收藏按钮，未登录则先登录，已登陆则执行收藏操作  -->
+                    {% set src = "/static/default/pc/img/like.png" if is_fav==1 else "/static/default/pc/img/notlike.png" %}
+                    <div class="goods-scroll" data-tid="{{ item.goods_id }}" onclick="fav(this)">
                       <img class="goods-scroll_img" src="{{ src }}" alt="">
                       <span>{{_('收藏')}}</span>
+                    </div>
                   </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="goods-detail_nav">
-        <div class="head-inner">
-          <ul class="detail-nav_list">
-            <li class="detail-nav_item allOn" id="navDatail">
-              <div class="detail-nav_head">{{_('详情')}}</div>
-            </li>
-            <li class="detail-nav_item" id="navCom">
-              <div class="detail-nav_head">{{_('评价 ')}}({{ item.comment_count }})</div>
-            </li>
-          </ul>
+        <div class="goods-detail_nav">
+          <div class="head-inner">
+            <ul class="detail-nav_list">
+              <li class="detail-nav_item allOn" id="navDatail">
+                <div class="detail-nav_head">{{_('详情')}}</div>
+              </li>
+              <li class="detail-nav_item" id="navCom">
+                <div class="detail-nav_head">{{_('评价 ')}}({{ item.comment_count }})</div>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <div id="cntBox">
-        <!-- 商品详情 -->
-        <div class="allCnt show" id="detail">
-          <div class="goods-detail-desc">
-            <div class="head-inner">
+        <div class="head-inner clearfix" id="cntBox">
+          <!-- 商品详情 -->
+          <div class="allCnt show" id="detail">
+            <div class="goods-detail-desc">
               {{ item.detail }}
             </div>
           </div>
-        </div>
-        <!-- 商品详情 end -->
+          <!-- 商品详情 end -->
 
-        <!-- 商品评价 -->
-        <div class="allCnt" id="comment">
-          <div class="goods-comment_head">
-            <div class="head-inner main-block">
-              <div class="border-line"></div>
-              <p class="head-text">{{_('评价晒单')}}</p>
+          <!-- 商品评价 -->
+          <div class="allCnt" id="comment">
+            <div class="goods-comment_head">
+              <div class="main-block">
+                <div class="border-line"></div>
+                <p class="head-text">{{_('评价晒单')}}</p>
+              </div>
             </div>
-          </div>
-        
-          {% if item.comment_count > 0 %}
-            <div class="goods-detail_comment">
-              <div class="head-inner">
+          
+            {% if item.comment_count > 0 %}
+              <div class="goods-detail_comment">
                 <div class="goods-comment_groom bg-white">
                   <div class="percent-block">
                     <p class="percent">{{ item.comment_good_rate }}%</p>
@@ -195,8 +194,8 @@
                   </div>
                 </div>
                 <div class="rate-wrap">
-                  <a href="javascript:void(0);" class="rate-type rateON" onclick="change_comment_tabs(this, 1)">{{_('全部评论 ')}}{{ item.comment_count }}</a>
-                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 2)">{{_('好评 ')}}</a>
+                  <a href="javascript:void(0);" class="rate-type rateON" id="allComm" onclick="change_comment_tabs(this, 1)">{{_('全部评论 ')}}{{ item.comment_count }}</a>
+                  <a href="javascript:void(0);" class="rate-type" id="goodComm" onclick="change_comment_tabs(this, 2)">{{_('好评 ')}}</a>
                   <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 3)">{{_('中评 ')}}</a>
                   <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 4)">{{_('差评 ')}}</a>
                   <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 5)">{{_('有图 ')}}</a>
@@ -204,49 +203,54 @@
                 <div id="paging">
                   <ul class="goods-comment_cnt bg-white">
                     {% for commentItem in comments %}
-                      <li class="comment-cnt_item">
-                        <div class="cnt-item_hd">
-                          {% set avatar = commentItem.avatar if commentItem.avatar else "" %}
-                          <img class="ava" src="{{ avatar }}" alt="">
+                    <li class="comment-cnt_item">
+                      <div class="cnt-item_hd">
+                        {% set avatar = commentItem.avatar if commentItem.avatar else "" %}
+                        <img class="ava" src="{{ avatar }}" alt="">
+                      </div>
+                      <div class="cnt-item_bd">
+                        <div class="review-title">
+                          {{ commentItem.nickname|default(_('匿名')) }}
+                          <span class="rate-text">{{_('好评')}}</span>
                         </div>
-                        <div class="cnt-item_bd">
-                          <div class="review-title">
-                            {{ commentItem.nickname|default(_('匿名')) }}
-                            <span class="rate-text">{{_('好评')}}</span>
-                          </div>
-                          <div class="review-add mar-top">{{ commentItem.add_time|timestamp2str }}</div>
-                          <div class="review_cnt">{{ commentItem.content }}</div>
-                          {% if commentItem.img_data %}
-                          <ul class="comment-img_wrap">
-                            {% set imgs = commentItem.img_data|json_loads %}
-                            {% for img in imgs %}
-                              <li class="commentImg">
-                                <img src="{{ img }}" alt="">
-                              </li>
-                            {% endfor %}   
-                          </ul>
-                          {% endif %}
-                        </div>
-                      </li>
+                        <div class="review-add mar-top">{{ commentItem.add_time|timestamp2str }}</div>
+                        <div class="review_cnt">{{ commentItem.content }}</div>
+                        {% if commentItem.img_data %}
+                        <ul class="comment-img_wrap">
+                          {% set imgs = commentItem.img_data|json_loads %} {% for img in imgs %}
+                          <li class="commentImg">
+                            <img src="{{ img }}" alt="">
+                          </li>
+                          {% endfor %}
+                        </ul>
+                        {% endif %}
+                      </div>
+                    </li>
                     {% endfor %}
                   </ul>
                   {{ libs.pagination_html_js(pagination, {'ttype':1, 'tid':item.goods_id}) }}
                 </div>
               </div>
-            </div>
-          {% else %}
-            <div class="goods-null_comment">
-                <div class="head-inner">
-                    <div class="null-comment_cnt">
-                        <p>暂时还没有评价</p>
-                        <p>期待你分享对产品的印象</p>
-                    </div>
-                </div>
-            </div>
-          {% endif %}
+            {% else %}
+              <div class="goods-null_comment">
+                  <div class="head-inner">
+                      <div class="null-comment_cnt">
+                          <p>暂时还没有评价</p>
+                          <p>期待你分享对产品的印象</p>
+                      </div>
+                  </div>
+              </div>
+            {% endif %}
+          </div>
+          <!-- 商品评价 -->
         </div>
-        <!-- 商品评价 -->
-      </div>
+    </div>
+  </div>
+
+  <!-- 返回顶部 -->
+  <div class="back-top hide">
+    <div class="back-top_img">
+      <img src="http://i1.mifile.cn/f/i/2018/home/totop.png" alt="">
     </div>
   </div>
 </div>
@@ -386,6 +390,7 @@
     $('#detail').addClass("hide").removeClass("show");
     $('#navCom').addClass("allOn");
     $('#navDatail').removeClass("allOn");
+    change_comment_tabs($('#allComm'),1);
   }
 
   //点击满意度跳到评论的好评版块
@@ -394,6 +399,25 @@
     $('#detail').addClass("hide").removeClass("show");
     $('#navCom').addClass("allOn");
     $('#navDatail').removeClass("allOn");
+    change_comment_tabs($('#goodComm'),2);
   }
+
+  $(function(){
+    //当滚动条的位置处于距顶部800像素以下时，返回顶部版块出现，否则消失
+    $(window).scroll(function () {
+      if ($(window).scrollTop() < 800) {
+        $(".back-top").removeClass('show').addClass('hide').fadeOut(200);
+      }
+      else {
+        $(".back-top").removeClass('hide').addClass('show').fadeIn(200);
+      }
+    });
+
+    //点击返回顶部
+    $('.back-top').click(function () {
+      $('body,html').animate({ scrollTop: 0 }, 200);
+    });
+  });
+  
 </script>
 {% endblock %}

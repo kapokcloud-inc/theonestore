@@ -8,8 +8,8 @@
   margin-bottom: 30px;
 }
 .cart-head {
-  height: 30px;
-  line-height: 30px;
+  height: 40px;
+  line-height: 40px;
   color: #333;
   font-size: 14px;
   padding: 25px;
@@ -25,6 +25,7 @@
 }
 .cart-goods_name {
   width: 380px;
+  line-height: 40px !important;
 }
 .cart-goods_price {
   width: 150px;
@@ -891,4 +892,13 @@ input[type=number]::-webkit-outer-spin-button {
   color: #666;
   line-height: 1.5;
   background-color: #f3f4f5;
+}
+.cart-status {
+  background-color: #eee;
+  color: #ccc;
+  padding: 2px 5px;
+}
+.cart-valid {
+  width: 380px;
+  line-height: 80px !important;
 }

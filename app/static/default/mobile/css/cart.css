@@ -104,3 +104,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.cart_status {
+  background-color: #eee;
+  color: #ccc;
+  padding: 2px 5px;
+  margin-left: 10px;
+}
