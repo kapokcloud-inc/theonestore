@@ -40,6 +40,7 @@ from app.forms.api.comment import CommentOrderGoodsForm
 
 from app.models.comment import Comment
 from app.models.shipping import Shipping
+from app.models.aftersales import Aftersales
 from app.models.order import (
     Order,
     OrderAddress,
@@ -59,7 +60,7 @@ def index():
     uid = get_uid()
 
     data               = OrderStaticMethodsService.orders(uid, request.args.to_dict(), True)
-    log_info(request.args.to_dict())
+   
     # pc端订单列表支持，支付、详情、售后3个指令，其余指令排除，即排除[2,3,4,5,6]
     if data.get("orders"):
         excel_code = [2,3,4,5,6]
@@ -69,6 +70,7 @@ def index():
             action_code[order.order_id] = list(temp)
 
     data['tab_status'] = request.args.get('tab_status', '0')
+
     return render_template('pc/order/index.html.j2', **data)
 
 

@@ -1,4 +1,5 @@
 {% extends '/default/pc/layout/base.html.j2' %} 
+{% import '/default/pc/libs/libs.html.j2' as libs %}
 
 {% block head %}
 <title>{{_('热卖 - 一店')}}</title>
@@ -39,22 +40,7 @@
         {% endfor %}
       </ul>
       <!-- 分页 每20条一页 -->
-      <div class="comment-page_list">
-        <span class="page-num page-first">
-          <i class="icon-xiaoyu"></i>
-        </span>
-        <span class="page-num btn-current">1</span>
-        <a href="" class="page-num">2</a>
-        <a href="" class="page-num">3</a>
-        <a href="" class="page-num">4</a>
-        <a href="" class="page-num">5</a>
-        <a href="" class="page-num">6</a>
-        <span class="page-more">...</span>
-        <a href="" class="page-num">12</a>
-        <a href="" class="page-num page-last">
-          <i class="icon-dayu"></i>
-        </a>
-      </div>
+      {{ libs.pagination_html(pagination,20) }}
       <!-- 分页 end -->
     </div>
   </div>

@@ -4,13 +4,16 @@
       <div class="navL-box_hd">{{_('订单中心')}}</div>
       <ul class="navL-box_bd">
         <li>
-          <a class="allOn" href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
+          {% set all_on = 'allOn' if request.path == url_for('pc.order.index') else '' %}
+          <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
         </li>
         <li>
-          <a href="{{ url_for('pc.order.comment', is_pending=1) }}">{{_('评价晒单')}} (1)</a>
+          {% set all_on = 'allOn' if request.path == url_for('pc.order.comment') else '' %}
+          <a class="{{ all_on }}" href="{{ url_for('pc.order.comment', is_pending=1) }}">{{_('评价晒单')}} (1)</a>
         </li>
         <li>
-          <a href="{{ url_for('pc.aftersales.root') }}">{{_('售后服务记录')}}</a>
+          {% set all_on = 'allOn' if request.path == url_for('pc.aftersales.root') else '' %}
+          <a class="{{ all_on }}" href="{{ url_for('pc.aftersales.root') }}">{{_('售后服务记录')}}</a>
         </li>
       </ul>
     </div>
@@ -18,22 +21,28 @@
       <div class="navL-box_hd">{{_('个人中心')}}</div>
       <ul class="navL-box_bd">
         <li>
-          <a href="{{ url_for('pc.me.index') }}">{{_('我的个人中心')}}</a>
+          {% set all_on = 'allOn' if request.path == url_for('pc.me.index') else '' %}
+          <a class="{{ all_on }}" href="{{ url_for('pc.me.index') }}">{{_('我的个人中心')}}</a>
         </li>
         <li>
-          <a href="{{ url_for('pc.me.messages') }}">{{_('消息通知')}} (1)</a>
+          {% set all_on = 'allOn' if request.path == url_for('pc.me.messages') else '' %}
+          <a class="{{ all_on }}" href="{{ url_for('pc.me.messages') }}">{{_('消息通知')}} (1)</a>
         </li>
         <li>
-          <a href="{{ url_for('pc.wallet.root') }}">{{_('钱包')}}</a>
+          {% set all_on = 'allOn' if request.path == url_for('pc.wallet.root') else '' %}
+          <a class="{{ all_on }}" href="{{ url_for('pc.wallet.root') }}">{{_('钱包')}}</a>
         </li>
         <li>
-          <a href="{{ url_for('pc.me.collect') }}">{{_('我的收藏')}}</a>
+          {% set all_on = 'allOn' if request.path == url_for('pc.me.collect') else '' %}
+          <a class="{{ all_on }}" href="{{ url_for('pc.me.collect',p=1,ps=20) }}">{{_('我的收藏')}}</a>
         </li>
         <li>
-          <a href="{{ url_for('pc.me.coupon') }}">{{_('优惠券')}}</a>
+          {% set all_on = 'allOn' if request.path == url_for('pc.me.coupon') else '' %}
+          <a class="{{ all_on }}" href="{{ url_for('pc.me.coupon') }}">{{_('优惠券')}}</a>
         </li>
         <li>
-          <a href="{{ url_for('pc.me.addresses') }}">{{_('收货地址')}}</a>
+          {% set all_on = 'allOn' if request.path == url_for('pc.me.addresses') else '' %}
+          <a class="{{ all_on }}" href="{{ url_for('pc.me.addresses') }}">{{_('收货地址')}}</a>
         </li>
       </ul>
     </div>

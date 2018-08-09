@@ -30,7 +30,8 @@ from app.helpers import (
     log_info,
     toint,
     model_create,
-    model_update
+    model_update,
+    model_delete
 )
 from app.helpers.date_time import current_timestamp
 
@@ -64,11 +65,8 @@ def index(page=1, page_size=20):
     g.page_title = _(u'商品')
 
     args       = request.args
+    tab_status = toint(args.get('tab_status', '0'))
     cat_id     = toint(args.get('cat_id', '0'))
-    is_sale    = args.get('is_sale', '-1')
-    is_sale    = toint(is_sale) if is_sale in ['-1', '0', '1'] else -1
-    is_hot     = args.get('is_hot', '-1')
-    is_hot     = toint(is_hot) if is_hot in ['-1', '0', '1'] else -1
     goods_name = args.get('goods_name', '').strip()
 
     q = db.session.query(Goods.goods_id, Goods.cat_id, Goods.goods_name, Goods.goods_img, Goods.goods_price, 
@@ -80,11 +78,17 @@ def index(page=1, page_size=20):
     if cat_id > 0:
         q = q.filter(Goods.cat_id == cat_id)
     
-    if is_sale in [0,1]:
-        q = q.filter(Goods.is_sale == is_sale)
+    if tab_status == 1:
+        q = q.filter(Goods.is_sale == 1)
     
-    if is_hot in [0,1]:
-        q = q.filter(Goods.is_hot == is_hot)
+    if tab_status == 2:
+        q = q.filter(Goods.is_sale == 0)
+
+    if tab_status == 3:
+        q = q.filter(Goods.is_hot == 1)
+
+    if tab_status == 4:
+        q = q.filter(Goods.is_recommend == 1)
     
     if goods_name:
         q = q.filter(Goods.goods_name.like('%%%s%%' % goods_name))
@@ -326,7 +330,30 @@ def category_save():
         category = model_create(GoodsCategories, {'add_time':current_timestamp()})
 
     cat_img = cat_img if cat_img else category.cat_img
-    model_update(category, {'cat_name':form.cat_name.data, 'cat_img':cat_img}, commit=True)
+    data    = {'cat_name':form.cat_name.data, 'cat_img':cat_img, 'is_show':form.is_show.data}
+    model_update(category, data, commit=True)
 
     return redirect(url_for('admin.item.categories'))
 
+
+@item.route('/category/remove')
+def category_remove():
+    """删除分类"""
+    resjson.action_code = 12
+
+    cat_id = toint(request.args.get('cat_id', '0'))
+
+    if cat_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    category = GoodsCategories.query.get(cat_id)
+    if not category:
+        return resjson.print_json(10, _(u'分类不存在'))
+
+    item = Goods.query.filter(Goods.cat_id == cat_id).filter(Goods.is_delete == 0).first()
+    if item:
+        return resjson.print_json(11, _(u'分类下有商品，禁止删除！'))
+
+    model_delete(category, commit=True)
+
+    return resjson.print_json(0, u'ok')

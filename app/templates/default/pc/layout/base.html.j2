@@ -44,7 +44,7 @@
                   <a href="{{ url_for('pc.me.coupon') }}">{{_('优惠券')}}</a>
                 </span>
                 <span>
-                  <a href="{{ url_for('pc.me.collect') }}">{{_('收藏')}}</a>
+                  <a href="{{ url_for('pc.me.collect', p=1, ps=20) }}">{{_('收藏')}}</a>
                 </span>
                 <span>
                   <a href="{{ url_for('pc.me.messages') }}">{{_('消息')}}</a>
@@ -62,7 +62,7 @@
             <a href="{{ url_for('pc.me.coupon') }}" class="mouseon">{{_('优惠券')}}</a>
           </li>
           <li class="top-nav_item">
-            <a href="{{ url_for('pc.me.collect') }}" class="mouseon">{{_('收藏')}}</a>
+            <a href="{{ url_for('pc.me.collect', p=1, ps=20) }}" class="mouseon">{{_('收藏')}}</a>
           </li>
           <li class="top-nav_item">
             <a href="{{ url_for('pc.me.messages') }}" class="mouseon">{{_('消息')}}</a>

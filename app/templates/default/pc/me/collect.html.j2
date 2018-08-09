@@ -1,4 +1,5 @@
 {% extends '/default/pc/layout/base.html.j2' %}
+{% import '/default/pc/libs/libs.html.j2' as libs %}
 
 
 {% block head %}
@@ -21,63 +22,38 @@
         {%include 'default/pc/layout/nav_left.html.j2'%}
         <div class="order-wrap">
           <div class="allPad">
-            <!-- 有收藏 -->
-            <div class="order-bd">
-              <ul class="all-list clearfix">
-                <li class="list-item2">
-                  <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                    <div class="item-product">
-                      <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
-                    </div>
-                    <div class="item-detail">
-                      <div class="all-title">小米短袖T恤 两件装 黑色+白色</div>
-                      <div class="all-price mar-top">￥89</div>
-                    </div>
-                  </a>
-                  <div class="review-btn_wrap" data-value="">
-                    <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
-                  </div>
-                </li>
-                <li class="list-item2">
-                  <a href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                    <div class="item-product">
-                      <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
-                    </div>
-                    <div class="item-detail">
-                      <div class="all-title">小米短袖T恤 两件装 黑色+白色</div>
-                      <div class="all-price mar-top">￥89</div>
-                    </div>
-                  </a>
-                  <div class="review-btn_wrap" data-value="">
-                    <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
-                  </div>
-                </li>
-              </ul>
-              <div class="page-box" style="margin-top:30px;">
-                <span class="page-num page-first">
-                  <i class="icon-xiaoyu"></i>
-                </span>
-                <span class="page-num btn-current">1</span>
-                <a href="" class="page-num">2</a>
-                <a href="" class="page-num">3</a>
-                <a href="" class="page-num">4</a>
-                <a href="" class="page-num">5</a>
-                <a href="" class="page-num">6</a>
-                <span class="page-more">...</span>
-                <a href="" class="page-num">12</a>
-                <a href="" class="page-num page-last">
-                  <i class="icon-dayu"></i>
-                </a>
+            {% if likes %}
+              <!-- 有收藏 -->
+              <div class="order-bd">
+                <ul class="all-list clearfix">
+                  {% for like in likes %}
+                    <li class="list-item2">
+                      <a href="{{ url_for('pc.item.detail', goods_id=like.tid) }}">
+                        <div class="item-product">
+                          <img src="{{ like.timg }}" alt="">
+                        </div>
+                        <div class="item-detail">
+                          <div class="all-title">{{ like.tname }}</div>
+                          <div class="all-price mar-top">￥{{ goods[like.tid].goods_price }}</div>
+                        </div>
+                      </a>
+                      <div class="review-btn_wrap" data-tid="{{ like.tid }}" onclick="delcollect(this)">
+                        <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
+                      </div>
+                    </li>
+                  {% endfor %}
+                </ul>
+                {{ libs.pagination_html(pagination) }}
               </div>
-            </div>
-            <!-- 有收藏 end -->
-
-            <!-- 没有收藏 -->
-            <div class="not-one">
-              <p class="not-one_text">{{_('您暂时没有收藏商品!')}}</p>
-              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-            </div>
-            <!-- 没有收藏 end -->
+              <!-- 有收藏 end -->
+            {% else %}
+              <!-- 没有收藏 -->
+              <div class="not-one">
+                <p class="not-one_text">{{_('您暂时没有收藏商品!')}}</p>
+                <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+              </div>
+              <!-- 没有收藏 end -->
+            {% endif %}
           </div>
         </div>
       </div>
@@ -87,5 +63,21 @@
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript"></script>
+<script type="text/javascript">
+
+  function delcollect(dom){
+    var $dom = $(dom);
+    var tid = $dom.attr('data-tid');
+    var params = {'like_type':2, 'ttype':1, 'tid':tid}
+
+    $.get("{{ url_for('api.like.action') }}", params, function(json) {
+      if (json.ret != 0) {
+        $.toast(json.msg, "text");
+        return false;
+      }
+      location.reload();
+    });
+  }
+
+</script>
 {% endblock%}

@@ -96,8 +96,14 @@
                               </a>
                             {% if 7 in codes[order.order_id] %}
                               <!-- 发货前只支持退款，发货后可以退货退款或换货 -->
-                              {% set btn_text = "申请退款" if order.shipping_status == 1 else "申请售后" %}
-                              {% set btn_href =  url_for('pc.aftersales.apply_step1',order_id=order.order_id)  if order.shipping_status == 1 else url_for('pc.aftersales.apply_step0',order_id=order.order_id) %}
+                              {% if order.shipping_status == 1 %}
+                                {% set btn_text = "申请退款" %}
+                                {% set aftersale = aftersales[order.order_id] %}
+                                {% set btn_href = url_for('pc.aftersales.detail',aftersales_id=aftersale.aftersales_id) if aftersale else url_for('pc.aftersales.apply_step1',order_id=order.order_id) %}
+                              {% else %}
+                                {% set btn_text = "申请售后" %}
+                                {% set btn_href = url_for('pc.aftersales.apply_step0',order_id=order.order_id) %}
+                              {% endif %}
                               <a class="btn-link" href="{{ btn_href }}">
                                 <button class="order-type_btn" type="button">{{ btn_text }}</button>
                               </a>
@@ -109,7 +115,7 @@
                   {% endfor %}
                 </ul>
               </div>
-              {{ libs.pagination_html(pagination) }}
+              {{ libs.pagination_html(pagination,10) }}
             </div>
             <!-- 有订单 end -->
             {% else %}

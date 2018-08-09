@@ -31,9 +31,10 @@
                   <div class="goods-small_pic clearfix">
                     <ul class="small-pic_list">
                       {% for pic_item in galleries %}
-                      <li class="small-pic_item current">
-                        <img src="{{ pic_item.img }}" alt="">
-                      </li>
+                        {% set selectclass = 'current' if current_big_pic == pic_item.img %}
+                        <li class="small-pic_item {{ selectclass }}">
+                          <img src="{{ pic_item.img }}" alt="">
+                        </li>
                       {% endfor %}
                     </ul>
                   </div>
@@ -354,13 +355,6 @@
     var tid = $dom.attr('data-tid');
     var params = {'like_type':2, 'ttype':1, 'tid':tid}
 
-    /* 登陆检测
-    var uid = {{ session.get('uid',0) }};
-    if (uid <= 0){
-      //跳转登录页面
-      return false;
-    }
-    */
     $.get("{{ url_for('api.like.action') }}", params, function(json) {
       if (json.ret != 0) {
         $.toast(json.msg, "text");

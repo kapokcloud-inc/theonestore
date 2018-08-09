@@ -48,6 +48,7 @@ from app.models.order import (
 )
 from app.models.funds import Funds
 from app.models.coupon import Coupon
+from app.models.item import Goods
 from app.models.user import (
     User,
     UserAddress,
@@ -147,11 +148,19 @@ def collect():
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']
         return redirect(url_for('api.weixin.login'))
-    uid = get_uid()
+    uid           = get_uid()
+    params        = request.args.to_dict()
+    params['uid'] = uid
+    data          = LikeStaticMethodsService.likes(params,True)
 
-    data      = LikeStaticMethodsService.likes({'uid':uid})
+    goods = {}
 
-    return render_template('pc/me/collect.html.j2', likes=data['likes'])
+    for like in data["likes"]:
+        good            = db.session.query(Goods.goods_price,Goods.market_price).filter(Goods.goods_id == like.tid).first()
+        goods[like.tid] = good
+
+    data['goods'] = goods
+    return render_template('pc/me/collect.html.j2', **data)
 
 
 @me.route('/coupon')

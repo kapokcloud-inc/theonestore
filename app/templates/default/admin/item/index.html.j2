@@ -7,34 +7,51 @@
   <div class="container-fluid">
     <div class="row bg-title">
       <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
-        {% set is_sale = request.args.get('is_sale', '-1') %}
-        {% set is_hot = request.args.get('is_hot', '-1') %}
+        {% set tab_status = request.args.get('tab_status', '0') %}
 
-        {% set sale_active = 'active' if is_sale == '1' else '' %}
-        <li role="presentation" class="{{ sale_active }}">
-          <a href="{{ url_for('admin.item.index', is_sale=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+        {% set active = 'active' if tab_status == '0' else '' %}
+        <li role="presentation" class="{{ active }}">
+          <a href="{{ url_for('admin.item.index', tab_status=0) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-user"></i>
+            </span>
+            <span class="hidden-xs">{{_('全部商品')}}</span>
+          </a>
+        </li>
+        {% set active = 'active' if tab_status == '1' else '' %}
+        <li role="presentation" class="{{ active }}">
+          <a href="{{ url_for('admin.item.index', tab_status=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
             <span class="visible-xs">
               <i class="ti-user"></i>
             </span>
             <span class="hidden-xs">{{_('销售中')}}</span>
           </a>
         </li>
-        {% set not_sale_active = 'active' if is_sale == '0' else '' %}
-        <li role="presentation" class="{{ not_sale_active }}">
-          <a href="{{ url_for('admin.item.index', is_sale=0) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
+        {% set active = 'active' if tab_status == '2' else '' %}
+        <li role="presentation" class="{{ active }}">
+          <a href="{{ url_for('admin.item.index', tab_status=2) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
             <span class="visible-xs">
               <i class="ti-user"></i>
             </span>
             <span class="hidden-xs">{{_('已下架')}}</span>
           </a>
         </li>
-        {% set hot_active = 'active' if (is_sale == '-1' or is_sale == '') and is_hot == '1' else '' %}
-        <li role="presentation" class="{{ hot_active }}">
-          <a href="{{ url_for('admin.item.index', is_hot=1) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
+        {% set active = 'active' if tab_status == '3' else '' %}
+        <li role="presentation" class="{{ active }}">
+          <a href="{{ url_for('admin.item.index', tab_status=3) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
             <span class="visible-xs">
               <i class="ti-email"></i>
             </span>
             <span class="hidden-xs">{{_('热卖')}}</span>
+          </a>
+        </li>
+        {% set active = 'active' if tab_status == '4' else '' %}
+        <li role="presentation" class="{{ active }}">
+          <a href="{{ url_for('admin.item.index', tab_status=4) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
+            <span class="visible-xs">
+              <i class="ti-email"></i>
+            </span>
+            <span class="hidden-xs">{{_('推荐')}}</span>
           </a>
         </li>
         <a href="{{ url_for('admin.item.create') }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display: block !important;background: #f33155 !important;border: 1px solid #f33155 !important;">
@@ -128,7 +145,7 @@
 function remove(goods_id) {
   swal({
     title: "{{_('确认删除')}}",
-    text: "{{_('确认删除此条商品？')}}",
+    text: "{{_('确认删除商品？')}}",
     type: "warning",
     showCancelButton: true,
     confirmButtonColor: "#DD6B55",

@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for more details.
 """
 import json
+from decimal import Decimal
 
 from flask import (
     Blueprint,
@@ -44,6 +45,7 @@ from app.services.api.order import (
 
 from app.forms.api.comment import CommentOrderGoodsForm
 
+from app.models.item import Goods
 from app.models.comment import Comment
 from app.models.order import (
     Order,
@@ -220,6 +222,18 @@ def save_comment():
             'rating':wtf_form.rating.data, 'content':wtf_form.content.data,
             'img_data':wtf_form.img_data.data, 'add_time':current_time}
     comment = model_create(Comment, data, commit=True)
+
+    item = Goods.query.get(order_goods.goods_id)
+    if item:
+        comment_count     = Comment.query.\
+                                filter(Comment.ttype == 1).\
+                                filter(Comment.tid == order_goods.goods_id).count()
+        good_count        = Comment.query.\
+                                filter(Comment.ttype == 1).\
+                                filter(Comment.tid == order_goods.goods_id).\
+                                filter(Comment.rating == 5).count()
+        comment_good_rate = round((Decimal(good_count)/Decimal(good_count)) * 100)
+        model_update(item, {'comment_count':comment_count, 'comment_good_rate':comment_good_rate})
 
     model_update(order_goods, {'comment_id':comment.comment_id}, commit=True)
 

@@ -1,4 +1,5 @@
 {% extends '/default/pc/layout/base.html.j2' %}
+{% import '/default/pc/libs/libs.html.j2' as libs %}
 
 
 {% block head %}
@@ -42,17 +43,18 @@
                         </div>
                         <div class="item-datail_bd clearfix">
                           {% set goods = (aftersale.goods_data)|json_loads %}
-                          {% set good = goods|first if goods %}
                           <div class="item-bd_fl">
-                            <div class="one-cell">
-                              <div class="one-cell_hd avatar80">
-                                <img src="{{ good.goods_img }}" alt="">
+                            {% for good in goods if goods %}
+                              <div class="one-cell">
+                                <div class="one-cell_hd avatar80">
+                                  <img src="{{ good.goods_img }}" alt="">
+                                </div>
+                                <div class="one-cell_bd">
+                                  <p class="blackGap">{{ good.goods_name }}</p>
+                                  <p class="blackGap mar-top">数量：{{ good.goods_quantity }}</p>
+                                </div>
                               </div>
-                              <div class="one-cell_bd">
-                                <p class="blackGap">{{ good.goods_name }}</p>
-                                <p class="blackGap mar-top">数量：{{ good.goods_quantity }}</p>
-                              </div>
-                            </div>
+                            {% endfor %}
                           </div>
                           <div class="item-bd_fr">
                             <a class="btn-link" href="{{ url_for('pc.aftersales.detail', aftersales_id=aftersale.aftersales_id) }}">
@@ -65,22 +67,7 @@
                     {% endfor %}
                   </ul>
                 </div>
-                <div class="page-box">
-                  <span class="page-num page-first">
-                    <i class="icon-xiaoyu"></i>
-                  </span>
-                  <span class="page-num btn-current">1</span>
-                  <a href="" class="page-num">2</a>
-                  <a href="" class="page-num">3</a>
-                  <a href="" class="page-num">4</a>
-                  <a href="" class="page-num">5</a>
-                  <a href="" class="page-num">6</a>
-                  <span class="page-more">...</span>
-                  <a href="" class="page-num">12</a>
-                  <a href="" class="page-num page-last">
-                    <i class="icon-dayu"></i>
-                  </a>
-                </div>
+                {{ libs.pagination_html(pagination,10) }}
               </div>
               <!-- 有申请 end -->
             {% else %}
