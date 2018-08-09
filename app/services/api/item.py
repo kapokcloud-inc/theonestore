@@ -14,7 +14,8 @@ from app.database import db
 
 from app.helpers import (
     log_info,
-    toint
+    toint,
+    model_update
 )
 
 from app.services.api.comment import CommentStaticMethodsService
@@ -97,9 +98,11 @@ class ItemStaticMethodsService(object):
         pagination = None
         if item.comment_count > 0:
             params     = {'p':1, 'ps':12, 'ttype':1, 'tid':goods_id}
-            data       = CommentStaticMethodsService.comments(params, True)
+            data       = CommentStaticMethodsService.comments(params, is_pagination=True)
             comments   = data['comments']
             pagination = data['pagination']
+
+        model_update(item, {'view_count':item.view_count+1}, commit=True)
 
         data = {'item':item, 'galleries':galleries, 'is_fav':is_fav,
                 'comments':comments, 'pagination':pagination}
