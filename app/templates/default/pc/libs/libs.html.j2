@@ -105,7 +105,7 @@
 {# 判断个人中心-左侧菜单选中项 #}
 {% macro get_me_navclass(nav_cat) %}
   {% set nav_cat_dict = {
-    'order':['pc.order.index', 'pc.order.detail'],
+    'order':['pc.order.index', 'pc.order.detail', 'pc.aftersales.apply_step0','pc.aftersales.apply_step1','pc.aftersales.apply_step2','pc.aftersales.apply_step3'],
     'comment':['pc.order.comment'],
     'aftersales':['pc.aftersales.root', 'pc.aftersales.detail'],
     'profile':['pc.me.index'],

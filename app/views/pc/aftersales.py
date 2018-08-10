@@ -44,7 +44,8 @@ from app.models.aftersales import (
 )
 
 from app.models.order import (
-    OrderAddress
+    OrderAddress,
+    OrderGoods
 )
 
 aftersales = Blueprint('pc.aftersales', __name__)
@@ -111,11 +112,26 @@ def apply_step0(order_id):
     return render_template('pc/aftersales/apply_step0.html.j2', **data)
 
 
-@aftersales.route('/apply/step1')
+@aftersales.route('/apply/step1/')
 def apply_step1():
     """pc站 - 申请售后服务-第一步"""
 
-    return render_template('pc/aftersales/apply_step1.html.j2')
+    if not check_login():
+        session['weixin_login_url'] = request.headers['Referer']
+        return redirect(url_for('api.weixin.login'))
+    uid = get_uid()
+    
+    order_id = request.args.to_dict().get('order_id')
+    og_id    = request.args.to_dict().get('og_id')
+    
+    data = OrderStaticMethodsService.detail_page(order_id, uid)
+    #pc端订单详情不支持再次购买，排除掉指令[5]
+    data['code']= list(set(data['code'])-set([5]))
+
+    order_good = OrderGoods.query.filter(OrderGoods.og_id==og_id).first()
+    data['order_good'] = order_good
+
+    return render_template('pc/aftersales/apply_step1.html.j2',**data)
 
 
 @aftersales.route('/apply/step2')

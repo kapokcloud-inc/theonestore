@@ -38,24 +38,62 @@
                   <p class="choice-goods_title">选择进行售后的商品</p>
                 </div>
                 <div class="aftersales-goods_box">
-                  <div class="one-cell not-oneCell">
-                    <div class="one-cell_hd avatar80">
-                      <img src="http://i1.mifile.cn/a1/T1tfL_BmAT1RXrhCrK!80x80.jpg" alt="">
-                    </div>
-                    <div class="one-cell_bd">
-                      <p class="blackGap">红米手机2A 移动4G双卡版 绿色 8GB</p>
-                      <p class="blackGap mar-top">数量：1</p>
-                    </div>
-                  </div>
+                    <!-- 判断售后状态  aftersale_status=1(整单售后) aftersale_status=2(指定商品售后)-->
+                    {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 %}
+                      {% set aftersale_status = 1 %}
+                    {% elif order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 %}
+                      {% set aftersale_status = 2 %}
+                    {% endif %}
+
+                    {% if aftersale_status==1 %}
+                      {% for item in items %}
+                        <div class="one-cell not-oneCell">
+                          <div class="one-cell_hd avatar80">
+                            <img src="{{ item.goods_img }}" alt="">
+                          </div>
+                          <div class="one-cell_bd">
+                            <p class="blackGap">{{ item.goods_name }}</p>
+                            <p class="blackGap mar-top">数量：{{ item.goods_quantity }}</p>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% elif aftersale_status==2 %}
+                      {% if order_good %}
+                        <div class="one-cell not-oneCell">
+                          <div class="one-cell_hd avatar80">
+                            <img src="{{ order_good.goods_img }}" alt="">
+                          </div>
+                          <div class="one-cell_bd">
+                            <p class="blackGap">{{ order_good.goods_name }}</p>
+                            <p class="blackGap mar-top">数量：{{ order_good.goods_quantity - order_good.aftersales_goods_quantity }}</p>
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endif %}
                 </div>
                 <div class="choice-goods">
                   <p class="choice-goods_title">为您的产品选择服务类型</p>
                 </div>
                 <div class="section-bd">
                   <ul class="aftersales-type_list clearfix">
-                    <li class="aftersales-type_item allActive" data-value="">{{_('退货退款')}}</li>
-                    <li class="aftersales-type_item" data-value="">{{_('仅退款')}}</li>
-                    <li class="aftersales-type_item" data-value="">{{_('仅换货')}}</li>
+                    {% if 7 in code %}
+                      <!-- 发货前的售后服务类型 -->
+                      {% if aftersale_status==1 and not aftersale %}
+                        <li class="aftersales-type_item allActive" data-value="1">{{_('仅退款')}}</li>
+                      {% endif %}
+                      <!-- 发货后的售后服务类型 -->
+                      {% if aftersale_status==2 %}
+                        {% set limit_time = order.shipping_time|before_after_timestamp({'days':7}) %}
+                        {% set limit_time1 = order.shipping_time|before_after_timestamp({'days':15}) %}
+                        <!-- 发货后7天内，支持退货退款和换货服务 -->
+                        {% if limit_time >= current_time %}
+                          <li class="aftersales-type_item allActive" data-value="2">{{_('退货退款')}}</li>
+                          <li class="aftersales-type_item" data-value="3">{{_('仅换货')}}</li>
+                        {% elif limit_time1 >= current_time %}
+                          <li class="aftersales-type_item allActive" data-value="3">{{_('仅换货')}}</li>
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
                   </ul>
                   <p class="greyGap">* 您的商品支持退货退款、仅换货服务</p>
                 </div>
@@ -80,8 +118,9 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="reg-btn">
-                  <a class="one-btn btn-primary" href="{{ url_for('pc.aftersales.apply_step2') }}">{{_('下一步')}}</a>
+                  <a id="btn_next" class="one-btn btn-primary" href="{{ url_for('pc.aftersales.apply_step2') }}">{{_('下一步')}}</a>
                 </div>
               </div>
           </div>
@@ -96,6 +135,15 @@
 <script type="text/javascript">
 $(".aftersales-type_item").click(function () {
   $(this).addClass('allActive').siblings().removeClass('allActive');
+  var aftersaale_type = $(this).getAttribute("data-value");
+  if(aftersaale_type=="3"){
+    $('#btn_next').attr('href',"{{ url_for('pc.aftersales.apply_step2') }}");
+    $('#btn_next').text("下一步");
+  }else{
+    $('#btn_next').attr('href',"{{ url_for('pc.aftersales.apply_step3') }}");
+    $('#btn_next').text("提交申请");
+  }
+
 });
 </script>
 {% endblock%}
