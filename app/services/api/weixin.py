@@ -25,46 +25,51 @@ from app.database import db
 
 from app.helpers import (
     log_info,
-    toint
+    toint,
+    randomstr
 )
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import set_user_session
 
 from app.services.api.user import UserCreateService
 
+from app.models.sys import SysSetting
 from app.models.user import User, UserThirdBind
 
 
 class WeiXinLoginService(object):
     """微信登录Service"""
 
-    def __init__(self):
+    def __init__(self, config_type, login_type, request):
         self.msg          = u''
         self.appid        = ''
         self.secret       = ''
+        self.config_type  = config_type         # 配置类型: mp或open
+        self.login_type   = login_type          # 登录类型: mp或qrcode
+        self.request      = request
         self.current_time = current_timestamp()
+        self.config_types = {'mp':'config_weixin_mp', 'open':'config_weixin_open'}
+        self.code_url     = ''
 
-    def check(self):
-        """检查"""
+    def __code_url(self):
+        """code url"""
 
-        # ??
-        self.appid        = ''
-        self.secret       = ''
+        uris   = {'mp':'https://open.weixin.qq.com/connect/oauth2/authorize',
+                    'qrcode':'https://open.weixin.qq.com/connect/qrconnect'}
+        scopes = {'mp':'snsapi_userinfo', 'qrcode':'snsapi_login'}
+
+        uri           = uris.get(self.login_type)
+        redirect_uri  = urlencode(request.url.encode('utf8'))
+        scope         = scopes.get(self.login_type)
+        state         = randomstr(32)
+        self.code_url = u'%s?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect' %\
+                        (uri, self.appid, redirect_uri, scope, state)
+
+        session['weixin_login_state'] = state
 
         return True
 
-    def code_url(self):
-        """code url"""
-
-        weixin_authorize_url = 'https://open.weixin.qq.com/connect/oauth2/authorize'
-        params               = {'redirect_uri':request.url.encode('utf8')}
-        redirect_uri_param   = urlencode(params)
-        code_url             = u'%s?appid=%s&%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect' % (
-                                weixin_authorize_url, self.appid, redirect_uri_param)
-
-        return code_url
-
-    def token_url(self, code):
+    def __token_url(self, code):
         """token url"""
 
         access_token_url = 'https://api.weixin.qq.com/sns/oauth2/access_token'
@@ -78,7 +83,7 @@ class WeiXinLoginService(object):
 
         return token_url
 
-    def userinfo_url(self, access_token, openid):
+    def __userinfo_url(self, access_token, openid):
         """userinfo url"""
 
         userinfo_url = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN" %\
@@ -86,11 +91,55 @@ class WeiXinLoginService(object):
 
         return userinfo_url
 
-    def login(self, code):
+    def check(self):
+        """检查"""
+
+        if self.config_type not in ['mp', 'open']:
+            self.msg = _(u'参数错误')
+            return False
+
+        if self.login_type not in ['mp', 'qrcode']:
+            self.msg = _(u'参数错误')
+            return False
+
+        config_key = self.config_types.get(self.config_type)
+        ss         = SysSetting.query.filter(SysSetting.key == config_key).first()
+        if not ss:
+            self.msg = _(u'配置错误')
+            return False
+
+        try:
+            config = json.loads(ss.value)
+        except Exception as e:
+            self.msg = _(u'配置错误')
+            return False
+
+        self.appid  = config.get('appid', '')
+        self.secret = config.get('secret', '')
+        if (not self.appid) or (not self.secret):
+            self.msg = _(u'配置错误')
+            return False
+
+        return True
+
+    def check_state(self):
+        """检查state"""
+
+        state = self.request.args.get('state', '')
+        if not state:
+            self.code_url = self.__code_url()
+
+    def login(self):
         """登陆"""
 
+        code  = self.request.args.get('code', '')
+        state = self.request.args.get('state', '')
+
+        if session.get('weixin_login_state') != state:
+            return False
+
         # 获取token
-        token_url = self.token_url(code)
+        token_url = self.__token_url(code)
         response  = requests.get(token_url)
         if response.status_code != 200:
             return False
@@ -112,7 +161,7 @@ class WeiXinLoginService(object):
         session['weixin_login_token_time']    = self.current_time
 
         # 获取用户信息
-        userinfo_url = self.userinfo_url(access_token, openid)
+        userinfo_url = self.__userinfo_url(access_token, openid)
         response     = requests.get(userinfo_url)
         if response.status_code != 200:
             return False
@@ -133,7 +182,7 @@ class WeiXinLoginService(object):
         # 绑定登录
         utb = UserThirdBind.query.\
                     filter(UserThirdBind.third_type == 1).\
-                    filter(UserThirdBind.third_user_id == openid).first()
+                    filter(UserThirdBind.third_unionid == unionid).first()
         if not utb:
             ucs = UserCreateService(user_data, self.current_time)
             if not ucs.check():
@@ -143,7 +192,8 @@ class WeiXinLoginService(object):
             ucs.commit()
             user = ucs.user
 
-            utb_data = {'uid':user.uid, 'third_type':1, 'third_user_id':openid, 'third_unionid':unionid,
+            utb_data = {'uid':user.uid, 'third_type':1,
+                        'third_user_id':openid, 'third_unionid':unionid,
                         'third_res_text':json.loads(data), 'add_time':self.current_time}
             utb      = UserThirdBind(**utb_data)
             db.session.add(utb)

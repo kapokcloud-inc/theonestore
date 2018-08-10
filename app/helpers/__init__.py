@@ -159,7 +159,7 @@ def tofloat(s):
     return float(0)
 
 
-def randomstr(random_len = 6, random_type = 0):
+def randomstr(random_len=6, random_type=0):
     """
     获取随机字符串
     @param random_len: 随机字符串长度

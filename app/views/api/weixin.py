@@ -33,22 +33,41 @@ weixin = Blueprint('api.weixin', __name__)
 def login():
     """微信登陆"""
 
-    code = request.args.get('code', '')
-    wxs  = WeiXinLoginService()
+    url  = url_for('mobile.index.root')
 
-    if not code:
-        return redirect(wxs.code_url())
+    wxls = WeiXinLoginService('mp', 'mp', request)
+    if not wxls.check():
+        return redirect(url)
 
-    index_url = url_for('mobile.index.root')
+    if not wxls.check_state():
+        return redirect(url)
 
-    if not wxs.check():
-        return redirect(index_url)
-
-    url = index_url
-    if wxs.login(code):
-        url = session.get('weixin_login_url', '')
-        url = url if url else index_url
+    if wxls.login():
+        url = session.get('weixin_login_url', url)
 
         session.pop('weixin_login_url', None)
+        session.pop('weixin_login_state', None)
+
+    return redirect(url)
+
+
+@weixin.route('/login-qrcode')
+def login_qrcode():
+    """微信扫码登陆"""
+
+    url  = url_for('mobile.index.root')
+
+    wxls = WeiXinLoginService('open', 'qrcode', request)
+    if not wxls.check():
+        return redirect(url)
+
+    if not wxls.check_state():
+        return redirect(url)
+
+    if wxls.login():
+        url = session.get('weixin_login_url', url)
+
+        session.pop('weixin_login_url', None)
+        session.pop('weixin_login_state', None)
 
     return redirect(url)
