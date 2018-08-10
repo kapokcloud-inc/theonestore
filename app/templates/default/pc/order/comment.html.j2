@@ -16,66 +16,64 @@
         <span>{{_('评价中心')}}</span>
       </p>
     </div>
-    <div class="user-main">
-      <div class="head-inner">
-        {%include 'default/pc/layout/nav_left.html.j2'%}
-        <div class="order-wrap">
-          <div class="allPad clearfix">
-            <div class="box-hd">
-              <ul class="box-hd_list">
-                <li class="box-hd_item">
-                  {% set all_On = 'allOn' if is_pending == 1 else '' %}
-                  <a class="{{ all_On }}" href="{{ url_for('pc.order.comment', p=1,ps=20,is_pending=1) }}">{{_('待评价商品')}}（{{ pending_count }}）</a>
-                </li>
-                <li class="box-hd_item">
-                  {% set all_On = 'allOn' if is_pending == 0 else '' %}
-                  <a class="{{ all_On }}" href="{{ url_for('pc.order.comment', p=1,ps=20,is_pending=0) }}">{{_('已评价商品')}}（{{ unpending_count }}）</a>
-                </li>
-              </ul>
-            </div>
-            
-            
-            {% if comments: %}
-              <!-- 有评价商品 start -->
-              <ul class="all-list clearfix">
-                {% for comment in comments %}
-                <li class="list-item2">
-                  <a href="{{ url_for('pc.item.detail', goods_id=comment.goods_id) }}">
-                    <div class="item-product">
-                      <img src="{{ comment.goods_img }}" alt="">
-                    </div>
-                    <div class="item-detail">
-                      <div class="all-title">{{ comment.goods_name }}</div>
-                      <div class="all-price mar-top">￥{{ comment.goods_price }}</div>
-                    </div>
-                  </a>
-                  {% if comment.comment_id == 0 %}
-                    <!-- 未评价的商品，此按钮显示 -->
-                    <div class="review-btn_wrap" data-value="{{ comment.og_id }}"> 
-                      <a class="review-btn_link btn-primary" href="{{ url_for('pc.order.create_comment', og_id=comment.og_id) }}">{{_('去评价')}}</a>
-                    </div>
-                    <!-- 未评价的商品，此按钮显示 end -->
-                  {% else %}
-                    <!-- 已评价的商品，此按钮显示 -->
-                    <div class="review-btn_wrap" data-value="{{ comment.og_id }}">
-                      <a class="review-btn_link btn-primary" href="{{ url_for('pc.order.comment_detail', og_id=comment.og_id) }}">{{_('查看评价')}}</a>
-                    </div>
-                    <!-- 已评价的商品，此按钮显示 end -->
-                  {% endif %}
-                </li>
-                {% endfor %}
-              </ul>
-              {{ libs.pagination_html(pagination,20) }}
-              <!-- 有评价商品 end -->
-            {% else %}
-              <!-- 没有评价商品 -->
-              <div class="not-one">
-                <p class="not-one_text">{{_('暂时没有符合条件的商品')}}</p>
-                <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-              </div>
-              <!-- 没有评价商品 end -->
-            {% endif %}
+  </div>
+  <div class="user-main">
+    <div class="head-inner clearfix">
+      {%include 'default/pc/layout/nav_left.html.j2'%}
+      <div class="order-wrap">
+        <div class="allPad clearfix">
+          <div class="box-hd">
+            <ul class="box-hd_list">
+              <li class="box-hd_item">
+                {% set all_On = 'allOn' if is_pending == 1 else '' %}
+                <a class="{{ all_On }}" href="{{ url_for('pc.order.comment', p=1,ps=20,is_pending=1) }}">{{_('待评价商品')}}（{{ pending_count }}）</a>
+              </li>
+              <li class="box-hd_item">
+                {% set all_On = 'allOn' if is_pending == 0 else '' %}
+                <a class="{{ all_On }}" href="{{ url_for('pc.order.comment', p=1,ps=20,is_pending=0) }}">{{_('已评价商品')}}（{{ unpending_count }}）</a>
+              </li>
+            </ul>
           </div>
+          {% if uncomments: %}
+            <!-- 有评价商品 start -->
+            <ul class="all-list clearfix">
+              {% for comment in comments %}
+              <li class="list-item2">
+                <a href="{{ url_for('pc.item.detail', goods_id=comment.goods_id) }}">
+                  <div class="item-product">
+                    <img src="{{ comment.goods_img }}" alt="">
+                  </div>
+                  <div class="item-detail">
+                    <div class="all-title">{{ comment.goods_name }}</div>
+                    <div class="all-price mar-top">￥{{ comment.goods_price }}</div>
+                  </div>
+                </a>
+                {% if comment.comment_id == 0 %}
+                <!-- 未评价的商品，此按钮显示 -->
+                <div class="review-btn_wrap" data-value="{{ comment.og_id }}">
+                  <a class="review-btn_link btn-primary" href="{{ url_for('pc.order.create_comment', og_id=comment.og_id) }}">{{_('去评价')}}</a>
+                </div>
+                <!-- 未评价的商品，此按钮显示 end -->
+                {% else %}
+                <!-- 已评价的商品，此按钮显示 -->
+                <div class="review-btn_wrap" data-value="{{ comment.og_id }}">
+                  <a class="review-btn_link btn-primary" href="{{ url_for('pc.order.comment_detail', og_id=comment.og_id) }}">{{_('查看评价')}}</a>
+                </div>
+                <!-- 已评价的商品，此按钮显示 end -->
+                {% endif %}
+              </li>
+              {% endfor %}
+            </ul>
+            {{ libs.pagination_html(pagination,20) }}
+            <!-- 有评价商品 end -->
+          {% else %}
+            <!-- 没有评价商品 -->
+            <div class="not-one">
+              <p class="not-one_text">{{_('暂时没有符合条件的商品')}}</p>
+              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+            </div>
+            <!-- 没有评价商品 end -->
+          {% endif %}
         </div>
       </div>
     </div>

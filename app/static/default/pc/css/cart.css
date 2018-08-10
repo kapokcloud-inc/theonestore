@@ -89,27 +89,19 @@
   color: #fff;
 }
 .cart-footer {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 0);
+  position: relative;
+  margin-top: 30px;
+  background-color: #fff;
   width: 1170px;
   height: 50px;
   line-height: 50px;
   z-index: 20;
-  background-color: #f5f5f5;
-  box-shadow: 0 -3px 5px #eee;
 }
 .cart-footer_left {
   float: left;
 }
 .cart-footer_right {
   float: right;
-}
-.ft-active {
-  position: relative !important;
-  background-color: #fff !important;
-  box-shadow: none !important;
 }
 .back-shopping {
   padding-left: 25px;

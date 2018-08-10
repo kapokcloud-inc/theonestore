@@ -89,6 +89,9 @@ table {
 .pad-top40{
   padding-top: 40px;
 }
+.mar-bottom40{
+  margin-bottom: 40px;
+}
 .blackGap{
   font-size: @font-size14 !important;
   color: @black-color;
@@ -514,7 +517,7 @@ header img{
 .back-top{
   position: fixed;
   right: 0;
-  bottom: 50px;
+  bottom: 300px;
   z-index: 110;
   width: 40px;
   height: 50px;
@@ -992,4 +995,54 @@ header img{
   padding: 20px;
   border: 1px solid #ccc;
   border-left: 2px solid #b0b0b0;
+}
+.footer-links{
+  padding: 40px 0;
+}
+.col-links{
+  float: left;
+  width: 160px;
+  height: 120px;
+  dt{
+    margin-bottom: 25px;
+    font-size: @font-size14;
+    line-height: 1.25;
+    color: @black-color;
+  }
+  dd{
+    margin-top: 10px;
+    font-size: @font-size12;
+    line-height: 20px;
+  }
+  a{
+    color: @grey-color6;
+    &:hover{
+      color: @main-color;
+    }
+  }
+}
+.col-contact{
+  float: right;
+  width: 200px;
+  height: 120px;
+  border-left: @border5;
+  text-align: center;
+  line-height: 40px;
+  &_phone{
+    font-size: 22px;
+    color: @main-color;
+    margin-top: 20px;
+  }
+  &_time{
+    font-size: @font-size12;
+    color: @grey-color6;
+  }
+}
+.slogan{
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  padding: 25px 0;
+  color: #999;
+  font-size: @font-size14;
 }

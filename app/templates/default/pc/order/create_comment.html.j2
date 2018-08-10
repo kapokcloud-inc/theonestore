@@ -14,48 +14,48 @@
         <span>{{_('发表评价')}}</span>
       </p>
     </div>
-    <div class="user-main">
-      <div class="head-inner">
-        <div class="allPad bg-white clearfix">
-          <div class="goods-info_block" style="margin:-40px 0 0 -40px;">
-            <li class="list-item">
-              <div class="item-product">
-                <img src="{{ order_goods.goods_img }}" alt="">
-              </div>
-              <div class="item-detail">
-                <div class="all-title"> {{ order_goods.goods_name }}</div>
-                <div class="all-price mar-top">￥{{ order_goods.goods_price }}</div>
-              </div>
-            </li>
+  </div>
+  <div class="user-main">
+    <div class="head-inner">
+      <div class="allPad bg-white clearfix">
+        <div class="goods-info_block" style="margin:-40px 0 0 -40px;">
+          <li class="list-item">
+            <div class="item-product">
+              <img src="{{ order_goods.goods_img }}" alt="">
+            </div>
+            <div class="item-detail">
+              <div class="all-title"> {{ order_goods.goods_name }}</div>
+              <div class="all-price mar-top">￥{{ order_goods.goods_price }}</div>
+            </div>
+          </li>
+        </div>
+        <div class="goods-add_com">
+          <div class="rate-type_box">
+            <button type="button" class="rate-type rateON" data-value="3">{{_('好评 ')}}</button>
+            <button type="button" class="rate-type" data-value="2">{{_('中评 ')}}</button>
+            <button type="button" class="rate-type" data-value="1">{{_('差评 ')}}</button>
           </div>
-          <div class="goods-add_com">
-            <div class="rate-type_box">
-              <button type="button" class="rate-type rateON" data-value="3">{{_('好评 ')}}</button>
-              <button type="button" class="rate-type" data-value="2">{{_('中评 ')}}</button>
-              <button type="button" class="rate-type" data-value="1">{{_('差评 ')}}</button>
-            </div>
-            <div class="comment-cnt">
-              <textarea class="comment-cnt_text" name="content" id="content" placeholder="{{_('请输入评价信息...')}}"></textarea>
-            </div>
-            <div class="uploader_wrap">
-              <div class="one-uploader">
-                <div class="one-uploader_bd">
-                  <ul class="one-uploader_files" id="uploaderFiles">
-                    <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531116730.76137577!200x200.jpg')"></li>
-                    <li class="one-uploader_file" style="background-image:url('https://i1.mifile.cn/a1/pms_1531116947.09778771!200x200.jpg')"></li>
-                    <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531878001.22998509!200x200.jpg')"></li>
-                  </ul>
-                  <div class="one-uploader_input-box">
-                    <input id="uploaderInput" class="one-uploader_input" type="file" accept="image/*" multiple="">
-                  </div>
+          <div class="comment-cnt">
+            <textarea class="comment-cnt_text" name="content" id="content" placeholder="{{_('请输入评价信息...')}}"></textarea>
+          </div>
+          <div class="uploader_wrap">
+            <div class="one-uploader">
+              <div class="one-uploader_bd">
+                <ul class="one-uploader_files" id="uploaderFiles">
+                  <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531116730.76137577!200x200.jpg')"></li>
+                  <li class="one-uploader_file" style="background-image:url('https://i1.mifile.cn/a1/pms_1531116947.09778771!200x200.jpg')"></li>
+                  <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531878001.22998509!200x200.jpg')"></li>
+                </ul>
+                <div class="one-uploader_input-box">
+                  <input id="uploaderInput" class="one-uploader_input" type="file" accept="image/*" multiple="">
                 </div>
               </div>
             </div>
-            <div class="reg-btn">
-              {{ wtf_form.csrf_token }}
-              <input id="og_id" type="hidden" value="{{ order_goods.og_id }}" />
-              <button type="button" class="one-btn btn-primary" onclick="submit()">{{_('提交')}}</button>
-            </div>
+          </div>
+          <div class="reg-btn">
+            {{ wtf_form.csrf_token }}
+            <input id="og_id" type="hidden" value="{{ order_goods.og_id }}" />
+            <button type="button" class="one-btn btn-primary" onclick="submit()">{{_('提交')}}</button>
           </div>
         </div>
       </div>
