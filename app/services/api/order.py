@@ -751,7 +751,7 @@ class OrderStaticMethodsService(object):
 
         q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.order_amount, Order.pay_status,
                             Order.shipping_amount, Order.shipping_status, Order.deliver_status,
-                            Order.goods_quantity, Order.goods_data, Order.add_time,Order.paid_time).\
+                            Order.goods_quantity, Order.goods_data, Order.add_time,Order.shipping_time).\
                 filter(Order.uid == uid).\
                 filter(Order.is_remove == 0)
 
