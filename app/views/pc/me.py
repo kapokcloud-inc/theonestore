@@ -49,6 +49,7 @@ from app.models.order import (
 from app.models.funds import Funds
 from app.models.coupon import Coupon
 from app.models.item import Goods
+from app.models.like import Like
 from app.models.user import (
     User,
     UserAddress,
@@ -109,10 +110,18 @@ def index():
             filter(OrderGoods.comment_id == 0)
     uncomment_count = get_count(q)
 
+    # 收藏商品
+    q = db.session.query(Like.like_id).\
+            filter(Like.uid == uid).\
+            filter(Like.like_type == 2).\
+            filter(Like.ttype == 1)
+    collect_count = get_count(q)
+
     # 退款售后
     q = db.session.query(Aftersales.aftersales_id).\
             filter(Aftersales.status.in_([1,2]))
     aftersales_count = get_count(q)
+
 
     # 未读消息
     ult          = UserLastTime.query.filter(UserLastTime.uid == uid).filter(UserLastTime.last_type == 1).first()
@@ -123,7 +132,7 @@ def index():
 
     data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'coupon_count':coupon_count,
             'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count, 'uncomment_count':uncomment_count,
-            'aftersales_count':aftersales_count, 'unread_count':unread_count, 'funds':funds}
+            'collect_count':collect_count, 'aftersales_count':aftersales_count, 'unread_count':unread_count, 'funds':funds}
     return render_template('pc/me/index.html.j2', **data)
 
 

@@ -751,7 +751,7 @@ class OrderStaticMethodsService(object):
 
         q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.order_amount, Order.pay_status,
                             Order.shipping_amount, Order.shipping_status, Order.deliver_status,
-                            Order.goods_quantity, Order.goods_data, Order.add_time).\
+                            Order.goods_quantity, Order.goods_data, Order.add_time,Order.shipping_time).\
                 filter(Order.uid == uid).\
                 filter(Order.is_remove == 0)
 
@@ -787,7 +787,7 @@ class OrderStaticMethodsService(object):
             if aftersale:
                 aftersales[order.order_id] = aftersale
             
-        return {'orders':orders, 'pagination':pagination, 'texts':texts, 'codes':codes,'aftersales':aftersales}
+        return {'orders':orders, 'pagination':pagination, 'texts':texts, 'codes':codes,'aftersales':aftersales,'current_time':current_timestamp()}
 
 
     @staticmethod
