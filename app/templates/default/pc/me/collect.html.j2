@@ -17,44 +17,46 @@
         <span>{{_('我的收藏')}}</span>
       </p>
     </div>
-    <div class="user-main">
-      <div class="head-inner clearfix">
-        {%include 'default/pc/layout/nav_left.html.j2'%}
-        <div class="order-wrap">
-          <div class="allPad">
-            {% if likes %}
-              <!-- 有收藏 -->
-              <div class="order-bd">
-                <ul class="all-list clearfix">
-                  {% for like in likes %}
-                    <li class="list-item2">
-                      <a href="{{ url_for('pc.item.detail', goods_id=like.tid) }}">
-                        <div class="item-product">
-                          <img src="{{ like.timg }}" alt="">
-                        </div>
-                        <div class="item-detail">
-                          <div class="all-title">{{ like.tname }}</div>
-                          <div class="all-price mar-top">￥{{ goods[like.tid].goods_price }}</div>
-                        </div>
-                      </a>
-                      <div class="review-btn_wrap" data-tid="{{ like.tid }}" onclick="delcollect(this)">
-                        <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
+  </div>
+  <div class="user-main">
+    <div class="head-inner clearfix">
+      {%include 'default/pc/layout/nav_left.html.j2'%}
+      <div class="order-wrap">
+        <div class="allPad">
+          {% if likes %}
+            <!-- 有收藏 -->
+            <div class="order-bd">
+              <ul class="all-list clearfix">
+                {% for like in likes %}
+                  <li class="list-item2">
+                    <a href="{{ url_for('pc.item.detail', goods_id=like.tid) }}">
+                      <div class="item-product">
+                        <img src="{{ like.timg }}" alt="">
                       </div>
-                    </li>
-                  {% endfor %}
-                </ul>
+                      <div class="item-detail">
+                        <div class="all-title">{{ like.tname }}</div>
+                        <div class="all-price mar-top">￥{{ goods[like.tid].goods_price }}</div>
+                      </div>
+                    </a>
+                    <div class="review-btn_wrap" data-tid="{{ like.tid }}" onclick="delcollect(this)">
+                      <a type="" class="review-btn_link" href="javascript:;">{{_('删除')}}</a>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+              <div class="pad-top40">
                 {{ libs.pagination_html(pagination) }}
               </div>
-              <!-- 有收藏 end -->
-            {% else %}
-              <!-- 没有收藏 -->
-              <div class="not-one">
-                <p class="not-one_text">{{_('您暂时没有收藏商品!')}}</p>
-                <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-              </div>
-              <!-- 没有收藏 end -->
-            {% endif %}
-          </div>
+            </div>
+            <!-- 有收藏 end -->
+          {% else %}
+            <!-- 没有收藏 -->
+            <div class="not-one">
+              <p class="not-one_text">{{_('您暂时没有收藏商品!')}}</p>
+              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+            </div>
+            <!-- 没有收藏 end -->
+          {% endif %}
         </div>
       </div>
     </div>

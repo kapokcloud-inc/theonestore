@@ -88,6 +88,11 @@
   font-size: 28px;
   font-weight: bold;
   line-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 .goods-desc {
   font-size: 14px;
@@ -201,7 +206,7 @@
   bottom: 20px;
   right: 0;
   display: none;
-  width: 300px;
+  width: 350px;
   background-color: #f3f4f5;
   z-index: 30;
   border: 1px solid #eee;

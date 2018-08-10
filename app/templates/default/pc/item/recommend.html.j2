@@ -40,7 +40,9 @@
         {% endfor %}
       </ul>
       <!-- 分页 每20条一页 -->
-      {{ libs.pagination_html(pagination,20) }}
+      <div class="user-main">
+        {{ libs.pagination_html(pagination,20) }}
+      </div>
       <!-- 分页 end -->
     </div>
   </div>
