@@ -1,7 +1,4 @@
 @charset "UTF-8";
-body {
-  background-color: #fff !important;
-}
 .category-list {
   position: relative;
   flex-direction: row;

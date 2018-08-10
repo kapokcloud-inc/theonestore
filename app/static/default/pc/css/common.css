@@ -91,6 +91,9 @@ table {
 .pad-top40 {
   padding-top: 40px;
 }
+.mar-bottom40 {
+  margin-bottom: 40px;
+}
 .blackGap {
   font-size: 14px !important;
   color: #333;
@@ -513,7 +516,7 @@ header img {
 .back-top {
   position: fixed;
   right: 0;
-  bottom: 50px;
+  bottom: 300px;
   z-index: 110;
   width: 40px;
   height: 50px;
@@ -993,4 +996,54 @@ header img {
   padding: 20px;
   border: 1px solid #ccc;
   border-left: 2px solid #b0b0b0;
+}
+.footer-links {
+  padding: 40px 0;
+}
+.col-links {
+  float: left;
+  width: 160px;
+  height: 120px;
+}
+.col-links dt {
+  margin-bottom: 25px;
+  font-size: 14px;
+  line-height: 1.25;
+  color: #333;
+}
+.col-links dd {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 20px;
+}
+.col-links a {
+  color: #666;
+}
+.col-links a:hover {
+  color: #f33155;
+}
+.col-contact {
+  float: right;
+  width: 200px;
+  height: 120px;
+  border-left: 1px solid #eee;
+  text-align: center;
+  line-height: 40px;
+}
+.col-contact_phone {
+  font-size: 22px;
+  color: #f33155;
+  margin-top: 20px;
+}
+.col-contact_time {
+  font-size: 12px;
+  color: #666;
+}
+.slogan {
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  padding: 25px 0;
+  color: #999;
+  font-size: 14px;
 }

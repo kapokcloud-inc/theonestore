@@ -196,10 +196,10 @@
                 </div>
                 <div class="rate-wrap">
                   <a href="javascript:void(0);" class="rate-type rateON" id="allComm" onclick="change_comment_tabs(this, 1)">{{_('全部评论 ')}}{{ item.comment_count }}</a>
-                  <a href="javascript:void(0);" class="rate-type" id="goodComm" onclick="change_comment_tabs(this, 2)">{{_('好评 ')}}</a>
-                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 3)">{{_('中评 ')}}</a>
-                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 4)">{{_('差评 ')}}</a>
-                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 5)">{{_('有图 ')}}</a>
+                  <a href="javascript:void(0);" class="rate-type" id="goodComm" onclick="change_comment_tabs(this, 2)">{{_('好评 ')}}{{ rating_3_count }}</a>
+                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 3)">{{_('中评 ')}}{{ rating_2_count }}</a>
+                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 4)">{{_('差评 ')}}{{ rating_1_count }}</a>
+                  <a href="javascript:void(0);" class="rate-type" onclick="change_comment_tabs(this, 5)">{{_('有图 ')}}{{ img_count }}</a>
                 </div>
                 <div id="paging">
                   <ul class="goods-comment_cnt bg-white">
@@ -245,9 +245,9 @@
           </div>
           <!-- 商品评价 -->
         </div>
+      </div>
     </div>
   </div>
-
   <!-- 返回顶部 -->
   <div class="back-top hide">
     <div class="back-top_img">

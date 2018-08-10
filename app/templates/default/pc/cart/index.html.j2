@@ -17,7 +17,7 @@
   <div class="head-inner">
     {% if carts %}
       <div class="cart-goods" id="cart-goods">
-        <div class="cart-goods_box">
+        <div class="bg-white">
           <div class="cart-head clearfix">
             <div class="col cart-check">
               {% set checked = 'icon-checkbox_selected' if cart_valid_total == items_quantity else '' %}
@@ -77,8 +77,7 @@
             {% endfor %}
           </ul>
         </div>
-        <!-- 用ft-active来控制结算条的位置 -->
-        <div class="cart-footer ft-active clearfix" id="footer">
+        <div class="cart-footer clearfix">
           <div class="cart-footer_left">
             <a class="back-shopping" href="{{ url_for('pc.index.root') }}">{{_('继续购物')}}</a>
             <span class="cart-total_num">
@@ -219,16 +218,6 @@ function checkout() {
 
 
 $(function(){
-  var actualH = (window.screen.availHeight-242) + 'px';      //实际剩余的高度
-  var listH = $('#cart-goods').css('height');     //获取cart-goods的高度
-
-  if(actualH <= listH){
-    $('#footer').removeClass('ft-active');
-  } else{
-    $('#footer').addClass('ft-active');
-  }
-
-
   $(".change_cart_quantity").focusout(function(){
     var quantity = parseInt($(this).val());
     var cart_id = parseInt($(this).attr('data-cart-id'));

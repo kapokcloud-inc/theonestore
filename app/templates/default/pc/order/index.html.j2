@@ -15,118 +15,118 @@
         <span>{{_('我的订单')}}</span>
       </p>
     </div>
-    <div class="user-main">
-      <div class="head-inner clearfix">
-        {%include 'default/pc/layout/nav_left.html.j2'%}
-        <div class="order-wrap">
-          <div class="allPad">
-            <div class="order-hd">
-              <ul class="order-hd_list">
-                <li class="order-hd_item">
-                  {% set all_on = 'allOn' if tab_status == '0' else '' %}
-                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('全部订单')}}</a>
-                </li>
-                <li class="order-hd_item">
-                  {% set all_on = 'allOn' if tab_status == '1' else '' %}
-                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=1) }}">{{_('待付款')}}</a>
-                </li>
-                <li class="order-hd_item">
-                  {% set all_on = 'allOn' if tab_status == '2' else '' %}
-                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=2) }}">{{_('待收货')}}</a>
-                </li>
-                <li class="order-hd_item">
-                  {% set all_on = 'allOn' if tab_status == '3' else '' %}
-                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=3) }}">{{_('已完成')}}</a>
-                </li>
-                <li class="order-hd_item">
-                  {% set all_on = 'allOn' if tab_status == '4' else '' %}
-                  <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=4) }}">{{_('已取消')}}</a>
-                </li>
-              </ul>
-            </div>
-            <!-- 有订单 -->
-            {% if orders %}
-            <div class="order-bd">
-              <div class="order-box">
-                <ul class="order-box_list">
-                  {% for order in orders %}
-                    <li class="order-box_item">
-                      <div class="order-item_detail">
-                        <div class="item-datail_hd">
-                          <div class="order-type">{{ texts[order.order_id] }}</div>
-                          <div class="order-desc">
-                            <div class="order-fl">{{ order.add_time|timestamp2str }}</div>
-                            <div class="order-fl">
-                              <span>{{_('订单号：')}}</span>
-                              <a class="orderID" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">{{ order.order_sn}} </a>
-                            </div>
-                            <div class="order-fl">{{_('微信支付')}}</div>
-                            <div class="order-price">
-                              {{_('订单金额：')}}￥
-                              <span class="price-num">{{ order.order_amount }}</span>
-                            </div>
+  </div>
+  <div class="user-main">
+    <div class="head-inner clearfix">
+      {%include 'default/pc/layout/nav_left.html.j2'%}
+      <div class="order-wrap">
+        <div class="allPad">
+          <div class="order-hd">
+            <ul class="order-hd_list">
+              <li class="order-hd_item">
+                {% set all_on = 'allOn' if tab_status == '0' else '' %}
+                <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('全部订单')}}</a>
+              </li>
+              <li class="order-hd_item">
+                {% set all_on = 'allOn' if tab_status == '1' else '' %}
+                <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=1) }}">{{_('待付款')}}</a>
+              </li>
+              <li class="order-hd_item">
+                {% set all_on = 'allOn' if tab_status == '2' else '' %}
+                <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=2) }}">{{_('待收货')}}</a>
+              </li>
+              <li class="order-hd_item">
+                {% set all_on = 'allOn' if tab_status == '3' else '' %}
+                <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=3) }}">{{_('已完成')}}</a>
+              </li>
+              <li class="order-hd_item">
+                {% set all_on = 'allOn' if tab_status == '4' else '' %}
+                <a class="{{ all_on }}" href="{{ url_for('pc.order.index', tab_status=4) }}">{{_('已取消')}}</a>
+              </li>
+            </ul>
+          </div>
+          <!-- 有订单 -->
+          {% if orders %}
+          <div class="order-bd">
+            <div class="order-box">
+              <ul class="order-box_list">
+                {% for order in orders %}
+                  <li class="order-box_item">
+                    <div class="order-item_detail">
+                      <div class="item-datail_hd">
+                        <div class="order-type">{{ texts[order.order_id] }}</div>
+                        <div class="order-desc">
+                          <div class="order-fl">{{ order.add_time|timestamp2str }}</div>
+                          <div class="order-fl">
+                            <span>{{_('订单号：')}}</span>
+                            <a class="orderID" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">{{ order.order_sn}} </a>
                           </div>
-                        </div>
-                        <div class="item-datail_bd clearfix">
-                          {% set goods_data = (order.goods_data)|json_loads %}
-                          <div class="item-bd_fl">
-                            {% for good in goods_data %}
-                              <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=good.goods_id) }}">
-                                <div class="one-cell_hd avatar80">
-                                  <img src="{{ good.goods_img }}" alt="">
-                                </div>
-                                <div class="one-cell_bd">
-                                  <p class="blackGap">{{ good.goods_name }}</p>
-                                  <p class="greyGap mar-top">
-                                    <span>￥{{ good.goods_price }}</span>
-                                    <span>x{{ good.quantity }}</span>
-                                  </p>
-                                </div>
-                              </a>
-                            {% endfor %}
-                          </div>
-                          <div class="item-bd_fr">
-                            {% if 1 in codes[order.order_id] %}
-                              <a class="btn-link" href="{{ url_for('pc.cart.pay',order_id=order.order_id) }}">
-                                <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
-                              </a>
-                            {% endif %}
-                              <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">
-                                <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
-                              </a>
-                            {% if 7 in codes[order.order_id] %}
-                              <!-- 发货前只支持退款，发货后可以退货退款或换货 -->
-                              {% if order.shipping_status == 1 %}
-                                {% set btn_text = "申请退款" %}
-                                {% set aftersale = aftersales[order.order_id] %}
-                                {% set btn_href = url_for('pc.aftersales.detail',aftersales_id=aftersale.aftersales_id) if aftersale else url_for('pc.aftersales.apply_step1',order_id=order.order_id) %}
-                              {% else %}
-                                {% set btn_text = "申请售后" %}
-                                {% set btn_href = url_for('pc.aftersales.apply_step0',order_id=order.order_id) %}
-                              {% endif %}
-                              <a class="btn-link" href="{{ btn_href }}">
-                                <button class="order-type_btn" type="button">{{ btn_text }}</button>
-                              </a>
-                            {% endif %}
+                          <div class="order-fl">{{_('微信支付')}}</div>
+                          <div class="order-price">
+                            {{_('订单金额：')}}￥
+                            <span class="price-num">{{ order.order_amount }}</span>
                           </div>
                         </div>
                       </div>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </div>
-              {{ libs.pagination_html(pagination,10) }}
+                      <div class="item-datail_bd clearfix">
+                        {% set goods_data = (order.goods_data)|json_loads %}
+                        <div class="item-bd_fl">
+                          {% for good in goods_data %}
+                            <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=good.goods_id) }}">
+                              <div class="one-cell_hd avatar80">
+                                <img src="{{ good.goods_img }}" alt="">
+                              </div>
+                              <div class="one-cell_bd">
+                                <p class="blackGap">{{ good.goods_name }}</p>
+                                <p class="greyGap mar-top">
+                                  <span>￥{{ good.goods_price }}</span>
+                                  <span>x{{ good.quantity }}</span>
+                                </p>
+                              </div>
+                            </a>
+                          {% endfor %}
+                        </div>
+                        <div class="item-bd_fr">
+                          {% if 1 in codes[order.order_id] %}
+                            <a class="btn-link" href="{{ url_for('pc.cart.pay',order_id=order.order_id) }}">
+                              <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
+                            </a>
+                          {% endif %}
+                            <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">
+                              <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
+                            </a>
+                          {% if 7 in codes[order.order_id] %}
+                            <!-- 发货前只支持退款，发货后可以退货退款或换货 -->
+                            {% if order.shipping_status == 1 %}
+                              {% set btn_text = "申请退款" %}
+                              {% set aftersale = aftersales[order.order_id] %}
+                              {% set btn_href = url_for('pc.aftersales.detail',aftersales_id=aftersale.aftersales_id) if aftersale else url_for('pc.aftersales.apply_step1',order_id=order.order_id) %}
+                            {% else %}
+                              {% set btn_text = "申请售后" %}
+                              {% set btn_href = url_for('pc.aftersales.apply_step0',order_id=order.order_id) %}
+                            {% endif %}
+                            <a class="btn-link" href="{{ btn_href }}">
+                              <button class="order-type_btn" type="button">{{ btn_text }}</button>
+                            </a>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
-            <!-- 有订单 end -->
-            {% else %}
-            <!-- 没有订单 -->
-            <div class="not-one">
-              <p class="not-one_text">{{_('您暂时没有订单!')}}</p>
-              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-            </div>
-            <!-- 没有订单 end -->
-            {% endif %}
+            {{ libs.pagination_html(pagination,10) }}
           </div>
+          <!-- 有订单 end -->
+          {% else %}
+          <!-- 没有订单 -->
+          <div class="not-one">
+            <p class="not-one_text">{{_('您暂时没有订单!')}}</p>
+            <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+          </div>
+          <!-- 没有订单 end -->
+          {% endif %}
         </div>
       </div>
     </div>
