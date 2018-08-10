@@ -56,7 +56,7 @@
                 {% endif %}
                 {% set limit_time = 0 %}
                 <!-- 创建的订单，已支付，已发货，据支付时间15天以内，允许申请售后 -->
-                {% set limit_time = order.paid_time|before_after_timestamp({'days':15}) %}
+                {% set limit_time = order.shipping_time|before_after_timestamp({'days':15}) %}
                 {% if order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 and limit_time >= current_time  %}
                   <a class="order-type_btn mar-right" href="{{ url_for('pc.aftersales.apply_step0',order_id=order.order_id) }}">{{_('申请售后')}}</a>
                 {% endif %}
