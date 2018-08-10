@@ -322,13 +322,15 @@
     var quantity = parseInt($("#goods_quantity").val());
 
     if (quantity <= 0) {
-      $.toast("{{_('购买数量不能小于0')}}", "text");
+      // 优化alert ??
+      alert("{{_('购买数量不能小于0')}}");
       return false;
     }
 
     $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
       if (json.ret != 0) {
-        $.toast(res.msg, "text");
+        // 优化alert ??
+        alert(res.msg);
         return false;
       }
 
@@ -358,7 +360,8 @@
 
     $.get("{{ url_for('api.like.action') }}", params, function(json) {
       if (json.ret != 0) {
-        $.toast(json.msg, "text");
+        // 优化alert ??
+        alert(res.msg);
         return false;
       }
 

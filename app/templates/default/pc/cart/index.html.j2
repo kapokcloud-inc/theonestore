@@ -33,24 +33,23 @@
           </div>
           <ul class="cart-goods_list">
             {% for cart in carts %}
-              <li id="li{{cart.cart.cart_id}}" class="cart-goods_item">
+              <li id="li{{ cart.cart.cart_id }}" class="cart-goods_item">
                 <div class="col cart-check">
                   {% set checked = 'icon-checkbox_selected' if cart.cart.is_checked == 1 else '' %}
                   {% set checked = checked if cart.is_valid == 1 else 'icon-notsel' %}
-                  {% set is_valid = 'is_valid' if cart.is_valid == 1 else '' %}
-                  <i class="icon-dagou icon-checkbox {{ checked }} {{ is_valid }}" id="cart{{cart.cart.cart_id}}" data-cart-id="{{ cart.cart.cart_id }}" data-quantity="{{ cart.cart.quantity }}" data-is-valid="{{ cart.is_valid }}"></i>
+                  <i class="cartbox icon-dagou icon-checkbox {{ checked }}" id="cart{{ cart.cart.cart_id }}" data-cart-id="{{ cart.cart.cart_id }}" data-quantity="{{ cart.cart.quantity }}" data-is-valid="{{ cart.is_valid }}" onclick="is_checked(this)"></i>
                 </div>
                 <div class="col cart-goods_img">
                   <img src="{{ cart.item.goods_img }}" alt="">
                 </div>
                 {% set goods_class = 'cart-valid' if cart.is_valid == 1 else 'cart-goods_name' %}
-                <div class="col {{ goods_class }}">
+                <div id="goods_class_{{ cart.cart.cart_id }}" class="col {{ goods_class }}">
                   <a href="{{ url_for('pc.item.detail', goods_id=cart.item.goods_id) }}">
                     <p class="all-text">{{ cart.item.goods_name }}</p>
-                    <p class="greyGap">
+                    <p id="cart_status_text_{{ cart.cart.cart_id }}" class="greyGap">
                     {% if cart.is_valid == 0 %}
                       {% set status = _('已下架') if cart.valid_status == 1 else _('库存不足') %}
-                      <span class="cart-status">{{status}}</span>
+                      <span class="cart-status">{{ status }}</span>
                     {% endif %}
                     </p>
                   </a>
@@ -61,7 +60,7 @@
                 <div class="col cart-goods_num">
                   <div class="apply-service_num">
                     <i class="num_minus" onclick="update_cart_quantity({{ cart.cart.cart_id }}, 0)"></i>
-                    <input class="num_ipt change_cart_quantity" type="text" id="quantity{{cart.cart.cart_id}}" name="quantity{{cart.cart.cart_id}}" value="{{ cart.cart.quantity }}" data-cart-id="{{cart.cart.cart_id}}" data-value="{{ cart.cart.quantity }}" minnum="1">
+                    <input class="num_ipt change_cart_quantity" type="text" id="quantity{{ cart.cart.cart_id }}" name="quantity{{ cart.cart.cart_id }}" value="{{ cart.cart.quantity }}" data-cart-id="{{ cart.cart.cart_id }}" data-value="{{ cart.cart.quantity }}" minnum="1">
                     <i class="num_add" onclick="update_cart_quantity({{ cart.cart.cart_id }}, 1)"></i>
                   </div>
                 </div>
@@ -69,7 +68,7 @@
                   <span id="items_amount{{ cart.cart.cart_id }}" class="all-text" style="color:#f33155 !important">￥{{ cart.items_amount }}</span>
                 </div>
                 <div class="col cart-goods_action">
-                  <a class="del" href="javascript:void(0);" onclick="remove({{cart.cart.cart_id}})">
+                  <a class="del" href="javascript:void(0);" onclick="remove({{ cart.cart.cart_id }})">
                     <i class="icon-cancel"></i>
                   </a>
                 </div>
@@ -110,25 +109,28 @@
 
 {% block script %}
 <script type="text/javascript">
-function get_carts() {
+function _get_carts() {
   var carts = [];
 
-  $(".is_valid").each(function(){
-    var cart = {};
-    cart.cart_id = $(this).attr('data-cart-id');
-    cart.is_checked = $(this).hasClass('icon-checkbox_selected') ? 1 : 0;
+  $(".cartbox").each(function(){
+    if (parseInt($(this).attr('data-is-valid')) == 1) {
+      var cart = {};
+      cart.cart_id = $(this).attr('data-cart-id');
+      cart.is_checked = $(this).hasClass('icon-checkbox_selected') ? 1 : 0;
 
-    carts.push(cart);
+      carts.push(cart);
+    }
   });
 
   return JSON.stringify(carts);
 }
 
 
-function checked(carts) {
+function _checked(carts) {
   $.get("{{ url_for('api.cart.checked') }}", {'carts':carts}, function(json) {
     if (json.ret != 0) {
-      $.toast(json.msg, "text");
+      // 优化alert ??
+      alert(json.msg);
       return false;
     }
 
@@ -139,24 +141,80 @@ function checked(carts) {
 }
 
 
-function update_cart(cart_id, quantity) {
-  var ret = true;
-  $.get("{{ url_for('api.cart.update') }}", {'cart_id':cart_id, 'quantity':quantity}, function(json) {
-    if (json.ret == 0) {
-      $("#cart_total").text(json.data.cart_total);
-      $("#items_quantity").text(json.data.items_quantity);
-      $("#items_amount").text(json.data.items_amount);
-      $("#items_amount"+cart_id).text("￥"+json.data._items_amount);
+function _is_all_selected() {
+  var is_all = 1;
 
-      ret = false;
-    } else {
+  $(".cartbox").each(function(){
+    if (parseInt($(this).attr('data-is-valid')) == 1 && !$(this).hasClass('icon-checkbox_selected')) {
+      is_all = 0;
+    }
+  });
+
+  (is_all == 1) ? $("#all").addClass('icon-checkbox_selected') : $("#all").removeClass('icon-checkbox_selected');
+}
+
+
+function _update_cart(cart_id, quantity) {
+  var ret = false;
+
+  $.ajax({
+    type: 'GET',
+    url: "{{ url_for('api.cart.update') }}",
+    data: {'cart_id':cart_id, 'quantity':quantity},
+    dataType: 'json',
+    timeout: 300,
+    async: false,
+    success: function(json) {
+      if (json.ret == 0) {
+        $("#cart_total").text(json.data.cart_total);
+        $("#items_quantity").text(json.data.items_quantity);
+        $("#items_amount").text(json.data.items_amount);
+        $("#items_amount"+cart_id).text("￥"+json.data._items_amount);
+
+        var is_valid = json.data.is_valid;
+        var valid_status = json.data.valid_status;
+        if(is_valid == 1) {
+          $("#cart"+cart_id).removeClass('icon-notsel').addClass('icon-checkbox_selected').attr('data-is-valid', is_valid);
+          $("#cart_status_text_"+cart_id).empty();
+          $("#goods_class_"+cart_id).removeClass('cart-goods_name').addClass('cart-valid');
+        } else {
+          $("#cart"+cart_id).removeClass('icon-checkbox_selected').addClass('icon-notsel').attr('data-is-valid', is_valid);
+
+          var status_arr = {1:"{{_('已下架')}}", 2:"{{_('库存不足')}}"};
+          var status_html = '<span class="cart-status">'+status_arr[valid_status]+'</span>';
+          $("#cart_status_text_"+cart_id).html(status_html);
+          $("#goods_class_"+cart_id).removeClass('cart-valid').addClass('cart-goods_name');
+        }
+
+        ret = true;
+      } else {
+        // 优化alert ??
+        alert(json.msg);
+      }
+    },
+    error: function(xhr, type) {
       // 优化alert ??
-      alert(json.msg);
-      ret = true;
+      alert("{{_('网络错误')}}");
     }
   });
 
   return ret;
+}
+
+
+function is_checked(dom) {
+  var $this = $(dom);
+
+  if ($this.hasClass('icon-checkbox_selected')) {
+    $this.removeClass('icon-checkbox_selected');
+  } else {
+    $this.addClass('icon-checkbox_selected');
+  }
+
+  _is_all_selected();
+
+  var carts = _get_carts();
+  _checked(carts);
 }
 
 
@@ -170,10 +228,11 @@ function update_cart_quantity(cart_id, is_add) {
     quantity = quantity > 1 ? quantity : 1;
   }
 
-  var ret = update_cart(cart_id, quantity);
+  var ret = _update_cart(cart_id, quantity);
   if (ret) {
     $("#quantity"+cart_id).val(quantity);
     $("#quantity"+cart_id).attr('data-value', quantity);
+    _is_all_selected();
   }
 }
 
@@ -200,7 +259,7 @@ function remove(cart_id) {
 function checkout() {
   var carts_id = [];
 
-  $(".is_valid").each(function(){
+  $(".cartbox").each(function(){
     if ($(this).hasClass('icon-checkbox_selected')) {
       var cart_id = parseInt($(this).attr('data-cart-id'));
       carts_id.push(cart_id);
@@ -219,8 +278,8 @@ function checkout() {
 
 
 $(function(){
-  var actualH = (window.screen.availHeight-242) + 'px';      //实际剩余的高度
-  var listH = $('#cart-goods').css('height');     //获取cart-goods的高度
+  var actualH = (window.screen.availHeight-242) + 'px'; //实际剩余的高度
+  var listH = $('#cart-goods').css('height');           //获取cart-goods的高度
 
   if(actualH <= listH){
     $('#footer').removeClass('ft-active');
@@ -238,46 +297,35 @@ $(function(){
       return false;
     }
 
-    var ret = update_cart(cart_id, quantity);
+    var ret = _update_cart(cart_id, quantity);
     if (ret) {
       $(this).attr('data-value', quantity);
+      _is_all_selected();
     }
   });
 
 
   $("#all").click(function(){
     if ($(this).hasClass('icon-checkbox_selected')) {
-      $(".is_valid").removeClass('icon-checkbox_selected');
+      $(".cartbox").each(function(){
+        if (parseInt($(this).attr('data-is-valid')) == 1) {
+          $(this).removeClass('icon-checkbox_selected');
+        }
+      });
+
       $(this).removeClass('icon-checkbox_selected');
     } else {
-      $(".is_valid").addClass('icon-checkbox_selected');
+      $(".cartbox").each(function(){
+        if (parseInt($(this).attr('data-is-valid')) == 1) {
+          $(this).addClass('icon-checkbox_selected');
+        }
+      });
+
       $(this).addClass('icon-checkbox_selected');
     }
 
-    var carts = get_carts();
-    checked(carts);
-  });
-
-
-  $(".is_valid").click(function(){
-    var is_all = 1;
-
-    if ($(this).hasClass('icon-checkbox_selected')) {
-      $(this).removeClass('icon-checkbox_selected');
-    } else {
-      $(this).addClass('icon-checkbox_selected');
-    }
-  
-    $(".is_valid").each(function(){
-      if (!$(this).hasClass('icon-checkbox_selected')) {
-        is_all = 0;
-      }
-    });
-
-    (is_all == 1) ? $("#all").addClass('icon-checkbox_selected') : $("#all").removeClass('icon-checkbox_selected');
-
-    var carts = get_carts();
-    checked(carts);
+    var carts = _get_carts();
+    _checked(carts);
   });
 });
 </script>

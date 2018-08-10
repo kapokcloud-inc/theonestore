@@ -68,24 +68,10 @@ class CartService(object):
         carts = q.order_by(Cart.cart_id.desc()).all()
 
         for cart in carts:
-            is_valid     = 1    # 是否有效: 0.失效; 1.有效;
-            valid_status = 0    # 失效状态: 0.默认; 1.下架; 2.缺货;
-
-            # 检查 - 商品
             item = Goods.query.get(cart.goods_id)
-            if not item:
-                is_valid     = 0
-                valid_status = 1
 
-            # 检查 - 商品是否已经下架
-            if item.is_sale != 1:
-                is_valid     = 0
-                valid_status = 1
-
-            # 检查 - 商品是否库存不足
-            if item.stock_quantity <= 0:
-                is_valid     = 0
-                valid_status = 2
+            # 检查 - 商品状态
+            is_valid, valid_status = CartStaticMethodsService.check_item_statue(item, cart)
 
             if is_valid == 1:
                 if cart.is_checked == 1:
@@ -148,19 +134,15 @@ class CheckoutService(object):
                 self.msg = _(u'非法的购物车商品项')
                 return False
             
-            # 检查 - 商品
-            item = Goods.query.get(cart.goods_id)
-            if not item:
-                self.msg = _(u'商品不存在')
-                return False
+            # 检查 - 商品状态
+            item                   = Goods.query.get(cart.goods_id)
+            is_valid, valid_status = CartStaticMethodsService.check_item_statue(item, cart)
 
-            # 检查 - 商品是否已经下架
-            if item.is_sale != 1:
+            if valid_status == 1:
                 self.msg = _(u'商品已经下架')
                 return False
 
-            # 检查 - 商品是否库存不足
-            if item.stock_quantity <= 0:
+            if valid_status == 2:
                 self.msg = _(u'商品库存不足')
                 return False
 
@@ -210,6 +192,29 @@ class CheckoutService(object):
 
 class CartStaticMethodsService(object):
     """购物车静态方法Service"""
+
+    @staticmethod
+    def check_item_statue(item, cart):
+        """检查商品状态"""
+        is_valid     = 1    # 是否有效: 0.失效; 1.有效;
+        valid_status = 0    # 失效状态: 0.默认; 1.下架; 2.缺货;
+
+        # 检查 - 商品是否存在
+        if not item:
+            is_valid     = 0
+            valid_status = 1
+
+        # 检查 - 商品是否已经下架
+        if item.is_sale != 1:
+            is_valid     = 0
+            valid_status = 1
+
+        # 检查 - 商品是否库存不足
+        if (item.stock_quantity <= 0) or (item.stock_quantity < cart.quantity):
+            is_valid     = 0
+            valid_status = 2
+
+        return (is_valid, valid_status)
 
     @staticmethod
     def pay_page(order_id, uid, client):
