@@ -145,7 +145,8 @@ $('#save').click(function(){
     //
     $.post("{{ url_for('api.me.update') }}", {'nickname':nickname}, function(json) {
       if (json.ret != 0) {
-        $.toast(json.msg, "text");
+        // 优化alert ??
+        alert(json.msg);
         return false;
       }
 
