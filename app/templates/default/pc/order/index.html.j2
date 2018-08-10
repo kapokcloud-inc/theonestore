@@ -1,5 +1,4 @@
 {% extends '/default/pc/layout/base.html.j2' %}
-{% import '/default/pc/libs/libs.html.j2' as libs %}
 
 {% block head %}
 <title>{{_('我的订单 - 一店')}}</title>
@@ -63,7 +62,7 @@
                           </div>
                           <div class="order-fl">{{_('微信支付')}}</div>
                           <div class="order-price">
-                            {{_('订单金额：')}}￥
+                            ￥{{_('订单金额：')}}
                             <span class="price-num">{{ order.order_amount }}</span>
                           </div>
                         </div>
@@ -86,27 +85,33 @@
                             </a>
                           {% endfor %}
                         </div>
+
                         <div class="item-bd_fr">
+                          <!-- 含有支付指令才显示支付按钮 -->
                           {% if 1 in codes[order.order_id] %}
                             <a class="btn-link" href="{{ url_for('pc.cart.pay',order_id=order.order_id) }}">
                               <button class="order-type_btn btn-primary" type="button">{{_('立即支付')}}</button>
                             </a>
                           {% endif %}
-                            <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">
-                              <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
-                            </a>
+                          
+                          <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=order.order_id) }}">
+                            <button class="order-type_btn" type="button">{{_('订单详情')}}</button>
+                          </a>
+
+                          <!-- 含有售后指令才显示售后按钮 -->
                           {% if 7 in codes[order.order_id] %}
-                            <!-- 发货前只支持退款，发货后可以退货退款或换货 -->
-                            {% if order.shipping_status == 1 %}
-                              {% set btn_text = "申请退款" %}
-                              {% set aftersale = aftersales[order.order_id] %}
-                              {% set btn_href = url_for('pc.aftersales.detail',aftersales_id=aftersale.aftersales_id) if aftersale else url_for('pc.aftersales.apply_step1',order_id=order.order_id) %}
-                            {% else %}
-                              {% set btn_text = "申请售后" %}
-                              {% set btn_href = url_for('pc.aftersales.apply_step0',order_id=order.order_id) %}
-                            {% endif %}
-                            <a class="btn-link" href="{{ btn_href }}">
-                              <button class="order-type_btn" type="button">{{ btn_text }}</button>
+                          <!-- 创建的订单，已支付，没发货，没售后记录的允许申请退款 -->
+                          {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 and not aftersale %}
+                            <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step1', order_id=order.order_id) }}">
+                              <button class="order-type_btn" type="button">{{_('申请退款')}}</button>
+                            </a>
+                          {% endif %}
+                        
+                          <!-- 创建的订单，已支付，已发货，据支付时间15天以内，允许申请售后 -->
+                          {% set limit_time = order.shipping_time|before_after_timestamp({'days':15}) %}
+                          {% if order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 and limit_time >= current_time %}
+                            <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step0', order_id=order.order_id) }}">
+                              <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
                             </a>
                           {% endif %}
                         </div>

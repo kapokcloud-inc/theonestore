@@ -35,7 +35,7 @@ comment = Blueprint('mobile.comment', __name__)
 def index():
     """手机站 - 商品评论"""
 
-    data               = CommentStaticMethodsService.index_page(request.args.to_dict())
+    data               = CommentStaticMethodsService.index_page(request.args)
     data['paging_url'] = url_for('mobile.comment.paging', **request.args)
 
     return render_template('mobile/comment/index.html.j2', **data)

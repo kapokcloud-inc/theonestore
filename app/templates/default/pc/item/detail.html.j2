@@ -1,5 +1,6 @@
 {% extends '/default/pc/layout/base.html.j2' %}
 {% import '/default/pc/libs/libs.html.j2' as libs %}
+{% import '/default/pc/libs/const.html.j2' as const %}
 
 {% block head %}
 <title>{{_('商品详情页 - 一店')}}</title>
@@ -203,22 +204,22 @@
                 </div>
                 <div id="paging">
                   <ul class="goods-comment_cnt bg-white">
-                    {% for commentItem in comments %}
+                    {% for comment in comments %}
                     <li class="comment-cnt_item">
                       <div class="cnt-item_hd">
-                        {% set avatar = commentItem.avatar if commentItem.avatar else "" %}
+                        {% set avatar = comment.avatar if comment.avatar else "" %}
                         <img class="ava" src="{{ avatar }}" alt="">
                       </div>
                       <div class="cnt-item_bd">
                         <div class="review-title">
-                          {{ commentItem.nickname|default(_('匿名')) }}
-                          <span class="rate-text">{{_('好评')}}</span>
+                          {{ comment.nickname|default(_('匿名')) }}
+                          <span class="rate-text">{{ const.RATING_TEXT.get(comment.rating) }}</span>
                         </div>
-                        <div class="review-add mar-top">{{ commentItem.add_time|timestamp2str }}</div>
-                        <div class="review_cnt">{{ commentItem.content }}</div>
-                        {% if commentItem.img_data %}
+                        <div class="review-add mar-top">{{ comment.add_time|timestamp2str }}</div>
+                        <div class="review_cnt">{{ comment.content }}</div>
+                        {% if comment.img_data %}
                         <ul class="comment-img_wrap">
-                          {% set imgs = commentItem.img_data|json_loads %} {% for img in imgs %}
+                          {% set imgs = comment.img_data|json_loads %} {% for img in imgs %}
                           <li class="commentImg">
                             <img src="{{ img }}" alt="">
                           </li>

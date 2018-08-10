@@ -16,6 +16,7 @@ from flask import (
     url_for
 )
 from flask_babel import gettext as _
+from flask_sqlalchemy import Pagination
 
 from app.database import db
 
@@ -170,15 +171,18 @@ def create_comment(og_id):
 
 
 @order.route('/comment')
-def comment():
+def comment(is_pagination=True):
     """pc站 - 评价中心"""
+
+    p          = toint(request.args.get('p', '1'))
+    ps         = toint(request.args.get('ps', '10'))
+    is_pending = toint(request.args.get('is_pending', '0'))
+
 
     if not check_login():
         session['weixin_login_url'] = request.headers['Referer']
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
-
-    is_pending = toint(request.args.get('is_pending', '0'))
 
     completed = db.session.query(Order.order_id).\
                     filter(Order.uid == uid).\
@@ -200,9 +204,14 @@ def comment():
     else:
         q = q.filter(OrderGoods.comment_id > 0)
     
-    uncomments = q.order_by(OrderGoods.og_id.desc()).all()
+    comments = q.order_by(OrderGoods.og_id.desc()).offset((p-1)*ps).limit(ps).all()
 
-    data = {'is_pending':is_pending, 'pending_count':pending_count, 'unpending_count':unpending_count, 'uncomments':uncomments}
+    pagination = None
+    if is_pagination:
+        pagination = Pagination(None, p, ps, q.count(), None)
+
+    data = {'is_pending':is_pending, 'pending_count':pending_count, 'unpending_count':unpending_count, 'comments':comments,'pagination':pagination}
+
     return render_template('pc/order/comment.html.j2', **data)
 
 
@@ -217,7 +226,10 @@ def comment_detail(og_id):
 
     order_goods = OrderGoods.query.get(og_id)
     comment     = Comment.query.filter(Comment.comment_id == order_goods.comment_id).filter(Comment.uid == uid).first()
+
+    print(comment)
     if not comment:
+        print('执行了')
         return redirect(request.headers['Referer'])
 
     return render_template('pc/order/comment_detail.html.j2', order_goods=order_goods, comment=comment)

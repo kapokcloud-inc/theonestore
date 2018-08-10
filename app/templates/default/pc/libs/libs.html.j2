@@ -101,3 +101,21 @@
     {% endif %}
   {% endif %}
 {% endmacro %}
+
+{# 判断个人中心-左侧菜单选中项 #}
+{% macro get_me_navclass(nav_cat) %}
+  {% set nav_cat_dict = {
+    'order':['pc.order.index', 'pc.order.detail'],
+    'comment':['pc.order.comment'],
+    'aftersales':['pc.aftersales.root', 'pc.aftersales.detail'],
+    'profile':['pc.me.index'],
+    'messages':['pc.me.messages'],
+    'wallet':['pc.wallet.root'],
+    'collect':['pc.me.collect'],
+    'coupon':['pc.me.coupon'],
+    'addresses':['pc.me.addresses'],
+  }%}
+  {% set endpoint_list = nav_cat_dict.get(nav_cat, []) %}
+  {% set class_on = ' class="allOn" ' if request.endpoint in endpoint_list else '' %}
+  {{ class_on }}
+{% endmacro %}

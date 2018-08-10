@@ -24,11 +24,11 @@
           <div class="one-cell">
             <div class="one-cell_hd avatar160" style="position: relative;">
               <input id="uploaderInput" class="one-uploader_input" type="file" accept="image/*" multiple="">
-              <img class="ava" src="http://s1.mi-img.com/mfsv2/avatar/fdsc3/p01XG074QZsd/srSPb8CLq7UEOL_320.jpg" alt="">
+              <img class="ava" src="{{ avatar }}" alt="">
             </div>
             <div class="one-cell_bd">
               <div class="user-name">
-                <span id="username">老犁</span>
+                <span id="username">{{ nickname }}</span>
                 <input class="changeIpu hide" type="text" data-value="" value="">
               </div>
               <div class="changeInfo">
@@ -50,7 +50,7 @@
                   <div class="one-cell_bd">
                     <p class="sub-item_hd">
                       <span>{{_('待支付的订单：')}}</span>
-                      <span class="allOn">0</span>
+                      <span class="allOn">{{ unpaid_count }}</span>
                     </p>
                     <div style="position: relative;">
                       <a class="sub-item_link" href="{{ url_for('pc.order.index', tab_status=1) }}">{{_('查看待支付订单 >')}}</a>
@@ -66,7 +66,7 @@
                   <div class="one-cell_bd">
                     <p class="sub-item_hd">
                       <span>{{_('待收货的订单：')}}</span>
-                      <span class="allOn">2</span>
+                      <span class="allOn">{{ undeliver_count }}</span>
                     </p>
                     <div style="position: relative;">
                       <a class="sub-item_link" href="{{ url_for('pc.order.index', tab_status=2) }}">{{_('查看待收货订单 >')}}</a>
@@ -82,7 +82,7 @@
                   <div class="one-cell_bd">
                     <p class="sub-item_hd">
                       <span>{{_('待评价商品数：')}}</span>
-                      <span class="allOn">4</span>
+                      <span class="allOn">{{ uncomment_count }}</span>
                     </p>
                     <div style="position: relative;">
                       <a class="sub-item_link" href="{{ url_for('pc.order.comment', is_pending=1) }}">{{_('查看待评价商品 >')}}</a>
@@ -98,7 +98,7 @@
                   <div class="one-cell_bd">
                     <p class="sub-item_hd">
                       <span>{{_('收藏的商品：')}}</span>
-                      <span class="allOn">3</span>
+                      <span class="allOn">{{ collect_count }}</span>
                     </p>
                     <div style="position: relative;">
                       <a class="sub-item_link" href="{{ url_for('pc.me.collect', p=1, ps=20, tab_status=2) }}">{{_('查看收藏的商品 >')}}</a>
@@ -122,6 +122,7 @@ $('#change').click(function(){
   if(!$('.changeIpu').hasClass('show')){
     $('#username').addClass('hide');
     $('.changeIpu').addClass('show').removeClass('hide');
+    $('.changeIpu').val('');
     $('#change').addClass('hide');
     $('#saveCal').addClass('show').removeClass('hide');
   }
@@ -134,7 +135,23 @@ $('#save').click(function(){
     $('#username').removeClass('hide');
     $('#saveCal').addClass('hide').removeClass('show');
     $('#change').removeClass('hide');
-  }
+
+    var nickname = $('.changeIpu').val();
+    //
+    //<!-- if(nickname==null||nickname.replace(/\s*/g, "")==''){
+     // alert('请输入昵称', "text");
+     // return;
+   // } -->
+    //
+    $.post("{{ url_for('api.me.update') }}", {'nickname':nickname}, function(json) {
+      if (json.ret != 0) {
+        $.toast(json.msg, "text");
+        return false;
+      }
+
+    //<!-- location.reload; -->
+    });
+    }
 });
 
 //点击取消
