@@ -330,7 +330,8 @@ def category_save():
         category = model_create(GoodsCategories, {'add_time':current_timestamp()})
 
     cat_img = cat_img if cat_img else category.cat_img
-    data    = {'cat_name':form.cat_name.data, 'cat_img':cat_img, 'is_show':form.is_show.data}
+    data    = {'cat_name':form.cat_name.data, 'cat_img':cat_img,
+                'is_show':form.is_show.data, 'is_recommend':form.is_recommend.data}
     model_update(category, data, commit=True)
 
     return redirect(url_for('admin.item.categories'))

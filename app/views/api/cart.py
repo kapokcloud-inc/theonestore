@@ -299,7 +299,7 @@ def checkout_amounts():
         return resjson.print_json(11, cs.msg)
 
     data = {'items_amount':cs.items_amount,
-            'shipping_amount':cs.shipping_amount.quantize(Decimal('0.00')),
-            'discount_amount':cs.discount_amount.quantize(Decimal('0.00')),
+            'shipping_amount':cs.shipping_amount,
+            'discount_amount':cs.discount_amount,
             'pay_amount':cs.pay_amount}
     return resjson.print_json(0, u'ok', data)

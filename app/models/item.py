@@ -45,6 +45,7 @@ class GoodsCategories(BaseModel, db.Model):
     cat_img = db.Column(db.String(255), default='')
     parent_id = db.Column(db.Integer, default=0)
     is_show = db.Column(db.Integer, default=0)
+    is_recommend = db.Column(db.Integer, default=0)
     sorting = db.Column(db.Integer, default=0)
     add_time = db.Column(db.Integer, default=0)
 
