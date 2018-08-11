@@ -31,7 +31,7 @@
             <div class="all-add mar-top">{{ comment.add_time|timestamp2str }}</div>
             <div class="review-cnt mar-top">{{ comment.content }}</div>
             <ul class="weui-uploader__files mar-top" id="uploaderFiles">
-              {% set img_data = comment.img_data|json_loads %} 
+              {% set img_data = comment.img_data|json_loads if comment.img_data %} 
               {% for img in img_data %}
                 <li class="weui-uploader__file" style="background-image:url('{{ img }}')"></li>
               {% endfor %}
