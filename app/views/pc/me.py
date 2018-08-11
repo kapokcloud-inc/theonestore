@@ -204,6 +204,7 @@ def coupon():
 
     data = {'valid_coupons':valid_coupons, 'invalid_coupons':invalid_coupons, 'used_coupons':used_coupons,
             'valid_count':valid_count, 'invalid_count':invalid_count, 'used_count':used_count}
+
     return render_template('pc/me/coupon.html.j2', **data)
 
 
