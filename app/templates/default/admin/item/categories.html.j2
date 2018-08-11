@@ -19,6 +19,7 @@
                   <th>{{_('名称')}}</th>
                   <th>{{_('图片')}}</th>
                   <th>{{_('是否显示')}}</th>
+                  <th>{{_('是否推荐')}}</th>
                   <th>{{_('添加时间')}}</th>
                   <th>{{_('操作')}}</th>
                 </tr>
@@ -32,6 +33,11 @@
                       <td>
                         <span class="label {{ const.YES_OR_NO_LABEL.get(category.is_show, 'label-danger') }} font-weight-100">
                           {{ const.YES_OR_NO.get(category.is_show, _('未知错误')) }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="label {{ const.YES_OR_NO_LABEL.get(category.is_recommend, 'label-danger') }} font-weight-100">
+                          {{ const.YES_OR_NO.get(category.is_recommend, _('未知错误')) }}
                         </span>
                       </td>
                       <td>{{ category.add_time|timestamp2str }}</td>

@@ -140,7 +140,7 @@
           <div class="all_desc height25">{{ cart.item.goods_desc }}</div>
         </div>
         <div class="weui-cell__ft mar-left">
-          <span class="all_price height25">￥{{ cart.item.goods_price }}</span>
+          <span class="all_price height25">￥{{ cart.item.goods_price|toamount }}</span>
           <p class="height25">x {{ cart.cart.quantity }}</p>
         </div>
       </div>

@@ -94,9 +94,9 @@
                   <img src="{{ cart.item.goods_img }}" alt="">
                 </div>
                 <div class="col goods-item_name">{{ cart.item.goods_name }}</div>
-                <div class="col goods-item_price">￥{{ cart.item.goods_price }}</div>
+                <div class="col goods-item_price">￥{{ cart.item.goods_price|toamount }}</div>
                 <div class="col goods-item_num">x {{ cart.cart.quantity }}</div>
-                {% set total_price = cart.item.goods_price * cart.cart.quantity %}
+                {% set total_price = cart.item.goods_price|toamount * cart.cart.quantity %}
                 <div class="col goods-item_total">￥{{ total_price }}</div>
               </li>
             {% endfor %}
@@ -107,7 +107,7 @@
             <img class="coupon-img" src="/static/default/pc/img/coupon.png" alt="">
             <span>{{_('使用优惠券')}}</span>
             <div style="line-height:25px;" class="hide" id="couponNum">{{_('使用优惠券1张，共抵扣')}}
-              <span class="allOn">￥0.0</span>
+              <span class="allOn">￥0.00</span>
             </div>
           </div>
 
@@ -129,8 +129,8 @@
                         <div class="coupon-info">
                           <div class="wave"></div>
                           <p>
-                            <span class="coupon-amount">￥{{ coupon.coupon_amount }}</span>
-                            满{{ coupon.limit_amount }}
+                            <span class="coupon-amount">￥{{ coupon.coupon_amount|toamount }}</span>
+                            满{{ coupon.limit_amount|toamount }}
                           </p>
                           <p>{{_('有效期')}}：{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</p>
                         </div>
@@ -141,8 +141,8 @@
                         <div class="coupon-info bg-eee">
                           <div class="wave"></div>
                           <p>
-                            <span class="coupon-amount">￥{{ coupon.coupon_amount }}</span>
-                            满{{ coupon.limit_amount }}
+                            <span class="coupon-amount">￥{{ coupon.coupon_amount|toamount }}</span>
+                            满{{ coupon.limit_amount|toamount }}
                           </p>
                           <p>{{_('有效期')}}：{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</p>
                         </div>

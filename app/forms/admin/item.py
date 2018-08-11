@@ -130,9 +130,9 @@ class ItemGalleriesForm(FlaskForm):
 
 class CategoryForm(Form):
     """分类form"""
-    cat_id   = HiddenField(default=0)
+    cat_id       = HiddenField(default=0)
 
-    cat_name = StringField(
+    cat_name     = StringField(
                     _(u'分类名称'),
                     render_kw={'placeholder':_(u'请输入分类名称')},
                     validators=[
@@ -140,7 +140,7 @@ class CategoryForm(Form):
                     ]
                 )
 
-    cat_img   = FileField(
+    cat_img      = FileField(
                     _(u'分类图片'),
                     description=_(u'图片文件'),
                     validators=[
@@ -149,4 +149,6 @@ class CategoryForm(Form):
                     ]
                 )
 
-    is_show   = BooleanField(_(u'是否显示'), false_values=(0, '0', ''), default=1)
+    is_show      = BooleanField(_(u'是否显示'), false_values=(0, '0', ''), default=1)
+
+    is_recommend = BooleanField(_(u'是否推荐'), false_values=(0, '0', ''))
