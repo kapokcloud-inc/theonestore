@@ -44,13 +44,12 @@ def root():
     """pc站 - 我的钱包"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
-    funds      = Funds.query.filter(Funds.uid == uid).first()
-    details    = FundsStaticMethodsService.details(uid, {})
-    log_info('details:%s' % details)
+    funds   = Funds.query.filter(Funds.uid == uid).first()
+    details = FundsStaticMethodsService.details(uid, {})
 
     return render_template('pc/wallet/index.html.j2', funds=funds, details=details)
 
@@ -60,8 +59,8 @@ def recharge():
     """pc站 - 钱包充值"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     order_id        = toint(request.args.get('order_id', '0'))

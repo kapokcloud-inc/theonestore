@@ -66,8 +66,8 @@ def checkout():
     """确认订单"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     # 结算页面
@@ -83,8 +83,8 @@ def pay(order_id):
     """支付订单"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     ret, msg, data, url = CartStaticMethodsService.pay_page(order_id, uid, 'pc')

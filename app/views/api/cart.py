@@ -280,7 +280,6 @@ def checkout_amounts():
     resjson.action_code = 15
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
         return resjson.print_json(10, _(u'未登陆'))
     uid = get_uid()
 

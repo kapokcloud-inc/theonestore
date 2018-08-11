@@ -55,7 +55,7 @@ def login():
 def login_qrcode():
     """微信扫码登陆"""
 
-    url  = url_for('mobile.index.root')
+    url  = url_for('pc.index.root')
 
     wxls = WeiXinLoginService('open', 'qrcode', request)
     if not wxls.check():
