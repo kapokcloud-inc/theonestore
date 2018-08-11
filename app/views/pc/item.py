@@ -50,10 +50,7 @@ def index():
 def detail(goods_id):
     """商品详情页"""
 
-    uid = get_uid()
-    if not uid:
-        session['weixin_login_url'] = request.url
-
+    uid  = get_uid()
     data = ItemStaticMethodsService.detail_page(goods_id, uid)
 
     return render_template('pc/item/detail.html.j2', **data)

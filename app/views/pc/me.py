@@ -64,8 +64,8 @@ def index():
     """pc站 - 个人中心"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid          = get_uid()
     nickname     = get_nickname()
     avatar       = get_avatar()
@@ -141,8 +141,8 @@ def addresses():
     """pc站 - 收货地址"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     addresses = UserAddress.query.filter(UserAddress.uid == uid).order_by(UserAddress.is_default.desc()).all()
@@ -155,8 +155,8 @@ def collect():
     """pc站 - 我的收藏"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid           = get_uid()
     params        = request.args.to_dict()
     params['uid'] = uid
@@ -177,8 +177,8 @@ def coupon():
     """pc站 - 我的优惠券"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid          = get_uid()
     current_time = current_timestamp()
 
@@ -213,8 +213,8 @@ def messages():
     """pc站 - 消息通知"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     messages   = MessageStaticMethodsService.messages({'uid':uid})

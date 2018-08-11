@@ -55,8 +55,8 @@ def root():
     """pc站 - 售后服务记录"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     params        = request.args.to_dict()
@@ -77,8 +77,8 @@ def detail(aftersales_id):
     """pc站 - 售后服务详情"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     aftersales = Aftersales.query.filter(Aftersales.aftersales_id == aftersales_id).filter(Aftersales.uid == uid).first()
@@ -92,7 +92,6 @@ def detail(aftersales_id):
     status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersales)
 
     data = {'aftersales':aftersales, 'log':log, 'status_text':status_text, 'action_code':action_code}
-    log_info(data)
     return render_template('pc/aftersales/detail.html.j2', **data)
 
 
@@ -101,8 +100,8 @@ def apply_step0(order_id):
     """pc站 - 申请售后服务-选择产品"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     data = OrderStaticMethodsService.detail_page(order_id, uid)

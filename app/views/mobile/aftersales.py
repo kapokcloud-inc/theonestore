@@ -47,7 +47,7 @@ def root():
     """手机站 - 售后服务列表"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -71,7 +71,7 @@ def paging():
     """加载分页"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = url_for('mobile.aftersales.root')
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -93,7 +93,7 @@ def detail(aftersales_id):
     """手机站 - 售后服务详情"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -116,7 +116,7 @@ def track(aftersales_id):
     """手机站 - 售后服务流水跟踪"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -136,7 +136,7 @@ def apply():
     """手机站 - 申请售后"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 

@@ -63,7 +63,7 @@ def index():
     """手机站 - 个人中心"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid          = get_uid()
     nickname     = get_nickname()
@@ -132,7 +132,7 @@ def profile():
     """手机站 - 修改用户信息"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
     
@@ -147,7 +147,7 @@ def addresses():
     """手机站 - 收货地址管理"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -161,7 +161,7 @@ def address(ua_id):
     """手机站 - 添加收货地址"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -181,7 +181,7 @@ def collect():
     """手机站 - 我的收藏"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -196,7 +196,7 @@ def collect_paging():
     """我的收藏 - 加载分页"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = url_for('mobile.me.collect')
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -212,7 +212,7 @@ def coupon():
     """手机站 - 我的优惠券"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid          = get_uid()
     current_time = current_timestamp()
@@ -247,7 +247,7 @@ def messages():
     """手机站 - 消息"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -262,7 +262,7 @@ def messages_paging():
     """消息 - 加载分页"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = url_for('mobile.me.messages')
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -271,3 +271,12 @@ def messages_paging():
     messages      = MessageStaticMethodsService.messages(params)
 
     return render_template('mobile/me/messages_paging.html.j2', messages=messages)
+
+
+@me.route('/signout')
+def signout():
+    """退出登录"""
+
+    session.clear()
+
+    return redirect(url_for('mobile.index.root'))

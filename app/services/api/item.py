@@ -88,11 +88,13 @@ class ItemStaticMethodsService(object):
         galleries = db.session.query(GoodsGalleries.img).\
                         filter(GoodsGalleries.goods_id == goods_id).all()
 
-        is_fav = db.session.query(Like.like_id).\
-                    filter(Like.like_type == 2).\
-                    filter(Like.ttype == 1).\
-                    filter(Like.tid == goods_id).\
-                    filter(Like.uid == uid).first()
+        is_fav = None
+        if uid:
+            is_fav = db.session.query(Like.like_id).\
+                        filter(Like.like_type == 2).\
+                        filter(Like.ttype == 1).\
+                        filter(Like.tid == goods_id).\
+                        filter(Like.uid == uid).first()
         is_fav = 1 if is_fav else 0
 
         comments = []

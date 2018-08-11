@@ -44,7 +44,7 @@ def root():
     """手机站 - 我的钱包"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -61,7 +61,7 @@ def paging():
     """加载分页"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = url_for('mobile.wallet.root')
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -75,7 +75,7 @@ def recharge():
     """手机站 - 钱包充值"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -102,7 +102,7 @@ def detail(fd_id):
     """手机站 - 交易明细详情"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
