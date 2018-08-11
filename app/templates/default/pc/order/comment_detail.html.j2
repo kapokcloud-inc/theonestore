@@ -17,7 +17,7 @@
   </div>
   <div class="user-main">
     <div class="head-inner">
-      {% if order_goods and order_goods.is_delete == 0 %}
+      {% if good and good.is_delete == 0 %}
         <!-- 商品并未在后台被删除的时候显示 start -->
         <div class="clearfix">
           <div class="goods-com_box clearfix">
@@ -33,7 +33,8 @@
                 <div class="all-add mar-top">{{ comment.add_time|timestamp2str }}</div>
                 <div class="review-cnt mar-top">{{ comment.content }}</div>
                 <ul class="weui-uploader__files mar-top" id="uploaderFiles">
-                  {% set img_data = comment.img_data|json_loads if comment.img_data %} {% for img in img_data %}
+                  {% set img_data = comment.img_data|json_loads if comment.img_data %} 
+                  {% for img in img_data %}
                   <li class="weui-uploader__file" style="background-image:url('{{ img }}')"></li>
                   {% endfor %}
                 </ul>
@@ -65,7 +66,7 @@
           <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('去首页看看')}}</a>
         </div>
         <!-- 商品已在后台被删除的时候显示 end -->
-      {%endif%}
+      {% endif %}
     </div>
   </div>
 </div>

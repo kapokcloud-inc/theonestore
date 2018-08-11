@@ -405,3 +405,8 @@
   font-size: 18px;
   color: #666;
 }
+#detail img {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}

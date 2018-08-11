@@ -42,6 +42,7 @@ from app.forms.api.comment import CommentOrderGoodsForm
 from app.models.comment import Comment
 from app.models.shipping import Shipping
 from app.models.aftersales import Aftersales
+from app.models.item import Goods
 from app.models.order import (
     Order,
     OrderAddress,
@@ -211,7 +212,7 @@ def comment(is_pagination=True):
         pagination = Pagination(None, p, ps, q.count(), None)
 
     data = {'is_pending':is_pending, 'pending_count':pending_count, 'unpending_count':unpending_count, 'comments':comments,'pagination':pagination}
-
+    log_info(comments)
     return render_template('pc/order/comment.html.j2', **data)
 
 
@@ -225,9 +226,10 @@ def comment_detail(og_id):
     uid = get_uid()
 
     order_goods = OrderGoods.query.get(og_id)
+    good        = Goods.query.get(order_goods.goods_id)
     comment     = Comment.query.filter(Comment.comment_id == order_goods.comment_id).filter(Comment.uid == uid).first()
 
     if not comment:
         return redirect(request.headers['Referer'])
 
-    return render_template('pc/order/comment_detail.html.j2', order_goods=order_goods, comment=comment)
+    return render_template('pc/order/comment_detail.html.j2', order_goods=order_goods, comment=comment, good=good)

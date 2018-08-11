@@ -41,6 +41,8 @@ class ItemStaticMethodsService(object):
         cat_id       = toint(params.get('cat_id', '0'))
         is_hot       = toint(params.get('is_hot', '-1'))
         is_recommend = toint(params.get('is_recommend', '-1'))
+        search_key   = params.get('search_key', '')
+
 
         q = db.session.query(Goods.goods_id, Goods.goods_name, Goods.goods_img, Goods.goods_desc,
                                 Goods.goods_price, Goods.market_price).\
@@ -59,8 +61,11 @@ class ItemStaticMethodsService(object):
         if is_recommend in [0,1]:
             q = q.filter(Goods.is_recommend == is_recommend)
 
-        items = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
+        if search_key != "":
+            q = q.filter(Goods.goods_name.like(u"%"+search_key+u"%"))
 
+        items = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
+        log_info(items)
         pagination = None
         if is_pagination:
             pagination = Pagination(None, p, ps, q.count(), None)
