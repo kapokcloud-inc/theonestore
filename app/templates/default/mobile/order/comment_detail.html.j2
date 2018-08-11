@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block body %}
-{% if order_goods and order_goods.is_delete == 0 %}
+{% if good and good.is_delete == 0 %}
   <!-- 商品并未在后台被删除的时候显示 start -->
   <div class="user_wrap">
     <a class="weui-cell bg-white" href="{{ url_for('mobile.item.detail', goods_id=9) }}">
