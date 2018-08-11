@@ -21,17 +21,20 @@ from flask import (
 
 from flask_babel import gettext as _
 
-from app.database import db
-
 from app.helpers import (
     log_info,
     toint,
-    randomstr
+    randomstr,
+    model_create,
+    model_update
 )
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import set_user_session
 
-from app.services.api.user import UserCreateService
+from app.services.api.user import (
+    UserCreateService,
+    UserStaticMethodsService
+)
 
 from app.models.sys import SysSetting
 from app.models.user import User, UserThirdBind
@@ -188,22 +191,25 @@ class WeiXinLoginService(object):
             if not ucs.check():
                 return False
 
+            # 创建用户
             ucs.create()
             ucs.commit()
             user = ucs.user
 
-            utb_data = {'uid':user.uid, 'third_type':1,
-                        'third_user_id':openid, 'third_unionid':unionid,
-                        'third_res_text':json.loads(data), 'add_time':self.current_time}
-            utb      = UserThirdBind(**utb_data)
-            db.session.add(utb)
+            # 创建帐户
+            UserStaticMethodsService.create_account(user.uid, is_commit=False)
+
+            # 创建绑定
+            data = {'uid':user.uid, 'third_type':1,
+                    'third_user_id':openid, 'third_unionid':unionid,
+                    'third_res_text':json.loads(data), 'add_time':self.current_time}
+            utb  = model_create(UserThirdBind, data)
         else:
             user = User.query.get(utb.uid)
             if not user:
                 return False
 
-        utb.update_time = self.current_time
-        db.session.commit()
+        model_update(utb, {'update_time':self.current_time}, commit=True)
 
         set_user_session(user)
 

@@ -21,7 +21,7 @@
           <a {{ libs.get_me_navclass('profile') }} href="{{ url_for('pc.me.index') }}">{{_('我的个人中心')}}</a>
         </li>
         <li>
-          <a {{ libs.get_me_navclass('messages') }} href="{{ url_for('pc.me.messages') }}">{{_('消息通知')}} (1)</a>
+          <a {{ libs.get_me_navclass('messages') }} href="{{ url_for('pc.me.messages') }}">{{_('消息通知')}} ({{ g.unread_count }})</a>
         </li>
         <li>
           <a {{ libs.get_me_navclass('wallet') }} href="{{ url_for('pc.wallet.root') }}">{{_('钱包')}}</a>

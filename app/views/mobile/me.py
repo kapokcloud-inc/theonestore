@@ -35,6 +35,7 @@ from app.helpers.user import (
 
 from app.services.message import MessageStaticMethodsService
 from app.services.api.like import LikeStaticMethodsService
+from app.services.api.user import UserStaticMethodsService
 
 from app.forms.api.me import (
     ProfileForm,
@@ -51,8 +52,7 @@ from app.models.funds import Funds
 from app.models.coupon import Coupon
 from app.models.user import (
     User,
-    UserAddress,
-    UserLastTime
+    UserAddress
 )
 
 
@@ -114,16 +114,11 @@ def index():
             filter(Aftersales.status.in_([1,2]))
     aftersales_count = get_count(q)
 
-    # 未读消息
-    ult          = UserLastTime.query.filter(UserLastTime.uid == uid).filter(UserLastTime.last_type == 1).first()
-    last_time    = ult.last_time if ult else 0
-    unread_count = get_count(db.session.query(Message.message_id).filter(Message.tuid == uid).filter(Message.add_time > last_time))
-
     funds = Funds.query.filter(Funds.uid == uid).first()
 
     data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'coupon_count':coupon_count,
             'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count, 'uncomment_count':uncomment_count,
-            'aftersales_count':aftersales_count, 'unread_count':unread_count, 'funds':funds}
+            'aftersales_count':aftersales_count, 'funds':funds}
     return render_template('mobile/me/index.html.j2', **data)
 
 
@@ -253,6 +248,8 @@ def messages():
 
     messages   = MessageStaticMethodsService.messages({'uid':uid})
     paging_url = url_for('mobile.me.messages_paging', **request.args)
+
+    UserStaticMethodsService.reset_last_time(uid, 1)
 
     return render_template('mobile/me/messages.html.j2', messages=messages, paging_url=paging_url)
 

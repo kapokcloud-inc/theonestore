@@ -55,23 +55,14 @@ def configure_before(app):
             g.pc_nav_categories = categories
 
         if (endpoint.find('pc.') == 0) or (endpoint.find('mobile.') == 0):
-            from app.helpers import get_count
-            from app.models.user import UserLastTime
-            from app.models.message import Message
+            from app.services.api.user import UserStaticMethodsService
 
             uid            = session.get('uid', 0)
             g.unread_count = 0
 
             if uid:
-                # 未读消息
-                ult            = UserLastTime.query.\
-                                    filter(UserLastTime.uid == uid).\
-                                    filter(UserLastTime.last_type == 1).first()
-                last_time      = ult.last_time if ult else 0
-                unread_count   = get_count(db.session.query(Message.message_id).\
-                                    filter(Message.tuid == uid).\
-                                    filter(Message.add_time > last_time))
-                g.unread_count = unread_count
+                # 未读消息数
+                g.unread_count = UserStaticMethodsService.unread_count(uid)
 
     @app.errorhandler(403)
     def forbidden(error):
