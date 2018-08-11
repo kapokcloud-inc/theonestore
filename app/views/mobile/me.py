@@ -251,10 +251,10 @@ def messages():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    messages   = MessageStaticMethodsService.messages({'uid':uid})
+    data   = MessageStaticMethodsService.messages({'uid':uid})
     paging_url = url_for('mobile.me.messages_paging', **request.args)
 
-    return render_template('mobile/me/messages.html.j2', messages=messages, paging_url=paging_url)
+    return render_template('mobile/me/messages.html.j2', messages=data["messages"], paging_url=paging_url)
 
 
 @me.route('/messages-paging')
@@ -268,9 +268,9 @@ def messages_paging():
 
     params        = request.args.to_dict()
     params['uid'] = uid
-    messages      = MessageStaticMethodsService.messages(params)
+    data          = MessageStaticMethodsService.messages(params)
 
-    return render_template('mobile/me/messages_paging.html.j2', messages=messages)
+    return render_template('mobile/me/messages_paging.html.j2', messages=data["messages"])
 
 
 @me.route('/signout')

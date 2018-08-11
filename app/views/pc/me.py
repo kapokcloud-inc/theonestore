@@ -210,13 +210,14 @@ def coupon():
 
 @me.route('/messages')
 def messages():
-    """pc站 - 消息通知"""
+    """pc站 - 消息通知列表"""
 
     if not check_login():
         session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
+    params = request.args.to_dict()
+    params['uid'] = uid
+    data   = MessageStaticMethodsService.messages(params,True)
 
-    messages   = MessageStaticMethodsService.messages({'uid':uid})
-
-    return render_template('pc/me/messages.html.j2', messages=messages)
+    return render_template('pc/me/messages.html.j2', **data)

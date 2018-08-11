@@ -10,7 +10,7 @@
 import json
 
 from flask_babel import gettext as _
-
+from flask_sqlalchemy import Pagination
 from app.database import db
 
 from app.helpers import (
@@ -117,16 +117,22 @@ class MessageStaticMethodsService(object):
     """消息静态方法Service"""
 
     @staticmethod
-    def messages(params):
+    def messages(params,is_pagination=False):
         """获取消息列表"""
 
         p   = toint(params.get('p', '1'))
         ps  = toint(params.get('ps', '10'))
         uid = toint(params.get('uid', '0'))
 
-        messages = db.session.query(Message.message_id, Message.message_type, Message.content,
+        q   = db.session.query(Message.message_id, Message.message_type, Message.content,
                                     Message.ttype, Message.tid, Message.add_time).\
-                    filter(Message.tuid == uid).\
-                    order_by(Message.message_id.desc()).offset((p-1)*ps).limit(ps).all()
+                    filter(Message.tuid == uid)
+                    
+        messages = q.order_by(Message.message_id.desc()).offset((p-1)*ps).limit(ps).all()
 
-        return messages
+        pagination = None
+
+        if is_pagination:
+            pagination = Pagination(None, p, ps, q.count(), None)
+
+        return {'messages':messages,'pagination':pagination}
