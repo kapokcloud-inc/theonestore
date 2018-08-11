@@ -8,49 +8,64 @@
 {% endblock %}
 
 {% block body %}
-<div class="user_wrap">
-  <a class="weui-cell bg-white" href="{{ url_for('mobile.item.detail', goods_id=9) }}">
-    <div class="weui-cell__hd avatar mar-right">
-      <img src="{{ order_goods.goods_img }}" alt="">
-    </div>
-    <div class="weui-cell__bd">
-      <div class="all_title height25">{{ order_goods.goods_name }}</div>
-      <div class="all_desc height25">{{ order_goods.goods_desc }}</div>
-    </div>
-    <div class="weui-cell__ft mar-left">
-      <p class="all_price">￥{{ order_goods.goods_price }}</p>
-    </div>
-  </a>
-  <div class="weui-cells weui-cells_form">
-    <div class="weui-gallery" id="gallery">
-      <span class="weui-gallery__img"  id="galleryImg"></span>
-      <div class="weui-gallery__opr">
-        <!-- <a href="javascript:" class="weui-gallery__del">
-          <i class="weui-icon-delete weui-icon_gallery-delete"></i>
-        </a> -->
+{% if order_goods and order_goods.is_delete == 0 %}
+  <!-- 商品并未在后台被删除的时候显示 start -->
+  <div class="user_wrap">
+    <a class="weui-cell bg-white" href="{{ url_for('mobile.item.detail', goods_id=9) }}">
+      <div class="weui-cell__hd avatar mar-right">
+        <img src="{{ order_goods.goods_img }}" alt="">
       </div>
-    </div>
-    <div class="weui-media-box weui-media-box_appmsg">
-      <div class="weui-media-box__hd">
-        <img class="weui-media-box__thumb ava" src="{{ comment.avatar }}" alt="">
+      <div class="weui-cell__bd">
+        <div class="all_title height25">{{ order_goods.goods_name }}</div>
+        <div class="all_desc height25">{{ order_goods.goods_desc }}</div>
       </div>
-      <div class="weui-media-box__bd">
-        <div class="all_title">
-          {{ comment.nickname }}
-          <span class="typeText">{{ const.RATING_TEXT.get(comment.rating) }}</span>
+      <div class="weui-cell__ft mar-left">
+        <p class="all_price">￥{{ order_goods.goods_price }}</p>
+      </div>
+    </a>
+    <div class="weui-cells weui-cells_form">
+      <div class="weui-gallery" id="gallery">
+        <span class="weui-gallery__img"  id="galleryImg"></span>
+        <div class="weui-gallery__opr">
         </div>
-        <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
-        <div class="review_cnt">{{ comment.content }}</div>
-        <ul class="weui-uploader__files mar-top" id="uploaderFiles">
-          {% set img_data = comment.img_data|json_loads %}
-          {% for img in img_data %}
-            <li class="weui-uploader__file" style="background-image:url('{{ img }}')"></li>
-          {% endfor %}
-        </ul>
+      </div>
+      <div class="weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__hd">
+          <img class="weui-media-box__thumb ava" src="{{ comment.avatar }}" alt="">
+        </div>
+        <div class="weui-media-box__bd">
+          <div class="all_title">
+            {{ comment.nickname }}
+            <span class="typeText">{{ const.RATING_TEXT.get(comment.rating) }}</span>
+          </div>
+          <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
+          <div class="review_cnt">{{ comment.content }}</div>
+          <ul class="weui-uploader__files mar-top" id="uploaderFiles">
+            {% set img_data = comment.img_data|json_loads if comment.img_data %}
+            {% for img in img_data %}
+              <li class="weui-uploader__file" style="background-image:url('{{ img }}')"></li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-</div>
+  <!-- 商品并未在后台被删除的时候显示 end -->
+{% else %}
+  <!-- 商品已在后台被删除的时候显示 start -->
+  <div class="not-product">
+    <div class="not-product_img">
+      <img class="notproduct" src="/static/default/mobile/img/notgoods.png" alt="">
+    </div>
+    <div class="not-product_text">{{_('商品不存在')}}</div>
+    <div class="reg_btn">
+      <a href="{{ url_for('mobile.index.root') }}">
+        <button type="button" class="weui-btn weui-btn_red">{{_('去首页看看')}}</button>
+      </a>
+    </div>
+  </div>
+  <!-- 商品已在后台被删除的时候显示 end -->
+{% endif %}
 {% endblock %}
 
 {% block script %}
