@@ -22,26 +22,33 @@
 }
 .cart-goods_img {
   width: 120px;
+  overflow: hidden;
 }
 .cart-goods_name {
   width: 380px;
   line-height: 40px !important;
 }
 .cart-goods_price {
-  width: 150px;
+  width: 110px;
   text-align: center;
+  overflow: hidden;
+  margin: 0 20px;
 }
 .cart-goods_num {
   width: 140px;
   text-align: center;
+  overflow: hidden;
 }
 .cart-goods_total {
-  width: 150px;
+  width: 110px;
   text-align: center;
+  overflow: hidden;
+  margin: 0 20px;
 }
 .cart-goods_action {
   width: 70px;
   text-align: center;
+  overflow: hidden;
 }
 .cart-goods_item {
   padding: 25px;
@@ -376,6 +383,7 @@
   position: relative;
   min-height: 130px;
   padding-top: 20px;
+  overflow: hidden;
 }
 .goods-info {
   font-size: 18px;

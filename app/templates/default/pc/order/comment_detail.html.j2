@@ -17,6 +17,7 @@
   </div>
   <div class="user-main">
     <div class="head-inner clearfix">
+      <!-- 商品并未在后台被删除的时候显示 start -->
       <div class="goods-com_box clearfix">
         <div class="one-cell">
           <div class="one-cell_hd avatar60">
@@ -54,6 +55,14 @@
           </div>
         </div>
       </div>
+      <!-- 商品并未在后台被删除的时候显示 end -->
+      
+      <!-- 商品已在后台被删除的时候显示 start -->
+      <div class="not-one">
+        <p class="not-one_text">{{_('商品不存在')}}</p>
+        <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('去首页看看')}}</a>
+      </div>
+      <!-- 商品已在后台被删除的时候显示 end -->
     </div>
   </div>
 </div>
