@@ -22,6 +22,7 @@ try:
     import urlparse
 except Exception as e:
     from urllib.parse import urlparse
+from decimal import Decimal
 
 from flask import (
     Flask,
@@ -156,6 +157,12 @@ def tofloat(s):
         pass
 
     return float(0)
+
+
+def toamount(base):
+    """转换成金额"""
+
+    return Decimal(base).quantize(Decimal('0.00'))
 
 
 def randomstr(random_len=6, random_type=0):

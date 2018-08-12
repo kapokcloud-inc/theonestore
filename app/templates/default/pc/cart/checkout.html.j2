@@ -94,9 +94,9 @@
                   <img src="{{ cart.item.goods_img }}" alt="">
                 </div>
                 <div class="col goods-item_name">{{ cart.item.goods_name }}</div>
-                <div class="col goods-item_price">￥{{ cart.item.goods_price }}</div>
+                <div class="col goods-item_price">￥{{ cart.item.goods_price|toamount }}</div>
                 <div class="col goods-item_num">x {{ cart.cart.quantity }}</div>
-                {% set total_price = cart.item.goods_price * cart.cart.quantity %}
+                {% set total_price = cart.item.goods_price|toamount * cart.cart.quantity %}
                 <div class="col goods-item_total">￥{{ total_price }}</div>
               </li>
             {% endfor %}
@@ -107,7 +107,7 @@
             <img class="coupon-img" src="/static/default/pc/img/coupon.png" alt="">
             <span>{{_('使用优惠券')}}</span>
             <div style="line-height:25px;" class="hide" id="couponNum">{{_('使用优惠券1张，共抵扣')}}
-              <span class="allOn">￥0.0</span>
+              <span class="allOn">￥0.00</span>
             </div>
           </div>
 
@@ -129,8 +129,8 @@
                         <div class="coupon-info">
                           <div class="wave"></div>
                           <p>
-                            <span class="coupon-amount">￥{{ coupon.coupon_amount }}</span>
-                            满{{ coupon.limit_amount }}
+                            <span class="coupon-amount">￥{{ coupon.coupon_amount|toamount }}</span>
+                            满{{ coupon.limit_amount|toamount }}
                           </p>
                           <p>{{_('有效期')}}：{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</p>
                         </div>
@@ -141,8 +141,8 @@
                         <div class="coupon-info bg-eee">
                           <div class="wave"></div>
                           <p>
-                            <span class="coupon-amount">￥{{ coupon.coupon_amount }}</span>
-                            满{{ coupon.limit_amount }}
+                            <span class="coupon-amount">￥{{ coupon.coupon_amount|toamount }}</span>
+                            满{{ coupon.limit_amount|toamount }}
                           </p>
                           <p>{{_('有效期')}}：{{ coupon.end_time|timestamp2str('YYYY.MM.DD') }}</p>
                         </div>
@@ -261,12 +261,14 @@ function checkout_amounts() {
   var coupon_id = $("#coupon_id").val();
 
   if (carts_id == '') {
-    $.toast("{{_('请先选购商品')}}", "text");
+    // 优化alert ??
+    alert("{{_('请先选购商品')}}");
     return false;
   }
 
   if (shipping_id == 0) {
-    $.toast("{{_('请先选择快递')}}", "text");
+    // 优化alert ??
+    alert("{{_('请先选择快递')}}");
     return false;
   }
 
@@ -276,7 +278,8 @@ function checkout_amounts() {
   params = {'carts_id':carts_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id};
   $.get("{{ url_for('api.cart.checkout_amounts') }}", params, function(json) {
     if (json.ret != 0) {
-      $.toast(json.msg, "text");
+      // 优化alert ??
+      alert(json.msg);
       return false;
     }
 
@@ -451,17 +454,20 @@ function submit() {
   var carts_id = $("#carts_id").val();
   
   if (ua_id == 0) {
-    $.toast("{{_('请先设置收货地址')}}", "text");
+    // 优化alert ??
+    alert("{{_('请先设置收货地址')}}");
     return false;
   }
 
   if (shipping_id == 0) {
-    $.toast("{{_('请先选择快递')}}", "text");
+    // 优化alert ??
+    alert("{{_('请先选择快递')}}");
     return false;
   }
 
   if (carts_id == '') {
-    $.toast("{{_('请先选购商品')}}", "text");
+    // 优化alert ??
+    alert("{{_('请先选购商品')}}");
     return false;
   }
 
@@ -474,7 +480,8 @@ function submit() {
       var order_id = json.data.order_id;
       window.location.href = "/pc/cart/pay/" + order_id;
     } else {
-      $.toast(json.msg, "text");
+      // 优化alert ??
+      alert(json.msg);
       return false;
     }
   });

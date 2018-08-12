@@ -1,5 +1,5 @@
 {% extends '/default/pc/layout/base.html.j2' %}
-
+{% import '/default/pc/libs/const.html.j2' as const %}
 
 {% block head %}
 <title>{{_('消息通知 - 一店')}}</title>
@@ -22,87 +22,51 @@
       {%include 'default/pc/layout/nav_left.html.j2'%}
       <div class="order-wrap">
         <div class="allPad">
-          <!-- 有消息通知 -->
-          <div class="order-bd">
-            <div class="order-box">
-              <ul class="order-box_list">
-                <li class="aftersales-goods_box">
-                  <div class="order-item_detail">
-                    <div class="msg-item_hd">
-                      <div class="msg-type">
-                        您的小米商品已出库
-                        <span class="msg-add greyGap">2018-08-03 10:39:47</span>
-                      </div>
-                      <div class="order-desc">您的订单已出库，（EMS1146293841115）物流信息可通过小米手机微信公众号、小米商城APP查询。</div>
-                    </div>
-                    <div class="clearfix">
-                      <div class="item-bd_fl">
-                        <div class="one-cell not-oneCell">
-                          <div class="one-cell_hd hig100">
-                            <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
+          {% if messages %}
+            <!-- 有消息通知 -->
+            <div class="order-bd">
+              <div class="order-box">
+                <ul class="order-box_list">
+                  {% for message in messages %}
+                    <li class="aftersales-goods_box">
+                      <div class="order-item_detail">
+                        <div class="msg-item_hd">
+                          <div class="msg-type">
+                            {{ const.MESSAGE_TYPE.get(message.message_type,"") }}
+                            <span class="msg-add greyGap">{{ message.add_time|timestamp2str }}</span>
+                          </div>
+                          <div class="order-desc">{{ message.content }}</div>
+                        </div>
+                        <div class="clearfix">
+                          <div class="item-bd_fl">
+                            <div class="one-cell not-oneCell">
+                              <div class="one-cell_hd hig100">
+                                <img src="{{ message.img }}" alt="">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="item-bd_fr">
+                            <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=message.tid) }}">
+                              <button class="order-type_btn" type="button">{{_('立即查看')}}</button>
+                            </a>
                           </div>
                         </div>
                       </div>
-                      <div class="item-bd_fr">
-                        <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
-                          <button class="order-type_btn" type="button">{{_('立即查看')}}</button>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li class="aftersales-goods_box">
-                  <div class="order-item_detail">
-                    <div class="msg-item_hd">
-                      <div class="msg-type">
-                        您的小米商品已签收
-                        <span class="msg-add greyGap">2018-08-03 10:39:47</span>
-                      </div>
-                      <div class="order-desc">您的订单已签收，（EMS1146293841115）物流信息可通过小米手机微信公众号、小米商城APP查询。</div>
-                    </div>
-                    <div class="clearfix">
-                      <div class="item-bd_fl">
-                        <div class="one-cell not-oneCell">
-                          <div class="one-cell_hd hig100">
-                            <img src="http://cdn.bg-mania.jp/images/2017/03/tbm_20170314185820.jpg" alt="">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="item-bd_fr">
-                        <a class="btn-link" href="{{ url_for('pc.order.detail', order_id=79) }}">
-                          <button class="order-type_btn" type="button">{{_('立即查看')}}</button>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </ul>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {{ libs.pagination_html(pagination,10) }}
             </div>
-            <div class="page-box">
-              <span class="page-num page-first">
-                <i class="icon-xiaoyu"></i>
-              </span>
-              <span class="page-num btn-current">1</span>
-              <a href="" class="page-num">2</a>
-              <a href="" class="page-num">3</a>
-              <a href="" class="page-num">4</a>
-              <a href="" class="page-num">5</a>
-              <a href="" class="page-num">6</a>
-              <span class="page-more">...</span>
-              <a href="" class="page-num">12</a>
-              <a href="" class="page-num page-last">
-                <i class="icon-dayu"></i>
-              </a>
+            <!-- 有消息通知 end -->
+          {% else %}
+            <!-- 没有消息通知 -->
+            <div class="not-one">
+              <p class="not-one_text">{{_('您暂时没有消息通知!')}}</p>
+              <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
             </div>
-          </div>
-          <!-- 有消息通知 end -->
-
-          <!-- 没有消息通知 -->
-          <!-- <div class="not-one">
-            <p class="not-one_text">{{_('您暂时没有消息通知!')}}</p>
-            <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
-          </div> -->
-          <!-- 没有消息通知 end -->
+            <!-- 没有消息通知 end -->
+          {% endif %}
         </div>
       </div>
     </div>

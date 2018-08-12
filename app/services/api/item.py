@@ -41,6 +41,8 @@ class ItemStaticMethodsService(object):
         cat_id       = toint(params.get('cat_id', '0'))
         is_hot       = toint(params.get('is_hot', '-1'))
         is_recommend = toint(params.get('is_recommend', '-1'))
+        search_key   = params.get('search_key', '')
+
 
         q = db.session.query(Goods.goods_id, Goods.goods_name, Goods.goods_img, Goods.goods_desc,
                                 Goods.goods_price, Goods.market_price).\
@@ -59,8 +61,11 @@ class ItemStaticMethodsService(object):
         if is_recommend in [0,1]:
             q = q.filter(Goods.is_recommend == is_recommend)
 
-        items = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
+        if search_key != "":
+            q = q.filter(Goods.goods_name.like(u"%"+search_key+u"%"))
 
+        items = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
+        log_info(items)
         pagination = None
         if is_pagination:
             pagination = Pagination(None, p, ps, q.count(), None)
@@ -88,11 +93,13 @@ class ItemStaticMethodsService(object):
         galleries = db.session.query(GoodsGalleries.img).\
                         filter(GoodsGalleries.goods_id == goods_id).all()
 
-        is_fav = db.session.query(Like.like_id).\
-                    filter(Like.like_type == 2).\
-                    filter(Like.ttype == 1).\
-                    filter(Like.tid == goods_id).\
-                    filter(Like.uid == uid).first()
+        is_fav = None
+        if uid:
+            is_fav = db.session.query(Like.like_id).\
+                        filter(Like.like_type == 2).\
+                        filter(Like.ttype == 1).\
+                        filter(Like.tid == goods_id).\
+                        filter(Like.uid == uid).first()
         is_fav = 1 if is_fav else 0
 
         comments = []

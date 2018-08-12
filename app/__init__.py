@@ -16,8 +16,11 @@ from flask import (
     redirect, 
     url_for,
     abort,
-    send_from_directory
+    send_from_directory,
+    g
 )
+
+from app.database import db
 
 from app.helpers import (
     get_uuid, 
@@ -43,6 +46,27 @@ def configure_before(app):
             admin_uid = session.get('admin_uid', 0)
             if admin_uid <= 0:
                 return abort(403)
+
+        # pc
+        if endpoint.find('pc.') == 0:
+            from app.models.item import GoodsCategories
+
+            # nav推荐分类列表
+            categories = db.session.query(GoodsCategories.cat_id, GoodsCategories.cat_name).\
+                                filter(GoodsCategories.is_recommend == 1).\
+                                order_by(GoodsCategories.sorting.desc()).\
+                                order_by(GoodsCategories.cat_id.desc()).all()
+            g.pc_nav_categories = categories
+
+        if (endpoint.find('pc.') == 0) or (endpoint.find('mobile.') == 0):
+            from app.services.api.user import UserStaticMethodsService
+
+            uid = session.get('uid', 0)
+            g.unread_count = 0
+
+            if uid:
+                # 未读消息数
+                g.unread_count = UserStaticMethodsService.unread_count(uid)
 
     @app.errorhandler(403)
     def forbidden(error):

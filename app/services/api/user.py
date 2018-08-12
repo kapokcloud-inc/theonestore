@@ -19,7 +19,11 @@ from app.helpers import (
 )
 from app.helpers.date_time import current_timestamp
 
-from app.models.user import User
+from app.models.message import Message
+from app.models.user import (
+    User,
+    UserLastTime
+)
 
 
 class UserCreateService(object):
@@ -53,3 +57,43 @@ class UserCreateService(object):
         """创建"""
 
         self.user = model_create(User, self.user_data)
+
+
+class UserStaticMethodsService(object):
+    """用户静态方法Service"""
+
+    @staticmethod
+    def create_account(uid, is_commit=False):
+        """创建帐户"""
+
+        model_create(UserLastTime, {'uid':uid, 'last_type':1, 'last_time':0}, commit=is_commit)
+
+        return True
+
+    @staticmethod
+    def unread_count(uid):
+        """未读消息数"""
+
+        ult          = UserLastTime.query.\
+                            filter(UserLastTime.uid == uid).\
+                            filter(UserLastTime.last_type == 1).first()
+        last_time    = ult.last_time if ult else 0
+        unread_count = db.session.query(Message.message_id).\
+                            filter(Message.tuid == uid).\
+                            filter(Message.add_time > last_time).count()
+
+        return unread_count
+
+    @staticmethod
+    def reset_last_time(uid, last_type):
+        """重置最新时间"""
+
+        current_time = current_timestamp()
+
+        ult = UserLastTime.query.\
+                filter(UserLastTime.uid == uid).\
+                filter(UserLastTime.last_type == last_type).first()
+
+        model_update(ult, {'last_time':current_time}, commit=True)
+
+        return True

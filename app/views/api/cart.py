@@ -36,7 +36,8 @@ from app.helpers.user import (
 from app.services.response import ResponseJson
 from app.services.api.cart import (
     CartService,
-    CheckoutService
+    CheckoutService,
+    CartStaticMethodsService
 )
 
 from app.models.order import (
@@ -104,8 +105,8 @@ def add():
         quantity = item_data.get('quantity')
 
         # 检查
-        goods = Goods.query.get(goods_id)
-        if not goods:
+        item = Goods.query.get(goods_id)
+        if not item:
             return resjson.print_json(10, _(u'找不到商品'))
 
         # 获取购物车商品
@@ -175,8 +176,13 @@ def update():
         if _cart['cart'].cart_id == cart_id:
             _items_amount = _cart['items_amount']
 
+    # 商品状态
+    item = Goods.query.get(cart.goods_id)
+    is_valid, valid_status = CartStaticMethodsService.check_item_statue(item, cart)
+
     data = {'cart_total':cs.cart_total, 'items_quantity':cs.items_quantity,
-            'items_amount':cs.items_amount, '_items_amount':_items_amount}
+            'items_amount':cs.items_amount, '_items_amount':_items_amount,
+            'is_valid':is_valid, 'valid_status':valid_status}
     return resjson.print_json(0, u'ok', data)
 
 
@@ -274,7 +280,6 @@ def checkout_amounts():
     resjson.action_code = 15
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
         return resjson.print_json(10, _(u'未登陆'))
     uid = get_uid()
 
@@ -294,7 +299,7 @@ def checkout_amounts():
         return resjson.print_json(11, cs.msg)
 
     data = {'items_amount':cs.items_amount,
-            'shipping_amount':cs.shipping_amount.quantize(Decimal('0.00')),
-            'discount_amount':cs.discount_amount.quantize(Decimal('0.00')),
+            'shipping_amount':cs.shipping_amount,
+            'discount_amount':cs.discount_amount,
             'pay_amount':cs.pay_amount}
     return resjson.print_json(0, u'ok', data)

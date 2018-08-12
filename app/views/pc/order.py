@@ -42,6 +42,7 @@ from app.forms.api.comment import CommentOrderGoodsForm
 from app.models.comment import Comment
 from app.models.shipping import Shipping
 from app.models.aftersales import Aftersales
+from app.models.item import Goods
 from app.models.order import (
     Order,
     OrderAddress,
@@ -56,8 +57,8 @@ def index():
     """订单列表页"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     data               = OrderStaticMethodsService.orders(uid, request.args.to_dict(), True)
@@ -80,8 +81,8 @@ def detail(order_id):
     """订单详情"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     data = OrderStaticMethodsService.detail_page(order_id, uid)
@@ -96,8 +97,8 @@ def cancel():
     """取消订单"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     args        = request.args
@@ -125,8 +126,8 @@ def deliver():
     """确认收货"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     args     = request.args
@@ -152,8 +153,8 @@ def create_comment(og_id):
     """pc站 - 发表评价"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     order_goods = OrderGoods.query.get(og_id)
@@ -180,8 +181,8 @@ def comment(is_pagination=True):
 
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     completed = db.session.query(Order.order_id).\
@@ -211,7 +212,7 @@ def comment(is_pagination=True):
         pagination = Pagination(None, p, ps, q.count(), None)
 
     data = {'is_pending':is_pending, 'pending_count':pending_count, 'unpending_count':unpending_count, 'comments':comments,'pagination':pagination}
-
+    log_info(comments)
     return render_template('pc/order/comment.html.j2', **data)
 
 
@@ -220,17 +221,15 @@ def comment_detail(og_id):
     """pc站 - 查看评价"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
-        return redirect(url_for('api.weixin.login'))
+        session['weixin_login_url'] = request.url
+        return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
     order_goods = OrderGoods.query.get(og_id)
+    good        = Goods.query.get(order_goods.goods_id)
     comment     = Comment.query.filter(Comment.comment_id == order_goods.comment_id).filter(Comment.uid == uid).first()
 
-    print(comment)
     if not comment:
-        print('执行了')
         return redirect(request.headers['Referer'])
 
-    return render_template('pc/order/comment_detail.html.j2', order_goods=order_goods, comment=comment)
-
+    return render_template('pc/order/comment_detail.html.j2', order_goods=order_goods, comment=comment, good=good)

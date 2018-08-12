@@ -23,7 +23,7 @@
             {% set url = 'javascript:void(0);' if url == '' else url %}
               <div class="swiper-slide">
                 <a href="{{ url }}">
-                  <img class="swiper-img" src="{{ adv.img }}" alt="">
+                  <img class="swiper-img" src="{{ adv.img }}-rectangle.w1200" alt="">
                 </a>
               </div>
           {% endfor %}
@@ -105,7 +105,7 @@
   var mySwiper = new Swiper('.swiper-container', {
     loop: true,
     autoplay: true,
-    speed: 300,
+    speed: 1500,
     pagination: {
       el: '.swiper-pagination',
       clickable: true,

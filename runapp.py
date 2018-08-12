@@ -23,6 +23,7 @@ from app.helpers import (
     configure_uploads,
     static_uri,
     toint,
+    toamount,
     get_file_uploadtype,
     request_args_to_query_string
 )
@@ -65,11 +66,12 @@ csrf.exempt('app.views.api.upload.ueditor')
 
 # 注册jinja模板过滤器
 jinja_filters = {
-    'timestamp2str': timestamp2str,
+    'timestamp2str':timestamp2str,
     'before_after_timestamp':before_after_timestamp,
-    'json_loads': json_loads,
-    'static_uri': static_uri,
-    'toint': toint,
+    'json_loads':json_loads,
+    'static_uri':static_uri,
+    'toint':toint,
+    'toamount':toamount,
     'get_file_uploadtype':get_file_uploadtype,
     'request_args_to_query_string':request_args_to_query_string
 }

@@ -105,7 +105,7 @@
 {# 判断个人中心-左侧菜单选中项 #}
 {% macro get_me_navclass(nav_cat) %}
   {% set nav_cat_dict = {
-    'order':['pc.order.index', 'pc.order.detail'],
+    'order':['pc.order.index', 'pc.order.detail', 'pc.aftersales.apply_step0','pc.aftersales.apply_step1','pc.aftersales.apply_step2','pc.aftersales.apply_step3'],
     'comment':['pc.order.comment'],
     'aftersales':['pc.aftersales.root', 'pc.aftersales.detail'],
     'profile':['pc.me.index'],
@@ -118,4 +118,51 @@
   {% set endpoint_list = nav_cat_dict.get(nav_cat, []) %}
   {% set class_on = ' class="allOn" ' if request.endpoint in endpoint_list else '' %}
   {{ class_on }}
+{% endmacro %}
+
+{# 优惠券列表数据填充 #}
+{% macro fill_coupon_data(coupons) %}
+  {% if coupons %}
+    <div class="order-bd pad-top40">
+      <ul class="coupon-box_list clearfix">
+        {% for coupon in coupons %}
+          {% if coupon.is_valid == 0 or coupon.order_id > 0  %}
+            <li class="coupon-box_item border-eee">
+              <div class="coupon-info bg-eee">
+                <div class="wave"></div>
+                <p>
+                  <span class="coupon-amount">￥{{ coupon.coupon_amount }}</span>
+                  {{ coupon.coupon_name }}
+                </p>
+                {% set validtime = '' if end_time==0 else coupon.end_time|timestamp2str('YYYY.MM.DD') %}
+                <p>{{_('有效期')}}：{{ validtime }}</p>
+              </div>
+              {% set suitgoods = coupon.limit_goods_name if coupon.limit_goods_name else '全场通用' %}
+              <div class="all-store color-eee">{{ suitgoods }}</div>
+            </li>
+          {% else %}
+            <li class="coupon-box_item"  onclick="go_home()"> 
+              <div class="coupon-info">
+                <div class="wave"></div>
+                <p>
+                  <span class="coupon-amount">￥{{ coupon.coupon_amount }}</span>
+                  {{ coupon.coupon_name }}
+                </p>
+                {% set validtime = '' if end_time==0 else coupon.end_time|timestamp2str('YYYY.MM.DD') %}
+                <p>{{_('有效期')}}：{{ validtime }}</p>
+              </div>
+              {% set suitgoods = coupon.limit_goods_name if coupon.limit_goods_name else '全场通用' %}
+              <div class="all-store">{{ suitgoods }}</div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <div class="not-one">
+      <p class="not-one_text">{{_('未找到相应优惠券!')}}</p>
+      <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('到商场去看看')}}</a>
+    </div>
+  {% endif %}
+    
 {% endmacro %}

@@ -19,43 +19,45 @@
     <nav class="top-nav">
       <div class="head-inner" style="height:35px;">
         <ul class="top-nav-tool">
-          <!-- 用户未登录时显示 -->
-          <!-- <li class="top-nav_item">
-            <a href="" class="mouseon">{{_('请登录')}}</a>
-          </li> -->
-          <!-- 用户未登录时显示 end -->
-
-          <!-- 用户登录时显示 -->
-          <li class="top-nav_user">
-            <div class="user-on">135****229</div>
-            <div class="user-wrap">
-              <div class="one-cell">
-                <div class="one-cell_hd avatar">
-                  <img class="ava" src="//u.vpimg1.com/upload/myi/2017/06/01/84/avatar_89373029_1496285287409_38x38_90.jpg" alt="">
+          {% set uid = session.get('uid', 0) %}
+          {% set nickname = session.get('nickname', '') %}
+          {% if uid %}
+            <li class="top-nav_user">
+              <div class="user-on">{{ nickname }}</div>
+              <div class="user-wrap">
+                <div class="one-cell">
+                  <div class="one-cell_hd avatar">
+                    <img class="ava" src="//u.vpimg1.com/upload/myi/2017/06/01/84/avatar_89373029_1496285287409_38x38_90.jpg" alt="">
+                  </div>
+                  <div class="one-cell_bd username">
+                    <a href="{{ url_for('pc.me.index') }}">{{ nickname }}</a>
+                  </div>
+                  <div class="one-cell_ft signout" onclick="signout()">{{_('[退出]')}}</div>
                 </div>
-                <div class="one-cell_bd username">
-                  <a href="{{ url_for('pc.me.index') }}">135****229</a>
+                <div class="user-about">
+                  <span>
+                    <a href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
+                  </span>
+                  <span>
+                    <a href="{{ url_for('pc.me.coupon') }}">{{_('优惠券')}}</a>
+                  </span>
+                  <span>
+                    <a href="{{ url_for('pc.me.collect', p=1, ps=20) }}">{{_('收藏')}}</a>
+                  </span>
+                  <span>
+                    <a href="{{ url_for('pc.me.messages') }}">{{_('消息')}}</a>
+                    {% if g.unread_count %}
+                      <i class="user-badge">{{ g.unread_count }}</i>
+                    {% endif %}
+                  </span>
                 </div>
-                <div class="one-cell_ft signout" onclick="signout()">{{_('[退出]')}}</div>
               </div>
-              <div class="user-about">
-                <span>
-                  <a href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
-                </span>
-                <span>
-                  <a href="{{ url_for('pc.me.coupon') }}">{{_('优惠券')}}</a>
-                </span>
-                <span>
-                  <a href="{{ url_for('pc.me.collect', p=1, ps=20) }}">{{_('收藏')}}</a>
-                </span>
-                <span>
-                  <a href="{{ url_for('pc.me.messages') }}">{{_('消息')}}</a>
-                  <i class="user-badge">1</i>
-                </span>
-              </div>
-            </div>
-          </li>
-          <!-- 用户登录时显示 end -->
+            </li>
+          {% else %}
+            <li class="top-nav_item">
+              <a href="" class="mouseon">{{_('请登录')}}</a>
+            </li>
+          {% endif %}
           
           <li class="top-nav_item">
             <a href="{{ url_for('pc.order.index', tab_status=0) }}" class="mouseon">{{_('我的订单')}}</a>
@@ -68,7 +70,9 @@
           </li>
           <li class="top-nav_item">
             <a href="{{ url_for('pc.me.messages') }}" class="mouseon">{{_('消息')}}</a>
-            <span class="news-badge">1</span>
+            {% if uid and g.unread_count %}
+              <i class="news-badge">{{ g.unread_count }}</i>
+            {% endif %}
           </li>
         </ul>
       </div>
@@ -197,23 +201,20 @@
       <div class="head-inner bg-red">
         <ul class="top-main_list clearfix">
           <div class="category-wrap">
-            <li class="top-main_item item_on">
+            {% set item_on = 'item_on' if request.endpoint == 'pc.index.root' else '' %}
+            <li class="top-main_item {{ item_on }}">
               <a class="top-main_atag" href="{{ url_for('pc.index.root') }}">{{_('首页')}}</a>
             </li>
-            <li class="top-main_item">
-              <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=1) }}">{{_('分类一分类一')}}</a>
-            </li>
-            <li class="top-main_item">
-              <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=1) }}">{{_('分类二')}}</a>
-            </li>
-            <li class="top-main_item">
-              <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=1) }}">{{_('分类三')}}</a>
-            </li>
-            <li class="top-main_item">
-              <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=1) }}">{{_('分类四')}}</a>
-            </li>
+            {% for category in g.pc_nav_categories %}
+              {% set cat_id = request.args.get('cat_id','0')|toint %}
+              {% set item_on = 'item_on' if (request.endpoint == 'pc.item.index') and (cat_id == category.cat_id) else '' %}
+              <li class="top-main_item {{ item_on }}">
+                <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=category.cat_id) }}">{{ category.cat_name }}</a>
+              </li>
+            {% endfor %}
           </div>
-          <li class="top-main_allCat">
+          {% set item_on = 'item_on' if request.endpoint == 'pc.category.root' else '' %}
+          <li class="top-main_allCat {{ item_on }}">
             <a class="top-main_atag" href="{{ url_for('pc.category.root') }}">{{_('全部分类')}}</a>
           </li>
         </ul>

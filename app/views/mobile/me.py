@@ -35,6 +35,7 @@ from app.helpers.user import (
 
 from app.services.message import MessageStaticMethodsService
 from app.services.api.like import LikeStaticMethodsService
+from app.services.api.user import UserStaticMethodsService
 
 from app.forms.api.me import (
     ProfileForm,
@@ -51,8 +52,7 @@ from app.models.funds import Funds
 from app.models.coupon import Coupon
 from app.models.user import (
     User,
-    UserAddress,
-    UserLastTime
+    UserAddress
 )
 
 
@@ -63,7 +63,7 @@ def index():
     """手机站 - 个人中心"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid          = get_uid()
     nickname     = get_nickname()
@@ -114,16 +114,11 @@ def index():
             filter(Aftersales.status.in_([1,2]))
     aftersales_count = get_count(q)
 
-    # 未读消息
-    ult          = UserLastTime.query.filter(UserLastTime.uid == uid).filter(UserLastTime.last_type == 1).first()
-    last_time    = ult.last_time if ult else 0
-    unread_count = get_count(db.session.query(Message.message_id).filter(Message.tuid == uid).filter(Message.add_time > last_time))
-
     funds = Funds.query.filter(Funds.uid == uid).first()
 
     data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'coupon_count':coupon_count,
             'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count, 'uncomment_count':uncomment_count,
-            'aftersales_count':aftersales_count, 'unread_count':unread_count, 'funds':funds}
+            'aftersales_count':aftersales_count, 'funds':funds}
     return render_template('mobile/me/index.html.j2', **data)
 
 
@@ -132,7 +127,7 @@ def profile():
     """手机站 - 修改用户信息"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
     
@@ -147,7 +142,7 @@ def addresses():
     """手机站 - 收货地址管理"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -161,7 +156,7 @@ def address(ua_id):
     """手机站 - 添加收货地址"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -181,7 +176,7 @@ def collect():
     """手机站 - 我的收藏"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -196,7 +191,7 @@ def collect_paging():
     """我的收藏 - 加载分页"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = url_for('mobile.me.collect')
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -212,7 +207,7 @@ def coupon():
     """手机站 - 我的优惠券"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid          = get_uid()
     current_time = current_timestamp()
@@ -247,14 +242,16 @@ def messages():
     """手机站 - 消息"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    messages   = MessageStaticMethodsService.messages({'uid':uid})
+    data       = MessageStaticMethodsService.messages({'uid':uid})
     paging_url = url_for('mobile.me.messages_paging', **request.args)
 
-    return render_template('mobile/me/messages.html.j2', messages=messages, paging_url=paging_url)
+    UserStaticMethodsService.reset_last_time(uid, 1)
+
+    return render_template('mobile/me/messages.html.j2', messages=data["messages"], paging_url=paging_url)
 
 
 @me.route('/messages-paging')
@@ -262,12 +259,21 @@ def messages_paging():
     """消息 - 加载分页"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = url_for('mobile.me.messages')
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
     params        = request.args.to_dict()
     params['uid'] = uid
-    messages      = MessageStaticMethodsService.messages(params)
+    data          = MessageStaticMethodsService.messages(params)
 
-    return render_template('mobile/me/messages_paging.html.j2', messages=messages)
+    return render_template('mobile/me/messages_paging.html.j2', messages=data["messages"])
+
+
+@me.route('/signout')
+def signout():
+    """退出登录"""
+
+    session.clear()
+
+    return redirect(url_for('mobile.index.root'))

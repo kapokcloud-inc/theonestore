@@ -24,6 +24,7 @@ from app.database import db
 from app.helpers import (
     log_info,
     toint,
+    toamount,
     model_create,
     model_update,
     model_delete
@@ -68,29 +69,16 @@ class CartService(object):
         carts = q.order_by(Cart.cart_id.desc()).all()
 
         for cart in carts:
-            is_valid     = 1    # 是否有效: 0.失效; 1.有效;
-            valid_status = 0    # 失效状态: 0.默认; 1.下架; 2.缺货;
+            item        = Goods.query.get(cart.goods_id)
+            goods_price = toamount(item.goods_price)
 
-            # 检查 - 商品
-            item = Goods.query.get(cart.goods_id)
-            if not item:
-                is_valid     = 0
-                valid_status = 1
-
-            # 检查 - 商品是否已经下架
-            if item.is_sale != 1:
-                is_valid     = 0
-                valid_status = 1
-
-            # 检查 - 商品是否库存不足
-            if item.stock_quantity <= 0:
-                is_valid     = 0
-                valid_status = 2
+            # 检查 - 商品状态
+            is_valid, valid_status = CartStaticMethodsService.check_item_statue(item, cart)
 
             if is_valid == 1:
                 if cart.is_checked == 1:
                     # 选中商品项商品总价
-                    _items_amount = Decimal(item.goods_price) * cart.quantity
+                    _items_amount = goods_price * cart.quantity
                     self.items_amount += _items_amount
 
                     # 选中商品项总件数
@@ -98,7 +86,7 @@ class CartService(object):
 
                 self.cart_valid_total += cart.quantity
 
-            items_amount = Decimal(item.goods_price) * cart.quantity
+            items_amount = goods_price * cart.quantity
 
             self.cart_total  += cart.quantity
             self.cart_amount += items_amount
@@ -148,25 +136,21 @@ class CheckoutService(object):
                 self.msg = _(u'非法的购物车商品项')
                 return False
             
-            # 检查 - 商品
-            item = Goods.query.get(cart.goods_id)
-            if not item:
-                self.msg = _(u'商品不存在')
-                return False
+            # 检查 - 商品状态
+            item                   = Goods.query.get(cart.goods_id)
+            is_valid, valid_status = CartStaticMethodsService.check_item_statue(item, cart)
 
-            # 检查 - 商品是否已经下架
-            if item.is_sale != 1:
+            if valid_status == 1:
                 self.msg = _(u'商品已经下架')
                 return False
 
-            # 检查 - 商品是否库存不足
-            if item.stock_quantity <= 0:
+            if valid_status == 2:
                 self.msg = _(u'商品库存不足')
                 return False
 
             # 商品总金额
-            _items_amount      = item.goods_price * cart.quantity
-            self.items_amount += Decimal(_items_amount)
+            _items_amount      = toamount(item.goods_price) * cart.quantity
+            self.items_amount += _items_amount
 
             self.items_id.append(item.goods_id)
 
@@ -185,7 +169,7 @@ class CheckoutService(object):
 
         # 快递金额: 不包邮或未满包邮金额
         if self.shipping.free_limit_amount == 0 or self.shipping.free_limit_amount > self.items_amount:
-            self.shipping_amount = Decimal(self.shipping.shipping_amount)
+            self.shipping_amount = toamount(self.shipping.shipping_amount)
 
         if self.coupon_id:
             # 检查 - 优惠券
@@ -199,7 +183,7 @@ class CheckoutService(object):
                 self.coupon.begin_time <= self.current_time and
                 self.coupon.end_time >= self.current_time and
                 self.coupon.limit_amount <= self.items_amount):
-                self.coupon_amount   = Decimal(self.coupon.coupon_amount)
+                self.coupon_amount   = toamount(self.coupon.coupon_amount)
                 self.discount_amount = self.coupon_amount
 
         # 应付金额
@@ -210,6 +194,29 @@ class CheckoutService(object):
 
 class CartStaticMethodsService(object):
     """购物车静态方法Service"""
+
+    @staticmethod
+    def check_item_statue(item, cart):
+        """检查商品状态"""
+        is_valid     = 1    # 是否有效: 0.失效; 1.有效;
+        valid_status = 0    # 失效状态: 0.默认; 1.下架; 2.缺货;
+
+        # 检查 - 商品是否存在
+        if not item:
+            is_valid     = 0
+            valid_status = 1
+
+        # 检查 - 商品是否已经下架
+        if item.is_sale != 1:
+            is_valid     = 0
+            valid_status = 1
+
+        # 检查 - 商品是否库存不足
+        if (item.stock_quantity <= 0) or (item.stock_quantity < cart.quantity):
+            is_valid     = 0
+            valid_status = 2
+
+        return (is_valid, valid_status)
 
     @staticmethod
     def pay_page(order_id, uid, client):
@@ -320,20 +327,21 @@ class CartStaticMethodsService(object):
         shipping_list  = []
         for _s in _shipping_list:
             titel    = _(u'%s  ￥%s(满￥%s免运费)' %\
-                        (_s.shipping_name, _s.shipping_amount, _s.free_limit_amount))
+                        (_s.shipping_name, toamount(_s.shipping_amount), toamount(_s.free_limit_amount)))
             shipping = u'{"title":"%s", "value":%s}' % (titel, _s.shipping_id)
             shipping_list.append(shipping)
         shipping_list  = ','.join(shipping_list)
         shipping_list  = '[%s]' % shipping_list
         shipping_title = _(u'%s  ￥%s(满￥%s免运费)' %\
-                            (default_shipping.shipping_name, default_shipping.shipping_amount,
-                            default_shipping.free_limit_amount))
+                            (default_shipping.shipping_name,
+                            toamount(default_shipping.shipping_amount),
+                            toamount(default_shipping.free_limit_amount)))
 
         carts_id = [cart_id.__str__() for cart_id in carts_id]
         carts_id = ','.join(carts_id)
 
         data = {'carts':cs.carts, 'carts_id':carts_id, 'items_amount':cs.items_amount,
-                'shipping_amount':cs.shipping_amount.quantize(Decimal('0.00')),
+                'shipping_amount':cs.shipping_amount,
                 'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount,
                 'addresses':addresses, 'default_address':default_address,
                 'shipping_list':shipping_list, 'default_shipping':default_shipping,

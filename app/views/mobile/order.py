@@ -54,7 +54,7 @@ def index():
     """订单列表页"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -70,7 +70,7 @@ def paging():
     """加载分页"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = url_for('mobile.order.index')
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -84,7 +84,7 @@ def detail(order_id):
     """订单详情"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -98,7 +98,7 @@ def cancel():
     """取消订单"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -127,7 +127,7 @@ def deliver():
     """确认收货"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -154,7 +154,7 @@ def track():
     """查询物流"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -182,7 +182,7 @@ def create_comment(og_id):
     """手机站 - 发表评价"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -204,7 +204,7 @@ def comment():
     """手机站 - 评价中心"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
@@ -241,14 +241,15 @@ def comment_detail(og_id):
     """手机站 - 查看评价"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
     order_goods = OrderGoods.query.get(og_id)
+    good        = Goods.query.get(order_goods.goods_id)
     comment     = Comment.query.filter(Comment.comment_id == order_goods.comment_id).filter(Comment.uid == uid).first()
     if not comment:
         return redirect(request.headers['Referer'])
 
-    return render_template('mobile/order/comment_detail.html.j2', order_goods=order_goods, comment=comment)
+    return render_template('mobile/order/comment_detail.html.j2', order_goods=order_goods, comment=comment,good=good)
 

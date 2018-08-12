@@ -789,7 +789,6 @@ class OrderStaticMethodsService(object):
             
         return {'orders':orders, 'pagination':pagination, 'texts':texts, 'codes':codes,'aftersales':aftersales,'current_time':current_timestamp()}
 
-
     @staticmethod
     def order_status_text_and_action_code(order, min_pay_time=0):
         """获取订单状态和订单指令"""
