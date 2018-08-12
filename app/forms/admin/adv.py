@@ -88,6 +88,14 @@ class AdvForm(Form):
                         Required(message=_(u'请选择分类'))]
                 )
 
+    platform_type = SelectField(
+                    _(u'平台类型'),
+                    coerce=int,
+                    choices=[ (1, _(u'移动端')), (2, _(u'PC端'))],
+                    validators=[
+                        Required(message=_(u'请选择平台类型'))]
+                )
+
     img     = FileField(
                     _(u'封面原图'),
                     description=_(u'图片文件'),

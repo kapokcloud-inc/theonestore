@@ -25,7 +25,7 @@ class AdvStaticMethodsService(object):
     """广告静态方法Service"""
 
     @staticmethod
-    def advs(params):
+    def advs(params, platform_type=1):
         """获取广告列表"""
 
         p   = toint(params.get('p', '1'))
@@ -35,6 +35,7 @@ class AdvStaticMethodsService(object):
         advs = db.session.query(Adv.adv_id, Adv.ac_id, Adv.img, Adv.ttype, Adv.tid, Adv.url).\
                     filter(Adv.is_show == 1).\
                     filter(Adv.ac_id == ac_id).\
+                    filter(Adv.platform_type == platform_type).\
                     order_by(Adv.sorting.desc()).\
                     order_by(Adv.adv_id.desc()).offset((p-1)*ps).limit(ps).all()
 

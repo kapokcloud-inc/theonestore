@@ -51,12 +51,12 @@ def index(page=1, page_size=20):
     g.page_title = _(u'广告')
 
     args       = request.args
-    tab_status = toint(args.get('tab_status', '0'))
+    platform_type = toint(args.get('platform_type', '0'))
 
     q = Adv.query
 
-    if tab_status == 1:
-        q = q.filter(Adv.ac_id == 1)
+    if platform_type > 0:
+        q = q.filter(Adv.platform_type == platform_type)
 
     advs       = q.order_by(Adv.adv_id.desc()).offset((page-1)*page_size).limit(page_size).all()
     pagination = Pagination(None, page, page_size, q.count(), None)
@@ -115,7 +115,8 @@ def save():
     img = img if img else adv.img
     data = {'ac_id':form.ac_id.data, 'img':img, 'desc':form.desc.data,
             'ttype':form.ttype.data, 'tid':form.tid.data, 'url':form.url.data,
-            'sorting':form.sorting.data, 'is_show':form.is_show.data}
+            'sorting':form.sorting.data, 'is_show':form.is_show.data,
+            'platform_type':form.platform_type.data}
     model_update(adv, data, commit=True)
 
     return redirect(url_for('admin.adv.index'))
