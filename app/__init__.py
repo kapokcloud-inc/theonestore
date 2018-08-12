@@ -7,12 +7,16 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import os
+from flask_babel import gettext as _
 from flask import (
+    current_app,
     session, 
     request, 
     redirect, 
     url_for,
-    abort
+    abort,
+    send_from_directory
 )
 
 from app.helpers import (
@@ -53,6 +57,13 @@ def configure_before(app):
         if (path.find('/admin/') == 0 or path.find('/static/') == 0):
             if not request.is_xhr:
                 return render_template('admin/404.html.j2')
+        elif (path.find('/MP_verify_') == 0 and path[-4:] == '.txt'):
+            filename = path[1:]
+            uploads_path = current_app.config['UPLOADED_FILES_DEST']
+            mp_verify_file = os.path.join(uploads_path, filename)
+            if os.path.exists(mp_verify_file):
+                return send_from_directory(uploads_path, filename)
+            return _(u'文件找不到')
 
     @app.errorhandler(500)
     def server_error(error):
