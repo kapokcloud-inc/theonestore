@@ -35,7 +35,7 @@ index = Blueprint('pc.index', __name__)
 def root():
     """pc - 首页"""
     
-    advs           = AdvStaticMethodsService.advs({'ac_id':1, 'platform_type':2})
+    advs           = AdvStaticMethodsService.advs({'ac_id':1}, platform_type=2)
     data_hot       = ItemStaticMethodsService.items({'is_hot':1, 'p':1, 'ps':12})
     data_recommend = ItemStaticMethodsService.items({'is_recommend':1, 'p':1, 'ps':12})
 
