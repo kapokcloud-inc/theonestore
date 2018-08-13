@@ -22,11 +22,7 @@
     </div>
     <div class="weui-gallery" id="gallery">
       <span class="weui-gallery__img" id="galleryImg"></span>
-      <div class="weui-gallery__opr">
-        <!-- <a href="javascript:" class="weui-gallery__del">
-          <i class="weui-icon-delete weui-icon_gallery-delete"></i>
-        </a> -->
-      </div>
+      <div class="weui-gallery__opr"></div>
     </div>
     {% for comment in comments %}
       <div class="weui-media-box weui-media-box_appmsg">
@@ -43,7 +39,7 @@
           <ul class="weui-uploader__files mar-top" id="uploaderFiles">
             {% set imgs = comment.img_data|json_loads %}
             {% for img in imgs %}
-              <li class="weui-uploader__file" style="background-image:url('{{ img }}')"></li>
+              <li class="weui-uploader__file" style="background-image:url('{{ img }}-square.middle')"></li>
             {% endfor %}
           </ul>
         </div>

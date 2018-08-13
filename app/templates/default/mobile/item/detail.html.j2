@@ -31,7 +31,7 @@
           <div class="swiper-wrapper">
             {% for gallery in galleries %}
               <div class="swiper-slide">
-                <img class="swiper-img" src="{{ gallery.img }}" alt="">
+                <img class="swiper-img" src="{{ gallery.img }}-square.giant" alt="">
               </div>
             {% endfor %}
           </div>
@@ -70,7 +70,7 @@
               <div class="weui-cell">
                 <div class="weui-cell__hd height50">
                   <div class="cart_phone">
-                    <img alt="" src="">
+                    <img alt="" src="{{ item.goods_img }}-square.small">
                   </div>
                 </div>
                 <div class="weui-cell__bd">
@@ -175,16 +175,27 @@
                 <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
                 <div class="review_cnt">{{ comment.content }}</div>
                 <div class="mar-top">
-                  {% set imgs = comment.img_data|json_loads %}
+                  {% set imgs = comment.img_data|json_loads if comment.img_data %}
                   {% for img in imgs %}
                     <span class="review_img">
-                      <img src="{{ img }}" alt="">
+                      <img src="{{ img }}-square.middle" alt="">
                     </span>
                   {% endfor %}
                 </div>
               </div>
             </div>
           {% endfor %}
+        </div>
+      {% else %}
+        <div class="weui-cells">
+          <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+              <span class="blackGap">{{_('评价')}}</span>
+            </div>
+            <div class="weui-cell__ft">
+              <span>{{_('暂无评价')}}</span>
+            </div>
+          </a>
         </div>
       {% endif %}
     </div>

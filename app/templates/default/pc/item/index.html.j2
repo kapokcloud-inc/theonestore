@@ -18,32 +18,41 @@
         </p>
       </div>
     </div>
-    <div class="head-inner">
-      <ul class="all-list clearfix pad-top40">
-        {% for item in items %}
-          <li class="list-item">
-            <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">
-              <div class="item-product">
-                <img src="{{ item.goods_img }}" alt="">
-              </div>
-              <div class="item-detail">
-              <p class="all-title">{{ item.goods_name }}</p>
-              <p class="all-desc">{{ item.goods_desc }}</p>
-                <div class="all-price mar-top">
-                  <span>￥{{ item.goods_price }}</span>
-                  {% if item.market_price > 0 %}
-                    <span class="price-del">￥{{ item.market_price }}</span>
-                  {% endif %}
+    {% if items %}
+      <div class="head-inner">
+        <ul class="all-list clearfix pad-top40">
+          {% for item in items %}
+            <li class="list-item">
+              <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">
+                <div class="item-product">
+                  <img src="{{ item.goods_img }}" alt="">
                 </div>
-              </div>
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-      <div class="user-main">
-        {{ libs.pagination_html(pagination,20) }}
+                <div class="item-detail">
+                <p class="all-title">{{ item.goods_name }}</p>
+                <p class="all-desc">{{ item.goods_desc }}</p>
+                  <div class="all-price mar-top">
+                    <span>￥{{ item.goods_price }}</span>
+                    {% if item.market_price > 0 %}
+                      <span class="price-del">￥{{ item.market_price }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="user-main">
+          {{ libs.pagination_html(pagination,20) }}
+        </div>
       </div>
-    </div>
+    {% else %}
+      <!-- 没有搜索到相关商品 start -->
+      <div class="not-one">
+        <p class="not-one_text">{{_('没有搜索到相关内容')}}</p>
+        <a class="not-one_btn btn-primary" href="{{ url_for('pc.index.root') }}">{{_('返回首页看看')}}</a>
+      </div>
+      <!-- 没有搜索到相关商品 end -->
+    {% endif %}
   </div>
 </div>
 {% endblock %}

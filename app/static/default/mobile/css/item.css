@@ -76,9 +76,9 @@
 .review-type_btn:last-child {
   margin-right: 0px;
 }
-.review-type_btn.btnOn {
-  background: #f33155;
-  color: #fff;
+.btnOn {
+  background: #f33155 !important;
+  color: #fff !important;
 }
 .praise_rate {
   color: #f33155;
