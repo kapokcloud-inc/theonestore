@@ -131,10 +131,13 @@ $.ajaxSetup({
 
 //点击修改昵称进行修改
 $('#change').click(function(){
+
   if(!$('.changeIpu').hasClass('show')){
+    var username = $('#username').text();
+
     $('#username').addClass('hide');
     $('.changeIpu').addClass('show').removeClass('hide');
-    $('.changeIpu').val('');
+    $('.changeIpu').val(username,"");
     $('#change').addClass('hide');
     $('#saveCal').addClass('show').removeClass('hide');
   }
