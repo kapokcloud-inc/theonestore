@@ -38,6 +38,7 @@ from app.services.api.like import LikeStaticMethodsService
 from app.services.api.user import UserStaticMethodsService
 
 from app.forms.api.me import (
+    ProfileForm,
     AddressForm
 )
 
@@ -67,9 +68,10 @@ def index():
         session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login_qrcode'))
     uid          = get_uid()
-    nickname     = get_nickname()
-    avatar       = get_avatar()
     current_time = current_timestamp()
+
+    #用户信息
+    user = User.query.get(uid)
 
     # 优惠券
     q = Coupon.query.\
@@ -125,10 +127,13 @@ def index():
 
     funds = Funds.query.filter(Funds.uid == uid).first()
 
-    data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'coupon_count':coupon_count,
+    wtf_form = ProfileForm()
+
+    data = {'user':user, 'coupon_count':coupon_count,
             'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count,
             'uncomment_count':uncomment_count, 'collect_count':collect_count,
-            'aftersales_count':aftersales_count, 'funds':funds}
+            'aftersales_count':aftersales_count, 'funds':funds, 'wtf_form':wtf_form}
+    log_info(data)
     return render_template('pc/me/index.html.j2', **data)
 
 

@@ -51,7 +51,7 @@ resjson.module_code = 13
 def update():
     """更新个人资料"""
     resjson.action_code = 10
-
+    
     if not check_login():
         return resjson.print_json(10, _(u'未登陆'))
     uid = get_uid()

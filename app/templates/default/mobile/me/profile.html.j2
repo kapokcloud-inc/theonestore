@@ -79,7 +79,7 @@ function submit() {
   var gender = gender_arr[gender];
 
   var params = {'nickname':nickname, 'avatar':avatar, 'gender':gender}
-  console.log(params);
+  
   $.post("{{ url_for('api.me.update') }}", params, function(json) {
     if (json.ret != 0) {
       $.toast(json.msg, "text");
