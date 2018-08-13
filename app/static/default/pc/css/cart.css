@@ -216,6 +216,7 @@
   margin-left: 15px;
   border: none;
   cursor: pointer;
+  background-color: #fff;
 }
 .selected {
   border: 1px solid #f33155 !important;
@@ -369,6 +370,7 @@
   color: #f33155;
   margin-left: 10px;
   border: none;
+  background-color: #fff;
 }
 .goods-section {
   position: relative;
@@ -483,7 +485,7 @@
 }
 .goods-footer_right {
   display: inline-block;
-  width: 100px;
+  width: 140px;
   text-align: right;
   color: #666;
   font-size: 14px;
@@ -510,6 +512,8 @@
   color: #f33155;
   font-size: 14px;
   border: none;
+  background-color: #fff;
+  margin-left: 5px;
 }
 .editAdd-section {
   width: 660px;

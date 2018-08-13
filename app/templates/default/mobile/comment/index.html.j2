@@ -21,7 +21,10 @@
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, is_img=1) }}">{{_('有图')}} {{ img_count }}</a>
     </div>
     <div class="weui-gallery" id="gallery">
-      <span class="weui-gallery__img" id="galleryImg"></span>
+      <div class="swiper-container">
+        <div class="swiper-wrapper"></div>
+      </div>
+      <!-- <span class="weui-gallery__img" id="galleryImg"></span> -->
       <div class="weui-gallery__opr"></div>
     </div>
     {% for comment in comments %}

@@ -985,6 +985,7 @@ header img {
   border-radius: 20px;
   border: 1px solid #ccc;
   overflow: hidden;
+  background-color: #fff;
 }
 .rateON {
   background-color: #f33155;
