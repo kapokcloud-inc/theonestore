@@ -131,7 +131,7 @@
                 {% for good in goods_data %}
                 <a class="one-cell not-oneCell" href="{{ url_for('pc.item.detail', goods_id=good.goods_id) }}">
                   <div class="one-cell_hd avatar80">
-                    <img src="{{ good.goods_img }}" alt="">
+                    <img src="{{ good.goods_img }}-square.small" alt="">
                   </div>
                   <div class="one-cell_bd">
                     <p class="blackGap">{{ good.goods_name }}</p>

@@ -512,6 +512,7 @@ header img {
   border-radius: 5px;
   line-height: 2.5;
   overflow: hidden;
+  cursor: pointer;
 }
 .back-top {
   position: fixed;

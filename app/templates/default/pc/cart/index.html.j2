@@ -40,7 +40,7 @@
                   <i class="cartbox icon-dagou icon-checkbox {{ checked }}" id="cart{{ cart.cart.cart_id }}" data-cart-id="{{ cart.cart.cart_id }}" data-quantity="{{ cart.cart.quantity }}" data-is-valid="{{ cart.is_valid }}" onclick="is_checked(this)"></i>
                 </div>
                 <div class="col cart-goods_img">
-                  <img src="{{ cart.item.goods_img }}" alt="">
+                  <img src="{{ cart.item.goods_img }}-square.small" alt="">
                 </div>
                 {% set goods_class = 'cart-valid' if cart.is_valid == 1 else 'cart-goods_name' %}
                 <div id="goods_class_{{ cart.cart.cart_id }}" class="col {{ goods_class }}">

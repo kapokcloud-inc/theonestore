@@ -106,7 +106,7 @@
                 {% for good in goods if goods %}
                   <div class="one-cell">
                     <div class="one-cell_hd avatar80">
-                      <img src="{{ good.goods_img }}" alt="">
+                      <img src="{{ good.goods_img }}-square.small" alt="">
                     </div>
                     <div class="one-cell_bd">
                       <p class="blackGap">{{ good.goods_name }}</p>
@@ -141,7 +141,7 @@
                     {% set imgdatas = aftersales.img_data|json_loads  %}
                     {% for img_item in imgdatas  %}
                       <td>
-                        <img  class="aftersales_img" src="{{ img_item }}" alt="">
+                        <img  class="aftersales_img" src="{{ img_item }}-square.small" alt="">
                       </td>
                     {% endfor %}
                   </tr>

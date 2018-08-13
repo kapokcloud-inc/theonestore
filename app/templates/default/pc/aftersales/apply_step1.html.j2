@@ -49,7 +49,7 @@
                       {% for item in items %}
                         <div class="one-cell not-oneCell">
                           <div class="one-cell_hd avatar80">
-                            <img src="{{ item.goods_img }}" alt="">
+                            <img src="{{ item.goods_img }}-square.small" alt="">
                           </div>
                           <div class="one-cell_bd">
                             <p class="blackGap">{{ item.goods_name }}</p>
@@ -61,11 +61,17 @@
                       {% if order_good %}
                         <div class="one-cell not-oneCell">
                           <div class="one-cell_hd avatar80">
-                            <img src="{{ order_good.goods_img }}" alt="">
+                            <img src="{{ order_good.goods_img }}-square.small" alt="">
                           </div>
                           <div class="one-cell_bd">
                             <p class="blackGap">{{ order_good.goods_name }}</p>
-                            <p class="blackGap mar-top">数量：{{ order_good.goods_quantity - order_good.aftersales_goods_quantity }}</p>
+                            <!-- <p class="blackGap mar-top">数量：{{ order_good.goods_quantity - order_good.aftersales_goods_quantity }}</p> -->
+                            <div class="apply-service_num mar-top">
+                              <i class="num_minus" onclick=""></i>
+                              <input class="num_ipt change_cart_quantity" type="text" id="" name=""
+                                value="3" data-cart-id="" data-value="" minnum="1">
+                              <i class="num_add" onclick=""></i>
+                            </div>
                           </div>
                         </div>
                       {% endif %}
