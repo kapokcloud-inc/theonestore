@@ -125,14 +125,13 @@ def index():
     aftersales_count = get_count(q)
 
 
-    funds = Funds.query.filter(Funds.uid == uid).first()
-
+    funds    = Funds.query.filter(Funds.uid == uid).first()
     wtf_form = ProfileForm()
 
-    data = {'user':user, 'coupon_count':coupon_count,
-            'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count,
-            'uncomment_count':uncomment_count, 'collect_count':collect_count,
-            'aftersales_count':aftersales_count, 'funds':funds, 'wtf_form':wtf_form}
+    data     = {'user':user, 'coupon_count':coupon_count,
+                'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count,
+                'uncomment_count':uncomment_count, 'collect_count':collect_count,
+                'aftersales_count':aftersales_count, 'funds':funds, 'wtf_form':wtf_form}
     log_info(data)
     return render_template('pc/me/index.html.j2', **data)
 
@@ -147,8 +146,9 @@ def addresses():
     uid = get_uid()
 
     addresses = UserAddress.query.filter(UserAddress.uid == uid).order_by(UserAddress.is_default.desc()).all()
+    wtf_form  = AddressForm()
 
-    return render_template('pc/me/addresses.html.j2', addresses=addresses)
+    return render_template('pc/me/addresses.html.j2', addresses=addresses, wtf_form=wtf_form)
 
 
 @me.route('/collect')
@@ -159,12 +159,12 @@ def collect():
         session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login_qrcode'))
     uid           = get_uid()
+
     params        = request.args.to_dict()
     params['uid'] = uid
     data          = LikeStaticMethodsService.likes(params,True)
 
-    goods = {}
-
+    goods         = {}
     for like in data["likes"]:
         good            = db.session.query(Goods.goods_price,Goods.market_price).filter(Goods.goods_id == like.tid).first()
         goods[like.tid] = good
