@@ -62,7 +62,7 @@ def login_qrcode():
         return redirect(url)
 
     if not wxls.check_state():
-        return redirect(url)
+        return redirect(wxls.code_url)
 
     if wxls.login():
         url = session.get('weixin_login_url', url)
