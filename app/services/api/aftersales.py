@@ -31,12 +31,16 @@ from app.helpers.date_time import (
     before_after_timestamp
 )
 
+from app.forms.api.aftersales import AfterSalesAddressForm
+
 from app.models.order import (
     Order,
+    OrderAddress,
     OrderGoods
 )
 from app.models.aftersales import (
     Aftersales,
+    AftersalesAddress,
     AftersalesLogs,
     AftersalesGoods
 )
@@ -55,12 +59,14 @@ class AfterSalesCreateService(object):
         self.deliver_status   = toint(deliver_status)   # 订单收货状态: 0.默认; 1.未收货; 2.已收货;
         self.content          = content                 # 申请原因
         self.img_data         = img_data                # 图片数据
+        self.current_time     = current_timestamp()     # 当前时间
         self.refunds_amount   = Decimal('0.00')         # 退款金额
         self.goods_data       = []                      # 售后商品数据
         self.order            = None                    # 订单实例
+        self.order_address    = None                    # 收货地址实例
         self.order_goods      = None                    # 订单商品实例
         self.order_goods_list = []                      # 订单商品实例列表
-        self.current_time     = current_timestamp()     #
+        self.address_data     = {}                      # 售后地址数据
 
     def _check_order(self):
         """检查订单"""
@@ -107,6 +113,8 @@ class AfterSalesCreateService(object):
         _sum          = db.session.query(func.sum(OrderGoods.goods_quantity).label('goods_sum')).\
                             filter(OrderGoods.order_id == self.order_id).first()
         self.quantity = _sum.goods_sum
+
+        self.order_address = OrderAddress.query.filter(OrderAddress.order_id == self.order_id).first()
 
         return True
 
@@ -168,10 +176,28 @@ class AfterSalesCreateService(object):
                 self.msg = _(u'超过有效换货时间')
                 return False
 
+        self.order_address = OrderAddress.query.filter(OrderAddress.order_id == self.order.order_id).first()
+
         data = {'og_id':self.order_goods.og_id, 'goods_id':self.order_goods.goods_id,
                 'goods_name':self.order_goods.goods_name, 'goods_img':self.order_goods.goods_img,
                 'goods_desc':self.order_goods.goods_desc, 'goods_quantity':self.quantity, 'maximum':maximum}
         self.goods_data.append(data)
+
+        return True
+
+    def __check_address(self):
+        """检查售后地址"""
+
+        wtf_form = AfterSalesAddressForm()
+        if not wtf_form.validate_on_submit():
+            for key,value in wtf_form.errors.items():
+                self.msg = value[0]
+            return False
+
+        self.address_data = {'name':wtf_form.name.data, 'mobile':wtf_form.mobile.data,
+                            'province':wtf_form.province.data, 'city':wtf_form.city.data,
+                            'district':wtf_form.district.data, 'address':wtf_form.address.data,
+                            'add_time':self.current_time, 'update_time':self.current_time}
 
         return True
 
@@ -216,6 +242,9 @@ class AfterSalesCreateService(object):
             if not self._check_order_goods():
                 return False
 
+            if not self.__check_address():
+                return False
+
         return True
 
     def create(self):
@@ -253,6 +282,11 @@ class AfterSalesCreateService(object):
                 model_update(order_goods, data)
         
         AfterSalesStaticMethodsService.add_log(aftersales.aftersales_id, _(u'申请售后服务，等待商家审核。'), self.current_time, False)
+
+        # 售后地址
+        if self.address_data:
+            self.address_data['aftersales_id'] = aftersales.aftersales_id
+            model_create(AftersalesAddress, self.address_data)
 
         db.session.commit()
 
@@ -341,10 +375,12 @@ class AfterSalesStaticMethodsService(object):
             if (order.goods_quantity - goods_sum) == quantity:
                 amount_sum     = db.session.query(func.sum(Aftersales.refunds_amount).label('amount_sum')).\
                                         filter(Aftersales.aftersales_id.in_(aftersales_id)).first()
-                refunds_amount = order.paid_amount - order.shipping_amount - amount_sum.amount_sum
+                amount_sum     = Decimal(amount_sum.amount_sum) if amount_sum.amount_sum else Decimal('0.00')
+                refunds_amount = Decimal(order.paid_amount) - Decimal(order.shipping_amount) - amount_sum
             else:
-                avg_amount     = order.discount_amount / order.goods_quantity
-                refunds_amount = round((order_goods.goods_price - avg_amount) * quantity, 2)
+                avg_amount     = Decimal(order.discount_amount) / order.goods_quantity
+                refunds_amount = (Decimal(order_goods.goods_price) - avg_amount) * quantity
+                refunds_amount = refunds_amount.quantize(Decimal('0.00'))
 
         return refunds_amount
 

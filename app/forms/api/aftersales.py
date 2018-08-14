@@ -45,3 +45,14 @@ class AfterSalesForm(FlaskForm):
     deliver_status  = IntegerField()
     img_data        = StringField()
     content         = StringField(validators=[Required(message=_(u'请填写申请原因'))])
+
+
+class AfterSalesAddressForm(FlaskForm):
+    """售后地址form"""
+    ua_id      = IntegerField()
+    name       = StringField(validators=[Required(message=_(u'请填写姓名'))])
+    mobile     = StringField(validators=[Required(message=_(u'请填写手机号码'))])
+    province   = StringField(validators=[Required(message=_(u'请填写省份'))])
+    city       = StringField(validators=[Required(message=_(u'请填写城市'))])
+    district   = StringField(validators=[Required(message=_(u'请填写行政区'))])
+    address    = StringField(validators=[Required(message=_(u'请填写详细地址'))])

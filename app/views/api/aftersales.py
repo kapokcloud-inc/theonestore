@@ -54,8 +54,17 @@ def apply():
             msg = value[0]
         return resjson.print_json(11, msg)
 
-    data = request.form.to_dict()
-    ascs = AfterSalesCreateService(uid, **data)
+    og_id           = toint(request.form.get('og_id', '0'))
+    quantity        = toint(request.form.get('quantity', '0'))
+    aftersales_type = toint(request.form.get('aftersales_type', '0'))
+    deliver_status  = toint(request.form.get('deliver_status', '0'))
+    content         = request.form.get('content', '').strip()
+    img_data        = request.form.get('img_data', '[]').strip()
+
+    data = {'uid':uid, 'order_id':0, 'og_id':og_id, 'quantity':quantity,
+            'aftersales_type':aftersales_type, 'deliver_status':deliver_status,
+            'content':content, 'img_data':img_data}
+    ascs = AfterSalesCreateService(**data)
     if not ascs.check():
         return resjson.print_json(12, ascs.msg)
 
