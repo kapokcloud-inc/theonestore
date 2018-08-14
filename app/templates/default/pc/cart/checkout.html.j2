@@ -91,7 +91,7 @@
             {% for cart in carts %}
               <li class="goods-body_item">
                 <div class="col goods-item_img">
-                  <img src="{{ cart.item.goods_img }}" alt="">
+                  <img src="{{ cart.item.goods_img }}-square.small" alt="">
                 </div>
                 <div class="col goods-item_name">{{ cart.item.goods_name }}</div>
                 <div class="col goods-item_price">￥{{ cart.item.goods_price|toamount }}</div>

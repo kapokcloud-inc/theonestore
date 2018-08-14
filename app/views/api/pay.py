@@ -38,7 +38,7 @@ from app.services.api.order import (
 from app.services.api.funds import FundsService
 from app.services.api.pay_weixin import (
     JsapiOpenidService,
-    JsapiPayParamsService,
+    UnifiedorderService,
     JsapiNotifyService
 )
 
@@ -148,19 +148,19 @@ def weixinjspay_req():
     nonce_str = str(tran.tran_id)
 
     # 创建支付参数
-    jpps = JsapiPayParamsService(tran.tran_id, openid, subject, tran.pay_amount*100, nonce_str, request.remote_addr)
-    if not jpps.check():
-        return resjson.print_json(14, jpps.msg)
+    us = UnifiedorderService(nonce_str, subject, tran.tran_id, tran.pay_amount*100, 'JSAPI', request.remote_addr, openid)
+    if not us.unifiedorder():
+        return resjson.print_json(14, us.msg)
 
     # 创建支付参数
-    jpps.create()
+    info = us.get_jsapi_pay_params()
 
-    return resjson.print_json(0, u'ok', {'info':jpps.pay_params})
+    return resjson.print_json(0, u'ok', {'info':info})
 
 
-@pay.route('/weixinjspay-notify')
-def weixinjspay_notify():
-    """微信jsapi支付回调"""
+@pay.route('/notify')
+def notify():
+    """微信支付回调"""
     resjson.action_code = 13
 
     xml = request.data

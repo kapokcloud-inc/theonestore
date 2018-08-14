@@ -22,7 +22,7 @@ from flask_babel import gettext as _
 from flask import (
     session,
     request,
-    redirect
+    url_for
 )
 
 from app.database import db
@@ -36,6 +36,181 @@ from app.helpers import (
 from app.helpers.date_time import current_timestamp
 from app.models.sys import SysSetting
 from app.ext.xml2json import xml2json
+
+
+class UnifiedorderService(object):
+    """统一下单Service"""
+
+    def __init__(self, nonce_str, body, out_trade_no, total_fee, trade_type,
+                spbill_create_ip='', openid=''):
+        """
+        @param nonce_str:           32位内随机字符串
+        @param body:                订单信息
+        @param out_trade_no:        商户订单号(交易ID)
+        @param total_fee:           交易金额
+        @param trade_type:          交易类型，JSAPI(公众号支付)、NATIVE(扫码支付)、APP(APP支付)
+        @param spbill_create_ip:    客户端请求IP地址
+        @param openid:              用户标识，trade_type=JSAPI时（即公众号支付），此参数必传，此参数为微信用户在商户对应appid下的唯一标识。
+        """
+        self.msg              = u''
+        self.nonce_str        = nonce_str
+        self.body             = body
+        self.out_trade_no     = out_trade_no
+        self.total_fee        = total_fee
+        self.trade_type       = trade_type
+        self.spbill_create_ip = spbill_create_ip
+        self.openid           = openid
+        self.current_time     = current_timestamp()
+        self.appid            = ''
+        self.secret           = ''
+        self.mch_id           = ''
+        self.partner_key      = ''
+        self.notify_url       = url_for('api.apy.notify')
+        self.prepay_id        = ''
+        self.code_url         = ''
+        self.sign_params      = {}
+
+    def __key_value_to_url_str(self, params):
+        """将键值对转为:key1=value1&key2=value2"""
+
+        pairs = []
+        keys  = sorted(params.keys())
+
+        for k in keys:
+            v = params.get(k, '').strip()
+            v = v.encode('utf8')
+            k = k.encode('utf8')
+            pairs.append('%s=%s' % (k, v))
+
+        _str = '&'.join(pairs)
+
+        return _str
+
+    def __create_sign(self, params):
+        """创建签名"""
+
+        url_str  = self.__key_value_to_url_str(params)
+        sign_str = '%s&key=%s' % (url_str, self.partner_key)
+
+        return (md5(sign_str).hexdigest()).upper()
+
+    def __get_prepay_xml(self):
+        """拼接XML"""
+
+        self.sign_params['sign'] = self.__create_sign(self.sign_params)
+
+        xml = "<xml>"
+        for k, v in self.sign_params.items():
+            v = v.encode('utf8')
+            k = k.encode('utf8')
+            xml += '<' + k + '>' + v + '</' + k + '>'
+        xml += "</xml>"
+
+        return xml
+
+    def __check(self):
+        """检查"""
+
+        if self.trade_type == 'JSAPI' and not self.openid:
+            self.msg = _(u'缺少openid')
+            return False
+
+        # 检查 - 配置
+        cpw_ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixin').first()
+        cwm_ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_mp').first()
+        if not cpw_ss or not cwm_ss:
+            self.msg = _(u'配置错误')
+            return False
+
+        # 检查 - 配置
+        try:
+            config_paymethod_weixin = json.loads(cpw_ss.value)
+            config_weixin_mp        = json.loads(cwm_ss.value)
+        except Exception as e:
+            self.msg = _(u'配置错误')
+            return False
+
+        # 检查 - 配置
+        self.appid       = config_weixin_mp.get('appid', '')
+        self.secret      = config_weixin_mp.get('secret', '')
+        self.mch_id      = config_paymethod_weixin.get('mch_id', '')
+        self.partner_key = config_paymethod_weixin.get('partner_key', '')
+        if self.appid == '' or self.secret == '' or self.mch_id == '' or self.partner_key == '':
+            self.msg = _(u'配置错误')
+            return False
+
+        return True
+
+    def __set_sign_params(self):
+        """设置创建签名参数"""
+
+        self.spbill_create_ip = self.spbill_create_ip if self.spbill_create_ip else '114.114.114.114'
+
+        self.sign_params = {
+            'appid':self.appid,
+            'mch_id':self.mch_id,
+            'nonce_str':self.nonce_str,
+            'body':self.body,
+            'out_trade_no':str(self.out_trade_no),
+            'total_fee':str(int(self.total_fee)),
+            'spbill_create_ip':self.spbill_create_ip,
+            'trade_type':'JSAPI',
+            'notify_url':self.notify_url,
+            'openid':self.openid
+        }
+
+    def unifiedorder(self):
+        """统一下单"""
+
+        # 检查
+        if not self.__check():
+            return False
+
+        # 设置创建签名参数
+        self.__set_sign_params()
+
+        # 请求下单
+        url     = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
+        xml     = self.__get_prepay_xml()
+        headers = {'Content-Type': 'application/xml'}
+        respone = requests.post(url, data=xml, headers=headers)
+
+        # 下单结果
+        doc            = ElementTree.fromstring(respone.content.encode('utf8'))
+        return_code    = doc.findtext('return_code')
+        return_msg     = doc.findtext('return_msg')
+        result_code    = doc.findtext('result_code')
+        err_code       = doc.findtext('err_code')
+        err_code_des   = doc.findtext('err_code_des')
+        self.prepay_id = doc.findtext('err_code_des')
+        self.code_url  = doc.findtext('err_code_des')
+
+        # 下单结果
+        if return_code != 'SUCCESS':
+            self.msg = return_msg
+            return False
+
+        # 下单结果
+        if result_code != 'SUCCESS':
+            self.msg = _(u'错误代码：%s  错误代码描述：%s' % (err_code, err_code_des))
+            return False
+
+        return True
+
+    def get_jsapi_pay_params(self):
+        """获取JSAPI支付签名参数"""
+
+        pay_params = {
+            'appId':self.appid,
+            'timeStamp':str(self.current_time),
+            'nonceStr':self.nonce_str,
+            'package':'prepay_id=%s' % self.prepay_id,
+            'signType':'MD5'
+        }
+
+        pay_params['paySign'] = self.__create_sign(pay_params)
+
+        return pay_params
 
 
 class JsapiOpenidService(object):
@@ -79,19 +254,19 @@ class JsapiOpenidService(object):
     def check(self):
         """检查"""
 
-        ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixinjsapi').first()
-        if not ss:
+        cwm_ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_mp').first()
+        if not cwm_ss:
             self.msg = _(u'配置错误')
             return False
 
         try:
-            config_paymethod_weixinjsapi = json.loads(ss.value)
+            config_weixin_mp = json.loads(cwm_ss.value)
         except Exception as e:
             self.msg = _(u'配置错误')
             return False
 
-        self.appid  = config_paymethod_weixinjsapi.get('appid', '')
-        self.secret = config_paymethod_weixinjsapi.get('secret', '')
+        self.appid  = config_weixin_mp.get('appid', '')
+        self.secret = config_weixin_mp.get('secret', '')
 
         if self.appid == '' or self.secret == '':
             self.msg = _(u'配置错误')
@@ -124,168 +299,6 @@ class JsapiOpenidService(object):
             return request.args.get('redirect_url')
 
         return ''
-
-
-class JsapiPayParamsService():
-    """jsapi支付参数Service"""
-
-    def __init__(self, tran_id, openid, body, total_fee, nonce_str, spbill_create_ip=''):
-        """
-        @param tran_id:             交易ID
-        @param openid:              openid
-        @param body:                订单信息
-        @param total_fee:           订单金额
-        @param nonce_str:           32位内随机字符串
-        @param spbill_create_ip:    客户端请求IP地址
-        """
-        self.msg              = u''
-        self.tran_id          = tran_id
-        self.openid           = openid
-        self.body             = body
-        self.total_fee        = total_fee
-        self.nonce_str        = nonce_str
-        self.spbill_create_ip = spbill_create_ip
-        self.current_time     = current_timestamp()
-        self.appid            = ''
-        self.secret           = ''
-        self.mch_id           = ''
-        self.partner_key      = ''
-        self.notify_url       = ''
-        self.prepay_id        = ''
-        self.sign_params      = {}
-        self.pay_params       = {}
-
-    def _key_value_to_url_str(self, params):
-        """将键值对转为:key1=value1&key2=value2"""
-
-        pairs = []
-        keys  = sorted(params.keys())
-
-        for k in keys:
-            v = params.get(k, '').strip()
-            v = v.encode('utf8')
-            k = k.encode('utf8')
-            pairs.append('%s=%s' % (k, v))
-
-        _str = '&'.join(pairs)
-
-        return _str
-
-    def _create_sign(self, params):
-        """创建签名"""
-
-        url_str  = self._key_value_to_url_str(params)
-        sign_str = '%s&key=%s' % (url_str, self.partner_key)
-
-        return (md5(sign_str).hexdigest()).upper()
-
-    def _get_prepay_xml(self):
-        """拼接XML"""
-
-        self.sign_params['sign'] = self._create_sign(self.sign_params)
-
-        xml = "<xml>"
-        for k, v in self.sign_params.items():
-            v = v.encode('utf8')
-            k = k.encode('utf8')
-            xml += '<' + k + '>' + v + '</' + k + '>'
-        xml += "</xml>"
-
-        return xml
-
-    def _set_prepay_id(self):
-        """设置获取prepay_id"""
-
-        url     = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
-        xml     = self._get_prepay_xml()
-        headers = {'Content-Type': 'application/xml'}
-
-        # 请求
-        respone    = requests.post(url, data=xml, headers=headers)
-        re_xml     = ElementTree.fromstring(respone.text.encode('utf8'))
-        xml_status = re_xml.getiterator('result_code')[0].text
-
-        if xml_status != 'SUCCESS':
-            self.msg = _(u"连接微信出错啦！")
-            return False
-
-        self.prepay_id = re_xml.getiterator('prepay_id')[0].text
-
-        return True
-
-    def _set_sign_params(self):
-        """设置创建签名参数"""
-
-        self.spbill_create_ip = self.spbill_create_ip if self.spbill_create_ip else '114.114.114.114'
-
-        self.sign_params = {
-            'appid':self.appid,
-            'mch_id':self.mch_id,
-            'nonce_str':self.nonce_str,
-            'body':self.body,
-            'out_trade_no':str(self.tran_id),
-            'total_fee':str(int(self.total_fee)),
-            'spbill_create_ip':self.spbill_create_ip,
-            'trade_type':'JSAPI',
-            'notify_url':self.notify_url,
-            'openid':self.openid
-        }
-
-        return True
-
-    def _set_pay_params(self):
-        """设置支付签名参数"""
-
-        self.pay_params = {
-            'appId':self.appid,
-            'timeStamp':str(self.current_time),
-            'nonceStr':self.nonce_str,
-            'package':'prepay_id=%s' % self.prepay_id,
-            'signType':'MD5'
-        }
-
-        self.pay_params['paySign'] = self._create_sign(self.pay_params)
-
-        return True
-
-    def check(self):
-        """检查"""
-
-        ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixinjsapi').first()
-        if not ss:
-            self.msg = _(u'配置错误')
-            return False
-
-        try:
-            config_paymethod_weixinjsapi = json.loads(ss.value)
-        except Exception as e:
-            self.msg = _(u'配置错误')
-            return False
-
-        self.appid       = config_paymethod_weixinjsapi.get('appid', '')
-        self.secret      = config_paymethod_weixinjsapi.get('secret', '')
-        self.mch_id      = config_paymethod_weixinjsapi.get('mch_id', '')
-        self.partner_key = config_paymethod_weixinjsapi.get('partner_key', '')
-        self.notify_url  = config_paymethod_weixinjsapi.get('notify_url', '')
-
-        if self.appid == '' or self.secret == '' or self.mch_id == '' or self.partner_key == '' or self.notify_url == '':
-            self.msg = _(u'配置错误')
-            return False
-
-        self._set_sign_params()
-
-        if not self._set_prepay_id():
-            self.msg = _(u'设置prepayId出错')
-            return False
-
-        return True
-
-    def create(self):
-        """创建支付参数"""
-
-        self._set_pay_params()
-
-        return True
 
 
 class JsapiNotifyService():
@@ -334,18 +347,18 @@ class JsapiNotifyService():
                         (self.xml, err_code, err_code_des))
             return False
 
-        ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixinjsapi').first()
-        if not ss:
+        cpw_ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixin').first()
+        if not cpw_ss:
             log_error('[ErrorServiceApiPayWeixinJsapiNotifyServiceVerify][SettingError01]  xml:%s ' % self.xml)
             return False
 
         try:
-            config_paymethod_weixinjsapi = json.loads(ss.value)
+            config_paymethod_weixin = json.loads(cpw_ss.value)
         except Exception as e:
             log_error('[ErrorServiceApiPayWeixinJsapiNotifyServiceVerify][SettingError02]  xml:%s ' % self.xml)
             return False
 
-        self.partner_key = config_paymethod_weixinjsapi.get('partner_key', '')
+        self.partner_key = config_paymethod_weixin.get('partner_key', '')
 
         if self.partner_key == '':
             log_error('[ErrorServiceApiPayWeixinJsapiNotifyServiceVerify][SettingError03]  xml:%s ' % self.xml)

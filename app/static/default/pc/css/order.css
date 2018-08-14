@@ -406,6 +406,7 @@
   padding: 0 20px;
   color: #666;
   border-left: 1px solid #eee;
+  cursor: pointer;
 }
 .box-hd_item:first-child {
   padding-left: 0;
@@ -610,4 +611,5 @@
   height: 100px;
   margin-right: 10px;
   margin-bottom: 10px;
+  cursor: pointer;
 }

@@ -41,20 +41,22 @@ class JsapiWeixinRefundsService(object):
     def check(self):
         """检查"""
 
-        ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixinjsapi').first()
-        if not ss:
+        cpw_ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixin').first()
+        cwm_ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_mp').first()
+        if not cpw_ss or not cwm_ss:
             self.msg = _(u'配置错误')
             return False
 
         try:
-            config_paymethod_weixinjsapi = json.loads(ss.value)
+            config_paymethod_weixin = json.loads(cpw_ss.value)
+            config_weixin_mp        = json.loads(cwm_ss.value)
         except Exception as e:
             self.msg = _(u'配置错误')
             return False
         
-        appid            = config_paymethod_weixinjsapi.get('appid', '')
-        mch_id           = config_paymethod_weixinjsapi.get('mch_id', '')
-        self.partner_key = config_paymethod_weixinjsapi.get('partner_key', '')
+        appid            = config_weixin_mp.get('appid', '')
+        mch_id           = config_paymethod_weixin.get('mch_id', '')
+        self.partner_key = config_paymethod_weixin.get('partner_key', '')
 
         if appid == '' or mch_id == '' or self.partner_key == '':
             self.msg = _(u'配置错误')
@@ -125,7 +127,7 @@ class JsapiWeixinRefundsService(object):
             self.msg = return_msg
             return False
 
-        if result_code == 'SUCCESS':
+        if result_code != 'SUCCESS':
             self.msg = _(u'错误代码：%s  错误代码描述：%s' % (err_code, err_code_des))
             return False
 

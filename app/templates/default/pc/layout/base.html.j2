@@ -27,7 +27,7 @@
               <div class="user-wrap">
                 <div class="one-cell">
                   <div class="one-cell_hd avatar">
-                    <img class="ava" src="//u.vpimg1.com/upload/myi/2017/06/01/84/avatar_89373029_1496285287409_38x38_90.jpg" alt="">
+                    <img class="ava" src="{{ session.get('avatar', '') }}-square.micro" alt="">
                   </div>
                   <div class="one-cell_bd username">
                     <a href="{{ url_for('pc.me.index') }}">{{ nickname }}</a>
@@ -186,9 +186,10 @@
         </div>
         <div class="one-search">
           <div class="one-search_form">
-            <input type="text" class="one-search_input" placeholder="{{_('请输入搜索内容')}}" autocomplete="off" max-length="15">
-            <a href="" class="one-search_button">
-              <img class="one-search_image" src="/static/default/pc/img/search.png" alt="">
+            {% set key = request.args.get('search_key',"") %}
+            <input type="text" class="one-search_input" placeholder="{{_('请输入搜索内容')}}" autocomplete="off" max-length="15" id='head_search_key' value="{{ key }}">
+            <a class="one-search_button">
+              <img class="one-search_image" src="/static/default/pc/img/search.png" alt="" onclick="go_search()">
             </a>
           </div>
         </div>
@@ -314,6 +315,29 @@
   <!-- footer -->
 
   <script type="text/javascript" src="/static/default/pc/js/jquery.min.js" charset="utf-8"></script>
+  <script type="text/javascript">
+
+  
+  //点击搜索图标
+  function go_search(){
+    var key  = $('#head_search_key').val();
+
+    //关键字为空不响应
+    if(key==null||key.replace(/\s*/g, "")==''){
+      return;
+    }
+
+    window.location.href= "{{ url_for('pc.item.index') }}"+'?p=1&ps=20&search_key='+key;
+  }
+
+  //输入框键盘回车监听
+  $('#head_search_key').keydown(function(event){
+    if(event.keyCode == 13){
+      go_search();
+    }
+  })
+
+  </script>
   
   {% block script %} {% endblock %}
 </body>

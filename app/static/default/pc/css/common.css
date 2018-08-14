@@ -512,6 +512,7 @@ header img {
   border-radius: 5px;
   line-height: 2.5;
   overflow: hidden;
+  cursor: pointer;
 }
 .back-top {
   position: fixed;
@@ -719,6 +720,7 @@ header img {
 .num_minus {
   padding: 15px;
   float: left;
+  cursor: pointer;
 }
 .num_minus::before {
   content: "";
@@ -732,6 +734,7 @@ header img {
 .num_add {
   padding: 15px;
   float: left;
+  cursor: pointer;
 }
 .num_add::before {
   content: "";
@@ -765,12 +768,13 @@ header img {
   position: absolute;
   display: inline-block;
   top: 5px;
-  right: 20px;
-  border-radius: 7px;
+  right: 12px;
+  border-radius: 11px;
   height: 14px;
-  width: 14px;
+  width: 22px;
   line-height: 14px;
   color: #fff;
+  font-style: normal;
   font-size: 12px;
   text-align: center;
   background-color: #f33155;
@@ -779,16 +783,16 @@ header img {
   position: absolute;
   display: inline-block;
   top: 2px;
-  right: 5px;
-  border-radius: 7px;
+  right: -4px;
+  border-radius: 11px;
   height: 14px;
-  width: 14px;
+  width: 22px;
   line-height: 14px;
   color: #fff;
+  font-style: normal;
   font-size: 12px;
   text-align: center;
   background-color: #f33155;
-  font-style: inherit;
 }
 .icon-dagou,
 .icon-cancel,
@@ -984,6 +988,8 @@ header img {
   border-radius: 20px;
   border: 1px solid #ccc;
   overflow: hidden;
+  background-color: #fff;
+  cursor: pointer;
 }
 .rateON {
   background-color: #f33155;

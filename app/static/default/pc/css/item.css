@@ -261,8 +261,8 @@
   color: #f33155;
 }
 .goods-detail-desc {
-  width: 100%;
-  text-align: center;
+  width: 750px;
+  margin: 0 auto;
 }
 .goods-detail-desc img {
   width: 100%;

@@ -29,14 +29,14 @@
                   <div class="info-left_box">
                     <div class="goods-big_pic">
                       {% set current_big_pic = (galleries|first).img if galleries and galleries|first else '' %}
-                      <img id="bigpic" src="{{ current_big_pic }}" alt="">
+                      <img id="bigpic" src="{{ current_big_pic }}-square.500" alt="">
                     </div>
                     <div class="goods-small_pic clearfix">
                       <ul class="small-pic_list">
                         {% for pic_item in galleries %}
                           {% set selectclass = 'current' if current_big_pic == pic_item.img %}
                           <li class="small-pic_item {{ selectclass }}">
-                            <img src="{{ pic_item.img }}" alt="">
+                            <img src="{{ pic_item.img }}-square.small" alt="">
                           </li>
                         {% endfor %}
                       </ul>
@@ -305,7 +305,8 @@
   $('.small-pic_item').on("click","img", function(){
     index = $(this).index();
     var imgurl = this.getAttribute("src");
-    $('#bigpic').attr("src", imgurl);
+    var imgurlR = imgurl.replace('-square.small','');
+    $('#bigpic').attr("src", imgurlR + '-square.500');
     $('.goods-big_pic').fadeIn(100);
     $(this).parent().addClass('current').siblings().removeClass('current');
   });

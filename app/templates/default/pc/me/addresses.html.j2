@@ -26,82 +26,33 @@
           <!-- 收货地址部分 -->
           <div class="address-section">
             <ul class="address-section_body clearfix">
-              <div class="address-body_item" onclick="add()">
+              <div class="address-body_item" onclick="edit(0)" id='new_address'>
                 <div class="add-new_address">
                   <img src="/static/default/pc/img/add.png" alt="">
                   <p>{{_('添加新地址')}}</p>
                 </div>
               </div>
-              <li class="address-body_item">
-                <div class="address-item_cnt">
-                  <p class="item-cnt_name">大头</p>
-                  <p class="item-cnt_mobile">13510515229</p>
-                  <p class="item-cnt_address">
-                    广东 深圳市 南山区 西丽街道
-                    <br> 留仙大道平山一路大园工业区
-                  </p>
-                </div>
-                <div class="item-cnt_edit">
-                  <button class="edit-btn" type="button" onclick="dele()">删除</button>
-                  <button class="edit-btn" type="button" onclick="edit()">修改</button>
-                </div>
-              </li>
-              <li class="address-body_item">
-                <div class="address-item_cnt">
-                  <p class="item-cnt_name">da头</p>
-                  <p class="item-cnt_mobile">13510515229</p>
-                  <p class="item-cnt_address">
-                    广东 深圳市 龙岗区 坂田街道
-                    <br> 长坑路西五巷1号
-                  </p>
-                </div>
-                <div class="item-cnt_edit">
-                  <button class="edit-btn" type="button" onclick="dele()">删除</button>
-                  <button class="edit-btn" type="button" onclick="edit()">修改</button>
-                </div>
-              </li>
-              <li class="address-body_item">
-                <div class="address-item_cnt">
-                  <p class="item-cnt_name">xiao头</p>
-                  <p class="item-cnt_mobile">13510515229</p>
-                  <p class="item-cnt_address">
-                    广东 深圳市 龙华新区 民治大道
-                    <br> 南京新村c12
-                  </p>
-                </div>
-                <div class="item-cnt_edit">
-                  <button class="edit-btn" type="button" onclick="dele()">删除</button>
-                  <button class="edit-btn" type="button" onclick="edit()">修改</button>
-                </div>
-              </li>
-              <li class="address-body_item">
-                <div class="address-item_cnt">
-                  <p class="item-cnt_name">da头</p>
-                  <p class="item-cnt_mobile">13510515229</p>
-                  <p class="item-cnt_address">
-                    广东 深圳市 龙岗区 坂田街道
-                    <br> 长坑路西五巷1号
-                  </p>
-                </div>
-                <div class="item-cnt_edit">
-                  <button class="edit-btn" type="button" onclick="dele()">删除</button>
-                  <button class="edit-btn" type="button" onclick="edit()">修改</button>
-                </div>
-              </li>
-              <li class="address-body_item">
-                <div class="address-item_cnt">
-                  <p class="item-cnt_name">xiao头</p>
-                  <p class="item-cnt_mobile">13510515229</p>
-                  <p class="item-cnt_address">
-                    广东 深圳市 龙华新区 民治大道
-                    <br> 南京新村c12
-                  </p>
-                </div>
-                <div class="item-cnt_edit">
-                  <button class="edit-btn" type="button" onclick="dele()">删除</button>
-                  <button class="edit-btn" type="button" onclick="edit()">修改</button>
-                </div>
-              </li>
+              {% for address in addresses %}
+                <li class="address-body_item" id='{{ address.ua_id }}' onclick="select(this)">
+                  <div class="address-item_cnt">
+                    <p id="address{{ address.ua_id }}_name" class="item-cnt_name" data-value="{{ address.name }}">{{ address.name }}</p>
+                    <p id="address{{ address.ua_id }}_mobile" class="item-cnt_mobile" data-value="{{ address.mobile }}">{{ address.mobile }}</p>
+                    <p class="item-cnt_address">
+                      <span id="address{{ address.ua_id }}_pcd">{{ address.province }} {{ address.city }} {{ address.district }}</span>
+                      <br> 
+                      <span id="address{{ address.ua_id }}_address">{{ address.address }}</span>
+                    </p>
+                  </div>
+                  <div class="item-cnt_edit">
+                    <button class="edit-btn" type="button" onclick="dele({{ address.ua_id }})">删除</button>
+                    <input id="address{{ address.ua_id }}_province" type="hidden" value="{{ address.province }}" />
+                    <input id="address{{ address.ua_id }}_city" type="hidden" value="{{ address.city }}" />
+                    <input id="address{{ address.ua_id }}_district" type="hidden" value="{{ address.district }}" />
+                    {{ wtf_form.csrf_token }}
+                    <button class="edit-btn" type="button" onclick="edit({{ address.ua_id }})">修改</button>
+                  </div>
+                </li>
+              {% endfor %}
             </ul>
             <div class="address-show-more hide" id="more">
               <span class="show-more_text" id="moreText">{{_('显示更多收货地址')}}</span>
@@ -115,7 +66,7 @@
     <div class="hide-mask hide">
       <div class="editAdd-section">
         <div class="editAdd-section_hd">
-          <span>{{_('添加收货地址')}}</span>
+          <span id='address_edit_title'>{{_('添加收货地址')}}</span>
           <a class="add-del" href="javascript:;" onclick="cancel()">
             <i class="icon-cancel"></i>
           </a>
@@ -123,23 +74,24 @@
         <div class="allPad">
           <div class="bd-flex">
             <label class="bd-label">{{_('姓名：')}}</label>
-            <input class="bd-input" type="text" placeholder="{{_('请填写收件人姓名')}}">
+            <input id="edit_address_name" class="bd-input" type="text" placeholder="{{_('请填写收件人姓名')}}">
           </div>
           <div class="bd-flex">
             <label class="bd-label">{{_('手机号码：')}}</label>
-            <input class="bd-input" type="text" placeholder="{{_('请填写收件人手机号码')}}">
+            <input id="edit_address_mobile" class="bd-input" type="text" placeholder="{{_('请填写收件人手机号码')}}">
           </div>
           <div class="bd-flex">
             <label class="bd-label">{{_('地区：')}}</label>
-            <input readonly class="bd-input city-picker-input" type="text" data-toggle="city-picker" placeholder="{{_('请选择省/市/区')}}">
+            <!-- <input readonly class="bd-input city-picker-input" type="text" data-toggle="city-picker" placeholder="{{_('请选择省/市/区')}}"> -->
+            <input id="edit_address_pcd" readonly type="text">
           </div>
           <div class="bd-flex">
             <label class="bd-label">{{_('详细地址：')}}</label>
-            <input class="bd-input" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}">
+            <input id="edit_address_address" class="bd-input" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}">
           </div>
         </div>
         <div class="editAdd-section_ft">
-          <button class="save-btn btn-primary mar-right" type="button" onclick="save()">{{_('保存')}}</button>
+          <button id="edit_address_ua_id" class="save-btn btn-primary mar-right" type="button" onclick="save()">{{_('保存')}}</button>
           <button class="cancel-btn" type="button" onclick="cancel()">{{_('取消')}}</button>
         </div>
       </div>
@@ -156,25 +108,77 @@
 <script type="text/javascript">
 var $mask = $('.hide-mask');
 
-// 选中地址
-$('.address-section_body > li').click(function () {
-  $(this).addClass('selected').siblings().removeClass('selected');
+var csrftoken = "{{ csrf_token() }}";
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
 });
 
-//点击edit()打开添加新地址弹窗
-function edit() {
+//选中地址
+function select(dom){
+  $("li.address-body_item").removeClass('selected');
+  $(dom).addClass('selected');
+}
+
+
+//点击edit()打开编辑地址弹窗
+function edit(ua_id) {
+
+  var name = '';
+  var mobile = '';
+  var province = '北京市';
+  var city = '北京市';
+  var district = '东城区';
+  var address = '';
+
   $mask.removeClass('hide');
   if (!$mask.hasClass('show')) {
+    if (ua_id > 0) {
+      $('#address_edit_title').text('编辑收货地址')
+
+      name = $("#address"+ua_id+"_name").text();
+      mobile = $("#address"+ua_id+"_mobile").text();
+      province = $("#address"+ua_id+"_province").val();
+      city = $("#address"+ua_id+"_city").val();
+      district = $("#address"+ua_id+"_district").val();
+      address = $("#address"+ua_id+"_address").text();
+    }else{
+      $('#address_edit_title').text('添加收货地址')
+    }
+
+    $("#edit_address_ua_id").val(ua_id);
+    $("#edit_address_name").val(name);
+    $("#edit_address_mobile").val(mobile);
+    $("#edit_address_address").val(address);
+
+    $("#edit_address_pcd").citypicker('reset');
+    $("#edit_address_pcd").citypicker('destroy');
+    $("#edit_address_pcd").citypicker({
+      province: province,
+      city: city,
+      district: district
+    });
+
     $mask.addClass('show');
   }
 }
 
-//点击add()打开添加新地址弹窗
-function add() {
-  $mask.removeClass('hide');
-  if (!$mask.hasClass('show')) {
-    $mask.addClass('show');
+//点击dele()删除地址
+function dele(address_id){
+  if(address_id<=0){
+    return;
   }
+
+  if(confirm('是否确认删除该收货地址？')){
+    $.get("{{ url_for('api.me.address_remove') }}", {'ua_id':address_id}, function(json){
+      if(json.ret != 0){
+        alert(json.msg);
+        return false;
+      }
+
+      $("#"+address_id).remove();
+    });
+  }
+
 }
 
 //点击cancel()关闭添加新地址弹窗
@@ -186,9 +190,60 @@ function cancel() {
 }
 
 //点击save()关闭添加新地址弹窗，并保存新添加的地址
-function save() {
+function save(ua_id) {
   $mask.removeClass('show');
   if (!$mask.hasClass('hide')) {
+
+    var ua_id = $("#edit_address_ua_id").val();
+    var name = $("#edit_address_name").val();
+    var mobile = $("#edit_address_mobile").val();
+    var pcd = $("#edit_address_pcd").val();
+    var address = $("#edit_address_address").val();
+    var pcd_arr = pcd.split('/');
+    var province = pcd_arr[0];
+    var city = pcd_arr[1];
+    var district = pcd_arr[2];
+
+    var params = {'ua_id':ua_id, 'name':name, 'mobile':mobile, 'province':province, 'city':city, 'district':district, 'address':address}
+    $.post("{{ url_for('api.me.address_save') }}", params, function(json) {
+      if (json.ret == 0) {
+        var _ua_id = json.data.ua_id;
+        var html = '{{ wtf_form.csrf_token }}';
+        if (ua_id == _ua_id) {
+          $("#address"+ua_id+"_name").text(name);
+          $("#address"+ua_id+"_mobile").text(mobile);
+          $("#address"+ua_id+"_pcd").text(province+' '+city+' '+district);
+          $("#address"+ua_id+"_address").text(address);
+        } else {
+          $(".selected").removeClass('selected');
+          var html_text = '<li class="address-body_item" id="'+_ua_id+'" onclick="select(this)">' +
+                            '<div class="address-item_cnt">' +
+                              '<p id="address'+_ua_id+'_name" class="item-cnt_name" data-value="'+name+'">'+name+'</p>' +
+                              '<p id="address'+_ua_id+'_mobile" class="item-cnt_mobile" data-value="'+mobile+'">'+mobile+'</p>' +
+                              '<p class="item-cnt_address">' +
+                                '<span id="address'+_ua_id+'_pcd">'+province+' '+city+' '+district+'</span>' +
+                                '<br>' +
+                                '<span id="address'+_ua_id+'_address">'+address+'</span>' +
+                              '</p>' +
+                            '</div>' +
+                            '<div class="item-cnt_edit">' +
+                              '<button class="edit-btn" type="button" onclick="dele('+_ua_id+')">删除</button>'+
+                              '<input id="address'+_ua_id+'_province" type="hidden" value="'+province+'" />' +
+                              '<input id="address'+_ua_id+'_city" type="hidden" value="'+city+'" />' +
+                              '<input id="address'+_ua_id+'_district" type="hidden" value="'+district+'" />' +
+                              html+
+                              '<button class="edit-btn" type="button" onclick="edit('+_ua_id+')">修改</button>' +
+                            '</div>' +
+                          '</li>';
+          $("#new_address").after(html_text);
+        }
+      } else {
+        // 优化alert ??
+        alert(json.msg);
+        return false;
+      }
+    });
+
     $mask.addClass('hide');
   }
 }

@@ -87,7 +87,7 @@
           <span>{{_('微信支付')}}</span>
           </div>
           <div class="bd-QRcode">
-            <img src="http://i.huodong.mi.com/qrcode/wxget?code=weixin%3A%2F%2Fwxpay%2Fbizpayurl%3Fpr%3DAnUWbUU&key=93cca3325e17f353ed46462f77c19aaa" alt="">
+            <img src="data:image/png;base64, {{ qrcode }}" alt="">
           </div>
 
           <!-- 微信扫码成功之后跳转到支付成功页面 /pc/pay/success + order_id -->
@@ -107,13 +107,6 @@
 <script type="text/javascript">
 //余额支付
 function funds_pay(order_id) {
-  // 检查
-  if ( !order_id ) {
-    // 优化alert ??
-    alert("{{_('创建订单失败，请刷新页面重试。')}}");
-    return false;
-  }
-
   var order_id_list = '[' + order_id + ']';
   $.get("{{ url_for('api.pay.fundspay_req') }}", {'order_id_list':order_id_list}, function(res) {
     if (res.ret != 0) {
@@ -137,5 +130,18 @@ function detail(){
     $('.order-section_detail').addClass('hide').removeClass('show');
   }
 }
+
+// 查询订单是否支付成功
+function is_paid(order_id) {
+  $.get("{{ url_for('api.order.is_paid') }}", {'order_id':order_id}, function(res) {
+    if (res.ret == 0 && res.data.is_paid == 1) {
+      window.location.href = "/pc/pay/success/"+order_id;
+    }
+  });
+}
+
+$(function(){
+  setInterval(is_paid, 1000);
+});
 </script>
 {% endblock%}

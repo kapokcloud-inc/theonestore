@@ -513,6 +513,7 @@ header img{
   border-radius: 5px;
   line-height: 2.5;
   overflow: hidden;
+  cursor: pointer;
 }
 .back-top{
   position: fixed;
@@ -722,6 +723,7 @@ header img{
 .num_minus{
   padding: 15px;
   float: left;
+  cursor: pointer;
   &::before{
     content: "";
     position: absolute;
@@ -735,6 +737,7 @@ header img{
 .num_add{
   padding: 15px;
   float: left;
+  cursor: pointer;
   &::before{
     content: "";
     position: absolute;
@@ -768,12 +771,13 @@ header img{
   position: absolute;
   display: inline-block;
   top: 5px;
-  right: 20px;
-  border-radius: 7px;
+  right: 12px;
+  border-radius: 11px;
   height: 14px;
-  width: 14px;
+  width: 22px;
   line-height: 14px;
   color: @white-color;
+  font-style: normal;
   font-size: @font-size12;
   text-align: center;
   background-color: @main-color;
@@ -782,16 +786,16 @@ header img{
   position: absolute;
   display: inline-block;
   top: 2px;
-  right: 5px;
-  border-radius: 7px;
+  right: -4px;
+  border-radius: 11px;
   height: 14px;
-  width: 14px;
+  width: 22px;
   line-height: 14px;
   color: @white-color;
+  font-style: normal;
   font-size: @font-size12;
   text-align: center;
   background-color: @main-color;
-  font-style: inherit;
 }
 .icon-dagou,.icon-cancel,.icon-dayu,.icon-xiaoyu{
   font-family: "iconfont" !important;
@@ -981,8 +985,10 @@ header img{
   text-align: center;
   margin-right: 10px;
   border-radius: 20px;
-  border:@border;
+  border: @border;
   overflow: hidden;
+  background-color: @white-color;
+  cursor: pointer;
 }
 .rateON{
   background-color: @main-color;
