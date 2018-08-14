@@ -23,18 +23,20 @@
         <div class="allPad">
           <div class="one-cell">
             <div class="one-cell_hd avatar160" style="position: relative;">
-              <input id="uploaderInput" class="one-uploader_input" type="file" accept="image/*" multiple="">
-              <img class="ava" src="{{ avatar }}" alt="">
+              <input id="image" name="image" class="one-uploader_input" type="file" accept="image/*">
+              <input id="avatar" name="avatar" type="hidden" value="{{  user.avatar }}" />
+              <img id='avatar_img' src="{{ user.avatar }}-square.middle" alt="" class="ava">
             </div>
             <div class="one-cell_bd">
               <div class="user-name">
-                <span id="username">{{ nickname }}</span>
-                <input class="changeIpu hide" type="text" data-value="" value="">
+                <span id="username">{{ user.nickname }}</span>
+                <input class="changeIpu hide" type="text" value="" placeholder="请输入昵称">
               </div>
               <div class="changeInfo">
                 <span id="change">{{_('修改昵称')}}</span>
                 <div class="hide" id="saveCal">
-                  <span id="save">{{_('保存')}}</span>
+                  {{ wtf_form.csrf_token }}
+                  <span id="save" href="javascript:void(0);">{{_('保存')}}</span>
                   <span class="cancel" id="cancel">{{_('取消')}}</span>
                 </div>
               </div>
@@ -113,22 +115,35 @@
     </div>
   </div>
 </div>
+
+<input class="hide"  id='gender' value='{{ user.gender }}'>
 {% endblock %}
 
 {% block script %}
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.iframe-transport.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
 <script type="text/javascript">
+var csrftoken = $('#csrf_token').val();
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
 //点击修改昵称进行修改
 $('#change').click(function(){
+
   if(!$('.changeIpu').hasClass('show')){
+    var username = $('#username').text();
+
     $('#username').addClass('hide');
     $('.changeIpu').addClass('show').removeClass('hide');
-    $('.changeIpu').val('');
+    $('.changeIpu').val(username,"");
     $('#change').addClass('hide');
     $('#saveCal').addClass('show').removeClass('hide');
   }
 });
 
-//点击保存
+//点击保存按钮
 $('#save').click(function(){
   if(!$('.changeIpu').hasClass('hide')){
     $('.changeIpu').addClass('hide').removeClass('show');
@@ -137,21 +152,46 @@ $('#save').click(function(){
     $('#change').removeClass('hide');
 
     var nickname = $('.changeIpu').val();
-    //
-    //<!-- if(nickname==null||nickname.replace(/\s*/g, "")==''){
-     // alert('请输入昵称', "text");
-     // return;
-   // } -->
-    //
-    $.post("{{ url_for('api.me.update') }}", {'nickname':nickname}, function(json) {
-      if (json.ret != 0) {
-        // 优化alert ??
-        alert(json.msg);
-        return false;
-      }
+    updateProfile(nickname);
 
-    //<!-- location.reload; -->
-    });
+  }
+});
+
+//更新个人资料
+function updateProfile(nickname){
+  
+  var avatar = $("#avatar").val();
+  var gender   = $('#gender').attr('value');
+  
+  if(nickname==null||nickname.replace(/\s*/g, "")==''){
+    alert('请输入昵称', "text");
+    return;
+  }
+  params = {'nickname':nickname, 'avatar':avatar, 'gender':gender}
+  $.post("{{ url_for('api.me.update') }}", params, function(json) {
+    if (json.ret != 0) {
+      alert(json.msg);
+      return false;
+    }
+
+    window.location.href="{{ url_for('pc.me.index') }}";
+  });
+}
+
+//上传图片
+$('#image').fileupload({
+    url: "{{ url_for('api.upload.image') }}",
+    dataType: 'json',
+    formData:{'prefix':'avatar'},
+    done: function (e, data) {
+      if(data.result.ret == 0) {
+        var image = data.result.data.image;
+
+        $("#avatar_img").attr('src', image);
+        $("#avatar").val(image);
+        var nickname = $('#username').text();
+        updateProfile(nickname)
+      }
     }
 });
 

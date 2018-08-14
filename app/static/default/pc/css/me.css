@@ -18,10 +18,13 @@
   position: absolute;
   top: 0;
   left: 0;
+  height: 31px;
+  line-height: 31px;
   background-color: #fff;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 400;
   color: #666;
+  padding-left: 10px;
 }
 .cancel {
   color: #666;

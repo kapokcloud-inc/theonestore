@@ -75,7 +75,6 @@ def configure_uploads(app):
     UPLOADED_FILES_DEST = app.config.get('UPLOADED_FILES_DEST', 'uploads')
     if UPLOADED_FILES_DEST[0] != '/':
         UPLOADED_FILES_DEST = os.path.join(os.getcwd(), 'uploads')
-    print (UPLOADED_FILES_DEST)
     app.config['UPLOADED_FILES_DEST'] = UPLOADED_FILES_DEST
     app.config['UPLOADED_DOCUMENTS_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'documents')
     app.config['UPLOADED_IMAGES_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'images')

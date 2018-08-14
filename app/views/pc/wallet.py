@@ -48,10 +48,11 @@ def root():
         return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
-    funds   = Funds.query.filter(Funds.uid == uid).first()
-    details = FundsStaticMethodsService.details(uid, {})
+    funds         = Funds.query.filter(Funds.uid == uid).first()
+    data          = FundsStaticMethodsService.details(uid, request.args.to_dict(),True)
+    data['funds'] = funds
 
-    return render_template('pc/wallet/index.html.j2', funds=funds, details=details)
+    return render_template('pc/wallet/index.html.j2', **data)
 
 
 @wallet.route('/recharge')

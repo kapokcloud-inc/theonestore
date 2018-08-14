@@ -23,7 +23,7 @@
           <div class="goods-com_box clearfix">
             <div class="one-cell">
               <div class="one-cell_hd avatar60">
-                <img class="ava" src="{{ comment.avatar }}" alt="">
+                <img class="ava" src="{{ comment.avatar }}-square.small" alt="">
               </div>
               <div class="one-cell_bd">
                 <div class="all-username">
@@ -45,7 +45,7 @@
             <div class="list-item">
               <a href="{{ url_for('pc.item.detail', goods_id=order_goods.goods_id) }}">
                 <div class="item-product">
-                  <img src="{{ order_goods.goods_img }}" alt="">
+                  <img src="{{ order_goods.goods_img }}-square.middle" alt="">
                 </div>
                 <div class="item-detail">
                   <div class="all-title"> {{ order_goods.goods_name }}</div>

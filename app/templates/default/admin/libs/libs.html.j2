@@ -349,3 +349,39 @@
   </div>
 {% endmacro %}
 
+{# 
+构建页面tabs
+-----------------
+:params field_name 字段名称
+:params tabs 标签列表
+        :label 标签名
+        :value 标签值
+        :url url地址
+:params btns 按钮列表
+        :label label名
+        :class 按钮样式类名，如空则为红色
+        :href 按钮连接
+#}
+{% macro build_listpage_tabs(field_name, tabs, btns=[]) %}
+{% set field_value = request.args.get(field_name, '') %}
+<div class="row bg-title">
+  <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+  {% for tab in tabs %}
+    {% set active_class = ' class="active" ' if (field_value == tab.value 
+                                                  or field_value|toint == tab.value) else '' %}
+    <li role="presentation" {{active_class}}>
+      <a href="{{ tab.url }}" role="tab" aria-expanded="false" style="background:none !important">
+        <span class="hidden-xs">{{ tab.label }}</span>
+      </a>
+    </li>
+  {% endfor %}
+  {% for btn in btns %}
+    {% set btnclass = btn.get('class', 'btn-danger') %}
+  <a href="{{ btn.href }}" class="btn {{btnclass}} pull-right m-l-20 waves-effect waves-light">
+    {{ btn.label }}
+  </a>
+  {% endfor %}
+  </ul>
+
+</div>
+{% endmacro %}

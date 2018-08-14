@@ -11,22 +11,21 @@
 <div class="index_wrap">
   <div id="paging-data-list" class="bg-white">
     <div class="weui-cell">
-      {% set btnOn = 'btnOn' if is_img == 0 and rating == 3 else '' %}
+      {% set btnOn = 'btnOn' if rating == '3' else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, rating=3) }}">{{_('好评')}} {{ rating_3_count }}</a>
-      {% set btnOn = 'btnOn' if is_img == 0 and rating == 2 else '' %}
+      {% set btnOn = 'btnOn' if rating == '2' else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, rating=2) }}">{{_('中评')}} {{ rating_2_count }}</a>
-      {% set btnOn = 'btnOn' if is_img == 0 and rating == 1 else '' %}
+      {% set btnOn = 'btnOn' if rating == '1' else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, rating=1) }}">{{_('差评')}} {{ rating_1_count }}</a>
-      {% set btnOn = 'btnOn' if is_img == 1 else '' %}
+      {% set btnOn = 'btnOn' if is_img == '1' else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, is_img=1) }}">{{_('有图')}} {{ img_count }}</a>
     </div>
     <div class="weui-gallery" id="gallery">
-      <span class="weui-gallery__img" id="galleryImg"></span>
-      <div class="weui-gallery__opr">
-        <!-- <a href="javascript:" class="weui-gallery__del">
-          <i class="weui-icon-delete weui-icon_gallery-delete"></i>
-        </a> -->
+      <div class="swiper-container">
+        <div class="swiper-wrapper"></div>
       </div>
+      <!-- <span class="weui-gallery__img" id="galleryImg"></span> -->
+      <div class="weui-gallery__opr"></div>
     </div>
     {% for comment in comments %}
       <div class="weui-media-box weui-media-box_appmsg">
@@ -43,7 +42,7 @@
           <ul class="weui-uploader__files mar-top" id="uploaderFiles">
             {% set imgs = comment.img_data|json_loads %}
             {% for img in imgs %}
-              <li class="weui-uploader__file" style="background-image:url('{{ img }}')"></li>
+              <li class="weui-uploader__file" style="background-image:url('{{ img }}-square.middle')"></li>
             {% endfor %}
           </ul>
         </div>

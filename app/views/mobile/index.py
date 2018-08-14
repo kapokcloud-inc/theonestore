@@ -33,7 +33,7 @@ index = Blueprint('mobile.index', __name__)
 def root():
     """手机站 - 首页"""
 
-    advs           = AdvStaticMethodsService.advs({'ac_id':1})
+    advs           = AdvStaticMethodsService.advs({'ac_id':1}, platform_type=1)
     data_hot       = ItemStaticMethodsService.items({'is_hot':1, 'p':1, 'ps':12})
     data_recommend = ItemStaticMethodsService.items({'is_recommend':1, 'p':1, 'ps':12})
 

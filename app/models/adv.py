@@ -15,6 +15,7 @@ class Adv(BaseModel, db.Model):
     __tablename__ = 'adv'
 
     adv_id = db.Column(db.Integer, primary_key=True)
+    platform_type = db.Column(db.Integer, default=0)
     ac_id = db.Column(db.Integer, default=0)
     img = db.Column(db.String(255), default='')
     desc = db.Column(db.String(255), default='')
