@@ -93,6 +93,35 @@
       </div>
     </div>
   </div>
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <div class="blackGap mar-bottom">{{_('收货寄回地址')}}</div>
+        <div>
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+              <input id="edit_address_name" class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人姓名')}}" value="">
+            </div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+              <input id="edit_address_mobile" class="weui-input greykGap" type="text" placeholder="{{_('请填写收件人手机号码')}}" value="">
+            </div>
+          </div>
+          <div class="weui-cell weui-cell_select weui-cell_select-after">
+            <div class="weui-cell__bd">
+              <input id="edit_address_pcd" class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="">
+            </div>
+          </div>
+          <div class="weui-cell">
+            <div class="weui-cell__bd">
+              <input id="edit_address_address" class="weui-input greykGap" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}" value="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div style="height:75px"></div>
   <div class="footer" style="display:block;height:65px">
     {{ wtf_form.csrf_token }}
@@ -110,6 +139,7 @@
 <script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/vendor/jquery.ui.widget.js"></script>
 <script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.iframe-transport.js"></script>
 <script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
+
 <script type="text/javascript">
 var csrftoken = $('#csrf_token').val();
 $.ajaxSetup({
