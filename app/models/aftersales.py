@@ -43,6 +43,22 @@ class Aftersales(BaseModel, db.Model):
     update_time = db.Column(db.Integer, default=0)
 
 
+class AftersalesAddress(BaseModel, db.Model):
+    __bind_key__ = 'theonestore'
+    __tablename__ = 'aftersales_address'
+
+    aa_id = db.Column(db.Integer, primary_key=True)
+    aftersales_id = db.Column(db.Integer, default=0)
+    name = db.Column(db.String(32), default='')
+    mobile = db.Column(db.String(15), default='')
+    province = db.Column(db.String(32), default='')
+    city = db.Column(db.String(32), default='')
+    district = db.Column(db.String(32), default='')
+    address = db.Column(db.String(255), default='')
+    add_time = db.Column(db.Integer, default=0)
+    update_time = db.Column(db.Integer, default=0)
+
+
 class AftersalesGoods(BaseModel, db.Model):
     __bind_key__ = 'theonestore'
     __tablename__ = 'aftersales_goods'

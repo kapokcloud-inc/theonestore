@@ -172,5 +172,6 @@ def apply():
                 return redirect(request.headers['Referer'])
 
         data = {'wtf_form':wtf_form, 'goods_data':ascs.goods_data,
-                'refunds_amount':ascs.refunds_amount, 'aftersales_type':aftersales_type}
+                'refunds_amount':ascs.refunds_amount,
+                'order_address':ascs.order_address, 'aftersales_type':aftersales_type}
         return render_template('mobile/aftersales/apply.html.j2', **data)
