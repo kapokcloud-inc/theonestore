@@ -267,3 +267,20 @@ def recharge():
     rocs.create()
 
     return resjson.print_json(0, u'ok', {'order_id':rocs.order.order_id})
+
+
+@order.route('/is_paid')
+def is_paid():
+    """查询订单是否支付成功"""
+    resjson.action_code = 17
+
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
+
+    order_id = toint(request.args.get('order_id', '0'))
+    order    = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
+    if order and order.pay_status == 2:
+        return resjson.print_json(0, u'ok', {'is_paid':1})
+
+    return resjson.print_json(0, u'ok', {'is_paid':0})

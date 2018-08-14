@@ -348,9 +348,4 @@ def request_args_to_query_string(params, p, ps):
     params['p']  = p
     params['ps'] = ps
 
-    try:
-        url = urllib.urlencode(params)
-    except Exception as e:
-        url = urllib.parse.urlencode(params)
-
-    return url
+    return urlencode(params)
