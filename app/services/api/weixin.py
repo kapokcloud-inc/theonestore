@@ -7,6 +7,7 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+from collections import OrderedDict
 import json
 import requests
 try:
@@ -61,15 +62,17 @@ class WeiXinLoginService(object):
                     'qrcode':'https://open.weixin.qq.com/connect/qrconnect'}
         scopes = {'mp':'snsapi_userinfo', 'qrcode':'snsapi_login'}
 
-        uri           = uris.get(self.login_type)
-        redirect_uri  = urlencode(request.url.encode('utf8'))
-        scope         = scopes.get(self.login_type)
-        state         = randomstr(32)
-        self.code_url = u'%s?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect' %\
-                        (uri, self.appid, redirect_uri, scope, state)
+        uri = uris.get(self.login_type)
+        params = OrderedDict()
+        params['appid'] = self.appid
+        params['redirect_uri'] = request.url
+        params['response_type'] = 'code'
+        params['scope'] = scopes.get(self.login_type)
+        params['state'] = randomstr(32)
+        query_string = urlencode(params)
+        self.code_url = u'%s?%s#wechat_redirect' % (uri, query_string)
 
-        session['weixin_login_state'] = state
-
+        session['weixin_login_state'] = params['state']
         return True
 
     def __token_url(self, code):
