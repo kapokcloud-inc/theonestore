@@ -208,7 +208,7 @@ class WeiXinLoginService(object):
             # 创建绑定
             data = {'uid':user.uid, 'third_type':1,
                     'third_user_id':openid, 'third_unionid':unionid,
-                    'third_res_text':json.loads(data), 'add_time':self.current_time}
+                    'third_res_text':json.dumps(data), 'add_time':self.current_time}
             utb  = model_create(UserThirdBind, data)
         else:
             user = User.query.get(utb.uid)
