@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for more details.
 """
 import json
+import os
 
 from flask import (
     request,
@@ -15,9 +16,12 @@ from flask import (
     Blueprint,
     redirect,
     url_for,
-    g
+    g,
+    current_app
 )
 from flask_babel import gettext as _
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import CombinedMultiDict
 
 from app.database import db
 from app.helpers import (
@@ -28,6 +32,8 @@ from app.helpers import (
 
 from app.forms.admin.shipping import ShippingForm
 from app.forms.admin.config import (
+    WeixinMpForm,
+    WeixinPayForm,
     SmsYunpianForm,
     SmsAlismsForm,
     StorageQiniuForm,
@@ -38,6 +44,74 @@ from app.models.sys import SysSetting
 
 
 config = Blueprint('admin.config', __name__)
+
+@config.route('/mp', methods=['GET', 'POST'])
+def mp():
+    """微信公众号"""
+    g.page_title = _(u'微信公众号')
+    
+    form = WeixinMpForm(CombinedMultiDict((request.files, request.form)))
+    ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_mp').first()
+    data = {}
+    if ss:
+        try:
+            data = json.loads(ss.value)
+        except Exception as e:
+            pass
+
+    if request.method == 'GET':
+        form.fill_form(data=data)
+        return render_template('admin/config/weixin_mp.html.j2', form=form)
+
+    if not form.validate_on_submit():
+        return render_template('admin/config/weixin_mp.html.j2', form=form)
+
+    data['appid'] = form.appid.data
+    data['secret'] = form.secret.data
+    if ss is None:
+        ss = SysSetting()
+        ss.key = 'config_weixin_mp'
+        db.session.add(ss)
+
+    # 校验文件上传
+    if form.mp_verify.data:
+        mp_verify = secure_filename(form.mp_verify.data.filename)
+        uploads_path = current_app.config['UPLOADED_FILES_DEST']
+        form.mp_verify.data.save(os.path.join(uploads_path, mp_verify))
+        mp_verify = '/'+mp_verify
+        data['mp_verify'] = mp_verify
+
+    ss.value = json.dumps(data)
+    db.session.commit()
+    return redirect(url_for('admin.index.success', title=_(u'设置微信公众号成功')))
+
+
+@config.route('/weixinpay', methods=['GET', 'POST'])
+def weixinpay():
+    """微信支付"""
+    g.page_title = _(u'微信支付')
+
+    form = WeixinPayForm()
+    ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixin').first()
+    if request.method == 'GET':
+        try:
+            data = json.loads(ss.value)
+        except Exception as e:
+            data = {}
+        form.fill_form(data=data)
+    else:
+        data = {'mch_id':form.mch_id.data, 'partner_key':form.partner_key.data}
+        if form.validate_on_submit():
+            if ss is None:
+                ss = SysSetting()
+                ss.key = 'config_paymethod_weixin'
+                db.session.add(ss)
+            ss.value = json.dumps(data)
+            db.session.commit()
+            return redirect(url_for('admin.index.success', title=_(u'设置微信支付成功')))
+
+    return render_template('admin/config/weixinpay.html.j2', form=form)
+
 
 @config.route('/sms/yunpian', methods=["GET", "POST"])
 def sms_yunpian():

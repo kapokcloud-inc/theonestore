@@ -9,8 +9,9 @@
 """
 import base64
 import json
-import qrcode
+import pyqrcode
 from io import BytesIO
+from decimal import Decimal
 
 from flask import (
     request,
@@ -104,27 +105,22 @@ def pay(order_id):
     if not ps.tran:
         ps.create_tran()
 
-    tran      = ps.tran
-    subject   = u'交易号：%d' % tran.tran_id
-    nonce_str = str(tran.tran_id)
+    tran       = ps.tran
+    tran_id    = tran.tran_id
+    subject    = u'交易号：%d' % tran_id
+    nonce_str  = str(tran_id)
+    pay_amount = Decimal(tran.pay_amount).quantize(Decimal('0.00'))*100
 
     # 统一下单
-    us = UnifiedorderService(nonce_str, subject, tran.tran_id, tran.pay_amount*100,
-                            'NATIVE', request.remote_addr)
+    us = UnifiedorderService(nonce_str, subject, tran_id, pay_amount, 'NATIVE', request.remote_addr)
+    if not us.unifiedorder():
+        return redirect(url_for('pc.order.index', msg=us.msg))
 
     # 生成二维码
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(us.code_url)
-    qr.make(fit=True)
-    img      = qr.make_image(fill_color="black", back_color="white")
+    big_code = pyqrcode.create(us.code_url, error='L', version=3, mode='binary')
     buffered = BytesIO()
-    img.save(buffered, format="PNG")
+    big_code.png(buffered, scale=6, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xff])
 
-    data['qrcode'] = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    data['qrcode'] = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
     return render_template('pc/cart/pay.html.j2', **data)

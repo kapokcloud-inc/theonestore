@@ -4,7 +4,8 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    {{ libs.setting_page_tabs('sms') }}
+    {{ libs.setting_page_tabs() }}
+
     <!-- .row -->
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -13,22 +14,11 @@
           <p class="text-muted m-b-30">
             短信服务（Short Message Service）是<code>阿里云</code>为用户提供的一种通信服务的能力，支持快速发送短信验证码、短信通知等，服务范围覆盖全球。 完美支撑双11期间2亿用户，发送6亿短信。三网合一专属通道，与工信部携号转网平台实时互联。电信级运维保障，实时监控自动切换，到达率高达99%。
           </p>
-          <div class="m-b-40">
-            <ul class="nav customtab nav-tabs" role="tablist">
-              <li role="presentation" class="">
-                <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="yunpian" role="tab" aria-expanded="false" style="background:none !important">
-                  <span class="visible-xs">{{_('云片')}}</span>
-                  <span class="hidden-xs">{{_('云片')}}</span>
-                </a>
-              </li>
-              <li role="presentation" class="active">
-                <a href="{{ url_for('admin.config.sms_alisms') }}" aria-controls="alisms" role="tab" aria-expanded="true" style="background:none !important">
-                  <span class="visible-xs">{{_('阿里')}}</span>
-                  <span class="hidden-xs">{{_('阿里')}}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+
+          {{ libs.build_tabs(tabs=[
+            {'label':_('云片'), 'endpoint':'admin.config.sms_yunpian'},
+            {'label':_('阿里'), 'endpoint':'admin.config.sms_alisms'},
+          ], border_bottom='line') }}
 
           {# 阿里云短信 form表单 #}
           {{ libs.render_form(form, action=url_for('admin.config.sms_alisms')) }}

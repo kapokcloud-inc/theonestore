@@ -47,6 +47,7 @@ from app.models.order import (
 )
 from app.models.aftersales import (
     Aftersales,
+    AftersalesAddress,
     AftersalesGoods,
     AftersalesLogs
 )
@@ -108,11 +109,15 @@ def detail(aftersales_id):
     order_goods   = OrderGoods.query.filter(OrderGoods.order_id == aftersale.order_id).order_by(OrderGoods.og_id.desc()).all()
     order_status_text, order_action_code = OrderStaticMethodsService.order_status_text_and_action_code(order)
 
-    logs = AftersalesLogs.query.filter(AftersalesLogs.aftersales_id == aftersales_id).order_by(AftersalesLogs.al_id.desc()).all()
+    logs    = AftersalesLogs.query.\
+                    filter(AftersalesLogs.aftersales_id == aftersales_id).\
+                    order_by(AftersalesLogs.al_id.desc()).all()
+    address = AftersalesAddress.query.\
+                    filter(AftersalesAddress.aftersales_id == aftersales_id).first()
 
     data = {'aftersale':aftersale, 'aftersale_goods':aftersale_goods, 'status_text':status_text, 'action_code':action_code,
             'order':order, 'order_address':order_address, 'order_goods':order_goods, 'order_status_text':order_status_text,
-            'logs':logs}
+            'logs':logs, 'address':address}
     return render_template('admin/aftersale/detail.html.j2', **data)
 
 

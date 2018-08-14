@@ -28,7 +28,6 @@ from flask import (
 from app.database import db
 
 from app.helpers import (
-    log_error,
     log_info,
     toint,
     url_push_query
@@ -65,7 +64,7 @@ class UnifiedorderService(object):
         self.secret           = ''
         self.mch_id           = ''
         self.partner_key      = ''
-        self.notify_url       = url_for('api.apy.notify')
+        self.notify_url       = '%s%s' % (request.host_url.strip('/'), url_for('api.pay.notify'))
         self.prepay_id        = ''
         self.code_url         = ''
         self.sign_params      = {}
@@ -131,10 +130,10 @@ class UnifiedorderService(object):
             return False
 
         # 检查 - 配置
-        self.appid       = config_weixin_mp.get('appid', '')
-        self.secret      = config_weixin_mp.get('secret', '')
-        self.mch_id      = config_paymethod_weixin.get('mch_id', '')
-        self.partner_key = config_paymethod_weixin.get('partner_key', '')
+        self.appid       = config_weixin_mp.get('appid', '').encode('utf8')
+        self.secret      = config_weixin_mp.get('secret', '').encode('utf8')
+        self.mch_id      = config_paymethod_weixin.get('mch_id', '').encode('utf8')
+        self.partner_key = config_paymethod_weixin.get('partner_key', '').encode('utf8')
         if self.appid == '' or self.secret == '' or self.mch_id == '' or self.partner_key == '':
             self.msg = _(u'配置错误')
             return False
@@ -154,10 +153,12 @@ class UnifiedorderService(object):
             'out_trade_no':str(self.out_trade_no),
             'total_fee':str(int(self.total_fee)),
             'spbill_create_ip':self.spbill_create_ip,
-            'trade_type':'JSAPI',
-            'notify_url':self.notify_url,
-            'openid':self.openid
+            'trade_type':self.trade_type,
+            'notify_url':self.notify_url
         }
+
+        if self.trade_type == 'JSAPI':
+            self.sign_params['openid'] = self.openid
 
     def unifiedorder(self):
         """统一下单"""
@@ -176,14 +177,14 @@ class UnifiedorderService(object):
         respone = requests.post(url, data=xml, headers=headers)
 
         # 下单结果
-        doc            = ElementTree.fromstring(respone.content.encode('utf8'))
+        doc            = ElementTree.fromstring(respone.content)
         return_code    = doc.findtext('return_code')
         return_msg     = doc.findtext('return_msg')
         result_code    = doc.findtext('result_code')
         err_code       = doc.findtext('err_code')
         err_code_des   = doc.findtext('err_code_des')
-        self.prepay_id = doc.findtext('err_code_des')
-        self.code_url  = doc.findtext('err_code_des')
+        self.prepay_id = doc.findtext('prepay_id')
+        self.code_url  = doc.findtext('code_url')
 
         # 下单结果
         if return_code != 'SUCCESS':

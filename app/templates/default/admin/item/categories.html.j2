@@ -24,35 +24,35 @@
                   <th>{{_('操作')}}</th>
                 </tr>
               </thead>
-                <tbody>
-                  {% for category in categories %}
-                    <tr id="category-{{category.cat_id}}">
-                      <td>{{ category.cat_id }}</td>
-                      <td>{{ category.cat_name }}</td>
-                      <td> <img src="{{ category.cat_img }}" alt="" width="80"> </td>
-                      <td>
-                        <span class="label {{ const.YES_OR_NO_LABEL.get(category.is_show, 'label-danger') }} font-weight-100">
-                          {{ const.YES_OR_NO.get(category.is_show, _('未知错误')) }}
-                        </span>
-                      </td>
-                      <td>
-                        <span class="label {{ const.YES_OR_NO_LABEL.get(category.is_recommend, 'label-danger') }} font-weight-100">
-                          {{ const.YES_OR_NO.get(category.is_recommend, _('未知错误')) }}
-                        </span>
-                      </td>
-                      <td>{{ category.add_time|timestamp2str }}</td>
-                      <td>
-                        <a href="{{ url_for('admin.item.category_detail', cat_id=category.cat_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
-                          <i class="ti-marker-alt"></i>
-                        </a>
-                        <a href="javascript:void(0);" class="text-inverse" data-toggle="tooltip" title="{{_('删除')}}" onclick="remove({{ category.cat_id }})">
-                          <i class="ti-trash"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-                {{ libs.pagination_html(pagination, 3) }}
+              <tbody>
+              {% for category in categories %}
+                <tr id="category-{{category.cat_id}}">
+                  <td>{{ category.cat_id }}</td>
+                  <td>{{ category.cat_name }}</td>
+                  <td> <img src="{{ category.cat_img }}" alt="" width="80"> </td>
+                  <td>
+                    <span class="label {{ const.YES_OR_NO_LABEL.get(category.is_show, 'label-danger') }} font-weight-100">
+                      {{ const.YES_OR_NO.get(category.is_show, _('未知错误')) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="label {{ const.YES_OR_NO_LABEL.get(category.is_recommend, 'label-danger') }} font-weight-100">
+                      {{ const.YES_OR_NO.get(category.is_recommend, _('未知错误')) }}
+                    </span>
+                  </td>
+                  <td>{{ category.add_time|timestamp2str }}</td>
+                  <td>
+                    <a href="{{ url_for('admin.item.category_detail', cat_id=category.cat_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
+                      <i class="ti-marker-alt"></i>
+                    </a>
+                    <a href="javascript:void(0);" class="text-inverse" data-toggle="tooltip" title="{{_('删除')}}" onclick="remove({{ category.cat_id }})">
+                      <i class="ti-trash"></i>
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+              {{ libs.pagination_html(pagination, 5) }}
             </table>
           </div>
         </div>

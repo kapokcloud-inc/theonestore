@@ -314,64 +314,49 @@
 {% endmacro %}
 
 {# 其它 - form-control-static #}
-{% macro setting_page_tabs(_active) %}
-  <div class="row bg-title">
-    <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
-      {% set active = 'active' if _active == 'sms' %}
-      <li role="presentation" class="{{ active }}">
-        <a href="{{ url_for('admin.config.sms_yunpian') }}" aria-controls="messages" role="tab" aria-expanded="true" style="background:none !important">
-          <span class="visible-xs">{{_('短信')}}</span>
-          <span class="hidden-xs">{{_('短信')}}</span>
-        </a>
-      </li>
-      {% set active = 'active' if _active == 'storage' %}
-      <li role="presentation" class="{{ active }}">
-        <a href="{{ url_for('admin.config.storage_qiniu') }}" aria-controls="messages" role="tab" aria-expanded="false" style="background:none !important">
-          <span class="visible-xs">{{_('存储')}}</span>
-          <span class="hidden-xs">{{_('存储')}}</span>
-        </a>
-      </li>
-      {% set active = 'active' if _active == 'shipping' %}
-      <li role="presentation" class="{{ active }}">
-        <a href="{{ url_for('admin.config.shipping') }}" aria-controls="messages" role="tab" aria-expanded="false" style="background:none !important">
-          <span class="visible-xs">{{_('快递')}}</span>
-          <span class="hidden-xs">{{_('快递')}}</span>
-        </a>
-      </li>
-      {% set active = 'active' if _active == 'system' %}
-      <li role="presentation" class="{{ active }}">
-        <a href="#messages1" aria-controls="messages" role="tab" aria-expanded="false" style="background:none !important">
-          <span class="visible-xs">{{_('系统')}}</span>
-          <span class="hidden-xs">{{_('系统')}}</span>
-        </a>
-      </li>
-    </ul>
-  </div>
+{% macro setting_page_tabs() %}
+{{ build_tabs(tabs=[
+  {'label':_('微信'), 'endpoint':'admin.config.mp', 
+      'endpoint_list':('admin.config.mp', 'admin.config.weixinpay')},
+  {'label':_('短信'), 'endpoint':'admin.config.sms_yunpian',
+      'endpoint_list':('admin.config.sms_yunpian', 'admin.config.sms_alisms')},
+  {'label':_('存储'), 'endpoint':'admin.config.storage_qiniu',
+      'endpoint_list':('admin.config.storage_qiniu', 'admin.config.storage_alioss')},
+  {'label':_('快递'), 'endpoint':'admin.config.shipping',
+      'endpoint_list':('admin.config.shipping', 'admin.config.shipping_detail')},
+]) }}
 {% endmacro %}
 
 {# 
 构建页面tabs
------------------
-:params field_name 字段名称
+----------------
 :params tabs 标签列表
         :label 标签名
         :value 标签值
-        :url url地址
+        :endpoint endpoint
+        :endpoint_list url地址列表(可选项)
+:params field_name 字段名称
 :params btns 按钮列表
         :label label名
         :class 按钮样式类名，如空则为红色
         :href 按钮连接
 #}
-{% macro build_listpage_tabs(field_name, tabs, btns=[]) %}
-{% set field_value = request.args.get(field_name, '') %}
+{% macro build_tabs(tabs, field_name='', btns=[], border_bottom='') %}
+{% set field_value = request.args.get(field_name, request.view_args.get(field_name, '')) if field_name else ''  %}
+{% set ul_style = 'style="border-bottom:none !important"' if not border_bottom else '' %}
 <div class="row bg-title">
-  <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
+  <ul class="nav customtab nav-tabs" role="tablist" {{ ul_style }}>
   {% for tab in tabs %}
-    {% set active_class = ' class="active" ' if (field_value == tab.value 
-                                                  or field_value|toint == tab.value) else '' %}
+    {% set active_class = ' class="active" '
+            if (
+              (not field_name and (request.endpoint == tab.endpoint or request.endpoint in tab.endpoint_list))
+              or (field_value == tab.value or field_value|toint == tab.value)
+            ) 
+            else '' %}
     <li role="presentation" {{active_class}}>
-      <a href="{{ tab.url }}" role="tab" aria-expanded="false" style="background:none !important">
-        <span class="hidden-xs">{{ tab.label }}</span>
+      {% set tab_url = url_for(tab.endpoint, **{field_name:tab.value}) if field_name else url_for(tab.endpoint) %}
+      <a href="{{ tab_url }}" role="tab" aria-expanded="false" style="background:none !important">
+        <span>{{ tab.label }}</span>
       </a>
     </li>
   {% endfor %}

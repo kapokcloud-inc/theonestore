@@ -1,0 +1,30 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    {{ libs.setting_page_tabs() }}
+
+    <!-- .row -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="white-box">
+          <h3 class="box-title"><a target="_blank" href="https://mp.weixin.qq.com/">{{ _('微信公众号') }}</a></h3>
+          <p class="text-muted m-b-30">
+            {{ _('再小的个体，也有自己的品牌。') }}
+          </p>
+
+          {{ libs.build_tabs(tabs=[
+            {'label':_('微信公众号'), 'endpoint':'admin.config.mp'},
+            {'label':_('微信支付'), 'endpoint':'admin.config.weixinpay'},
+          ], border_bottom='line') }}
+
+          {# 微信公众号 form表单 #}
+          {{ libs.render_form(form, action=url_for('admin.config.mp'), enctype='multipart/form-data', primary_key=form.appid.data) }}
+
+        </div>
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+</div>
+{% endblock %}
