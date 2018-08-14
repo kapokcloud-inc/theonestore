@@ -140,7 +140,7 @@
                     <th>{{_('图片：')}}</th>
                     {% set imgdatas = aftersales.img_data|json_loads  %}
                     {% for img_item in imgdatas  %}
-                      <td>
+                      <td style="line-height: 0;">
                         <img  class="aftersales_img" src="{{ img_item }}-square.small" alt="">
                       </td>
                     {% endfor %}

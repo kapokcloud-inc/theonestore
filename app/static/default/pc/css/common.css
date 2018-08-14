@@ -720,6 +720,7 @@ header img {
 .num_minus {
   padding: 15px;
   float: left;
+  cursor: pointer;
 }
 .num_minus::before {
   content: "";
@@ -733,6 +734,7 @@ header img {
 .num_add {
   padding: 15px;
   float: left;
+  cursor: pointer;
 }
 .num_add::before {
   content: "";
@@ -766,11 +768,11 @@ header img {
   position: absolute;
   display: inline-block;
   top: 5px;
-  right: 17px;
-  border-radius: 8px;
-  height: 16px;
-  width: 16px;
-  line-height: 16px;
+  right: 12px;
+  border-radius: 11px;
+  height: 14px;
+  width: 22px;
+  line-height: 14px;
   color: #fff;
   font-style: normal;
   font-size: 12px;
@@ -781,11 +783,11 @@ header img {
   position: absolute;
   display: inline-block;
   top: 2px;
-  right: 5px;
-  border-radius: 7px;
-  height: 16px;
-  width: 16px;
-  line-height: 16px;
+  right: -4px;
+  border-radius: 11px;
+  height: 14px;
+  width: 22px;
+  line-height: 14px;
   color: #fff;
   font-style: normal;
   font-size: 12px;
@@ -987,6 +989,7 @@ header img {
   border: 1px solid #ccc;
   overflow: hidden;
   background-color: #fff;
+  cursor: pointer;
 }
 .rateON {
   background-color: #f33155;
