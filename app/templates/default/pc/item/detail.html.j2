@@ -5,6 +5,7 @@
 {% block head %}
 <title>{{_('商品详情页 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/item.css">
+<link rel="stylesheet" href="/static/default/pc/css/swiper.min.css">
 <link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
 
@@ -36,7 +37,7 @@
                         {% for pic_item in galleries %}
                           {% set selectclass = 'current' if current_big_pic == pic_item.img %}
                           <li class="small-pic_item {{ selectclass }}">
-                            <img src="{{ pic_item.img }}-square.small" alt="">
+                            <img src="{{ pic_item.img }}-square.small" alt="" img-index="{{ loop.index }}">
                           </li>
                         {% endfor %}
                       </ul>
@@ -250,12 +251,32 @@
           </div>
         </div>
       </div>
-      <!-- 返回顶部 -->
+      <!-- 返回顶部 start -->
       <div class="back-top hide">
         <div class="back-top_img">
           <img src="http://i1.mifile.cn/f/i/2018/home/totop.png" alt="">
         </div>
       </div>
+      <!-- 返回顶部 end -->
+
+      <!-- 商品相册点击放大 -->
+      <div class="hide-mask hide" style="background-color: #fff !important;" id="giant-div">
+        <div class="zoom-big-block">
+          <div class="bigImg-block">
+            <img id="giant" src="" alt="">
+          </div>
+        </div>
+        <a class="image-num_first" id="giant-prev" href="javascript:;">
+          <i class="icon-xiaoyu"></i>
+        </a>
+        <a class="image-num_last" id="giant-next" href="javascript:;">
+          <i class="icon-dayu"></i>
+        </a>
+        <a class="bigimage" id="giant-close" href="javascript:;">
+          <i class="icon-cancel"></i>
+        </a>
+      </div>
+      <!-- 商品相册点击放大，左右滑动 end -->
     </div>
     <!-- 商品并未在后台被删除的时候显示 end -->
   {% else %}
@@ -271,163 +292,256 @@
 {% endblock %}
 
 {% block script %}
+<script type="text/javascript" src="/static/default/pc/js/swiper.min.js" charset="utf-8"></script>
+
 <script type="text/javascript">
-  function jump_page(query_string) {
-    $.get("{{ url_for('pc.item.comments_paging') }}", {'query_string':query_string}, function(res) {
-      $("#paging").empty().append(res);
-    });
-  }
-
-  function change_comment_tabs(dom, tab) {
-    $(".rate-type").each(function(i){
-      $(this).removeClass('rateON');
-    });
-
-    $(dom).addClass('rateON');
-
-    var query_string = '';
-    if (tab == 1) {
-      query_string = 'ttype=1&tid={{ item.goods_id }}&p=1&ps=12';
-    } else if (tab == 2) {
-      query_string = 'ttype=1&tid={{ item.goods_id }}&rating=3&p=1&ps=12';
-    } else if (tab == 3) {
-      query_string = 'ttype=1&tid={{ item.goods_id }}&rating=2&p=1&ps=12';
-    } else if (tab == 4) {
-      query_string = 'ttype=1&tid={{ item.goods_id }}&rating=1&p=1&ps=12';
-    } else if (tab == 5) {
-      query_string = 'ttype=1&tid={{ item.goods_id }}&is_img=1&p=1&ps=12';
-    }
-
-    jump_page(query_string);
-  }
-
-  //点击切换图片
-  $('.small-pic_item').on("click","img", function(){
-    index = $(this).index();
-    var imgurl = this.getAttribute("src");
-    var imgurlR = imgurl.replace('-square.small','');
-    $('#bigpic').attr("src", imgurlR + '-square.500');
-    $('.goods-big_pic').fadeIn(100);
-    $(this).parent().addClass('current').siblings().removeClass('current');
+$(document).ready(function(){
+  // 商品相册点击放大事件
+  $('#bigpic').click(function() {
+    showGiant();
+    $('#giant-div').fadeIn(1000);
+    $('#giant-div').addClass('show').removeClass('hide');
   });
 
-  //购买数量计数器
-  var MIN = 1;
-  $('.num_minus').click(function (e) {
-    var $input = $(e.currentTarget).parent().find('#goods_quantity');
-    var number = parseInt($input.val() || "0") - 1;
-  
-    if (number < MIN) number = MIN;
-    $input.val(number);
-  })
+  //点击上一张按钮事件
+  $('#giant-prev').bind('click', prevGiant);
 
-  $('.num_add').click(function (e) {
-    var $input = $(e.currentTarget).parent().find('#goods_quantity');
-    var number = parseInt($input.val() || "0") + 1;
+  //点击下一张按钮事件
+  $('#giant-next').bind('click', nextGiant);
 
-    $input.val(number);
-  })
+  //点击关闭商品相册
+  $('#giant-close').click(function(){
+    closeGiant();
+    $('#giant-div').addClass('hide').removeClass('show');
+  });
+});
 
-  //加入购物车
-  function cartTo() {
-    var goods_id = parseInt($('#goods_id').val());
-    var quantity = parseInt($("#goods_quantity").val());
+/**
+ * 显示最大图
+ */
+function showGiant() {
+  var $current = $('.small-pic_item.current');
+  var $prev = $current.prev();
+  var $next = $current.next();
+  var img_url = $current.find('img').attr('src');
+  var img_url_giant = img_url.replace('-square.small', '-square.giant');
+  $('#giant').attr("src", img_url_giant);
 
-    if (quantity <= 0) {
+  // 判断上一张
+  if ($prev.length <= 0) {
+    $('#giant-prev').hide();
+  } else {
+    $('#giant-prev').show();
+  }
+
+  // 判断下一张
+  if ($next.length <= 0) {
+    $('#giant-next').hide();
+  } else {
+    $('#giant-next').show();
+  }
+
+}
+
+/**
+ * 上一张最大图
+ */
+function prevGiant() {
+  var $current = $('.small-pic_item.current');
+  $current.removeClass('current');
+
+  var $prev = $current.prev();
+  $prev.addClass('current');
+
+  showGiant();
+}
+
+/**
+ * 下一张最大图
+ */
+function nextGiant() {
+  var $current = $('.small-pic_item.current');
+  $current.removeClass('current');
+
+  var $next = $current.next();
+  $next.addClass('current');
+
+  showGiant();
+}
+
+/**
+ * 关闭弹窗
+ */
+function closeGiant(){
+  var $current = $('.small-pic_item.current');
+  var img_url = $current.find('img').attr('src');
+  var img_url_giant = img_url.replace('-square.small', '-square.giant');
+  $('#bigpic').attr("src", img_url_giant);
+}
+
+function jump_page(query_string) {
+  $.get("{{ url_for('pc.item.comments_paging') }}", {'query_string':query_string}, function(res) {
+    $("#paging").empty().append(res);
+  });
+}
+
+function change_comment_tabs(dom, tab) {
+  $(".rate-type").each(function(i){
+    $(this).removeClass('rateON');
+  });
+
+  $(dom).addClass('rateON');
+
+  var query_string = '';
+  if (tab == 1) {
+    query_string = 'ttype=1&tid={{ item.goods_id }}&p=1&ps=12';
+  } else if (tab == 2) {
+    query_string = 'ttype=1&tid={{ item.goods_id }}&rating=3&p=1&ps=12';
+  } else if (tab == 3) {
+    query_string = 'ttype=1&tid={{ item.goods_id }}&rating=2&p=1&ps=12';
+  } else if (tab == 4) {
+    query_string = 'ttype=1&tid={{ item.goods_id }}&rating=1&p=1&ps=12';
+  } else if (tab == 5) {
+    query_string = 'ttype=1&tid={{ item.goods_id }}&is_img=1&p=1&ps=12';
+  }
+
+  jump_page(query_string);
+}
+
+//点击切换图片
+$('.small-pic_item').on("click","img", function(){
+  var $img = $(this);
+  //var img_index = $img.attr('img-index');
+
+  // 替换图片
+  var imgurl = $img.attr('src');
+  var square500img = imgurl.replace('-square.small','-square.500');//500x500
+  var $bigpic = $('#bigpic');
+  $bigpic.attr("src", square500img);
+  //$bigpic.attr('img-index', img_index);
+
+  $('.goods-big_pic').fadeIn(100);
+
+  $(this).parent().addClass('current').siblings().removeClass('current');
+});
+
+//购买数量计数器
+var MIN = 1;
+$('.num_minus').click(function (e) {
+  var $input = $(e.currentTarget).parent().find('#goods_quantity');
+  var number = parseInt($input.val() || "0") - 1;
+
+  if (number < MIN) number = MIN;
+  $input.val(number);
+})
+
+$('.num_add').click(function (e) {
+  var $input = $(e.currentTarget).parent().find('#goods_quantity');
+  var number = parseInt($input.val() || "0") + 1;
+
+  $input.val(number);
+})
+
+//加入购物车
+function cartTo() {
+  var goods_id = parseInt($('#goods_id').val());
+  var quantity = parseInt($("#goods_quantity").val());
+
+  if (quantity <= 0) {
+    // 优化alert ??
+    alert("{{_('购买数量不能小于0')}}");
+    return false;
+  }
+
+  $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
+    if (json.ret != 0) {
       // 优化alert ??
-      alert("{{_('购买数量不能小于0')}}");
+      alert(res.msg);
       return false;
     }
 
-    $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
-      if (json.ret != 0) {
-        // 优化alert ??
-        alert(res.msg);
-        return false;
-      }
+    $("#navs_cart_total").text(json.data.cart_total);
+  });
+}
 
-      $("#navs_cart_total").text(json.data.cart_total);
-    });
-  }
+// 立即购买
+function buynow() {
+  var goods_id = parseInt($('#goods_id').val());
+  var quantity = parseInt($("#goods_quantity").val());
+  var href = "{{ url_for('pc.cart.checkout') }}" + '?buy_now='+quantity+'&goods_id='+goods_id;
+  window.location.href = href;
+}
 
-  // 立即购买
-  function buynow() {
-    var goods_id = parseInt($('#goods_id').val());
-    var quantity = parseInt($("#goods_quantity").val());
-    var href = "{{ url_for('pc.cart.checkout') }}" + '?buy_now='+quantity+'&goods_id='+goods_id;
-    window.location.href = href;
-  }
-
-  //去购物车
-  function toCart() {
-    window.location.href = "{{ url_for('pc.cart.checkout') }}";
-  }
+//去购物车
+function toCart() {
+  window.location.href = "{{ url_for('pc.cart.checkout') }}";
+}
 
 
- //收藏
- function fav(dom) {
-    var $dom = $(dom);
-    var tid = $dom.attr('data-tid');
-    var params = {'like_type':2, 'ttype':1, 'tid':tid}
+//收藏
+function fav(dom) {
+  var $dom = $(dom);
+  var tid = $dom.attr('data-tid');
+  var params = {'like_type':2, 'ttype':1, 'tid':tid}
 
-    $.get("{{ url_for('api.like.action') }}", params, function(json) {
-      if (json.ret != 0) {
-        // 优化alert ??
-        alert(res.msg);
-        return false;
-      }
+  $.get("{{ url_for('api.like.action') }}", params, function(json) {
+    if (json.ret != 0) {
+      // 优化alert ??
+      alert(res.msg);
+      return false;
+    }
 
-      if (json.data.action_code == 1) {
-        $dom.children().first().attr('src', '/static/default/pc/img/like.png');
-      } else {
-        $dom.children().first().attr('src', '/static/default/pc/img/notlike.png');
-      }
-    });
-  }
+    if (json.data.action_code == 1) {
+      $dom.children().first().attr('src', '/static/default/pc/img/like.png');
+    } else {
+      $dom.children().first().attr('src', '/static/default/pc/img/notlike.png');
+    }
+  });
+}
 
-  //点击切换商品详情和商品评价
-  $(function () {
-    $(".detail-nav_list li").off("click").on("click", function () {
-      var index = $(this).index();
-      $(this).addClass("allOn").siblings().removeClass("allOn");
-      $("#cntBox .allCnt").eq(index).addClass("show").siblings().removeClass("show");
-    });
+//点击切换商品详情和商品评价
+$(function () {
+  $(".detail-nav_list li").off("click").on("click", function () {
+    var index = $(this).index();
+    $(this).addClass("allOn").siblings().removeClass("allOn");
+    $("#cntBox .allCnt").eq(index).addClass("show").siblings().removeClass("show");
+  });
+});
+
+//点击评论跳到评论版块
+function comment(){
+  $('#comment').addClass("show").removeClass("hide");
+  $('#detail').addClass("hide").removeClass("show");
+  $('#navCom').addClass("allOn");
+  $('#navDatail').removeClass("allOn");
+  change_comment_tabs($('#allComm'),1);
+}
+
+//点击满意度跳到评论的好评版块
+function goodCom() {
+  $('#comment').addClass("show").removeClass("hide");
+  $('#detail').addClass("hide").removeClass("show");
+  $('#navCom').addClass("allOn");
+  $('#navDatail').removeClass("allOn");
+  change_comment_tabs($('#goodComm'),2);
+}
+
+$(function(){
+  //当滚动条的位置处于距顶部800像素以下时，返回顶部版块出现，否则消失
+  $(window).scroll(function () {
+    if ($(window).scrollTop() < 800) {
+      $(".back-top").removeClass('show').addClass('hide').fadeOut(200);
+    }
+    else {
+      $(".back-top").removeClass('hide').addClass('show').fadeIn(200);
+    }
   });
 
-  //点击评论跳到评论版块
-  function comment(){
-    $('#comment').addClass("show").removeClass("hide");
-    $('#detail').addClass("hide").removeClass("show");
-    $('#navCom').addClass("allOn");
-    $('#navDatail').removeClass("allOn");
-    change_comment_tabs($('#allComm'),1);
-  }
-
-  //点击满意度跳到评论的好评版块
-  function goodCom() {
-    $('#comment').addClass("show").removeClass("hide");
-    $('#detail').addClass("hide").removeClass("show");
-    $('#navCom').addClass("allOn");
-    $('#navDatail').removeClass("allOn");
-    change_comment_tabs($('#goodComm'),2);
-  }
-
-  $(function(){
-    //当滚动条的位置处于距顶部800像素以下时，返回顶部版块出现，否则消失
-    $(window).scroll(function () {
-      if ($(window).scrollTop() < 800) {
-        $(".back-top").removeClass('show').addClass('hide').fadeOut(200);
-      }
-      else {
-        $(".back-top").removeClass('hide').addClass('show').fadeIn(200);
-      }
-    });
-
-    //点击返回顶部
-    $('.back-top').click(function () {
-      $('body,html').animate({ scrollTop: 0 }, 200);
-    });
+  //点击返回顶部
+  $('.back-top').click(function () {
+    $('body,html').animate({ scrollTop: 0 }, 200);
   });
+});
   
 </script>
 {% endblock %}
