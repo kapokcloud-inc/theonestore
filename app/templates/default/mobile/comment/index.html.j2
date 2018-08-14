@@ -11,13 +11,13 @@
 <div class="index_wrap">
   <div id="paging-data-list" class="bg-white">
     <div class="weui-cell">
-      {% set btnOn = 'btnOn' if is_img == 0 and rating == 3 else '' %}
+      {% set btnOn = 'btnOn' if rating == '3' else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, rating=3) }}">{{_('好评')}} {{ rating_3_count }}</a>
-      {% set btnOn = 'btnOn' if is_img == 0 and rating == 2 else '' %}
+      {% set btnOn = 'btnOn' if rating == '2' else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, rating=2) }}">{{_('中评')}} {{ rating_2_count }}</a>
-      {% set btnOn = 'btnOn' if is_img == 0 and rating == 1 else '' %}
+      {% set btnOn = 'btnOn' if rating == '1' else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, rating=1) }}">{{_('差评')}} {{ rating_1_count }}</a>
-      {% set btnOn = 'btnOn' if is_img == 1 else '' %}
+      {% set btnOn = 'btnOn' if is_img == '1' else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, is_img=1) }}">{{_('有图')}} {{ img_count }}</a>
     </div>
     <div class="weui-gallery" id="gallery">

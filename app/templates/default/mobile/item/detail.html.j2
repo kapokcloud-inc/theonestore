@@ -153,7 +153,7 @@
     <div id="nav2">
       {% if item.comment_count > 0 %}
         <div class="weui-cells">
-          <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.comment.index', ttype=1, tid=item.goods_id, rating=3) }}">
+          <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.comment.index', ttype=1, tid=item.goods_id) }}">
             <div class="weui-cell__bd">
               <span class="blackGap">{{_('评价')}}</span>
               <span class="mar-left praise_rate">{{_('好评%s' % item.comment_good_rate)}}%</span>
