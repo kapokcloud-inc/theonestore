@@ -13,7 +13,7 @@
     <div class="type-head">
       <div class="head-inner">
         <p class="type-head_text">
-          {% set cat_name = category.cat_name if category else "" %}
+          {% set cat_name = category.cat_name if category else request.args.get('search_key',"") %}
           <span>{{ cat_name }}</span>
         </p>
       </div>
