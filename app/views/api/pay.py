@@ -143,12 +143,14 @@ def weixinjspay_req():
     if not ps.tran:
         ps.create_tran()
 
-    tran      = ps.tran
-    subject   = u'交易号：%d' % tran.tran_id
-    nonce_str = str(tran.tran_id)
+    tran       = ps.tran
+    tran_id    = tran.tran_id
+    subject    = u'交易号：%d' % tran_id
+    nonce_str  = str(tran_id)
+    pay_amount = Decimal(tran.pay_amount).quantize(Decimal('0.00'))*100
 
     # 创建支付参数
-    us = UnifiedorderService(nonce_str, subject, tran.tran_id, tran.pay_amount*100, 'JSAPI', request.remote_addr, openid)
+    us = UnifiedorderService(nonce_str, subject, tran_id, pay_amount, 'JSAPI', request.remote_addr, openid)
     if not us.unifiedorder():
         return resjson.print_json(14, us.msg)
 

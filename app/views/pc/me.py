@@ -225,3 +225,12 @@ def messages():
     UserStaticMethodsService.reset_last_time(uid, 1)
 
     return render_template('pc/me/messages.html.j2', **data)
+
+
+@me.route('/signout')
+def signout():
+    """退出登录"""
+
+    session.clear()
+
+    return redirect(url_for('pc.index.root'))

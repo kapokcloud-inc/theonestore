@@ -105,13 +105,14 @@ def pay(order_id):
     if not ps.tran:
         ps.create_tran()
 
-    tran      = ps.tran
-    subject   = u'交易号：%d' % tran.tran_id
-    nonce_str = str(tran.tran_id)
+    tran       = ps.tran
+    tran_id    = tran.tran_id
+    subject    = u'交易号：%d' % tran_id
+    nonce_str  = str(tran_id)
+    pay_amount = Decimal(tran.pay_amount).quantize(Decimal('0.00'))*100
 
     # 统一下单
-    us = UnifiedorderService(nonce_str, subject, tran.tran_id, Decimal(tran.pay_amount).quantize(Decimal('0.00'))*100,
-                            'NATIVE', request.remote_addr)
+    us = UnifiedorderService(nonce_str, subject, tran_id, pay_amount, 'NATIVE', request.remote_addr)
     if not us.unifiedorder():
         return redirect(url_for('pc.order.index', msg=us.msg))
 
@@ -120,6 +121,6 @@ def pay(order_id):
     buffered = BytesIO()
     big_code.png(buffered, scale=6, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xff])
 
-    data['qrcode'] = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    data['qrcode'] = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
     return render_template('pc/cart/pay.html.j2', **data)

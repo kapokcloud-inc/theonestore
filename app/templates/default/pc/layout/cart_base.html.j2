@@ -36,7 +36,7 @@
                   <div class="one-cell_bd username">
                     <a href="{{ url_for('pc.me.index') }}">{{ nickname }}</a>
                   </div>
-                  <div class="one-cell_ft signout" onclick="signout()">{{_('[退出]')}}</div>
+                  <div class="one-cell_ft signout"><a href="{{ url_for('pc.me.signout') }}">{{_('[退出]')}}</a></div>
                 </div>
                 <div class="user-about">
                   <span>
@@ -59,7 +59,7 @@
             </li>
           {% else %}
             <li class="top-nav_item">
-              <a href="" class="mouseon">{{_('请登录')}}</a>
+              <a href="{{ url_for('api.weixin.login_qrcode') }}" class="mouseon">{{_('请登录')}}</a>
             </li>
           {% endif %}
           

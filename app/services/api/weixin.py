@@ -133,7 +133,10 @@ class WeiXinLoginService(object):
 
         state = self.request.args.get('state', '')
         if not state:
-            self.code_url = self.__code_url()
+            self.__code_url()
+            return False
+
+        return True
 
     def login(self):
         """登陆"""
