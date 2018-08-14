@@ -4,7 +4,8 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    {{ libs.setting_page_tabs('storage') }}
+    {{ libs.setting_page_tabs() }}
+
     <!-- .row -->
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -13,22 +14,11 @@
           <p class="text-muted m-b-30">
             海量、安全、低成本、高可靠的云存储服务，提供99.999999999%的数据可靠性。使用RESTful API 可以在互联网任何位置存储和访问，容量和处理能力弹性扩展，多种存储类型供选择全面优化存储成本。
           </p>
-          <div class="m-b-40">
-            <ul class="nav customtab nav-tabs" role="tablist">
-              <li role="presentation" class="">
-                <a href="{{ url_for('admin.config.storage_qiniu') }}" aria-controls="alioss" role="tab" aria-expanded="true" style="background:none !important">
-                  <span class="visible-xs">{{_('七牛云')}}</span>
-                  <span class="hidden-xs">{{_('七牛云')}}</span>
-                </a>
-              </li>
-              <li role="presentation" class="active">
-                <a href="{{ url_for('admin.config.storage_alioss') }}" aria-controls="qiniu" role="tab" aria-expanded="false" style="background:none !important">
-                  <span class="visible-xs">{{_('阿里云OSS')}}</span>
-                  <span class="hidden-xs">{{_('阿里云OSS')}}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+
+          {{ libs.build_tabs(tabs=[
+            {'label':_('七牛云'), 'endpoint':'admin.config.storage_qiniu'},
+            {'label':_('阿里云OSS'), 'endpoint':'admin.config.storage_alioss'},
+          ], border_bottom='line') }}
 
           {# 阿里云OSS form表单 #}
           {{ libs.render_form(form, action=url_for('admin.config.storage_alioss')) }}

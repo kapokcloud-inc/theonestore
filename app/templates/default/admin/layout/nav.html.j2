@@ -95,7 +95,29 @@
            'href':url_for('admin.config.sms_yunpian'),
            'view':'config',
            'icon':'mdi mdi-settings',
-           'children':None
+           'children':[
+              {'title':_('微信'),
+              'href':url_for('admin.config.mp'),
+              'endpoints':['admin.config.mp',
+                           'admin.config.weixinpay']
+              },
+              {'title':_('短信'),
+              'href':url_for('admin.config.sms_yunpian'),
+              'endpoints':['admin.config.sms_yunpian',
+                           'admin.config.sms_alisms']
+              },
+              {'title':_('存储'),
+              'href':url_for('admin.config.storage_qiniu'),
+              'endpoints':['admin.config.storage_qiniu',
+                           'admin.config.storage_alioss']
+              },
+              {'title':_('快递'),
+              'href':url_for('admin.config.shipping'),
+              'endpoints':['admin.config.shipping',
+                           'admin.config.shipping_detail']
+              },
+
+           ]
           },
         ]
       %}

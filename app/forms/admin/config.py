@@ -8,11 +8,17 @@
     :license: BSD, see LICENSE for more details.
 """
 from flask_babel import gettext as _
+from flask_wtf.file import (
+    FileField, 
+    FileAllowed, 
+    FileRequired
+)
+from flask_uploads import UploadSet, TEXT
+
 from wtforms import (
     IntegerField,
     StringField,
     DecimalField,
-    FileField,
     SelectField,
     TextAreaField
 )
@@ -24,6 +30,34 @@ from wtforms.validators import (
 )
 
 from app.forms import Form
+
+class WeixinMpForm(Form):
+    appid = StringField(label=_(u'开发者(AppID)'),
+                    description=_(u'如：wxf7337ac7caaac670<br>请查看您的公众号 “开发->基本设置” '),
+                    validators=[Required(message=_(u'请填写开发者(AppID)'))])
+
+    secret = StringField(label=_(u'开发者密码(AppSecret)'),
+                    description=_(u'如：b1946ac92492d2347c6235b4d2611184<br>请查看您的公众号 “开发->基本设置”'),
+                    validators=[Required(message=_(u'请填写开发者密码(AppSecret)'))])
+
+    mp_verify = FileField(_(u'公众号校验文件'), 
+                    description=_(u'如：MP_verify_zprDbONIS74q99hQ.txt<br>请前往您的公众号 “设置 -> 公众号设置 -> 功能设置 -> 业务域名” 下载校验文件'), 
+                    validators=[
+                        FileRequired(_(u'文件未上传')), 
+                        FileAllowed(UploadSet('text', TEXT), message=_(u'只允许上传txt文本文件'))
+                ])
+
+
+class WeixinPayForm(Form):
+    mch_id = StringField(label=_(u'微信支付商户号'),
+                    description=_(u'如：1400590602，请查看您的商户平台 "帐户中心 -> 帐户设置 -> 商户信息 -> 基本帐户信息"'),
+                    validators=[Required(message=_(u'请填写微信支付商户号'))])
+    
+    partner_key = StringField(label=_(u'微信支付商户密钥'),
+                    description=_(u'请查看您的商户平台 "帐户中心 -> 帐户设置 -> API安全 -> API密钥"'),
+                    validators=[Required(message=_(u'请填写微信支付商户密钥'))])
+    
+
 
 
 class SmsYunpianForm(Form):

@@ -4,7 +4,8 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    {{ libs.setting_page_tabs('storage') }}
+    {{ libs.setting_page_tabs() }}
+
     <!-- .row -->
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -13,22 +14,11 @@
           <p class="text-muted m-b-30 font-13">
             七牛云是国内领先的以视觉智能和数据智能为核心的企业级云计算服务商，同时也是国内最有特色的智能视频云服务商，累计为 70 多万家企业提供服务，覆盖了国内80%网民。围绕富媒体场景推出了对象存储、融合 CDN 加速、容器云、大数据平台、深度学习平台等产品、并提供一站式智能视频云解决方案。为各行业及应用提供可持续发展的智能视频云生态，帮助企业快速上云，创造更广阔的商业价值。
           </p>
-          <div class="m-b-40">
-            <ul class="nav customtab nav-tabs" role="tablist">
-              <li role="presentation" class="active">
-                <a href="{{ url_for('admin.config.storage_qiniu') }}" aria-controls="alioss" role="tab" aria-expanded="true" style="background:none !important">
-                  <span class="visible-xs">{{_('七牛云')}}</span>
-                  <span class="hidden-xs">{{_('七牛云')}}</span>
-                </a>
-              </li>
-              <li role="presentation" class="">
-                <a href="{{ url_for('admin.config.storage_alioss') }}" aria-controls="qiniu" role="tab" aria-expanded="false" style="background:none !important">
-                  <span class="visible-xs">{{_('阿里云OSS')}}</span>
-                  <span class="hidden-xs">{{_('阿里云OSS')}}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+
+          {{ libs.build_tabs(tabs=[
+            {'label':_('七牛云'), 'endpoint':'admin.config.storage_qiniu'},
+            {'label':_('阿里云OSS'), 'endpoint':'admin.config.storage_alioss'},
+          ], border_bottom='line') }}
 
           {# 七牛form表单 #}
           {{ libs.render_form(form, action=url_for('admin.config.storage_qiniu')) }}

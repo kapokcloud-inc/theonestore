@@ -1,6 +1,4 @@
 {% extends '/default/admin/layout/base.html.j2' %}
-{% import '/default/admin/libs/libs.html.j2' as libs %}
-{% import '/default/admin/libs/const.html.j2' as const %}
 
 {% block head %}
 <!-- Color picker plugins css -->
@@ -15,11 +13,11 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    {{ libs.build_listpage_tabs('platform_type', tabs=[
-        {'label':_('全部'), 'value':0, 'url':url_for('admin.adv.index')},
-        {'label':_('移动端'), 'value':1, 'url':url_for('admin.adv.index', platform_type='1')},
-        {'label':_('PC端'), 'value':2, 'url':url_for('admin.adv.index', platform_type='2')},
-      ], btns=[{'label':_('添加广告'), 'href':url_for('admin.adv.create')}]) }}
+    {{ libs.build_tabs([
+        {'label':_('全部'), 'value':0, 'endpoint':'admin.adv.index'},
+        {'label':_('移动端'), 'value':1, 'endpoint':'admin.adv.index'},
+        {'label':_('PC端'), 'value':2, 'endpoint':'admin.adv.index'},
+      ], 'platform_type', btns=[{'label':_('添加广告'), 'href':url_for('admin.adv.create')}]) }}
 
     <div class="row">
       <div class="col-lg-12">

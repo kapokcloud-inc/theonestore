@@ -35,7 +35,8 @@ from flask_uploads import (
     configure_uploads as flask_configure_uploads, 
     patch_request_class,
     DOCUMENTS,
-    IMAGES
+    IMAGES,
+    TEXT
 )
 from flask_wtf.file import FileAllowed
 from sqlalchemy import func
@@ -78,10 +79,12 @@ def configure_uploads(app):
     app.config['UPLOADED_FILES_DEST'] = UPLOADED_FILES_DEST
     app.config['UPLOADED_DOCUMENTS_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'documents')
     app.config['UPLOADED_IMAGES_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'images')
+    app.config['UPLOADED_TEXT_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'text')
 
     documents = UploadSet('documents', DOCUMENTS)
     images = UploadSet('images', IMAGES)
-    flask_configure_uploads(app, (documents, images))
+    text = UploadSet('text', TEXT)
+    flask_configure_uploads(app, (documents, images, text))
     
     # 最大上传文件大小64M，MAX_CONTENT_LENGTH=64*1024*1024
     patch_request_class(app)
