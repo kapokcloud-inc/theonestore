@@ -10,3 +10,5 @@ Flask-Uploads==0.2.1
 uuid==1.30
 qiniu==7.2.2
 oss2==2.5.0
+qrcode==6.0
+pillow==5.2.0

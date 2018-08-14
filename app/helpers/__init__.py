@@ -191,8 +191,12 @@ def urlencode(params):
 
     _params = params.copy()
     for k,v in params.items():
-        if isinstance(v, types.StringType) or isinstance(v, types.UnicodeType):
-            _params[k] = v.encode('utf8')
+        try:
+            if isinstance(v, types.StringType) or isinstance(v, types.UnicodeType):
+                _params[k] = v.encode('utf8')
+        except Exception as e:
+            if isinstance(v, str):
+                _params[k] = v.encode('utf8')
 
     try:
         url = urllib.urlencode(_params)
@@ -204,11 +208,18 @@ def urlencode(params):
 
 def url_push_query(url, key_value_str):
     """url增加query参数"""
+    try:
+        url_tuple = urlparse.urlparse(url)
+    except Exception as e:
+        url_tuple = urllib.parse.urlparse(url)
 
-    url_tuple = urlparse.urlparse(url)
     query     = key_value_str if url_tuple.query == '' else url_tuple.query+'&'+key_value_str
     new_tuple = (url_tuple.scheme, url_tuple.netloc, url_tuple.path, url_tuple.params, query, url_tuple.fragment)
-    url       = urlparse.urlunparse(new_tuple)
+
+    try:
+        url = urlparse.urlunparse(new_tuple)
+    except Exception as e:
+        url = urllib.parse.urlunparse(new_tuple)
 
     return url
 
@@ -347,9 +358,4 @@ def request_args_to_query_string(params, p, ps):
     params['p']  = p
     params['ps'] = ps
 
-    try:
-        url = urllib.urlencode(params)
-    except Exception as e:
-        url = urllib.parse.urlencode(params)
-
-    return url
+    return urlencode(params)

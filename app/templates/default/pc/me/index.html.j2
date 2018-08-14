@@ -24,12 +24,12 @@
           <div class="one-cell">
             <div class="one-cell_hd avatar160" style="position: relative;">
               <input id="image" name="image" class="one-uploader_input" type="file" accept="image/*">
-              <input id="avatar" name="avatar" type="hidden" value="{{  user.avatar }}" />
-              <img id='avatar_img' src="{{ user.avatar }}-square.middle" alt="" class="ava">
+              <input id="avatar" name="avatar" type="hidden" value="{{  session.get('avatar') }}" />
+              <img id='avatar_img' src="{{ session.get('avatar') }}-square.middle" alt="" class="ava">
             </div>
             <div class="one-cell_bd">
               <div class="user-name">
-                <span id="username">{{ user.nickname }}</span>
+                <span id="username">{{ session.get('nickname') }}</span>
                 <input class="changeIpu hide" type="text" value="" placeholder="请输入昵称">
               </div>
               <div class="changeInfo">
