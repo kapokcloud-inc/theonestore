@@ -105,7 +105,13 @@ def checkout():
         if not ret:
             return redirect(url)
 
-        data['openid'] = session.get('jsapi_weixin_openid', '')
+        data['openid']     = ''
+        opentime           = session.get('jsapi_weixin_opentime', 0)
+        current_time       = current_timestamp()
+        is_expire_opentime = opentime < (current_time-30*60)
+        if not is_expire_opentime:
+            data['openid'] = session.get('jsapi_weixin_openid', '')
+
         return render_template('mobile/cart/pay.html.j2', **data)
 
     # 结算页面
