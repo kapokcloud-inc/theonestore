@@ -28,6 +28,7 @@ from flask import (
 from app.database import db
 
 from app.helpers import (
+    log_error,
     log_info,
     toint,
     url_push_query
