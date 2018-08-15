@@ -156,7 +156,7 @@ def weixinjspay_req():
     return resjson.print_json(0, u'ok', {'info':info})
 
 
-@pay.route('/notify')
+@pay.route('/notify', methods=["GET", "POST"])
 def notify():
     """微信支付回调"""
     resjson.action_code = 13
