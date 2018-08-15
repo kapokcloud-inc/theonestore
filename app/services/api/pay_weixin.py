@@ -291,7 +291,6 @@ class JsapiOpenidService(object):
         if not self.code and (not self.openid or is_expire_opentime):
             # 创建获取code的url
             self._code_url()
-
             return True
 
         # 根据微信code获取openid
@@ -300,8 +299,10 @@ class JsapiOpenidService(object):
             self._get_openid()
 
             self.redirect_url = url_for('mobile.cart.checkout', order_id=self.order_id)
-
             return True
+        
+        self.redirect_url = url_for('mobile.cart.checkout', order_id=self.order_id)
+        return True
 
 
 class JsapiNotifyService():
