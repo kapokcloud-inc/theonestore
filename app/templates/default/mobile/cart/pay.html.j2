@@ -203,6 +203,7 @@ function weixin_pay(order_id, openid) {
       }
 
       window.location.href = res.data.code_url;
+      return false;
     });
   }
 
