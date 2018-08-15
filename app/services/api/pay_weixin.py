@@ -343,11 +343,12 @@ class JsapiNotifyService():
     def check(self):
         """检查"""
 
-        repone_xml   = ElementTree.fromstring(self.xml)
-        return_code  = repone_xml.getiterator('result_code')[0].text
-        err_code     = repone_xml.getiterator('err_code')[0].text
-        err_code_des = repone_xml.getiterator('err_code_des')[0].text
+        repone_xml  = ElementTree.fromstring(self.xml)
+        return_code = repone_xml.getiterator('result_code')[0].text
         if return_code != 'SUCCESS':
+            err_code     = repone_xml.getiterator('err_code')[0].text
+            err_code_des = repone_xml.getiterator('err_code_des')[0].text
+
             log_error('[ErrorServiceApiPayWeixinJsapiNotifyServiceVerify][ResponeError]  xml:%s code:%s des:%s' %\
                         (self.xml, err_code, err_code_des))
             return False
