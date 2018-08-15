@@ -191,7 +191,7 @@ class WeiXinLoginService(object):
         # 绑定登录
         utb = UserThirdBind.query.\
                     filter(UserThirdBind.third_type == 1).\
-                    filter(UserThirdBind.third_unionid == unionid).first()
+                    filter(UserThirdBind.third_user_id == openid).first()
         if not utb:
             ucs = UserCreateService(user_data, self.current_time)
             if not ucs.check():
