@@ -63,6 +63,7 @@ configure_uploads(app)
 # 启动form表单csr保护
 csrf = CSRFProtect(app)
 csrf.exempt('app.views.api.upload.ueditor')
+csrf.exempt('app.views.api.pay.notify')
 
 # 注册jinja模板过滤器
 jinja_filters = {
