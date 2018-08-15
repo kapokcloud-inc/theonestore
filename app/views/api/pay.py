@@ -100,19 +100,15 @@ def weixinjspay_openid():
     """获取微信支付openid"""
     resjson.action_code = 11
 
-    redirect_url = request.args.get('redirect_url', '').strip()
-
-    jos = JsapiOpenidService(redirect_url)
+    jos = JsapiOpenidService()
     if not jos.check():
         return resjson.print_json(10, jos.msg)
 
-    redirect_url = jos.set_openid()
-    if redirect_url:
-        return redirect(redirect_url)
+    jos.set_openid()
+    if jos.code_url:
+        return resjson.print_json(0, u'ok', {'code_url':jos.code_url})
 
-    openid = jos.openid
-
-    return resjson.print_json(0, u'ok', {'openid':openid})
+    return redirect(jos.redirect_url)
 
 
 @pay.route('/weixinjspay-req')

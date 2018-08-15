@@ -137,8 +137,6 @@
 
 <script type="text/javascript">
 var $payList = $('#payList');
-var is_weixin = {{ is_weixin }};
-var redirect_url = '{{ redirect_url }}';
 
 //提交订单
 function submit() {
@@ -189,9 +187,7 @@ function funds_pay(order_id) {
 }
 
 //微信支付
-function weixin_pay(order_id) {
-  var openid = '';
-
+function weixin_pay(order_id, openid) {
   //检查
   if ( !order_id ) {
     $.toast("{{_('创建订单失败，请刷新页面重试。')}}", "text");
@@ -199,20 +195,15 @@ function weixin_pay(order_id) {
   }
 
   //获取openid
-  var redirect_url = '{{ request.base_url }}' + '?order_id=' + order_id + '&weixin=1';
-  $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'redirect_url':redirect_url}, function(res) {
-    if (res.ret != 0) {
-      $.toast(res.msg, "text");
-      return false;
-    }
+  if (openid == '') {
+    $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'order_id':order_id}, function(res) {
+      if (res.ret != 0) {
+        $.toast(res.msg, "text");
+        return false;
+      }
 
-    openid = res.data.openid;
-  });
-
-  //检查
-  if ( !openid ) {
-    $.toast("{{_('获取openid失败，请刷新页面重试。')}}", "text");
-    return false;
+      window.location.href = res.data.code_url;
+    });
   }
 
   var order_id_list = '[' + order_id + ']';
@@ -253,7 +244,7 @@ function choose_pay(dom, pay_type) {
       funds_pay(order_id);
     } else if (pay_type == 'weixin_pay') {
       $("#funds_pay").prop('checked', false);
-      weixin_pay(order_id);
+      weixin_pay(order_id, '');
     } else {
       $.toast("{{_('错误的支付方式')}}", "text");
       return false;
@@ -267,10 +258,10 @@ function choose_pay(dom, pay_type) {
 }
 
 //立即调起微信支付
-if (is_weixin == 1) {
+if ({{ openid }} != '') {
   var order_id = parseInt($("#order_id").val());
 
-  weixin_pay(order_id);
+  weixin_pay(order_id, openid);
 }
 </script> 
 {% endblock %}

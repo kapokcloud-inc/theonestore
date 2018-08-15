@@ -105,6 +105,7 @@ def checkout():
         if not ret:
             return redirect(url)
 
+        data['openid'] = session.get('jsapi_weixin_openid', '')
         return render_template('mobile/cart/pay.html.j2', **data)
 
     # 结算页面

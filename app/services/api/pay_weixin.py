@@ -217,11 +217,12 @@ class UnifiedorderService(object):
 class JsapiOpenidService(object):
     """jsapi获取openidService"""
 
-    def __init__(self, redirect_url):
+    def __init__(self):
         self.msg           = u''
-        self.redirect_url  = redirect_url
         self.current_time  = current_timestamp()
+        self.order_id      = 0
         self.code_url      = ''
+        self.redirect_url  = ''
         self.appid         = ''
         self.secret        = ''
         self.code          = ''
@@ -232,7 +233,7 @@ class JsapiOpenidService(object):
         """创建获取code的uri"""
 
         weixin_authorize_url = 'https://open.weixin.qq.com/connect/oauth2/authorize'
-        redirect_uri         = url_push_query(request.url, 'redirect_url=%s' % self.redirect_url)
+        redirect_uri         = url_push_query(request.url, 'order_id=%s' % self.order_id)
         params               = {'redirect_uri':redirect_uri.encode('utf8')}
         redirect_uri_param   = urlencode(params)
         self.code_url        = u'%s?appid=%s&%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect' % (
@@ -247,10 +248,12 @@ class JsapiOpenidService(object):
         params           = {'appid':self.appid.encode('utf8'), 'secret':self.secret.encode('utf8'),
                             'code':self.code.encode('utf8'), 'grant_type':'authorization_code'.encode('utf8')}
 
-        url         = u'%s?%s' % (access_token_url, urlencode(params))
-        res         = requests.get(url)
-        jsonobj     = res.json()
-        self.openid = jsonobj['openid']
+        url     = u'%s?%s' % (access_token_url, urlencode(params))
+        res     = requests.get(url)
+        jsonobj = res.json()
+
+        session['jsapi_weixin_openid']   = jsonobj['openid']
+        session['jsapi_weixin_opentime'] = self.current_time
 
     def check(self):
         """检查"""
@@ -278,7 +281,8 @@ class JsapiOpenidService(object):
     def set_openid(self):
         """设置openid"""
 
-        self.code          = request.args.get('code', '')
+        self.code          = request.args.get('code', '').strip()
+        self.order_id      = toint(request.args.get('order_id', '0'))
         self.openid        = session.get('jsapi_weixin_openid', '')
         self.opentime      = session.get('jsapi_weixin_opentime', 0)
         is_expire_opentime = self.opentime < (self.current_time-30*60)
@@ -288,18 +292,16 @@ class JsapiOpenidService(object):
             # 创建获取code的url
             self._code_url()
 
-            return self.code_url
+            return True
 
         # 根据微信code获取openid
         if self.code and (not self.openid or is_expire_opentime):
+            # 获取openid
             self._get_openid()
 
-            session['jsapi_weixin_openid']   = self.openid
-            session['jsapi_weixin_opentime'] = self.current_time
+            self.redirect_url = url_for('mobile.cart.checkout', order_id=self.order_id)
 
-            return request.args.get('redirect_url')
-
-        return ''
+            return True
 
 
 class JsapiNotifyService():
