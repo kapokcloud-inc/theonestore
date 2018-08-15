@@ -198,13 +198,8 @@ function onBridgeReady() {
         return true;
       }
 
-      if (res.err_msg == "get_brand_wcpay_request:cancel") {
-        alert('cancel');
-        return true;
-      }
-
       if (res.err_msg == "get_brand_wcpay_request:fail") {
-        alert('fail');
+        alert("{{_('调起支付失败！')}}");
         return true;
       }
     }
