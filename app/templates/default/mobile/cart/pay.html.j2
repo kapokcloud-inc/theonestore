@@ -186,6 +186,19 @@ function funds_pay(order_id) {
   });
 }
 
+//调起微信支付
+function onBridgeReady(info) {
+  WeixinJSBridge.invoke(
+    'getBrandWCPayRequest', info, function(res){
+      //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+      if (res.err_msg == "get_brand_wcpay_request:ok" ) {
+        window.location.href = '{{ pay_success_url }}';
+        return true;
+      }
+    }
+  );
+}
+
 //微信支付
 function weixin_pay(order_id, openid) {
   //检查
@@ -213,16 +226,16 @@ function weixin_pay(order_id, openid) {
         return false;
       }
 
-      //调起支付
-      WeixinJSBridge.invoke(
-          'getBrandWCPayRequest', res.data.info, function(res){
-              //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-              if (res.err_msg == "get_brand_wcpay_request:ok" ) {
-                  window.location.href = "/mobile/pay/success/"+order_id;
-                  return true;
-              }
-          }
-      );
+      if (typeof WeixinJSBridge == "undefined") {
+        if ( document.addEventListener ) {
+          document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        } else if (document.attachEvent) {
+          document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+          document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+      } else {
+        onBridgeReady();
+      }
     });
   }
 

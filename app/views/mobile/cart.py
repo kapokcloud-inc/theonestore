@@ -112,6 +112,7 @@ def checkout():
         if not is_expire_opentime:
             data['openid'] = session.get('jsapi_weixin_openid', '')
 
+        data['pay_success_url'] = url_for('mobile.pay.success', order_id=order_id)
         return render_template('mobile/cart/pay.html.j2', **data)
 
     # 结算页面
