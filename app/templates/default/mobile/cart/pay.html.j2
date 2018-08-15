@@ -137,6 +137,7 @@
 
 <script type="text/javascript">
 var $payList = $('#payList');
+var openid = '{{ openid }}';
 
 //提交订单
 function submit() {
@@ -191,17 +192,17 @@ function onBridgeReady(info) {
   WeixinJSBridge.invoke(
     'getBrandWCPayRequest', info, function(res){
       //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-      if (res.err_msg == "get_brand_wcpay_request:ok" ) {
+      if (res.err_msg == "get_brand_wcpay_request:ok") {
         window.location.href = '{{ pay_success_url }}';
         return true;
       }
 
-      if (res.err_msg == "get_brand_wcpay_request:cancel" ) {
+      if (res.err_msg == "get_brand_wcpay_request:cancel") {
         alert('cancel');
         return true;
       }
 
-      if (res.err_msg == "get_brand_wcpay_request:fail" ) {
+      if (res.err_msg == "get_brand_wcpay_request:fail") {
         alert('fail');
         return true;
       }
@@ -210,7 +211,7 @@ function onBridgeReady(info) {
 }
 
 //微信支付
-function weixin_pay(order_id, openid) {
+function weixin_pay(order_id) {
   //检查
   if ( !order_id ) {
     $.toast("{{_('创建订单失败，请刷新页面重试。')}}", "text");
@@ -268,7 +269,7 @@ function choose_pay(dom, pay_type) {
       funds_pay(order_id);
     } else if (pay_type == 'weixin_pay') {
       $("#funds_pay").prop('checked', false);
-      weixin_pay(order_id, '');
+      weixin_pay(order_id);
     } else {
       $.toast("{{_('错误的支付方式')}}", "text");
       return false;
@@ -282,10 +283,10 @@ function choose_pay(dom, pay_type) {
 }
 
 //立即调起微信支付
-if ('{{ openid }}') {
+if (openid) {
   var order_id = parseInt($("#order_id").val());
 
-  weixin_pay(order_id, '{{ openid }}');
+  weixin_pay(order_id);
 }
 </script> 
 {% endblock %}
