@@ -195,6 +195,16 @@ function onBridgeReady(info) {
         window.location.href = '{{ pay_success_url }}';
         return true;
       }
+
+      if (res.err_msg == "get_brand_wcpay_request:cancel" ) {
+        alert('cancel');
+        return true;
+      }
+
+      if (res.err_msg == "get_brand_wcpay_request:fail" ) {
+        alert('fail');
+        return true;
+      }
     }
   );
 }
