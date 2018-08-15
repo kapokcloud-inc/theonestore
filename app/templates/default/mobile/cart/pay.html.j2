@@ -205,28 +205,28 @@ function weixin_pay(order_id, openid) {
       window.location.href = res.data.code_url;
       return false;
     });
+  } else {
+    var order_id_list = '[' + order_id + ']';
+    $.get("{{ url_for('api.pay.weixinjspay_req') }}", {'order_id_list':order_id_list, 'openid':openid}, function(res) {
+      if (res.ret != 0) {
+        $.toast(res.msg, "text");
+        return false;
+      }
+
+      //调起支付
+      WeixinJSBridge.invoke(
+          'getBrandWCPayRequest', res.data.info, function(res){
+              //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+              if (res.err_msg == "get_brand_wcpay_request:ok" ) {
+                  window.location.href = "/mobile/pay/success/"+order_id;
+                  return true;
+              }
+          }
+      );
+    });
   }
 
-  var order_id_list = '[' + order_id + ']';
-  $.get("{{ url_for('api.pay.weixinjspay_req') }}", {'order_id_list':order_id_list, 'openid':openid}, function(res) {
-    if (res.ret != 0) {
-      $.toast(res.msg, "text");
-      return false;
-    }
-
-    //调起支付
-    WeixinJSBridge.invoke(
-        'getBrandWCPayRequest', res.data.info, function(res){
-            //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-            if (res.err_msg == "get_brand_wcpay_request:ok" ) {
-                window.location.href = "/mobile/pay/success/"+order_id;
-                return true;
-            }
-        }
-    );
-  });
-
-  return false;
+  return true;
 }
 
 //选择支付
