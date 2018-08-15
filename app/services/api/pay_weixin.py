@@ -379,7 +379,7 @@ class JsapiNotifyService():
     def verify(self):
         """验证签名"""
 
-        params = xml2json(self.xml)
+        params = xml2json(self.xml)['xml']
         _sign  = params.get('sign', '')
 
         params.pop('sign')
