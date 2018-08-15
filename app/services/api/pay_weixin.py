@@ -301,7 +301,7 @@ class JsapiOpenidService(object):
             self.redirect_url = url_for('mobile.cart.checkout', order_id=self.order_id)
             return True
         
-        self.redirect_url = url_for('mobile.cart.checkout', order_id=self.order_id)
+        self.code_url = url_for('mobile.cart.checkout', order_id=self.order_id)
         return True
 
 
