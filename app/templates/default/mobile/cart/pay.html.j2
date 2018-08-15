@@ -259,10 +259,10 @@ function choose_pay(dom, pay_type) {
 }
 
 //立即调起微信支付
-if ("{{ openid }}") {
+if ('{{ openid }}') {
   var order_id = parseInt($("#order_id").val());
 
-  weixin_pay(order_id, openid);
+  weixin_pay(order_id, '{{ openid }}');
 }
 </script> 
 {% endblock %}
