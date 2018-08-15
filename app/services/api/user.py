@@ -19,6 +19,7 @@ from app.helpers import (
 )
 from app.helpers.date_time import current_timestamp
 
+from app.models.funds import Funds
 from app.models.message import Message
 from app.models.user import (
     User,
@@ -63,10 +64,14 @@ class UserStaticMethodsService(object):
     """用户静态方法Service"""
 
     @staticmethod
-    def create_account(uid, is_commit=False):
+    def create_account(uid, current_time, is_commit=False):
         """创建帐户"""
 
-        model_create(UserLastTime, {'uid':uid, 'last_type':1, 'last_time':0}, commit=is_commit)
+        data = {'uid':uid, 'last_type':1, 'last_time':0}
+        model_create(UserLastTime, data, commit=is_commit)
+
+        data = {'uid':uid, 'funds':0, 'add_time':current_time, 'update_time':current_time}
+        model_create(Funds, data, commit=is_commit)
 
         return True
 

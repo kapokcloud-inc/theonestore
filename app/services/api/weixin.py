@@ -203,7 +203,7 @@ class WeiXinLoginService(object):
             user = ucs.user
 
             # 创建帐户
-            UserStaticMethodsService.create_account(user.uid, is_commit=False)
+            UserStaticMethodsService.create_account(user.uid, self.current_time, is_commit=False)
 
             # 创建绑定
             data = {'uid':user.uid, 'third_type':1,
