@@ -138,6 +138,7 @@
 <script type="text/javascript">
 var $payList = $('#payList');
 var openid = '{{ openid }}';
+var pay_info = null;
 
 //提交订单
 function submit() {
@@ -188,9 +189,9 @@ function funds_pay(order_id) {
 }
 
 //调起微信支付
-function onBridgeReady(info) {
+function onBridgeReady() {
   WeixinJSBridge.invoke(
-    'getBrandWCPayRequest', info, function(res){
+    'getBrandWCPayRequest', pay_info, function(res){
       //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
       if (res.err_msg == "get_brand_wcpay_request:ok") {
         window.location.href = '{{ pay_success_url }}';
@@ -237,6 +238,8 @@ function weixin_pay(order_id) {
         return false;
       }
 
+      pay_info = res.data.info;
+
       if (typeof WeixinJSBridge == "undefined"){
         if( document.addEventListener ){
           document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
@@ -245,7 +248,7 @@ function weixin_pay(order_id) {
           document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
         }
       }else{
-        onBridgeReady(res.data.info);
+        onBridgeReady();
       }
     });
   }
