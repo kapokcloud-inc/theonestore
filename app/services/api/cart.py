@@ -234,7 +234,9 @@ class CartStaticMethodsService(object):
         funds         = Funds.query.filter(Funds.uid == uid).first()
 
         shipping_title = _(u'%s  ￥%s(满￥%s免运费)' %\
-                            (order.shipping_name, order.shipping_amount, order.free_limit_amount))
+                            (order.shipping_name,
+                            toamount(order.shipping_amount),
+                            toamount(order.free_limit_amount)))
 
         data = {'order':order, 'order_address':order_address, 'coupon':coupon,
                 'shipping_title':shipping_title, 'funds':funds.funds, 'is_weixin':is_weixin}

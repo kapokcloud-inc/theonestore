@@ -44,7 +44,7 @@
           <div class="all_desc height25">{{ item.goods_desc }}</div>
         </div>
         <div class="weui-cell__ft mar-left">
-          <span class="all_price height25">￥{{ item.goods_price }}</span>
+          <span class="all_price height25">￥{{ item.goods_price|toamount }}</span>
           <p class="height25">x {{ item.quantity }}</p>
         </div>
       </div>
@@ -66,15 +66,15 @@
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('商品总价')}}</label>
-          <span class="weui-form-preview__value">￥{{ order.goods_amount }}</span>
+          <span class="weui-form-preview__value">￥{{ order.goods_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('运费')}}</label>
-          <span class="weui-form-preview__value">+￥{{ order.shipping_amount }}</span>
+          <span class="weui-form-preview__value">+￥{{ order.shipping_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('优惠金额')}}</label>
-          <span class="weui-form-preview__value">-￥{{ order.discount_amount }}</span>
+          <span class="weui-form-preview__value">-￥{{ order.discount_amount|toamount }}</span>
         </div>
       </div>
     </div>
@@ -85,7 +85,7 @@
       <div class="total">
         <div class="total-price">
           <span>{{_('支付金额')}}：</span>
-          <span class="all_price" style="font-size:18px">￥{{ order.pay_amount }}</span>
+          <span class="all_price" style="font-size:18px">￥{{ order.pay_amount|toamount }}</span>
         </div>
         <input id="order_id" type="hidden" value="{{ order.order_id }}" />
         <div class="btn_primary" onclick="submit()">{{_('提交订单')}}</div>
