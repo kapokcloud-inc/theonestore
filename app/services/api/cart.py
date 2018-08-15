@@ -233,7 +233,7 @@ class CartStaticMethodsService(object):
         coupon        = Coupon.query.filter(Coupon.order_id == order_id).first()
         funds         = Funds.query.filter(Funds.uid == uid).first()
 
-        shipping_title = _(u'%s&nbsp;&nbsp;￥%s(满￥%s免运费)' %\
+        shipping_title = _(u'%s￥%s(满￥%s免运费)' %\
                             (order.shipping_name,
                             toamount(order.shipping_amount),
                             toamount(order.free_limit_amount)))
@@ -328,13 +328,13 @@ class CartStaticMethodsService(object):
         # 快递
         shipping_list  = []
         for _s in _shipping_list:
-            titel    = _(u'%s&nbsp;&nbsp;￥%s(满￥%s免运费)' %\
+            titel    = _(u'%s￥%s(满￥%s免运费)' %\
                         (_s.shipping_name, toamount(_s.shipping_amount), toamount(_s.free_limit_amount)))
             shipping = u'{"title":"%s", "value":%s}' % (titel, _s.shipping_id)
             shipping_list.append(shipping)
         shipping_list  = ','.join(shipping_list)
         shipping_list  = '[%s]' % shipping_list
-        shipping_title = _(u'%s&nbsp;&nbsp;￥%s(满￥%s免运费)' %\
+        shipping_title = _(u'%s￥%s(满￥%s免运费)' %\
                             (default_shipping.shipping_name,
                             toamount(default_shipping.shipping_amount),
                             toamount(default_shipping.free_limit_amount)))
