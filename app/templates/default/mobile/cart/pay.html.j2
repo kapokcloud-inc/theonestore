@@ -245,7 +245,7 @@ function weixin_pay(order_id) {
           document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
         }
       } else {
-        onBridgeReady();
+        onBridgeReady(res.data.info);
       }
     });
   }
