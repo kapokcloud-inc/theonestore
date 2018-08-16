@@ -43,7 +43,7 @@
 var openid = '{{ openid }}';
 var pay_info = null;
 
-var csrftoken = $('#csrf_token').val();
+var csrftoken = "{{ csrf_token() }}";
 $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
