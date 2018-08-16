@@ -55,13 +55,14 @@ def apply():
         return resjson.print_json(11, msg)
 
     og_id           = toint(request.form.get('og_id', '0'))
+    order_id        = toint(request.form.get('order_id', '0'))
     quantity        = toint(request.form.get('quantity', '0'))
     aftersales_type = toint(request.form.get('aftersales_type', '0'))
     deliver_status  = toint(request.form.get('deliver_status', '0'))
     content         = request.form.get('content', '').strip()
     img_data        = request.form.get('img_data', '[]').strip()
 
-    data = {'uid':uid, 'order_id':0, 'og_id':og_id, 'quantity':quantity,
+    data = {'uid':uid, 'order_id':order_id, 'og_id':og_id, 'quantity':quantity,
             'aftersales_type':aftersales_type, 'deliver_status':deliver_status,
             'content':content, 'img_data':img_data}
     ascs = AfterSalesCreateService(**data)
