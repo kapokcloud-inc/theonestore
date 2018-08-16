@@ -65,12 +65,11 @@
                           </div>
                           <div class="one-cell_bd">
                             <p class="blackGap">{{ order_good.goods_name }}</p>
-                            <!-- <p class="blackGap mar-top">数量：{{ order_good.goods_quantity - order_good.aftersales_goods_quantity }}</p> -->
                             <div class="apply-service_num mar-top">
-                              <i class="num_minus" onclick=""></i>
-                              <input class="num_ipt change_cart_quantity" type="text" id="" name=""
-                                value="3" data-cart-id="" data-value="" minnum="1">
-                              <i class="num_add" onclick=""></i>
+                              {% set remain_num = order_good.goods_quantity - order_good.aftersales_goods_quantity %}
+                              <i class="num_minus"></i>
+                              <input class="num_ipt change_cart_quantity" type="text" id="remain_quantity" value="{{ remain_num }}"  minnum="1" maxnum='{{ remain_num }}'>
+                              <i class="num_add"></i>
                             </div>
                           </div>
                         </div>
@@ -83,9 +82,11 @@
                 <div class="section-bd">
                   <ul class="aftersales-type_list clearfix">
                     {% if 7 in code %}
+                      {% set service_text = "抱歉，您的商品没有符合的服务!" %}
                       <!-- 发货前的售后服务类型 -->
-                      {% if aftersale_status==1 and not aftersale %}
-                        <li class="aftersales-type_item allActive" data-value="1">{{_('仅退款')}}</li>
+                      {% if aftersale_status==1 %}
+                        <li class="aftersales-type_item" data-value="1">{{_('仅退款')}}</li>
+                        {% set service_text = "您的商品支持仅退款服务" %}
                       {% endif %}
                       <!-- 发货后的售后服务类型 -->
                       {% if aftersale_status==2 %}
@@ -93,40 +94,41 @@
                         {% set limit_time1 = order.shipping_time|before_after_timestamp({'days':15}) %}
                         <!-- 发货后7天内，支持退货退款和换货服务 -->
                         {% if limit_time >= current_time %}
-                          <li class="aftersales-type_item allActive" data-value="2">{{_('退货退款')}}</li>
+                          <li class="aftersales-type_item" data-value="2">{{_('退货退款')}}</li>
                           <li class="aftersales-type_item" data-value="3">{{_('仅换货')}}</li>
+                          {% set service_text = "您的商品支持退货退款、仅换货服务" %}
                         {% elif limit_time1 >= current_time %}
-                          <li class="aftersales-type_item allActive" data-value="3">{{_('仅换货')}}</li>
+                          <li class="aftersales-type_item" data-value="3">{{_('仅换货')}}</li>
+                          {% set service_text = "您的商品支持仅换货服务" %}
                         {% endif %}
                       {% endif %}
                     {% endif %}
                   </ul>
-                  <p class="greyGap">* 您的商品支持退货退款、仅换货服务</p>
+                  <p class="greyGap">* {{ service_text }}</p>
                 </div>
                 <div class="choice-goods">
                   <p class="choice-goods_title">产品问题描述</p>
                 </div>
                 <div class="section-bd">
                   <div>
-                    <textarea class="aftersales-reason" name="" id="" placeholder="请输入具体问题..."></textarea>
+                    <textarea class="aftersales-reason" name="" id="content" placeholder="请输入具体问题..."></textarea>
                   </div>
                   <p class="label-title">{{_('上传商品图片（单张不超过3MB。请注意拍摄画质尽量清晰，突出商品问题。非必填项）')}}</p>
                   <div class="one-uploader">
                     <div class="one-uploader_bd">
-                      <ul class="one-uploader_files" id="uploaderFiles">
-                        <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531116730.76137577!200x200.jpg')"></li>
-                        <li class="one-uploader_file" style="background-image:url('https://i1.mifile.cn/a1/pms_1531116947.09778771!200x200.jpg')"></li>
-                        <li class="one-uploader_file" style="background-image:url('http://i1.mifile.cn/a1/pms_1531878001.22998509!200x200.jpg')"></li>
-                      </ul>
+                      <ul class="one-uploader_files" id="uploaderFiles"></ul>
                       <div class="one-uploader_input-box">
-                        <input id="uploaderInput" class="one-uploader_input" type="file" accept="image/*" multiple="">
+                        <input id="uploaderInput" name="image" class="one-uploader_input" type="file" accept="image/*" multiple="">
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div class="reg-btn">
-                  <a id="btn_next" class="one-btn btn-primary" href="{{ url_for('pc.aftersales.apply_step2') }}">{{_('下一步')}}</a>
+                  {{ wtf_form.csrf_token }}
+                  <input id="order_id" name="order_id" type="hidden" value="{{ order.order_id }}" />
+                  <input id="og_id" name="og_id" type="hidden" value="{{ order_good.og_id }}" />
+                  <a id="btn_next" class="one-btn btn-primary" onclick="return doNext()">{{_('下一步')}}</a>
                 </div>
               </div>
           </div>
@@ -138,18 +140,99 @@
 {% endblock %}
 
 {% block script %}
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/vendor/jquery.ui.widget.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.iframe-transport.js"></script>
+<script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
 <script type="text/javascript">
+var csrftoken = $('#csrf_token').val();
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
+//切换服务选中状态
 $(".aftersales-type_item").click(function () {
   $(this).addClass('allActive').siblings().removeClass('allActive');
-  var aftersaale_type = $(this).getAttribute("data-value");
-  if(aftersaale_type=="3"){
-    $('#btn_next').attr('href',"{{ url_for('pc.aftersales.apply_step2') }}");
-    $('#btn_next').text("下一步");
-  }else{
-    $('#btn_next').attr('href',"{{ url_for('pc.aftersales.apply_step3') }}");
-    $('#btn_next').text("提交申请");
-  }
 
+  
 });
+
+//点击数量减号
+$('.num_minus').click(function (e) {
+
+    var $input = $('#remain_quantity');
+    var MIN    = parseInt($input.attr('minnum'));
+    var number = parseInt($input.val() || "0") - 1;
+  
+    if (number < MIN) number = MIN;
+    $input.val(number);
+  })
+
+  //点击数量加号
+$('.num_add').click(function (e) {
+    var $input = $('#remain_quantity');
+    var MAX    = parseInt($input.attr('maxnum'));
+    var number = parseInt($input.val() || "0") + 1;
+
+    if (number > MAX) number = MAX;
+    $input.val(number);
+  })
+
+//图片上传
+$('#uploaderInput').fileupload({
+    url: "{{ url_for('api.upload.image') }}",
+    dataType: 'json',
+    formData:{'prefix':'comment'},
+    done: function (e, data) {
+      if(data.result.ret == 0) {
+        var image = data.result.data.image;
+        var html_text = '<li class="one-uploader_file" style="background-image:url(' + image + ')" data-value="'+image+'"></li>';
+        $("#uploaderFiles").append(html_text);
+      }
+    }
+});
+
+//点击下一步按钮
+function doNext(){
+  var aftersales_type = $('li.allActive').attr("data-value");
+
+  var order_id = $("#order_id").val();
+  var content = $("#content").val();
+  var images = [];
+  $(".one-uploader_file").each(function(i){
+    images.push($(this).attr('data-value'));
+  });
+  var img_data = JSON.stringify(images);
+
+  if( aftersales_type == 1 ){//整单退款，提交申请
+
+    var params = {'order_id':order_id, 'aftersales_type':1, 'deliver_status':0, 'content':content, 'img_data':img_data};
+    
+  }else if( aftersales_type == 2 ){//单商品退货退款，提交申请
+
+    var og_id = parseInt($("#og_id").val());
+    var quantity =  parseInt($("#remain_quantity").val());
+    var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':2, 'deliver_status':2, 'content':content, 'img_data':img_data, 'name':"", 'mobile':"", 'province':"", 'city':"", 'district':"",'address':""};
+
+  }else if ( aftersales_type == 3 ){//但商品换货，进入地址编辑页
+
+  }else{
+    alert('请选择售后服务类型')
+    return false;
+  }
+  //仅退款和退货退款直接提交申请
+  if(aftersales_type == 1 || aftersales_type == 2){
+    $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
+      if (json.ret == 0) {
+        aftersales_id = json.data.aftersales_id
+        //window.location.href = "{{ url_for('pc.aftersales.apply_step3') }}" + "?aftersales_type=" + aftersales_type + "&aftersales_id=" + aftersales_id;
+      } else {
+        alert(json.msg,'text');
+        return false;
+      }
+    });
+  }
+  
+}
+
 </script>
 {% endblock%}
