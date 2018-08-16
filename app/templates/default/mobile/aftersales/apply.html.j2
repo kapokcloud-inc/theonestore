@@ -93,7 +93,7 @@
       </div>
     </div>
   </div>
-  <div class="weui-cells weui-cells_form">
+  <div id="refunds_address_box" class="weui-cells weui-cells_form" style="display:none;">
     <div class="weui-cell">
       <div class="weui-cell__bd">
         <div class="blackGap mar-bottom">{{_('收货寄回地址')}}</div>
@@ -196,10 +196,12 @@ function change_type(dom, type) {
 
   if (type == 3) {
     $("#refunds_amount_box").hide();
+    $("#refunds_address_box").show();
   } else {
     refunds_amount();
 
     $("#refunds_amount_box").show();
+    $("#refunds_address_box").hide();
   }
 
   $("#aftersales_type").val($(dom).attr('data-value'));
@@ -232,14 +234,6 @@ function submit() {
   var deliver_status = $("#deliver_status").attr('data-values');
   var content = $("#content").val();
   var img_data = $("#img_data").val();
-  var name = $("#edit_address_name").val();
-  var mobile = $("#edit_address_mobile").val();
-  var pcd = $("#edit_address_pcd").val();
-  var address = $("#edit_address_address").val();
-  var pcd_arr = pcd.split(' ');
-  var province = pcd_arr[0];
-  var city = pcd_arr[1];
-  var district = pcd_arr[2];
 
   if (aftersales_type == 2 || aftersales_type == 3) {
     deliver_status = 2;
@@ -247,6 +241,25 @@ function submit() {
 
   var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':aftersales_type, 'deliver_status':deliver_status, 'content':content, 'img_data':img_data, 'name':name, 'mobile':mobile, 'province':province, 'city':city, 'district':district,
   'address':address};
+
+  if (aftersales_type == 3) {
+    var name = $("#edit_address_name").val();
+    var mobile = $("#edit_address_mobile").val();
+    var pcd = $("#edit_address_pcd").val();
+    var address = $("#edit_address_address").val();
+    var pcd_arr = pcd.split(' ');
+    var province = pcd_arr[0];
+    var city = pcd_arr[1];
+    var district = pcd_arr[2];
+
+    params.name = name;
+    params.mobile = mobile;
+    params.province = province;
+    params.city = city;
+    params.district = district;
+    params.address = address;
+  }
+
   $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
     if (json.ret == 0) {
       window.location.href = "{{ url_for('mobile.aftersales.root') }}";
