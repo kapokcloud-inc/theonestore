@@ -130,15 +130,13 @@ function submit() {
 
         $("#order_id").val(order_id);
         weixin_pay(order_id);
-        return true;
       } else {
         $.toast(json.msg, "text");
-        return false;
       }
     });
+  } else {
+    weixin_pay(order_id);
   }
-
-  weixin_pay(order_id);
 }
 
 //立即调起微信支付
