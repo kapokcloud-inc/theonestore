@@ -5,7 +5,6 @@
 {% block head %}
 <title>{{_('商品详情页 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/item.css">
-<link rel="stylesheet" href="/static/default/pc/css/swiper.min.css">
 <link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
 
@@ -222,10 +221,11 @@
                           <div class="review_cnt">{{ comment.content }}</div>
                           {% if comment.img_data %}
                           <ul class="comment-img_wrap">
-                            {% set imgs = comment.img_data|json_loads %} {% for img in imgs %}
-                            <li class="commentImg">
-                              <img src="{{ img }}" alt="">
-                            </li>
+                            {% set imgs = comment.img_data|json_loads %} 
+                            {% for img in imgs %}
+                              <li class="commentImg">
+                                <img  src="{{ img }}-square.middle" alt="">
+                              </li>
                             {% endfor %}
                           </ul>
                           {% endif %}
@@ -276,7 +276,26 @@
           <i class="icon-cancel"></i>
         </a>
       </div>
-      <!-- 商品相册点击放大，左右滑动 end -->
+      <!-- 商品相册点击放大 end -->
+
+      <!-- 评价图片点击放大 -->
+      <div class="hide-mask hide" id="giant-comment">
+        <div class="zoom-big-block">
+          <div class="bigImg-com">
+            <img id="giantCom" src="" alt="">
+          </div>
+        </div>
+        <a class="image-num_first" id="comment-prev" href="javascript:;">
+          <i class="icon-xiaoyu"></i>
+        </a>
+        <a class="image-num_last" id="comment-next" href="javascript:;">
+          <i class="icon-dayu"></i>
+        </a>
+        <a class="bigimage" id="comment-close" href="javascript:;">
+          <i class="icon-cancel"></i>
+        </a>
+      </div>
+      <!-- 评价图片点击放大 end -->
     </div>
     <!-- 商品并未在后台被删除的时候显示 end -->
   {% else %}
@@ -296,28 +315,73 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+  // 点击切换商品详情和商品评价
+  $(".detail-nav_list li").off("click").on("click", function () {
+    var index = $(this).index();
+    $(this).addClass("allOn").siblings().removeClass("allOn");
+    $("#cntBox .allCnt").eq(index).addClass("show").siblings().removeClass("show");
+  });
+
   // 商品相册点击放大事件
   $('#bigpic').click(function() {
     showGiant();
-    $('#giant-div').fadeIn(1000);
     $('#giant-div').addClass('show').removeClass('hide');
   });
 
-  //点击上一张按钮事件
+  // 商品相册点击上一张按钮事件
   $('#giant-prev').bind('click', prevGiant);
 
-  //点击下一张按钮事件
+  // 商品相册点击下一张按钮事件
   $('#giant-next').bind('click', nextGiant);
 
-  //点击关闭商品相册
+  // 点击关闭商品相册事件
   $('#giant-close').click(function(){
     closeGiant();
     $('#giant-div').addClass('hide').removeClass('show');
   });
+
+  // 评论图片点击事件
+  commentImgClick();
+  
 });
 
 /**
- * 显示最大图
+ * 评论图片点击事件
+ */
+function commentImgClick() {
+  // 点击评价图片放大事件
+  $('.commentImg').click(function () {
+    var $current = $(this);
+    showCommentGiant($current);
+    $('#giant-comment').addClass('show').removeClass('hide');
+
+    // 评价图片点击上一张按钮事件
+    $('#comment-prev').click(function () {
+      $current = $current.prev();
+      var img_url = $current.find('img').attr('src');
+      var img_url_giant = img_url.replace('-square.middle', '-rectangle.w720');
+      $('#giantCom').attr("src", img_url_giant);
+      showCommentGiant($current);
+    });
+
+    // 评价图片点击下一张按钮事件
+    $('#comment-next').click(function () {
+      $current = $current.next();
+      var img_url = $current.find('img').attr('src');
+      var img_url_giant = img_url.replace('-square.middle', '-rectangle.w720');
+      $('#giantCom').attr("src", img_url_giant);
+      showCommentGiant($current);
+    });
+  });
+
+  // 点击关闭评价图片事件
+  $('#comment-close').click(function () {
+    $('#giant-comment').addClass('hide').removeClass('show');
+  });
+}
+
+/**
+ * 商品相册显示最大图
  */
 function showGiant() {
   var $current = $('.small-pic_item.current');
@@ -340,11 +404,10 @@ function showGiant() {
   } else {
     $('#giant-next').show();
   }
-
 }
 
 /**
- * 上一张最大图
+ * 商品相册上一张最大图
  */
 function prevGiant() {
   var $current = $('.small-pic_item.current');
@@ -357,7 +420,7 @@ function prevGiant() {
 }
 
 /**
- * 下一张最大图
+ * 商品相册下一张最大图
  */
 function nextGiant() {
   var $current = $('.small-pic_item.current');
@@ -370,18 +433,49 @@ function nextGiant() {
 }
 
 /**
- * 关闭弹窗
+ * 关闭商品相册弹窗
  */
 function closeGiant(){
   var $current = $('.small-pic_item.current');
   var img_url = $current.find('img').attr('src');
-  var img_url_giant = img_url.replace('-square.small', '-square.giant');
-  $('#bigpic').attr("src", img_url_giant);
+  var img_url_500 = img_url.replace('-square.small', '-square.500');
+  $('#bigpic').attr("src", img_url_500);
 }
 
-function jump_page(query_string) {
+/**
+ * 评价图片显示最大图
+ */
+function showCommentGiant($current) {
+  var $prev = $current.prev();
+  var $next = $current.next();
+  var img_url = $current.find('img').attr('src');
+  var img_url_giant = img_url.replace('-square.middle', '-rectangle.w720');
+  $('#giantCom').attr("src", img_url_giant);
+
+  // 判断上一张
+  if ($prev.length <= 0) {
+    $('#comment-prev').hide();
+  } else {
+    $('#comment-prev').show();
+  }
+
+  // 判断下一张
+  if ($next.length <= 0) {
+    $('#comment-next').hide();
+  } else {
+    $('#comment-next').show();
+  }
+}
+
+/**
+ * 加载评论内容html
+ */
+function loadCommentsHtml(query_string) {
   $.get("{{ url_for('pc.item.comments_paging') }}", {'query_string':query_string}, function(res) {
     $("#paging").empty().append(res);
+
+    // 评论图片点击事件
+    commentImgClick();
   });
 }
 
@@ -405,20 +499,19 @@ function change_comment_tabs(dom, tab) {
     query_string = 'ttype=1&tid={{ item.goods_id }}&is_img=1&p=1&ps=12';
   }
 
-  jump_page(query_string);
+  loadCommentsHtml(query_string);
+
 }
 
 //点击切换图片
 $('.small-pic_item').on("click","img", function(){
   var $img = $(this);
-  //var img_index = $img.attr('img-index');
 
   // 替换图片
   var imgurl = $img.attr('src');
   var square500img = imgurl.replace('-square.small','-square.500');//500x500
   var $bigpic = $('#bigpic');
   $bigpic.attr("src", square500img);
-  //$bigpic.attr('img-index', img_index);
 
   $('.goods-big_pic').fadeIn(100);
 
@@ -498,15 +591,6 @@ function fav(dom) {
     }
   });
 }
-
-//点击切换商品详情和商品评价
-$(function () {
-  $(".detail-nav_list li").off("click").on("click", function () {
-    var index = $(this).index();
-    $(this).addClass("allOn").siblings().removeClass("allOn");
-    $("#cntBox .allCnt").eq(index).addClass("show").siblings().removeClass("show");
-  });
-});
 
 //点击评论跳到评论版块
 function comment(){

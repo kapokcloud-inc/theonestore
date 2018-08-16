@@ -38,6 +38,7 @@ from app.services.api.order import (
 
 from app.forms.api.comment import CommentOrderGoodsForm
 
+from app.models.item import Goods
 from app.models.comment import Comment
 from app.models.shipping import Shipping
 from app.models.order import (
