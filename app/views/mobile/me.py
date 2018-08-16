@@ -111,7 +111,8 @@ def index():
 
     # 退款售后
     q = db.session.query(Aftersales.aftersales_id).\
-            filter(Aftersales.status.in_([1,2]))
+            filter(Aftersales.status.in_([1,2])).\
+            filter(Aftersales.uid == uid)
     aftersales_count = get_count(q)
 
     funds = Funds.query.filter(Funds.uid == uid).first()

@@ -12,7 +12,10 @@ import json
 import random
 from decimal import Decimal
 
-from flask import abort
+from flask import (
+    abort,
+    session
+)
 from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
 from sqlalchemy import or_
@@ -35,7 +38,10 @@ from app.helpers.date_time import (
 )
 
 from app.services.message import MessageCreateService
-from app.services.api.cart import CheckoutService
+from app.services.api.cart import (
+    CheckoutService,
+    CartService
+)
 from app.services.api.funds import FundsService
 
 from app.models.aftersales import Aftersales
@@ -205,6 +211,10 @@ class OrderCreateService(object):
             mcs.do()
 
         db.session.commit()
+
+        cs = CartService(self.uid, 0)
+        cs.check()
+        session['cart_total'] = cs.cart_total
 
         return True
 
