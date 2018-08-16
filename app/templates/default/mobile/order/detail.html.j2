@@ -121,7 +121,7 @@
 
         {% for _code in code %}
           {% if _code == 1 %}
-            <a href="{{ url_for('mobile.cart.checkout', order_id=order.order_id) }}">
+            <a href="{{ url_for('mobile.cart.checkout', order_id=order.order_id, is_buy_now=0) }}">
               <button type="button" class="order_btn order-state_btn">{{_('付款')}}</button>
             </a>
           {% endif %}

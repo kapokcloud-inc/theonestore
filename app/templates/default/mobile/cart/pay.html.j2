@@ -282,7 +282,8 @@ function choose_pay(dom, pay_type) {
 
 //立即调起微信支付
 $(document).ready(function() {
-  if (openid) {
+  var is_pay_now = {{ is_pay_now }};
+  if (openid && is_pay_now == 1) {
     var order_id = parseInt($("#order_id").val());
 
     weixin_pay(order_id);

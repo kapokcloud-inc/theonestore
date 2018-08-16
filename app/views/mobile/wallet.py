@@ -84,6 +84,7 @@ def recharge():
 
     order_id        = toint(request.args.get('order_id', '0'))
     recharge_amount = 0
+    pay_success_url = ''
 
     # 订单付款
     if order_id > 0:
@@ -93,6 +94,7 @@ def recharge():
             return redirect(request.headers['Referer'])
         
         recharge_amount = order.pay_amount
+        pay_success_url = url_for('mobile.pay.success', order_id=order_id)
 
     openid             = ''
     opentime           = session.get('jsapi_weixin_opentime', 0)
@@ -100,8 +102,6 @@ def recharge():
     is_expire_opentime = opentime < (current_time-30*60)
     if not is_expire_opentime:
         openid = session.get('jsapi_weixin_openid', '')
-
-    pay_success_url = url_for('mobile.pay.success', order_id=order_id)
 
     data = {'order_id':order_id, 'recharge_amount':recharge_amount,
             'openid':openid, 'pay_success_url':pay_success_url}
