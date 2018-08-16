@@ -93,11 +93,6 @@ class AfterSalesCreateService(object):
             self.msg = _(u'发货状态错误')
             return False
     
-        limit_time = before_after_timestamp(self.order.paid_time, {'days':7})
-        if self.current_time >= limit_time:
-            self.msg = _(u'超过有效退款时间')
-            return False
-
         aftersales = Aftersales.query.filter(Aftersales.order_id == self.order_id).filter(Aftersales.status.in_([1,2,3])).first()
         if aftersales:
             self.msg = _(u'售后状态错误')
@@ -243,8 +238,9 @@ class AfterSalesCreateService(object):
             if not self._check_order_goods():
                 return False
 
-            if not self.__check_address():
-                return False
+            if self.aftersales_type == 3:
+                if not self.__check_address():
+                    return False
 
         return True
 
