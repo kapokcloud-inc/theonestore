@@ -66,6 +66,23 @@
 <script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
 
 <script type="text/javascript">
+
+//图片上传
+$('#uploaderInput').fileupload({
+  url: "{{ url_for('api.upload.image') }}",
+  dataType: 'json',
+  formData: { 'prefix': 'comment' },
+  done: function (e, data) {
+    if (data.result.ret == 0) {
+      var image = data.result.data.image;
+      var html_text = '<li class="one-uploader_file">' +
+                        '<img src="' + image + '-square.small" alt="" data-value="' + image + '">' +
+                      '</li>';
+      $("#uploaderFiles").append(html_text);
+    }
+  }
+});
+
 var csrftoken = $('#csrf_token').val();
 $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
@@ -99,18 +116,5 @@ function submit() {
     }
   });
 }
-//图片上传
-$('#uploaderInput').fileupload({
-    url: "{{ url_for('api.upload.image') }}",
-    dataType: 'json',
-    formData:{'prefix':'comment'},
-    done: function (e, data) {
-      if(data.result.ret == 0) {
-        var image = data.result.data.image;
-        var html_text = '<li class="one-uploader_file" style="background-image:url(' + image + ')" data-value="'+image+'"></li>';
-        $("#uploaderFiles").append(html_text);
-      }
-    }
-});
 </script>
 {% endblock%}

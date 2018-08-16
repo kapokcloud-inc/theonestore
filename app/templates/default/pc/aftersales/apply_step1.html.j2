@@ -185,7 +185,9 @@ $('#uploaderInput').fileupload({
     done: function (e, data) {
       if(data.result.ret == 0) {
         var image = data.result.data.image;
-        var html_text = '<li class="one-uploader_file" style="background-image:url(' + image + ')" data-value="'+image+'"></li>';
+        var html_text = '<li class="one-uploader_file">' +
+                          '<img src="' + image + '-square.small" alt="" data-value="' + image + '">' +
+                        '</li>';
         $("#uploaderFiles").append(html_text);
       }
     }
