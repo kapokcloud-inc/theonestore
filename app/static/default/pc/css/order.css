@@ -350,6 +350,11 @@
   background-size: cover;
   cursor: pointer;
 }
+.one-uploader_file img {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+}
 .one-uploader_input-box {
   float: left;
   position: relative;

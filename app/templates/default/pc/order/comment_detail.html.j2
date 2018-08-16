@@ -4,6 +4,7 @@
 <title>{{_('查看评价 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/order.css">
 <link rel="stylesheet" href="/static/default/pc/css/index.css">
+<link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
 {% endblock %}
 
 {% block body %}
@@ -32,10 +33,12 @@
                 </div>
                 <div class="all-add mar-top">{{ comment.add_time|timestamp2str }}</div>
                 <div class="review-cnt mar-top">{{ comment.content }}</div>
-                <ul class="weui-uploader__files mar-top" id="uploaderFiles">
+                <ul class="one-uploader_files mar-top" id="uploaderFiles">
                   {% set img_data = comment.img_data|json_loads if comment.img_data %} 
                   {% for img in img_data %}
-                  <li class="weui-uploader__file" style="background-image:url('{{ img }}')"></li>
+                    <li class="one-uploader_file">
+                      <img src="{{ img }}-square.small" alt="">
+                    </li>
                   {% endfor %}
                 </ul>
               </div>
@@ -57,6 +60,25 @@
               </div>
             </div>
           </div>
+
+          <!-- 评价图片点击放大 -->
+          <div class="hide-mask hide" id="giant-comment">
+            <div class="zoom-big-block">
+              <div class="bigImg-com">
+                <img id="giantCom" src="" alt="">
+              </div>
+            </div>
+            <a class="image-num_first" id="comment-prev" href="javascript:;">
+              <i class="icon-xiaoyu"></i>
+            </a>
+            <a class="image-num_last" id="comment-next" href="javascript:;">
+              <i class="icon-dayu"></i>
+            </a>
+            <a class="bigimage" id="comment-close" href="javascript:;">
+              <i class="icon-cancel"></i>
+            </a>
+          </div>
+          <!-- 评价图片点击放大 end -->
         </div>
         <!-- 商品并未在后台被删除的时候显示 end -->
       {% else %}
@@ -74,19 +96,77 @@
 
 {% block script %}
 <script type="text/javascript">
+$(document).ready(function(){
+  // 点击评价图片放大事件
+  $('.one-uploader_file').click(function () {
+    var $current = $(this);
+    comDetailGiant($current);
+    $('#giant-comment').addClass('show').removeClass('hide');
 
- //加入购物车
-  function addCar(goods_id) {
-    var quantity = 1;
-    //var goods_id = parseInt($(".add-cart").attr("data-tid"));
-    $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
-      if (json.ret != 0) {
-        // 优化alert ??
-        alert(res.msg);
-        return false;
-      }
-      $("#navs_cart_total").text(json.data.cart_total);
+    // 评价图片点击上一张按钮事件
+    $('#comment-prev').click(function () {
+      $current = $current.prev();
+      var img_url = $current.find('img').attr('src');
+      var img_url_giant = img_url.replace('-square.small', '-rectangle.w720');
+      $('#giantCom').attr("src", img_url_giant);
+      comDetailGiant($current);
     });
+
+    // 评价图片点击下一张按钮事件
+    $('#comment-next').click(function () {
+      $current = $current.next();
+      var img_url = $current.find('img').attr('src');
+      var img_url_giant = img_url.replace('-square.small', '-rectangle.w720');
+      $('#giantCom').attr("src", img_url_giant);
+      comDetailGiant($current);
+    });
+  });
+
+  // 点击关闭评价图片事件
+  $('#comment-close').click(function () {
+    $('#giant-comment').addClass('hide').removeClass('show');
+  });
+});
+
+/**
+  * 评价图片显示最大图
+  */
+function comDetailGiant($current) {
+  var $prev = $current.prev();
+  var $next = $current.next();
+  var img_url = $current.find('img').attr('src');
+  var img_url_giant = img_url.replace('-square.small', '-rectangle.w720');
+  $('#giantCom').attr("src", img_url_giant);
+
+  // 判断上一张
+  if ($prev.length <= 0) {
+    $('#comment-prev').hide();
+  } else {
+    $('#comment-prev').show();
   }
+
+  // 判断下一张
+  if ($next.length <= 0) {
+    $('#comment-next').hide();
+  } else {
+    $('#comment-next').show();
+  }
+}
+
+/**
+  * 加入购物车
+  */
+function addCar(goods_id) {
+  var quantity = 1;
+  //var goods_id = parseInt($(".add-cart").attr("data-tid"));
+  $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
+    if (json.ret != 0) {
+      // 优化alert ??
+      alert(res.msg);
+      return false;
+    }
+    $("#navs_cart_total").text(json.data.cart_total);
+  });
+}
 </script>
 {% endblock%}

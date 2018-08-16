@@ -42,7 +42,7 @@
 
                       {% set step_one_text = const.AFTERSALES_STATUS_CHECK.get(aftersales.check_status,'审核') %}
                       {% set step_one_type = 'step-active' if aftersales.check_status in [2,3] else '' %}
-                      {% set step_one_type = 'step-done' if aftersales.refunds_status in [2,3] or aftersales.return_status in [2,3] or aftersales.resend_status in [2,3] or aftersales.status in [3] else step_one_type %}
+                      {% set step_one_type = 'step-done' if aftersales.refunds_status in [2,3] or aftersales.return_status in [3] or aftersales.resend_status in [3] or aftersales.status in [3] else step_one_type %}
                       {% set step_one_time = '2018-07-31 21:06:05' if aftersales.check_status in [2,3] else '' %}
                       <li class="step {{ step_one_type }}">
                         <div>{{ step_one_text }}</div>
@@ -52,9 +52,9 @@
                       <!-- 仅退货退款或换货有该流程 -->
                       {% if aftersales.aftersales_type in [2,3] %}
                         {% set step_two_text = const.AFTERSALES_STATUS_RECEIVER.get(aftersales.return_status,'商家收货') %}
-                        {% set step_two_type = 'step-active' if aftersales.return_status in [2,3] else '' %}
-                        {% set step_two_type = 'step-done' if aftersales.refunds_status in [2,3] or aftersales.resend_status in [2,3]  or aftersales.status in [3] else step_one_type %}
-                        {% set step_two_time = '2018-07-31 21:06:05' if aftersales.return_status in [2,3] else '' %}
+                        {% set step_two_type = 'step-active' if aftersales.return_status in [3] else '' %}
+                        {% set step_two_type = 'step-done' if aftersales.refunds_status in [2,3] or aftersales.resend_status in [3]  or aftersales.status in [3] else step_two_type %}
+                        {% set step_two_time = '2018-07-31 21:06:05' if aftersales.return_status in [3] else '' %}
                         <li class="step {{ step_two_type }}">
                           <div>{{ step_two_text }}</div>
                           <div class="progress-info">{{ step_two_time }}</div>
@@ -70,9 +70,9 @@
                       <!-- 仅换货有该流程 -->
                       {% elif aftersales.aftersales_type == 3 %}
                         {% set step_three_text = const.AFTERSALES_STATUS_DELIVERY.get(aftersales.resend_status,'客户收货') %}
-                        {% set step_three_type = 'step-active' if aftersales.resend_status in [2,3] else '' %}
+                        {% set step_three_type = 'step-active' if aftersales.resend_status in [3] else '' %}
                         {% set step_three_type = 'step-done' if aftersales.status in [3] else step_three_type %}
-                        {% set step_three_time = '2018-07-31 21:06:05' if aftersales.resend_status in [2,3] else '' %}
+                        {% set step_three_time = '2018-07-31 21:06:05' if aftersales.resend_status in [3] else '' %}
                       {% endif %}
                       <li class="step {{ step_three_type }}">
                         <div>{{ step_three_text }}</div>
@@ -91,8 +91,15 @@
                 <div class="order-delivery hide">
                   <div class="delivery-list_box">
                     <ul class="delivery-list mar-top">
-                      {% for log_item in log if log %}
-                        <li class="delivery-list_item firstOn last">{{ log_item.content }} {{ log_item.add_time|timestamp2str }}</li>
+                      {% for log_item in log %}
+                        {% if loop.first %}
+                          {% set type = 'first' if loop.length > 1 else 'firstOn' %}
+                        {% elif loop.last %}
+                          {% set type = 'last' %}
+                        {% else %}
+                          {% set type = '' %}
+                        {% endif %}
+                        <li class="delivery-list_item {{ type }}">{{ log_item.content }} {{ log_item.add_time|timestamp2str }}</li>
                       {% endfor %}
                     </ul>
                   </div>
@@ -102,7 +109,7 @@
                 </div>
               </div>
               <div class="order-goods bd-bottom5">
-                {% set goods = (aftersales.goods_data)|json_loads %}
+                {% set goods = (aftersales.goods_data)|json_loads if aftersales.goods_data %}
                 {% for good in goods if goods %}
                   <div class="one-cell">
                     <div class="one-cell_hd avatar80">
