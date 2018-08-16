@@ -81,6 +81,7 @@ def index():
     # 未付款订单
     q = db.session.query(Order.order_id).\
             filter(Order.uid == uid).\
+            filter(Order.order_type == 1).\
             filter(Order.is_remove == 0).\
             filter(Order.order_status == 1).\
             filter(Order.pay_status == 1)
@@ -89,6 +90,7 @@ def index():
     # 待收货订单
     q = db.session.query(Order.order_id).\
             filter(Order.uid == uid).\
+            filter(Order.order_type == 1).\
             filter(Order.is_remove == 0).\
             filter(Order.order_status == 1).\
             filter(Order.pay_status == 2).\
@@ -97,6 +99,7 @@ def index():
 
     completed = db.session.query(Order.order_id).\
                     filter(Order.uid == uid).\
+                    filter(Order.order_type == 1).\
                     filter(Order.is_remove == 0).\
                     filter(Order.order_status == 2).\
                     filter(Order.pay_status == 2).\
