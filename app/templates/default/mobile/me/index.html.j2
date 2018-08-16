@@ -27,6 +27,7 @@
         <li class="flex pstR">
           <a href="{{ url_for('mobile.order.index', tab_status=1) }}">
             {% if unpaid_count > 0 %}
+              {% set unpaid_count = unpaid_count if unpaid_count <=99 else '99+' %}
               <span class="weui-badge msg_badge">{{ unpaid_count }}</span>
             {% endif %}
             <div class="icom_photo">
@@ -38,6 +39,7 @@
         <li class="flex pstR">
           <a href="{{ url_for('mobile.order.index', tab_status=2) }}">
             {% if undeliver_count > 0 %}
+              {% set undeliver_count = undeliver_count if undeliver_count <=99 else '99+' %}
               <span class="weui-badge msg_badge">{{ undeliver_count }}</span>
             {% endif %}
             <div class="icom_photo">
@@ -49,6 +51,7 @@
         <li class="flex pstR">
           <a href="{{ url_for('mobile.order.comment', is_pending=1) }}">
             {% if uncomment_count > 0 %}
+              {% set uncomment_count = uncomment_count if uncomment_count <=99 else '99+' %}
               <span class="weui-badge msg_badge">{{ uncomment_count }}</span>
             {% endif %}
             <div class="icom_photo">
@@ -60,6 +63,7 @@
         <li class="flex pstR">
           <a href="{{ url_for('mobile.aftersales.root') }}">
             {% if aftersales_count > 0 %}
+              {% set aftersales_count = aftersales_count if aftersales_count <=99 else '99+' %}
               <span class="weui-badge msg_badge">{{ aftersales_count }}</span>
             {% endif %}
             <div class="icom_photo">

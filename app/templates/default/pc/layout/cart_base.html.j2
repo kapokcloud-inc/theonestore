@@ -51,6 +51,7 @@
                   <span>
                     <a href="{{ url_for('pc.me.messages') }}">{{_('消息')}}</a>
                     {% if g.unread_count %}
+                      {% set unread_count = g.unread_count if g.unread_count <= 99 else '99+'  %}
                       <i class="user-badge">{{ g.unread_count }}</i>
                     {% endif %}
                   </span>

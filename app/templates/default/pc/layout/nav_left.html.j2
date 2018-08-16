@@ -7,7 +7,8 @@
           <a {{ libs.get_me_navclass('order') }} href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
         </li>
         <li>
-          <a {{ libs.get_me_navclass('comment') }} href="{{ url_for('pc.order.comment', ip=1,ps=20,is_pending=1) }}">{{_('评价晒单')}} (1)</a>
+          {% set pending_count = '(%s)' % pending_count if pending_count else '' %}
+          <a {{ libs.get_me_navclass('comment') }} href="{{ url_for('pc.order.comment', ip=1,ps=20,is_pending=1) }}">{{_('评价晒单')}} {{ pending_count }}</a>
         </li>
         <li>
           <a {{ libs.get_me_navclass('aftersales') }} href="{{ url_for('pc.aftersales.root') }}">{{_('售后服务记录')}}</a>

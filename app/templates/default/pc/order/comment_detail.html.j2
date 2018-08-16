@@ -61,7 +61,7 @@
             </div>
           </div>
 
-          <!-- 评价图片点击放大 -->
+          <!-- 评价图片点击放大弹窗 -->
           <div class="hide-mask hide" id="giant-comment">
             <div class="zoom-big-block">
               <div class="bigImg-com">
@@ -78,7 +78,7 @@
               <i class="icon-cancel"></i>
             </a>
           </div>
-          <!-- 评价图片点击放大 end -->
+          <!-- 评价图片点击放大弹窗 end -->
         </div>
         <!-- 商品并未在后台被删除的时候显示 end -->
       {% else %}
@@ -122,15 +122,15 @@ $(document).ready(function(){
     });
   });
 
-  // 点击关闭评价图片事件
+  // 点击关闭弹窗事件
   $('#comment-close').click(function () {
     $('#giant-comment').addClass('hide').removeClass('show');
   });
 });
 
 /**
-  * 评价图片显示最大图
-  */
+ * 评价图片显示最大图
+ */
 function comDetailGiant($current) {
   var $prev = $current.prev();
   var $next = $current.next();

@@ -612,9 +612,15 @@
   border-top: 1px solid #eee;
 }
 .aftersales_img {
+  display: inline-block;
   width: 100px;
   height: 100px;
   margin-right: 10px;
   margin-bottom: 10px;
   cursor: pointer;
+}
+.aftersales_img img {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
 }

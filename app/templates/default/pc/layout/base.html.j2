@@ -97,7 +97,10 @@
               {% set cart_total = session.get('cart_total', 0) %}
               <img class="cart-bag" src="/static/default/pc/img/cart.png" alt="">
               <span class="cart-text">{{_('购物车')}}</span>
-              <span id="navs_cart_total" class="cart-badge">{{ cart_total }}</span>
+              {% if cart_total %}
+                {% set cart_total = cart_total if cart_total <=99 else '99+' %}
+                <span id="navs_cart_total" class="cart-badge">{{ cart_total }}</span>
+              {% endif %}
             </a>
           </div>
           <div class="tool-cnt">

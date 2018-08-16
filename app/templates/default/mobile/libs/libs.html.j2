@@ -28,6 +28,7 @@
         <a href="{{ url_for('mobile.cart.root') }}">
           {% set cart_total = session.get('cart_total', 0) %}
           {% if cart_total %}
+            {% set cart_total = cart_total if cart_total <=99 else '99+' %}
             <span id="cart_total" class="weui-badge msg_badge">{{ cart_total }}</span>
           {% endif %}
           <div class="icom_photo">
@@ -42,6 +43,7 @@
         <a href="{{ url_for('mobile.me.index') }}">
           {% set uid = session.get('uid', 0) %}
           {% if uid and g.unread_count > 0 %}
+            {% set unread_count = g.unread_count if g.unread_count <= 99 else '99+'  %}
             <span class="weui-badge msg_badge">{{ g.unread_count }}</span>
           {% endif %}
           <div class="icom_photo">

@@ -10,23 +10,23 @@
 <div class="user_wrap">
   <div class="weui-navbar">
     <div class="typeStatus">
-      {% set on = 'orderType-on' if tab_status == 0 else '' %}
+      {% set on = 'orderType-on' if tab_status == '0' else '' %}
       <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=0) }}">{{_('全部')}}</a>
     </div>
     <div class="typeStatus">
-      {% set on = 'orderType-on' if tab_status == 1 else '' %}
+      {% set on = 'orderType-on' if tab_status == '1' else '' %}
       <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=1) }}">{{_('待付款')}}</a>
     </div>
     <div class="typeStatus">
-      {% set on = 'orderType-on' if tab_status == 2 else '' %}
+      {% set on = 'orderType-on' if tab_status == '2' else '' %}
       <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=2) }}">{{_('待收货')}}</a>
     </div>
     <div class="typeStatus">
-      {% set on = 'orderType-on' if tab_status == 3 else '' %}
+      {% set on = 'orderType-on' if tab_status == '3' else '' %}
       <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=3) }}">{{_('已完成')}}</a>
     </div>
     <div class="typeStatus">
-      {% set on = 'orderType-on' if tab_status == 4 else '' %}
+      {% set on = 'orderType-on' if tab_status == '4' else '' %}
       <a class="orderType {{ on }}" href="{{ url_for('mobile.order.index', tab_status=4) }}">{{_('已取消')}}</a>
     </div>
   </div>
