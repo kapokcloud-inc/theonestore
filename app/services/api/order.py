@@ -885,15 +885,17 @@ class OrderStaticMethodsService(object):
         order_address = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
         text, code    = OrderStaticMethodsService.order_status_text_and_action_code(order)
 
-        express_data = None
+        express_data  = None
+        express_datas = []
         if order.shipping_status == 2:
             _express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
             if _express_msg == 'ok':
-                express_data = _express_data[0] if len(_express_data) > 0 else {}
+                express_data  = _express_data[0] if len(_express_data) > 0 else {}
+                express_datas = _express_data
 
         aftersale = Aftersales.query.filter(Aftersales.order_id == order_id).filter(Aftersales.status.in_([1,2])).first()
 
         data = {'order':order, 'items':items, 'order_address':order_address,
-                'text':text, 'code':code, 'express_data':express_data,
+                'text':text, 'code':code, 'express_data':express_data, 'express_datas':express_datas,
                 'aftersale':aftersale, 'current_time':current_timestamp()}
         return data

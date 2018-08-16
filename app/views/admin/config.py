@@ -34,6 +34,7 @@ from app.forms.admin.shipping import ShippingForm
 from app.forms.admin.config import (
     WeixinMpForm,
     WeixinPayForm,
+    WeixinOpenForm,
     SmsYunpianForm,
     SmsAlismsForm,
     StorageQiniuForm,
@@ -111,6 +112,33 @@ def weixinpay():
             return redirect(url_for('admin.index.success', title=_(u'设置微信支付成功')))
 
     return render_template('admin/config/weixinpay.html.j2', form=form)
+
+@config.route('/weixinopen', methods=['GET','POST'])
+def weixinopen():
+    """微信开放平台"""
+    g.page_title = _(u'微信开放平台')
+
+    form = WeixinOpenForm()
+    ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_open').first()
+    if request.method == 'GET':
+        try:
+            data = json.loads(ss.value)
+        except Exception as e:
+            data = {}
+        form.fill_form(data=data)
+    else:
+        data = {'appid':form.appid.data, 'secret':form.secret.data}
+        if form.validate_on_submit():
+            if ss is None:
+                ss = SysSetting()
+                ss.key = 'config_weixin_open'
+                db.session.add(ss)
+            ss.value = json.dumps(data)
+            db.session.commit()
+            return redirect(url_for('admin.index.success',title=_(u'设置微信开放平台成功')))
+    
+    return render_template('admin/config/weixinopen.html.j2',form=form)
+
 
 
 @config.route('/sms/yunpian', methods=["GET", "POST"])

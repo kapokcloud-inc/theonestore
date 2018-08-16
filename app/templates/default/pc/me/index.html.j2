@@ -163,9 +163,9 @@ function updateProfile(nickname){
   var avatar = $("#avatar").val();
   var gender   = $('#gender').attr('value');
   
-  if(nickname==null||nickname.replace(/\s*/g, "")==''){
-    alert('请输入昵称', "text");
-    return;
+  if(typeof nickname =='undefiined' || nickname == null || nickname.replace(/(^\s*)|(\s*$)/g,"") == ''){
+    alert('请输入昵称');
+    return false;
   }
   params = {'nickname':nickname, 'avatar':avatar, 'gender':gender}
   $.post("{{ url_for('api.me.update') }}", params, function(json) {

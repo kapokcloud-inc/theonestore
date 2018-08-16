@@ -39,48 +39,40 @@
                 </div>
                 <ul class="all-list clearfix">
                   {% for item in items %}
-                  <li class="list-item2">
-                    <div class="item-product">
-                      <img src="{{ item.goods_img }}-square.middle" alt="">
-                    </div>
-                    <div class="item-detail">
-                      <div class="all-title">{{ item.goods_name }}</div>
-                      <div class="greyGap mar-top">数量 x{{ item.goods_quantity }}</div>
-                    </div>
+                    <li class="list-item2">
+                      <div class="item-product">
+                        <img src="{{ item.goods_img }}-square.middle" alt="">
+                      </div>
+                      <div class="item-detail">
+                        <div class="all-title">{{ item.goods_name }}</div>
+                        {% set quantity = item.goods_quantity - item.aftersales_goods_quantity if item.goods_quantity > item.aftersales_goods_quantity else item.aftersales_goods_quantity %}
+                        <div class="greyGap mar-top">数量 x{{ quantity }}</div>
+                      </div>
 
-                    <!-- 申请售后的条件，非取消的订单，已支付，已发货，发货后15天内，对应商品还有未申请售后的 -->
-                    {% set limit_time = order.shipping_time|before_after_timestamp({'days':15}) %}
-                    <!-- 0=不能操作 -->
-                    {% set aftersale_type = 0 %}
-                    {% if order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 %}
-                      {% if limit_time >= current_time and item.goods_quantity > item.aftersales_goods_quantity  %}
-                        <!-- 1=申请售后 -->
-                        {% set aftersale_type = 1 %}
-                      {% elif aftersale %}
-                        <!-- 2=售后处理中 -->
-                        {% set aftersale_goods = (aftersale.goods_data)|json_loads %}
-                        {% for afteritem in aftersale_goods %}
-                          {% if  afteritem.goods_id == item.goods_id %}
-                            {% set aftersale_type = 2 %}
-                          {% endif %}
-                        {% endfor %}
+                      <!-- 申请售后的条件，非取消的订单，已支付，已发货，发货后15天内，对应商品还有未申请售后的 -->
+                      {% set limit_time = order.shipping_time|before_after_timestamp({'days':15}) %}
+                      {% if order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 %}
+                        {% if limit_time >= current_time and item.goods_quantity > item.aftersales_goods_quantity  %}
+                          <!-- 未申请的商品，此按钮显示 -->
+                          <div class="review-btn_wrap" data-value="">
+                            <a class="review-btn_link btn-primary" href="{{ url_for('pc.aftersales.apply_step1',order_id=order.order_id,og_id= item.og_id) }}">{{_('申请售后')}}</a>
+                          </div>
+                          <!-- 未申请的商品，此按钮显示 end -->
+                        {% elif aftersale_all %}
+                          <!-- 2=售后处理中 -->
+                          {% for aftersale in aftersale_all %}
+                            {% set good = aftersale.goods_data|json_loads|first() if aftersale.goods_data %}
+                            {% if item.og_id == good.og_id %}
+                              <!-- 已申请的商品，此按钮显示 -->
+                              <div class="review-btn_wrap" data-value="">
+                                <a class="review-btn_link" href="{{ url_for('pc.aftersales.detail', aftersales_id=aftersale.aftersales_id) }}">{{_('售后受理中')}}</a>
+                              </div>
+                              <!-- 已申请的商品，此按钮显示 end -->
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
                       {% endif %}
-                    {% endif %}
-
-                    {% if aftersale_type == 1 %}
-                      <!-- 未申请的商品，此按钮显示 -->
-                      <div class="review-btn_wrap" data-value="">
-                        <a class="review-btn_link btn-primary" href="{{ url_for('pc.aftersales.apply_step1',order_id=order.order_id,og_id= item.og_id) }}">{{_('申请售后')}}</a>
-                      </div>
-                      <!-- 未申请的商品，此按钮显示 end -->
-                    {% elif aftersale_type == 2 %}
-                      <!-- 已申请的商品，此按钮显示 -->
-                      <div class="review-btn_wrap" data-value="">
-                        <a class="review-btn_link" href="{{ url_for('pc.aftersales.detail', aftersales_id=aftersale.aftersales_id) }}">{{_('售后受理中')}}</a>
-                      </div>
-                      <!-- 已申请的商品，此按钮显示 end -->
-                    {% endif %}
-                  </li>
+                    </li>
                   {% endfor %}
                 </ul>
               </div>

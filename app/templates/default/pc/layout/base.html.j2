@@ -46,8 +46,9 @@
                   </span>
                   <span>
                     <a href="{{ url_for('pc.me.messages') }}">{{_('消息')}}</a>
-                    {% if g.unread_count %}
-                      <i class="user-badge">{{ g.unread_count }}</i>
+                    {% if uid and g.unread_count %}
+                      {% set unread_count = g.unread_count if g.unread_count <= 99 else '99+'  %}
+                      <i class="user-badge">{{ unread_count }}</i>
                     {% endif %}
                   </span>
                 </div>
@@ -71,7 +72,7 @@
           <li class="top-nav_item">
             <a href="{{ url_for('pc.me.messages') }}" class="mouseon">{{_('消息')}}</a>
             {% if uid and g.unread_count %}
-              <i class="news-badge">{{ g.unread_count }}</i>
+              <i class="news-badge">{{ unread_count }}</i>
             {% endif %}
           </li>
         </ul>
@@ -323,8 +324,8 @@
     var key  = $('#head_search_key').val();
 
     //关键字为空不响应
-    if(key==null||key.replace(/\s*/g, "")==''){
-      return;
+    if(typeof key =='undefiined' || key == null || key.replace(/(^\s*)|(\s*$)/g,"") == ''){
+      return false;
     }
 
     window.location.href= "{{ url_for('pc.item.index') }}"+'?p=1&ps=20&search_key='+key;
