@@ -222,8 +222,6 @@ class CartStaticMethodsService(object):
     def pay_page(order_id, uid, client):
         """订单支付页面"""
 
-        is_weixin = toint(request.args.get('is_weixin', '0'))
-
         # 检查
         order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
         if not order:
@@ -239,7 +237,7 @@ class CartStaticMethodsService(object):
                             toamount(order.free_limit_amount)))
 
         data = {'order':order, 'order_address':order_address, 'coupon':coupon,
-                'shipping_title':shipping_title, 'funds':funds.funds, 'is_weixin':is_weixin}
+                'shipping_title':shipping_title, 'funds':funds.funds}
         return (True, u'', data, u'')
 
     @staticmethod

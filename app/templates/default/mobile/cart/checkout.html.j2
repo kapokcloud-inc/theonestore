@@ -602,7 +602,7 @@ function weixin_pay(order_id) {
   }
 
   //获取openid
-  $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'order_id':order_id}, function(res) {
+  $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'order_id':order_id, 'order_type':1}, function(res) {
     if (res.ret != 0) {
       $.toast(res.msg, "text");
       return false;

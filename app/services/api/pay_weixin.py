@@ -222,6 +222,7 @@ class JsapiOpenidService(object):
         self.msg           = u''
         self.current_time  = current_timestamp()
         self.order_id      = 0
+        self.order_type    = 0
         self.code_url      = ''
         self.redirect_url  = ''
         self.appid         = ''
@@ -234,7 +235,7 @@ class JsapiOpenidService(object):
         """创建获取code的uri"""
 
         weixin_authorize_url = 'https://open.weixin.qq.com/connect/oauth2/authorize'
-        redirect_uri         = url_push_query(request.url, 'order_id=%s' % self.order_id)
+        redirect_uri         = url_push_query(request.url, 'order_id=%s&order_type=%s' % (self.order_id, self.order_type))
         params               = {'redirect_uri':redirect_uri.encode('utf8')}
         redirect_uri_param   = urlencode(params)
         self.code_url        = u'%s?appid=%s&%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect' % (
@@ -284,6 +285,7 @@ class JsapiOpenidService(object):
 
         self.code          = request.args.get('code', '').strip()
         self.order_id      = toint(request.args.get('order_id', '0'))
+        self.order_type    = toint(request.args.get('order_type', '0'))
         self.openid        = session.get('jsapi_weixin_openid', '')
         self.opentime      = session.get('jsapi_weixin_opentime', 0)
         is_expire_opentime = self.opentime < (self.current_time-30*60)
@@ -299,10 +301,18 @@ class JsapiOpenidService(object):
             # 获取openid
             self._get_openid()
 
-            self.redirect_url = url_for('mobile.cart.checkout', order_id=self.order_id)
+            if self.order_type == 1:
+                self.redirect_url = url_for('mobile.cart.checkout', order_id=self.order_id)
+            if self.order_type == 2:
+                self.redirect_url = url_for('mobile.wallet.recharge', order_id=self.order_id)
+
             return True
-        
-        self.code_url = url_for('mobile.cart.checkout', order_id=self.order_id)
+
+        if self.order_type == 1:
+            self.code_url = url_for('mobile.cart.checkout', order_id=self.order_id)
+        if self.order_type == 2:
+            self.code_url = url_for('mobile.wallet.recharge', order_id=self.order_id)
+
         return True
 
 

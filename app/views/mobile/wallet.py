@@ -27,6 +27,9 @@ from app.helpers.user import (
     check_login,
     get_uid
 )
+from app.helpers.date_time import (
+    current_timestamp
+)
 
 from app.services.api.funds import FundsStaticMethodsService
 
@@ -80,9 +83,7 @@ def recharge():
     uid = get_uid()
 
     order_id        = toint(request.args.get('order_id', '0'))
-    is_weixin       = toint(request.args.get('is_weixin', '0'))
     recharge_amount = 0
-    redirect_url    = url_push_query(request.url, 'is_weixin=1')
 
     # 订单付款
     if order_id > 0:
@@ -93,7 +94,17 @@ def recharge():
         
         recharge_amount = order.pay_amount
 
-    data = {'order_id':order_id, 'recharge_amount':recharge_amount, 'is_weixin':is_weixin, 'redirect_url':redirect_url}
+    openid             = ''
+    opentime           = session.get('jsapi_weixin_opentime', 0)
+    current_time       = current_timestamp()
+    is_expire_opentime = opentime < (current_time-30*60)
+    if not is_expire_opentime:
+        openid = session.get('jsapi_weixin_openid', '')
+
+    pay_success_url = url_for('mobile.pay.success', order_id=order_id)
+
+    data = {'order_id':order_id, 'recharge_amount':recharge_amount,
+            'openid':openid, 'pay_success_url':pay_success_url}
     return render_template('mobile/wallet/recharge.html.j2', **data)
 
 
