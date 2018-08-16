@@ -101,7 +101,7 @@
                             <!-- 含有售后指令才显示售后按钮 -->
                             {% if 7 in codes[order.order_id] %}
                               <!-- 创建的订单，已支付，没发货，没售后记录的允许申请退款 -->
-                              {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 and not aftersale %}
+                              {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 and not aftersales[order.order_id] %}
                                 <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step1', order_id=order.order_id,og_id=0) }}">
                                   <button class="order-type_btn" type="button">{{_('申请退款')}}</button>
                                 </a>
