@@ -96,8 +96,9 @@ def checkout():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    args     = request.args
-    order_id = toint(args.get('order_id', '0'))
+    args       = request.args
+    order_id   = toint(args.get('order_id', '0'))
+    is_pay_now = toint(args.get('is_pay_now', '1'))
 
     # 订单付款页面
     if order_id > 0:
@@ -105,6 +106,15 @@ def checkout():
         if not ret:
             return redirect(url)
 
+        data['openid']     = ''
+        opentime           = session.get('jsapi_weixin_opentime', 0)
+        current_time       = current_timestamp()
+        is_expire_opentime = opentime < (current_time-30*60)
+        if not is_expire_opentime:
+            data['openid'] = session.get('jsapi_weixin_openid', '')
+
+        data['pay_success_url'] = url_for('mobile.pay.success', order_id=order_id)
+        data['is_pay_now']      = is_pay_now
         return render_template('mobile/cart/pay.html.j2', **data)
 
     # 结算页面

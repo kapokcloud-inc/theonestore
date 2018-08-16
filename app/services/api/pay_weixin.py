@@ -28,6 +28,7 @@ from flask import (
 from app.database import db
 
 from app.helpers import (
+    log_error,
     log_info,
     toint,
     url_push_query
@@ -217,11 +218,13 @@ class UnifiedorderService(object):
 class JsapiOpenidService(object):
     """jsapi获取openidService"""
 
-    def __init__(self, redirect_url):
+    def __init__(self):
         self.msg           = u''
-        self.redirect_url  = redirect_url
         self.current_time  = current_timestamp()
+        self.order_id      = 0
+        self.order_type    = 0
         self.code_url      = ''
+        self.redirect_url  = ''
         self.appid         = ''
         self.secret        = ''
         self.code          = ''
@@ -232,7 +235,7 @@ class JsapiOpenidService(object):
         """创建获取code的uri"""
 
         weixin_authorize_url = 'https://open.weixin.qq.com/connect/oauth2/authorize'
-        redirect_uri         = url_push_query(request.url, 'redirect_url=%s' % self.redirect_url)
+        redirect_uri         = url_push_query(request.url, 'order_id=%s&order_type=%s' % (self.order_id, self.order_type))
         params               = {'redirect_uri':redirect_uri.encode('utf8')}
         redirect_uri_param   = urlencode(params)
         self.code_url        = u'%s?appid=%s&%s&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect' % (
@@ -247,10 +250,12 @@ class JsapiOpenidService(object):
         params           = {'appid':self.appid.encode('utf8'), 'secret':self.secret.encode('utf8'),
                             'code':self.code.encode('utf8'), 'grant_type':'authorization_code'.encode('utf8')}
 
-        url         = u'%s?%s' % (access_token_url, urlencode(params))
-        res         = requests.get(url)
-        jsonobj     = res.json()
-        self.openid = jsonobj['openid']
+        url     = u'%s?%s' % (access_token_url, urlencode(params))
+        res     = requests.get(url)
+        jsonobj = res.json()
+
+        session['jsapi_weixin_openid']   = jsonobj['openid']
+        session['jsapi_weixin_opentime'] = self.current_time
 
     def check(self):
         """检查"""
@@ -278,7 +283,9 @@ class JsapiOpenidService(object):
     def set_openid(self):
         """设置openid"""
 
-        self.code          = request.args.get('code', '')
+        self.code          = request.args.get('code', '').strip()
+        self.order_id      = toint(request.args.get('order_id', '0'))
+        self.order_type    = toint(request.args.get('order_type', '0'))
         self.openid        = session.get('jsapi_weixin_openid', '')
         self.opentime      = session.get('jsapi_weixin_opentime', 0)
         is_expire_opentime = self.opentime < (self.current_time-30*60)
@@ -287,19 +294,26 @@ class JsapiOpenidService(object):
         if not self.code and (not self.openid or is_expire_opentime):
             # 创建获取code的url
             self._code_url()
-
-            return self.code_url
+            return True
 
         # 根据微信code获取openid
         if self.code and (not self.openid or is_expire_opentime):
+            # 获取openid
             self._get_openid()
 
-            session['jsapi_weixin_openid']   = self.openid
-            session['jsapi_weixin_opentime'] = self.current_time
+            if self.order_type == 1:
+                self.redirect_url = url_for('mobile.cart.checkout', order_id=self.order_id)
+            if self.order_type == 2:
+                self.redirect_url = url_for('mobile.wallet.recharge', order_id=self.order_id)
 
-            return request.args.get('redirect_url')
+            return True
 
-        return ''
+        if self.order_type == 1:
+            self.code_url = url_for('mobile.cart.checkout', order_id=self.order_id)
+        if self.order_type == 2:
+            self.code_url = url_for('mobile.wallet.recharge', order_id=self.order_id)
+
+        return True
 
 
 class JsapiNotifyService():
@@ -339,11 +353,12 @@ class JsapiNotifyService():
     def check(self):
         """检查"""
 
-        repone_xml   = ElementTree.fromstring(self.xml)
-        return_code  = repone_xml.getiterator('result_code')[0].text
-        err_code     = repone_xml.getiterator('err_code')[0].text
-        err_code_des = repone_xml.getiterator('err_code_des')[0].text
+        repone_xml  = ElementTree.fromstring(self.xml)
+        return_code = repone_xml.getiterator('result_code')[0].text
         if return_code != 'SUCCESS':
+            err_code     = repone_xml.getiterator('err_code')[0].text
+            err_code_des = repone_xml.getiterator('err_code_des')[0].text
+
             log_error('[ErrorServiceApiPayWeixinJsapiNotifyServiceVerify][ResponeError]  xml:%s code:%s des:%s' %\
                         (self.xml, err_code, err_code_des))
             return False
@@ -374,9 +389,8 @@ class JsapiNotifyService():
     def verify(self):
         """验证签名"""
 
-        options  = optparse.Values({"pretty":False})
-        params   = json.loads(xml2json(self.xml, options))['xml']
-        _sign    = params.get('sign', '')
+        params = xml2json(self.xml)['xml']
+        _sign  = params.get('sign', '')
 
         params.pop('sign')
         sign = self._create_sign(params)

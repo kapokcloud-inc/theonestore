@@ -41,11 +41,11 @@
       <li class="flex pstR">
         <a href="{{ url_for('mobile.me.index') }}">
           {% set uid = session.get('uid', 0) %}
-          {% if uid %}
+          {% if uid and g.unread_count > 0 %}
             <span class="weui-badge msg_badge">{{ g.unread_count }}</span>
           {% endif %}
           <div class="icom_photo">
-            {% set _src = '/static/default/mobile/img/userOn.png' if _view == 'user' else '/static/default/mobile/img/user.png' %}
+            {% set _src = '/static/default/mobile/img/userOn.png' if _view == 'me' else '/static/default/mobile/img/user.png' %}
             {% set _on = 'on' if _view == 'user' else '' %}
             <img src="{{ _src }}" alt="">
           </div>

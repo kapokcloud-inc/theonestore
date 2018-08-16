@@ -170,8 +170,9 @@ class WeiXinLoginService(object):
         session['weixin_login_token_time']    = self.current_time
 
         # 获取用户信息
-        userinfo_url = self.__userinfo_url(access_token, openid)
-        response     = requests.get(userinfo_url)
+        userinfo_url      = self.__userinfo_url(access_token, openid)
+        response          = requests.get(userinfo_url)
+        response.encoding = 'utf8'
         if response.status_code != 200:
             return False
 
@@ -191,7 +192,7 @@ class WeiXinLoginService(object):
         # 绑定登录
         utb = UserThirdBind.query.\
                     filter(UserThirdBind.third_type == 1).\
-                    filter(UserThirdBind.third_unionid == unionid).first()
+                    filter(UserThirdBind.third_user_id == openid).first()
         if not utb:
             ucs = UserCreateService(user_data, self.current_time)
             if not ucs.check():
@@ -203,7 +204,7 @@ class WeiXinLoginService(object):
             user = ucs.user
 
             # 创建帐户
-            UserStaticMethodsService.create_account(user.uid, is_commit=False)
+            UserStaticMethodsService.create_account(user.uid, self.current_time, is_commit=False)
 
             # 创建绑定
             data = {'uid':user.uid, 'third_type':1,

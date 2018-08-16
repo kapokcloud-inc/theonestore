@@ -58,7 +58,15 @@ class WeixinPayForm(Form):
                     validators=[Required(message=_(u'请填写微信支付商户密钥'))])
     
 
+class WeixinOpenForm(Form):
+    appid = StringField(label=_(u'微信开放平台(AppID)'),
+                    description=_(u'如：'),
+                    validators=[Required(message=_(u'请填写微信开放平台(AppID)'))])
 
+    secret = StringField(label=_(u'微信开放平台密码(AppSecret)'),
+                    description=_(u'如：'),
+                    validators=[Required(message=_(u'请填写微信开放平台密码(AppSecret)'))])
+                    
 
 class SmsYunpianForm(Form):
     ak = StringField(_name='ak', 

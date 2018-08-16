@@ -44,7 +44,7 @@
           <div class="all_desc height25">{{ item.goods_desc }}</div>
         </div>
         <div class="weui-cell__ft mar-left">
-          <span class="all_price height25">￥{{ item.goods_price }}</span>
+          <span class="all_price height25">￥{{ item.goods_price|toamount }}</span>
           <p class="height25">x {{ item.quantity }}</p>
         </div>
       </div>
@@ -66,15 +66,15 @@
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('商品总价')}}</label>
-          <span class="weui-form-preview__value">￥{{ order.goods_amount }}</span>
+          <span class="weui-form-preview__value">￥{{ order.goods_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('运费')}}</label>
-          <span class="weui-form-preview__value">+￥{{ order.shipping_amount }}</span>
+          <span class="weui-form-preview__value">+￥{{ order.shipping_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('优惠金额')}}</label>
-          <span class="weui-form-preview__value">-￥{{ order.discount_amount }}</span>
+          <span class="weui-form-preview__value">-￥{{ order.discount_amount|toamount }}</span>
         </div>
       </div>
     </div>
@@ -85,7 +85,7 @@
       <div class="total">
         <div class="total-price">
           <span>{{_('支付金额')}}：</span>
-          <span class="all_price" style="font-size:18px">￥{{ order.pay_amount }}</span>
+          <span class="all_price" style="font-size:18px">￥{{ order.pay_amount|toamount }}</span>
         </div>
         <input id="order_id" type="hidden" value="{{ order.order_id }}" />
         <div class="btn_primary" onclick="submit()">{{_('提交订单')}}</div>
@@ -137,8 +137,8 @@
 
 <script type="text/javascript">
 var $payList = $('#payList');
-var is_weixin = {{ is_weixin }};
-var redirect_url = '{{ redirect_url }}';
+var openid = '{{ openid }}';
+var pay_info = null;
 
 //提交订单
 function submit() {
@@ -188,10 +188,26 @@ function funds_pay(order_id) {
   });
 }
 
+//调起微信支付
+function onBridgeReady() {
+  WeixinJSBridge.invoke(
+    'getBrandWCPayRequest', pay_info, function(res){
+      //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+      if (res.err_msg == "get_brand_wcpay_request:ok") {
+        window.location.href = '{{ pay_success_url }}';
+        return true;
+      }
+
+      if (res.err_msg == "get_brand_wcpay_request:fail") {
+        alert("{{_('调起支付失败！')}}");
+        return true;
+      }
+    }
+  );
+}
+
 //微信支付
 function weixin_pay(order_id) {
-  var openid = '';
-
   //检查
   if ( !order_id ) {
     $.toast("{{_('创建订单失败，请刷新页面重试。')}}", "text");
@@ -199,42 +215,40 @@ function weixin_pay(order_id) {
   }
 
   //获取openid
-  var redirect_url = '{{ request.base_url }}' + '?order_id=' + order_id + '&weixin=1';
-  $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'redirect_url':redirect_url}, function(res) {
-    if (res.ret != 0) {
-      $.toast(res.msg, "text");
+  if (openid == '') {
+    $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'order_id':order_id, 'order_type':1}, function(res) {
+      if (res.ret != 0) {
+        $.toast(res.msg, "text");
+        return false;
+      }
+
+      window.location.href = res.data.code_url;
       return false;
-    }
+    });
+  } else {
+    var order_id_list = '[' + order_id + ']';
+    $.get("{{ url_for('api.pay.weixinjspay_req') }}", {'order_id_list':order_id_list, 'openid':openid}, function(res) {
+      if (res.ret != 0) {
+        $.toast(res.msg, "text");
+        return false;
+      }
 
-    openid = res.data.openid;
-  });
+      pay_info = res.data.info;
 
-  //检查
-  if ( !openid ) {
-    $.toast("{{_('获取openid失败，请刷新页面重试。')}}", "text");
-    return false;
+      if (typeof WeixinJSBridge == "undefined"){
+        if( document.addEventListener ){
+          document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        }else if (document.attachEvent){
+          document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+          document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+      }else{
+        onBridgeReady();
+      }
+    });
   }
 
-  var order_id_list = '[' + order_id + ']';
-  $.get("{{ url_for('api.pay.weixinjspay_req') }}", {'order_id_list':order_id_list, 'openid':openid}, function(res) {
-    if (res.ret != 0) {
-      $.toast(res.msg, "text");
-      return false;
-    }
-
-    //调起支付
-    WeixinJSBridge.invoke(
-        'getBrandWCPayRequest', res.data.info, function(res){
-            //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-            if (res.err_msg == "get_brand_wcpay_request:ok" ) {
-                window.location.href = "/mobile/pay/success/"+order_id;
-                return true;
-            }
-        }
-    );
-  });
-
-  return false;
+  return true;
 }
 
 //选择支付
@@ -267,10 +281,13 @@ function choose_pay(dom, pay_type) {
 }
 
 //立即调起微信支付
-if (is_weixin == 1) {
-  var order_id = parseInt($("#order_id").val());
+$(document).ready(function() {
+  var is_pay_now = {{ is_pay_now }};
+  if (openid && is_pay_now == 1) {
+    var order_id = parseInt($("#order_id").val());
 
-  weixin_pay(order_id);
-}
+    weixin_pay(order_id);
+  }
+});
 </script> 
 {% endblock %}

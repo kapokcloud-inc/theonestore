@@ -37,6 +37,7 @@ from app.services.api.order import (
 )
 
 from app.forms.api.aftersales import AfterSalesForm
+from app.database import db
 
 from app.models.aftersales import (
     Aftersales,
@@ -104,9 +105,15 @@ def apply_step0(order_id):
         return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
-    data = OrderStaticMethodsService.detail_page(order_id, uid)
+    data               = OrderStaticMethodsService.detail_page(order_id, uid)
     #pc端订单详情不支持再次购买，排除掉指令[5]
     data['code']= list(set(data['code'])-set([5]))
+
+    #申请售后的存在多条售后记录
+    aftersale_all = db.session.query(Aftersales.goods_data,Aftersales.aftersales_id).\
+                            filter(Aftersales.order_id == order_id).\
+                            filter(Aftersales.status.in_([1,2])).all()
+    data['aftersale_all'] = aftersale_all
 
     return render_template('pc/aftersales/apply_step0.html.j2', **data)
 
@@ -120,15 +127,24 @@ def apply_step1():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
     
-    order_id = request.args.to_dict().get('order_id')
-    og_id    = request.args.to_dict().get('og_id')
+    order_id              = request.args.to_dict().get('order_id')
+    og_id                 = request.args.to_dict().get('og_id')
     
-    data = OrderStaticMethodsService.detail_page(order_id, uid)
+    data                  = OrderStaticMethodsService.detail_page(order_id, uid)
     #pc端订单详情不支持再次购买，排除掉指令[5]
-    data['code']= list(set(data['code'])-set([5]))
+    data['code']          = list(set(data['code'])-set([5]))
+    order_good            = OrderGoods.query.filter(OrderGoods.og_id==og_id).first()
+    data['order_good']    = order_good
 
-    order_good = OrderGoods.query.filter(OrderGoods.og_id==og_id).first()
-    data['order_good'] = order_good
+    #申请售后的存在多条售后记录
+    aftersale_all         = db.session.query(Aftersales.goods_data,Aftersales.aftersales_id).\
+                            filter(Aftersales.order_id == order_id).\
+                            filter(Aftersales.status.in_([1,2])).all()
+    data['aftersale_all'] = aftersale_all
+
+    wtf_form              = AfterSalesForm()
+    data['wtf_form']      = wtf_form
+    
 
     return render_template('pc/aftersales/apply_step1.html.j2',**data)
 

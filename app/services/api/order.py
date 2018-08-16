@@ -12,7 +12,10 @@ import json
 import random
 from decimal import Decimal
 
-from flask import abort
+from flask import (
+    abort,
+    session
+)
 from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
 from sqlalchemy import or_
@@ -35,7 +38,10 @@ from app.helpers.date_time import (
 )
 
 from app.services.message import MessageCreateService
-from app.services.api.cart import CheckoutService
+from app.services.api.cart import (
+    CheckoutService,
+    CartService
+)
 from app.services.api.funds import FundsService
 
 from app.models.aftersales import Aftersales
@@ -205,6 +211,10 @@ class OrderCreateService(object):
             mcs.do()
 
         db.session.commit()
+
+        cs = CartService(self.uid, 0)
+        cs.check()
+        session['cart_total'] = cs.cart_total
 
         return True
 
@@ -598,12 +608,14 @@ class PaidService(object):
             model_update(order, data)
 
             # 站内消息
-            content = _(u'您的订单%s已支付，我们会尽快发货。' % order.order_sn)
-            mcs = MessageCreateService(1, order.uid, -1, content, ttype=1, tid=order_id, current_time=self.current_time)
-            if not mcs.check():
-                log_error('[ErrorServiceApiOrderPaidServicePaid][MessageCreateError]  order_id:%s msg:%s' % (order_id, mcs.msg))
-            else:
-                mcs.do()
+            if order.order_type == 1:
+                content = _(u'您的订单%s已支付，我们会尽快发货。' % order.order_sn)
+                mcs = MessageCreateService(1, order.uid, -1, content, ttype=1, tid=order_id, current_time=self.current_time)
+                if not mcs.check():
+                    log_error('[ErrorServiceApiOrderPaidServicePaid][MessageCreateError]  order_id:%s msg:%s' %\
+                                (order_id, mcs.msg))
+                else:
+                    mcs.do()
 
             # 提交订单事务
             db.session.commit()
@@ -753,6 +765,7 @@ class OrderStaticMethodsService(object):
                             Order.shipping_amount, Order.shipping_status, Order.deliver_status,
                             Order.goods_quantity, Order.goods_data, Order.add_time,Order.shipping_time).\
                 filter(Order.uid == uid).\
+                filter(Order.order_type == 1).\
                 filter(Order.is_remove == 0)
 
         if tab_status == 1:
@@ -872,15 +885,17 @@ class OrderStaticMethodsService(object):
         order_address = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
         text, code    = OrderStaticMethodsService.order_status_text_and_action_code(order)
 
-        express_data = None
+        express_data  = None
+        express_datas = []
         if order.shipping_status == 2:
             _express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
             if _express_msg == 'ok':
-                express_data = _express_data[0] if len(_express_data) > 0 else {}
+                express_data  = _express_data[0] if len(_express_data) > 0 else {}
+                express_datas = _express_data
 
         aftersale = Aftersales.query.filter(Aftersales.order_id == order_id).filter(Aftersales.status.in_([1,2])).first()
 
         data = {'order':order, 'items':items, 'order_address':order_address,
-                'text':text, 'code':code, 'express_data':express_data,
+                'text':text, 'code':code, 'express_data':express_data, 'express_datas':express_datas,
                 'aftersale':aftersale, 'current_time':current_timestamp()}
         return data

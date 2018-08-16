@@ -26,7 +26,9 @@
       <ul class="order_status">
         <li class="flex pstR">
           <a href="{{ url_for('mobile.order.index', tab_status=1) }}">
-            <span class="weui-badge">{{ unpaid_count }}</span>
+            {% if unpaid_count > 0 %}
+              <span class="weui-badge msg_badge">{{ unpaid_count }}</span>
+            {% endif %}
             <div class="icom_photo">
               <img src="/static/default/mobile/img/pay.png" alt="">
             </div>
@@ -35,7 +37,9 @@
         </li>
         <li class="flex pstR">
           <a href="{{ url_for('mobile.order.index', tab_status=2) }}">
-            <span class="weui-badge">{{ undeliver_count }}</span>
+            {% if undeliver_count > 0 %}
+              <span class="weui-badge msg_badge">{{ undeliver_count }}</span>
+            {% endif %}
             <div class="icom_photo">
               <img src="/static/default/mobile/img/deliver.png" alt="">
             </div>
@@ -44,7 +48,9 @@
         </li>
         <li class="flex pstR">
           <a href="{{ url_for('mobile.order.comment', is_pending=1) }}">
-            <span class="weui-badge">{{ uncomment_count }}</span>
+            {% if uncomment_count > 0 %}
+              <span class="weui-badge msg_badge">{{ uncomment_count }}</span>
+            {% endif %}
             <div class="icom_photo">
               <img src="/static/default/mobile/img/comment.png" alt="">
             </div>
@@ -53,7 +59,9 @@
         </li>
         <li class="flex pstR">
           <a href="{{ url_for('mobile.aftersales.root') }}">
-            <span class="weui-badge">{{ aftersales_count }}</span>
+            {% if aftersales_count > 0 %}
+              <span class="weui-badge msg_badge">{{ aftersales_count }}</span>
+            {% endif %}
             <div class="icom_photo">
               <img src="/static/default/mobile/img/aftersale.png" alt="">
             </div>
@@ -69,16 +77,16 @@
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">{{_('优惠券')}}</div>
-      {% if coupon_count > 0 %}
-        <div class="weui-cell__ft">{{ coupon_count }}{{_('张')}}</div>
-      {% endif %}
+      {% set _coupon_count = _('%s张' % coupon_count) if coupon_count > 0 else '' %}
+      <div class="weui-cell__ft">{{ _coupon_count }}</div>
     </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.wallet.root') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">{{_('钱包')}}</div>
-      <div class="weui-cell__ft">{{ funds.funds }}{{_('元')}}</div>
+      {% set _funds = _('%s元' % funds.funds) if funds.funds else '' %}
+      <div class="weui-cell__ft">{{ _funds }}</div>
     </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.me.collect') }}">
       <div class="weui-cell__hd">
@@ -92,24 +100,23 @@
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">{{_('消息')}}</div>
-      {% if g.unread_count > 0 %}
-        <div class="weui-cell__ft">{{_('未读%s条' % g.unread_count)}}</div>
-      {% endif %}
+      {% set _unread_count = _('未读%s条' % g.unread_count) if g.unread_count > 0 else '' %}
+      <div class="weui-cell__ft">{{ _unread_count }}</div>
     </a>
   </div>
   <div class="weui-cells weui-cells_form">
-    <a class="weui-cell weui-cell_access" href="">
-      <div class="weui-cell__hd">
-        <img src="" alt="">
-      </div>
-      <div class="weui-cell__bd">{{_('关于一店')}}</div>
-      <div class="weui-cell__ft"></div>
-    </a>
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.me.addresses') }}">
       <div class="weui-cell__hd">
         <img src="" alt="">
       </div>
       <div class="weui-cell__bd">{{_('地址管理')}}</div>
+      <div class="weui-cell__ft"></div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="">
+      <div class="weui-cell__hd">
+        <img src="" alt="">
+      </div>
+      <div class="weui-cell__bd">{{_('关于一店')}}</div>
       <div class="weui-cell__ft"></div>
     </a>
   </div>

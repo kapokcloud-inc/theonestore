@@ -40,18 +40,35 @@
 
 {% block script %}
 <script type="text/javascript">
-var is_weixin = {{ is_weixin }};
-var redirect_url = '{{ redirect_url }}';
+var openid = '{{ openid }}';
+var pay_success_url = '{{ pay_success_url }}';
+var pay_info = null;
 
-var csrftoken = $('#csrf_token').val();
+var csrftoken = "{{ csrf_token() }}";
 $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
 
+//调起微信支付
+function onBridgeReady() {
+  WeixinJSBridge.invoke(
+    'getBrandWCPayRequest', pay_info, function(res){
+      //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+      if (res.err_msg == "get_brand_wcpay_request:ok") {
+        window.location.href = pay_success_url;
+        return true;
+      }
+
+      if (res.err_msg == "get_brand_wcpay_request:fail") {
+        alert("{{_('调起支付失败！')}}");
+        return true;
+      }
+    }
+  );
+}
+
 //微信支付
 function weixin_pay(order_id) {
-  var openid = '';
-
   //检查
   if ( !order_id ) {
     $.toast("{{_('创建订单失败，请刷新页面重试。')}}", "text");
@@ -59,41 +76,40 @@ function weixin_pay(order_id) {
   }
 
   //获取openid
-  $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'redirect_url':redirect_url}, function(res) {
-    if (res.ret != 0) {
-      $.toast(res.msg, "text");
+  if (openid == '') {
+    $.get("{{ url_for('api.pay.weixinjspay_openid') }}", {'order_id':order_id, 'order_type':1}, function(res) {
+      if (res.ret != 0) {
+        $.toast(res.msg, "text");
+        return false;
+      }
+
+      window.location.href = res.data.code_url;
       return false;
-    }
+    });
+  } else {
+    var order_id_list = '[' + order_id + ']';
+    $.get("{{ url_for('api.pay.weixinjspay_req') }}", {'order_id_list':order_id_list, 'openid':openid}, function(res) {
+      if (res.ret != 0) {
+        $.toast(res.msg, "text");
+        return false;
+      }
 
-    openid = res.data.openid;
-  });
+      pay_info = res.data.info;
 
-  //检查
-  if ( !openid ) {
-    $.toast("{{_('获取openid失败，请刷新页面重试。')}}", "text");
-    return false;
+      if (typeof WeixinJSBridge == "undefined"){
+        if( document.addEventListener ){
+          document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        }else if (document.attachEvent){
+          document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+          document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+      }else{
+        onBridgeReady();
+      }
+    });
   }
 
-  var order_id_list = '[' + order_id + ']';
-  $.get("{{ url_for('api.pay.weixinjspay_req') }}", {'order_id_list':order_id_list, 'openid':openid}, function(res) {
-    if (res.ret != 0) {
-      $.toast(res.msg, "text");
-      return false;
-    }
-
-    //调起支付
-    WeixinJSBridge.invoke(
-        'getBrandWCPayRequest', res.data.info, function(res){
-            //使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
-            if (res.err_msg == "get_brand_wcpay_request:ok" ) {
-                window.location.href = "/mobile/pay/success/"+order_id;
-                return true;
-            }
-        }
-    );
-  });
-
-  return false;
+  return true;
 }
 
 //提交订单
@@ -112,22 +128,26 @@ function submit() {
     $.post("{{ url_for('api.order.recharge') }}", params, function(json) {
       if (json.ret == 0) {
         order_id = json.data.order_id;
+
+        pay_success_url = pay_success_url != '' ? pay_success_url : '/mobile/pay/success/'+order_id;
         $("#order_id").val(order_id);
+        weixin_pay(order_id);
       } else {
         $.toast(json.msg, "text");
-        return false;
       }
     });
+  } else {
+    weixin_pay(order_id);
   }
-
-  weixin_pay(order_id);
 }
 
 //立即调起微信支付
-if (is_weixin == 1) {
+$(document).ready(function() {
   var order_id = parseInt($("#order_id").val());
 
-  weixin_pay(order_id);
-}
+  if (openid && order_id) {
+    weixin_pay(order_id);
+  }
+});
 </script>
 {% endblock %}
