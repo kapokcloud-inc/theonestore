@@ -170,8 +170,9 @@ class WeiXinLoginService(object):
         session['weixin_login_token_time']    = self.current_time
 
         # 获取用户信息
-        userinfo_url = self.__userinfo_url(access_token, openid)
-        response     = requests.get(userinfo_url)
+        userinfo_url      = self.__userinfo_url(access_token, openid)
+        response          = requests.get(userinfo_url)
+        response.encoding = 'utf8'
         if response.status_code != 200:
             return False
 
