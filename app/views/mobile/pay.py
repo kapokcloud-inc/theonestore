@@ -19,6 +19,8 @@ from flask_babel import gettext as _
 
 from app.helpers import render_template
 
+from app.models.order import Order
+
 pay = Blueprint('mobile.pay', __name__)
 
 
@@ -26,4 +28,8 @@ pay = Blueprint('mobile.pay', __name__)
 def success(order_id):
     """手机站 - 完成支付"""
 
-    return render_template('mobile/pay/success.html.j2', order_id=order_id)
+    order = Order.query.get(order_id)
+    if not order:
+        return redirect(url_for('mobile.index.root'))
+
+    return render_template('mobile/pay/success.html.j2', order=order)
