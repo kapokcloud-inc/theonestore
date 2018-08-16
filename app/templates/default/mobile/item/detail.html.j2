@@ -216,6 +216,7 @@
       </div>
       <div class="icon_wrap" onclick="toCart()">
         {% set cart_total = session.get('cart_total', 0) %}
+        {% set cart_total = cart_total if cart_total else '' %}
         <span id="cart_total" class="weui-badge msg_badge">{{ cart_total }}</span>
         <img src="/static/default/mobile/img/cart.png" alt="">
       </div>
