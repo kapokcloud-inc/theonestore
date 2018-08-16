@@ -115,7 +115,7 @@ class AfterSaleCheckService(object):
                                         self.order_address.district, self.order_address.address)
                 name    = self.order_address.name
                 mobile  = self.order_address.mobile
-                content = '%s地址：%s 收货人：%s 电话：%s' % (content, address, name, mobile)
+                content = _(u'%s地址：%s 收货人：%s 电话：%s' % (content, address, name, mobile))
         else:
             data    = {'status':4, 'check_status':3, 'update_time':self.current_time}
             content = _(u'抱歉通知您，您的服务单号：%s审核不通过。原因：%s' % (self.aftersale.aftersales_sn, self.content))
