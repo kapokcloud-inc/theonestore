@@ -598,12 +598,14 @@ class PaidService(object):
             model_update(order, data)
 
             # 站内消息
-            content = _(u'您的订单%s已支付，我们会尽快发货。' % order.order_sn)
-            mcs = MessageCreateService(1, order.uid, -1, content, ttype=1, tid=order_id, current_time=self.current_time)
-            if not mcs.check():
-                log_error('[ErrorServiceApiOrderPaidServicePaid][MessageCreateError]  order_id:%s msg:%s' % (order_id, mcs.msg))
-            else:
-                mcs.do()
+            if order.order_type == 1:
+                content = _(u'您的订单%s已支付，我们会尽快发货。' % order.order_sn)
+                mcs = MessageCreateService(1, order.uid, -1, content, ttype=1, tid=order_id, current_time=self.current_time)
+                if not mcs.check():
+                    log_error('[ErrorServiceApiOrderPaidServicePaid][MessageCreateError]  order_id:%s msg:%s' %\
+                                (order_id, mcs.msg))
+                else:
+                    mcs.do()
 
             # 提交订单事务
             db.session.commit()
@@ -753,6 +755,7 @@ class OrderStaticMethodsService(object):
                             Order.shipping_amount, Order.shipping_status, Order.deliver_status,
                             Order.goods_quantity, Order.goods_data, Order.add_time,Order.shipping_time).\
                 filter(Order.uid == uid).\
+                filter(Order.order_type == 1).\
                 filter(Order.is_remove == 0)
 
         if tab_status == 1:
