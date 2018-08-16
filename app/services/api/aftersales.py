@@ -20,6 +20,7 @@ from app.database import db
 from app.helpers import (
     log_info,
     toint,
+    toamount,
     model_to_dict_only,
     model_create,
     model_update,
@@ -382,7 +383,7 @@ class AfterSalesStaticMethodsService(object):
                 refunds_amount = (Decimal(order_goods.goods_price) - avg_amount) * quantity
                 refunds_amount = refunds_amount.quantize(Decimal('0.00'))
 
-        return refunds_amount
+        return toamount(refunds_amount)
 
     @staticmethod
     def add_log(aftersales_id, content, current_time=0, commit=True):
