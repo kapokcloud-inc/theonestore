@@ -7,7 +7,7 @@
           <a {{ libs.get_me_navclass('order') }} href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
         </li>
         <li>
-          {% set uncomment_count = '(%s)' % g.uncomment_count|string() if g.uncomment_count else '' %}
+          {% set uncomment_count = '(%s)' % g.uncomment_count if g.uncomment_count else '' %}
           <a {{ libs.get_me_navclass('comment') }} href="{{ url_for('pc.order.comment', ip=1,ps=20,is_pending=1) }}">{{_('评价晒单')}} {{ uncomment_count }}</a>
         </li>
         <li>
@@ -22,7 +22,7 @@
           <a {{ libs.get_me_navclass('profile') }} href="{{ url_for('pc.me.index') }}">{{_('我的个人中心')}}</a>
         </li>
         <li>
-          {% set unread_count = '(%s)' % g.unread_count|string() if g.unread_count else "" %}
+          {% set unread_count = '(%s)' % g.unread_count if g.unread_count else "" %}
           <a {{ libs.get_me_navclass('messages') }} href="{{ url_for('pc.me.messages') }}">{{_('消息通知')}} {{ unread_count }}</a>
         </li>
         <li>

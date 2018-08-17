@@ -60,11 +60,11 @@ class WeixinPayForm(Form):
 
 class WeixinOpenForm(Form):
     appid = StringField(label=_(u'微信开放平台(AppID)'),
-                    description=_(u'如：'),
+                    description=_(u'登录微信开放平台，"管理中心 -> 网站应用 -> 应用详情"查看AppID。若还没有申请应用，请在微信开放平台申请"网站应用"。'),
                     validators=[Required(message=_(u'请填写微信开放平台(AppID)'))])
 
     secret = StringField(label=_(u'微信开放平台密码(AppSecret)'),
-                    description=_(u'如：'),
+                    description=_(u'登录微信开放平台，"管理中心 -> 网站应用 -> 应用详情"查看AppSecret。若还没有申请应用，请在微信开放平台申请"网站应用"。'),
                     validators=[Required(message=_(u'请填写微信开放平台密码(AppSecret)'))])
                     
 
@@ -131,3 +131,19 @@ class StorageAliossForm(Form):
     cname = StringField(label=_(u'CDN加速域名'), 
                     description=_(u'<p>不需要填写https或者http开头，只需要填写域名</p><p>例如：static.theonestore.cn</p>'),
                     validators=[Required(message=_(u'请填写CDN加速域名'))])
+
+
+class AftersalesAddressForm(Form):
+    consignee_name   = StringField(label=_(u'售后收货负责人/部门'),
+                        description=_(u'售后服务，用户"退货/换货"寄回商品的联系人/部门'), 
+                        validators=[Required(message=_(u'请填写收货人'))])
+
+    consignee_mobile = StringField(label=_(u'联系电话'),
+                        description=_(u'很重要，能联系到的负责人/部门电话'), 
+                        validators=[Required(message=_(u'请填写收货人电话'))])
+
+    consignee_address = StringField(label=_(u'完整地址'),
+                        description=_(u'如：广东省深圳市南山区西丽大学城云谷2期8栋510'), 
+                        validators=[Required(message=_(u'请填写收货人地址'))])
+
+    

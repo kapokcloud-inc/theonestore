@@ -8,9 +8,9 @@
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="white-box">
-          <h3 class="box-title"><a target="_blank" href="https://pay.weixin.qq.com/">{{ _('微信开放平台') }}</a></h3>
+          <h3 class="box-title"><a target="_blank" href="https://open.weixin.qq.com/">{{ _('微信开放平台') }}</a></h3>
           <p class="text-muted m-b-30">
-            {{ _('微信开放平台 - 中国领先的第三方开放平台') }}
+            {{ _('微信开放平台 - 用于网站微信扫码登录') }}
           </p>
 
           {{ libs.build_tabs(tabs=[
@@ -19,7 +19,7 @@
             {'label':_('微信开放平台'), 'endpoint':'admin.config.weixinopen'}
           ], border_bottom='line') }}
 
-          {# 微信支付 form表单 #}
+          {# 微信开放平台 form表单 #}
           {{ libs.render_form(form, action=url_for('admin.config.weixinopen')) }}
 
         </div>
