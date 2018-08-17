@@ -298,3 +298,10 @@
   padding: 15px;
   line-height: 0;
 }
+.weui-cells__tips {
+  margin-top: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  color: #ccc;
+  font-size: 12px;
+}

@@ -125,9 +125,7 @@
     </a>
   </div>
   <div class="reg_btn">
-    <a href="">
-      <a href="{{ url_for('mobile.me.signout') }}" type="button" class="weui-btn weui-btn_red">{{_('退出登录')}}</a>
-    </a>
+    <a href="{{ url_for('mobile.me.signout') }}" class="weui-btn weui-btn_red">{{_('退出登录')}}</a>
   </div>
 
   {{ libs.bottom_navigation_bar() }}
