@@ -437,6 +437,8 @@ class NativeService(object):
             self.msg = self.us.msg
             return False
 
+        return True
+
 
     def create_qrcode(self):
         """创建二维码"""
