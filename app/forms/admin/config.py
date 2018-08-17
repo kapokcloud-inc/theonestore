@@ -134,15 +134,15 @@ class StorageAliossForm(Form):
 
 
 class AftersalesAddressForm(Form):
-    consignee_name   = StringField(label=_('售后收货负责人/部门'),
+    consignee_name   = StringField(label=_(u'售后收货负责人/部门'),
                         description=_(u'售后服务，用户"退货/换货"寄回商品的联系人/部门'), 
                         validators=[Required(message=_(u'请填写收货人'))])
 
-    consignee_mobile = StringField(label=_('联系电话'),
+    consignee_mobile = StringField(label=_(u'联系电话'),
                         description=_(u'很重要，能联系到的负责人/部门电话'), 
                         validators=[Required(message=_(u'请填写收货人电话'))])
 
-    consignee_address = StringField(label=_('完整地址'),
+    consignee_address = StringField(label=_(u'完整地址'),
                         description=_(u'如：广东省深圳市南山区西丽大学城云谷2期8栋510'), 
                         validators=[Required(message=_(u'请填写收货人地址'))])
 
