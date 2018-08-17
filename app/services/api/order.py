@@ -796,7 +796,7 @@ class OrderStaticMethodsService(object):
             text, code = OrderStaticMethodsService.order_status_text_and_action_code(order)
             texts[order.order_id] = text
             codes[order.order_id] = code
-            aftersale = Aftersales.query.filter(Aftersales.order_id == order.order_id).filter(Aftersales.status.in_([1,2])).first()
+            aftersale = Aftersales.query.filter(Aftersales.order_id == order.order_id).filter(Aftersales.status.in_([1,2,3])).first()
             if aftersale:
                 aftersales[order.order_id] = aftersale
             
@@ -893,7 +893,7 @@ class OrderStaticMethodsService(object):
                 express_data  = _express_data[0] if len(_express_data) > 0 else {}
                 express_datas = _express_data
 
-        aftersale = Aftersales.query.filter(Aftersales.order_id == order_id).filter(Aftersales.status.in_([1,2])).first()
+        aftersale = Aftersales.query.filter(Aftersales.order_id == order_id).filter(Aftersales.status.in_([1,2,3])).first()
 
         data = {'order':order, 'items':items, 'order_address':order_address,
                 'text':text, 'code':code, 'express_data':express_data, 'express_datas':express_datas,

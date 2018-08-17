@@ -69,9 +69,9 @@ def apply():
     if not ascs.check():
         return resjson.print_json(12, ascs.msg)
 
-    ascs.create()
+    aftersales_id = ascs.create()
 
-    return resjson.print_json(0, u'ok')
+    return resjson.print_json(0, u'ok', {'aftersales_id':aftersales_id})
 
 
 @aftersales.route('/refunds-amount')

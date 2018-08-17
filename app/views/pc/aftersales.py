@@ -105,12 +105,12 @@ def apply_step0(order_id):
         return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
-    data               = OrderStaticMethodsService.detail_page(order_id, uid)
+    data                  = OrderStaticMethodsService.detail_page(order_id, uid)
     #pc端订单详情不支持再次购买，排除掉指令[5]
     data['code']= list(set(data['code'])-set([5]))
 
     #申请售后的存在多条售后记录
-    aftersale_all = db.session.query(Aftersales.goods_data,Aftersales.aftersales_id).\
+    aftersale_all         = db.session.query(Aftersales.goods_data,Aftersales.aftersales_id).\
                             filter(Aftersales.order_id == order_id).\
                             filter(Aftersales.status.in_([1,2])).all()
     data['aftersale_all'] = aftersale_all
@@ -144,7 +144,6 @@ def apply_step1():
 
     wtf_form              = AfterSalesForm()
     data['wtf_form']      = wtf_form
-    
 
     return render_template('pc/aftersales/apply_step1.html.j2',**data)
 
@@ -156,8 +155,9 @@ def apply_step2():
     return render_template('pc/aftersales/apply_step2.html.j2')
 
 
-@aftersales.route('/apply/step3')
+@aftersales.route('/apply/step3/')
 def apply_step3():
     """pc站 - 申请售后服务-第三步"""
+    data = request.args.to_dict()
 
-    return render_template('pc/aftersales/apply_step3.html.j2')
+    return render_template('pc/aftersales/apply_step3.html.j2', **data)

@@ -287,7 +287,7 @@ class AfterSalesCreateService(object):
 
         db.session.commit()
 
-        return True
+        return aftersales.aftersales_id
 
 
 class AfterSalesStaticMethodsService(object):

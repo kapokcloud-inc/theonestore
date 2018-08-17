@@ -84,7 +84,7 @@
                   <div class="one-cell_bd">
                     <p class="sub-item_hd">
                       <span>{{_('待评价商品数：')}}</span>
-                      <span class="allOn">{{ uncomment_count }}</span>
+                      <span class="allOn">{{ g.uncomment_count }}</span>
                     </p>
                     <div style="position: relative;">
                       <a class="sub-item_link" href="{{ url_for('pc.order.comment', is_pending=1) }}">{{_('查看待评价商品 >')}}</a>
