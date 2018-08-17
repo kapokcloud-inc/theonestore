@@ -7,10 +7,7 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
-import base64
 import json
-import pyqrcode
-from io import BytesIO
 from decimal import Decimal
 
 from flask import (
@@ -40,7 +37,7 @@ from app.helpers.user import (
 )
 
 from app.services.api.order import PayService
-from app.services.api.pay_weixin import UnifiedorderService
+from app.services.api.pay_weixin import NativeService
 from app.services.api.cart import (
     CartService,
     CheckoutService,
@@ -111,16 +108,10 @@ def pay(order_id):
     nonce_str  = str(tran_id)
     pay_amount = Decimal(tran.pay_amount).quantize(Decimal('0.00'))*100
 
-    # 统一下单
-    us = UnifiedorderService(nonce_str, subject, tran_id, pay_amount, 'NATIVE', request.remote_addr)
-    if not us.unifiedorder():
-        return redirect(url_for('pc.order.index', msg=us.msg))
-
-    # 生成二维码
-    big_code = pyqrcode.create(us.code_url, error='L', version=3, mode='binary')
-    buffered = BytesIO()
-    big_code.png(buffered, scale=6, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xff])
-
-    data['qrcode'] = base64.b64encode(buffered.getvalue()).decode('utf-8')
+    # 支付二维码
+    ns = NativeService(nonce_str, subject, tran_id, pay_amount, request.remote_addr)
+    if not ns.create_qrcode():
+        return redirect(url_for('pc.order.index', msg=ns.msg))
+    data['qrcode'] = ns.qrcode
 
     return render_template('pc/cart/pay.html.j2', **data)

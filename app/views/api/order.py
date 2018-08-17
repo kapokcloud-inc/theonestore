@@ -35,12 +35,14 @@ from app.helpers.user import (
 
 from app.services.response import ResponseJson
 from app.services.message import MessageCreateService
+from app.services.api.pay_weixin import NativeService
 from app.services.api.order import (
     OrderCreateService,
     OrderUpdateService,
     OrderCancelService,
     OrderDeliverService,
-    RechargeOrderCreateService
+    RechargeOrderCreateService,
+    PayService
 )
 
 from app.forms.api.comment import CommentOrderGoodsForm
@@ -259,6 +261,7 @@ def recharge():
 
     form            = request.form
     recharge_amount = form.get('recharge_amount', '0.00').strip()
+    is_qrcode       = toint(form.get('is_qrcode', '0'))
 
     rocs = RechargeOrderCreateService(uid, recharge_amount)
     if not rocs.check():
@@ -266,7 +269,29 @@ def recharge():
 
     rocs.create()
 
-    return resjson.print_json(0, u'ok', {'order_id':rocs.order.order_id})
+    qrcode = ''
+    if is_qrcode == 1:
+        # 创建支付
+        ps = PayService(uid, [rocs.order.order_id])
+        if not ps.check():
+            return resjson.print_json(12, ps.msg)
+
+        if not ps.tran:
+            ps.create_tran()
+
+        tran       = ps.tran
+        tran_id    = tran.tran_id
+        subject    = u'交易号：%d' % tran_id
+        nonce_str  = str(tran_id)
+        pay_amount = Decimal(tran.pay_amount).quantize(Decimal('0.00'))*100
+
+        # 支付二维码
+        ns = NativeService(nonce_str, subject, tran_id, pay_amount, request.remote_addr)
+        if not ns.create_qrcode():
+            return resjson.print_json(13, ns.msg)
+        qrcode = ns.qrcode
+
+    return resjson.print_json(0, u'ok', {'order_id':rocs.order.order_id, 'qrcode':qrcode})
 
 
 @order.route('/is_paid')

@@ -7,12 +7,15 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import base64
 import json
 import requests
 import optparse
+import pyqrcode
 from decimal import Decimal
 from hashlib import md5
 from xml.etree import ElementTree
+from io import BytesIO
 try:
     from urllib.parse import urlencode
 except ImportError as identifier:
@@ -399,5 +402,53 @@ class JsapiNotifyService():
         if _sign != sign:
             log_error('[ErrorServiceApiPayWeixinJsapiNotifyServiceVerify][VerifyError]  xml:%s ' % self.xml)
             return False
+
+        return True
+
+
+class NativeService(object):
+    """扫码支付Service"""
+
+    def __init__(self, nonce_str, body, out_trade_no, total_fee, spbill_create_ip=''):
+        """
+        @param nonce_str:           32位内随机字符串
+        @param body:                订单信息
+        @param out_trade_no:        商户订单号(交易ID)
+        @param total_fee:           交易金额
+        @param spbill_create_ip:    客户端请求IP地址
+        """
+        self.msg              = u''
+        self.nonce_str        = nonce_str
+        self.body             = body
+        self.out_trade_no     = out_trade_no
+        self.total_fee        = total_fee
+        self.spbill_create_ip = spbill_create_ip
+        self.current_time     = current_timestamp()
+        self.us               = None                # 统一下单实例
+        self.qrcode           = None                # 二维码流数据
+    
+    def __check(self):
+        """检查"""
+
+        # 统一下单
+        self.us = UnifiedorderService(self.nonce_str, self.body, self.out_trade_no, self.total_fee,
+                                        'NATIVE', self.spbill_create_ip)
+        if not self.us.unifiedorder():
+            self.msg = self.us.msg
+            return False
+
+
+    def create_qrcode(self):
+        """创建二维码"""
+
+        if not self.__check():
+            return False
+
+        # 生成二维码
+        big_code = pyqrcode.create(self.us.code_url, error='L', version=3, mode='binary')
+        buffered = BytesIO()
+        big_code.png(buffered, scale=6, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xff])
+
+        self.qrcode = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
         return True
