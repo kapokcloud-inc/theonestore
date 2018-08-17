@@ -201,19 +201,21 @@ function doNext(){
   var content = $("#content").val();
   var images = [];
   $(".one-uploader_file").each(function(i){
-    images.push($(this).attr('data-value'));
+    var $img = $(this).find('img');
+    var img_url = $img.attr('data-value');
+    images.push(img_url);
   });
   var img_data = JSON.stringify(images);
 
   if( aftersales_type == 1 ){//整单退款，提交申请
-
+    
     var params = {'order_id':order_id, 'aftersales_type':1, 'deliver_status':0, 'content':content, 'img_data':img_data};
     
   }else if( aftersales_type == 2 ){//单商品退货退款，提交申请
 
     var og_id = parseInt($("#og_id").val());
     var quantity =  parseInt($("#remain_quantity").val());
-    var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':2, 'deliver_status':2, 'content':content, 'img_data':img_data, 'name':"", 'mobile':"", 'province':"", 'city':"", 'district':"",'address':""};
+    var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':2, 'deliver_status':2, 'content':content, 'img_data':img_data};
 
   }else if ( aftersales_type == 3 ){//但商品换货，进入地址编辑页
 
@@ -226,14 +228,14 @@ function doNext(){
     $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
       if (json.ret == 0) {
         aftersales_id = json.data.aftersales_id
-        //window.location.href = "{{ url_for('pc.aftersales.apply_step3') }}" + "?aftersales_type=" + aftersales_type + "&aftersales_id=" + aftersales_id;
+        console.log(aftersales_id)
+        window.location.href = "{{ url_for('pc.aftersales.apply_step3') }}" + "?aftersales_type=" + aftersales_type + "&aftersales_id=" + aftersales_id;
       } else {
         alert(json.msg,'text');
         return false;
       }
     });
   }
-  
 }
 
 </script>
