@@ -51,7 +51,7 @@
               <span>{{_('微信支付')}}</span>
             </div>
             <div class="bd-QRcode">
-              <img id="qrcode" src="http://i.huodong.mi.com/qrcode/wxget?code=weixin%3A%2F%2Fwxpay%2Fbizpayurl%3Fpr%3DAnUWbUU&key=93cca3325e17f353ed46462f77c19aaa"
+              <img id="qrcode" src=""
                 alt="">
             </div>
       
@@ -81,10 +81,6 @@ function is_paid(order_id) {
 }
 
 function pay() {
-  if (!$('#weixinPay').hasClass('show')) {
-    $('#weixinPay').addClass('show').removeClass('hide');
-  }
-
   var recharge_amount = parseFloat($("#recharge_amount").val());
 
     if (recharge_amount <= 0) {
@@ -100,6 +96,8 @@ function pay() {
 
         var src = 'data:image/png;base64, '+qrcode;
         $("#qrcode").attr('src', src);
+
+        $('#weixinPay').addClass('show').removeClass('hide');
 
         setInterval(is_paid, 1000);
       } else {
