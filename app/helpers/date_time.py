@@ -14,20 +14,20 @@ import time
 from app.helpers import log_info
 
 
-def timestamp2str(timestamp, format_style='YYYY-MM-DD HH:mm:ss'):
+def timestamp2str(timestamp, format_style='YYYY-MM-DD HH:mm:ss', timezone='UTC+8'):
     """时间戳转换为指定格式时间"""
 
     utc = arrow.get(timestamp)
-    loc = utc.to('local')       # 时区 ??
+    loc = utc.to(timezone)
 
     return loc.format(format_style)
 
 
-def str2timestamp(str, format_style='YYYY-MM-DD HH:mm:ss'):
+def str2timestamp(_str, format_style='YYYY-MM-DD HH:mm:ss', timezone='UTC+8'):
     """指定格式时间转换为时间戳"""
 
-    utc = arrow.get(str, format_style)
-    loc = utc.to('local')
+    utc = arrow.get(_str, format_style)
+    loc = utc.replace(tzinfo=timezone)
 
     return loc.timestamp
 
