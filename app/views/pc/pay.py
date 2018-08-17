@@ -29,7 +29,7 @@ def success(order_id):
     return render_template('pc/pay/success.html.j2', order_id=order_id)
 
 
-@pay.route('/recharge-success')
+@pay.route('/recharge_success')
 def recharge_success():
     """pc站 - 充值成功"""
 

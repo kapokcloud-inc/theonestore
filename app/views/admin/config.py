@@ -38,7 +38,8 @@ from app.forms.admin.config import (
     SmsYunpianForm,
     SmsAlismsForm,
     StorageQiniuForm,
-    StorageAliossForm
+    StorageAliossForm,
+    AftersalesAddressForm
 )
 from app.models.shipping import Shipping
 from app.models.sys import SysSetting
@@ -327,3 +328,29 @@ def shipping_save():
 
     return render_template('admin/config/shipping_detail.html.j2', form=wtf_form, shipping=shipping)
 
+
+@config.route('/aftersales_server', methods=['GET','POST'])
+def aftersales_server():
+    """售后地址"""
+    g.page_title = _(u'售后地址')
+
+    form = AftersalesAddressForm()
+    ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_server').first()
+    if request.method == 'GET':
+        try:
+            data = json.loads(ss.value)
+        except Exception as e:
+            data = {}
+        form.fill_form(data=data)
+    else:
+        data = {'consignee_name':form.consignee_name.data, 'consignee_mobile':form.consignee_mobile.data, 'consignee_address':form.consignee_address.data}
+        if form.validate_on_submit():
+            if ss is None:
+                ss = SysSetting()
+                ss.key = 'config_aftersales_server'
+                db.session.add(ss)
+            ss.value = json.dumps(data)
+            db.session.commit()
+            return redirect(url_for('admin.index.success',title=_(u'设置售后地址成功')))
+    
+    return render_template('admin/config/aftersales_server.html.j2',form=form)
