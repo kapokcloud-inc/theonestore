@@ -71,6 +71,11 @@
 
 {% block script %}
 <script type="text/javascript">
+var csrftoken = "{{ csrf_token() }}";
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
 // 查询订单是否支付成功
 function is_paid(order_id) {
   $.get("{{ url_for('api.order.is_paid') }}", {'order_id':order_id}, function(res) {
