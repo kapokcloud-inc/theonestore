@@ -71,13 +71,14 @@
 
 {% block script %}
 <script type="text/javascript">
+var order_id = 0;
 var csrftoken = "{{ csrf_token() }}";
 $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
 
 // 查询订单是否支付成功
-function is_paid(order_id) {
+function is_paid() {
   $.get("{{ url_for('api.order.is_paid') }}", {'order_id':order_id}, function(res) {
     if (res.ret == 0 && res.data.is_paid == 1) {
       window.location.href = "/pc/pay/success/"+order_id;
