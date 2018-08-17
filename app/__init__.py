@@ -67,6 +67,31 @@ def configure_before(app):
             if uid:
                 # 未读消息数
                 g.unread_count = UserStaticMethodsService.unread_count(uid)
+        
+        # PC待评价数
+        if (endpoint.find('pc.order') == 0) or (endpoint.find('pc.aftersales') == 0) or (endpoint.find('pc.me')  == 0) or (endpoint.find('pc.wallet')  == 0):
+
+            from app.models.order import (Order, OrderGoods)
+            from app.helpers import get_count
+
+            uid = session.get('uid', 0)
+            g.uncomment_count = 0
+            
+            if uid:
+                completed = db.session.query(Order.order_id).\
+                                    filter(Order.uid == uid).\
+                                    filter(Order.is_remove == 0).\
+                                    filter(Order.order_status == 2).\
+                                    filter(Order.pay_status == 2).\
+                                    filter(Order.deliver_status == 2).all()
+                completed = [order.order_id for order in completed]
+
+                q         = db.session.query(OrderGoods.og_id).\
+                                    filter(OrderGoods.order_id.in_(completed)).\
+                                    filter(OrderGoods.comment_id == 0)
+
+                g.uncomment_count = get_count(q)
+
 
     @app.errorhandler(403)
     def forbidden(error):

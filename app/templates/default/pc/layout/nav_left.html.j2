@@ -7,8 +7,8 @@
           <a {{ libs.get_me_navclass('order') }} href="{{ url_for('pc.order.index', tab_status=0) }}">{{_('我的订单')}}</a>
         </li>
         <li>
-          {% set pending_count = '(%s)' % pending_count if pending_count else '' %}
-          <a {{ libs.get_me_navclass('comment') }} href="{{ url_for('pc.order.comment', ip=1,ps=20,is_pending=1) }}">{{_('评价晒单')}} {{ pending_count }}</a>
+          {% set uncomment_count = '(%s)' % g.uncomment_count|string() if g.uncomment_count else '' %}
+          <a {{ libs.get_me_navclass('comment') }} href="{{ url_for('pc.order.comment', ip=1,ps=20,is_pending=1) }}">{{_('评价晒单')}} {{ uncomment_count }}</a>
         </li>
         <li>
           <a {{ libs.get_me_navclass('aftersales') }} href="{{ url_for('pc.aftersales.root') }}">{{_('售后服务记录')}}</a>
@@ -22,8 +22,8 @@
           <a {{ libs.get_me_navclass('profile') }} href="{{ url_for('pc.me.index') }}">{{_('我的个人中心')}}</a>
         </li>
         <li>
-          {% set count_text = ('(' + g.unread_count|string() + ')') if g.unread_count > 0 else "" %}
-          <a {{ libs.get_me_navclass('messages') }} href="{{ url_for('pc.me.messages') }}">{{_('消息通知')}} {{ count_text }}</a>
+          {% set unread_count = '(%s)' % g.unread_count|string() if g.unread_count else "" %}
+          <a {{ libs.get_me_navclass('messages') }} href="{{ url_for('pc.me.messages') }}">{{_('消息通知')}} {{ unread_count }}</a>
         </li>
         <li>
           <a {{ libs.get_me_navclass('wallet') }} href="{{ url_for('pc.wallet.root') }}">{{_('钱包')}}</a>
