@@ -133,12 +133,12 @@ class StorageAliossForm(Form):
                     validators=[Required(message=_(u'请填写CDN加速域名'))])
 
 
-class AftersalesAddressForm(Form):
-    consignee_name   = StringField(label=_(u'售后收货负责人/部门'),
+class AftersalesServiceForm(Form):
+    consignee_name    = StringField(label=_(u'售后收货负责人/部门'),
                         description=_(u'售后服务，用户"退货/换货"寄回商品的联系人/部门'), 
                         validators=[Required(message=_(u'请填写收货人'))])
 
-    consignee_mobile = StringField(label=_(u'联系电话'),
+    consignee_mobile  = StringField(label=_(u'联系电话'),
                         description=_(u'很重要，能联系到的负责人/部门电话'), 
                         validators=[Required(message=_(u'请填写收货人电话'))])
 
