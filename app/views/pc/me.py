@@ -106,12 +106,6 @@ def index():
                     filter(Order.deliver_status == 2).all()
     completed = [order.order_id for order in completed]
 
-    # 待评价
-    q = db.session.query(OrderGoods.og_id).\
-            filter(OrderGoods.order_id.in_(completed)).\
-            filter(OrderGoods.comment_id == 0)
-    uncomment_count = get_count(q)
-
     # 收藏商品
     q = db.session.query(Like.like_id).\
             filter(Like.uid == uid).\
@@ -130,9 +124,9 @@ def index():
 
     data     = {'user':user, 'coupon_count':coupon_count,
                 'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count,
-                'uncomment_count':uncomment_count, 'collect_count':collect_count,
-                'aftersales_count':aftersales_count, 'funds':funds, 'wtf_form':wtf_form}
-    log_info(data)
+                'collect_count':collect_count,'aftersales_count':aftersales_count, 
+                'funds':funds, 'wtf_form':wtf_form}
+
     return render_template('pc/me/index.html.j2', **data)
 
 
