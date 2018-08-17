@@ -86,6 +86,50 @@
       <div class="weui-cell__ft"></div>
     </a>
   </div>
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+      <div class="weui-cell__bd blackGap">{{_('商品寄回信息')}}</div>
+    </div>
+    <div class="weui-form-preview">
+      <div class="weui-form-preview__bd">
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">{{_('收货人')}}</label>
+          <span class="weui-form-preview__value">大头</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">{{_('电话')}}</label>
+          <span class="weui-form-preview__value">13510515229</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">{{_('地址')}}</label>
+          <span class="weui-form-preview__value">深圳市南山区留仙大道平山一路大园工业区8栋510</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+      <div class="weui-cell__bd">{{_('填写寄回商品快递单号')}}</div>
+    </div>
+    <div class="weui-cell">
+      <div class="weui-cell__hd">
+        <label class="weui-label blackGap">{{_('快递单号：')}}</label>
+      </div>
+      <div class="weui-cell__bd">
+        <input class="weui-input" type="text" placeholder="{{_('请填写快递单号')}}">
+      </div>
+    </div>
+    <div class="weui-cell">
+      <div class="weui-cells__tips">{{_('备注：快递面单信息需填写完整且需与您售后申请单信息一致；
+        务必请将申请单号备注在快递面单上再行邮寄！ 一个服务单号邮寄一个包裹！若有问题请联系客服')}}</div>
+    </div>
+    
+    <div class="weui-cell">
+      <div class="weui-cell__bd">
+        <button type="button" class="weui-btn weui-btn_red" onclick="">{{_('提交')}}</button>
+      <div class="weui-cell__bd">
+    </div>
+  </div>
 </div>
 {% endblock %}
 

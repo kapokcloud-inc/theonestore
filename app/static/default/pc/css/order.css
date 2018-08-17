@@ -624,3 +624,22 @@
   max-width: 100%;
   max-height: 100%;
 }
+.track-num {
+  width: 200px;
+  height: 25px;
+  line-height: 25px;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #333;
+}
+.aftersales-tips {
+  font-size: 12px;
+  color: #ccc;
+}
+.reg-submit_btn {
+  width: 200px;
+  margin: 15px auto 0 0;
+}
+.reg-submit_btn .one-btn {
+  border-radius: 0;
+}
