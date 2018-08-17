@@ -41,7 +41,7 @@
           <span class="weui-form-preview__value">
             {% set img_data = aftersales.img_data|json_loads %}
             {% for img in img_data %}
-              <img class="applyImg" src="{{ img }}" alt="">
+              <img class="applyImg" src="{{ img }}-square.middle" alt="">
             {% endfor %}
           </span>
         </div>
@@ -62,7 +62,7 @@
     {% for goods in goods_data %}
       <div class="weui-cell  not_before">
         <div class="weui-cell__hd avatar mar-right">
-          <img src="{{ goods.goods_img }}" alt="">
+          <img src="{{ goods.goods_img }}-square.small" alt="">
         </div>
         <div class="weui-cell__bd">
           <div class="all_title height25">{{ goods.goods_name }}</div>
@@ -127,12 +127,88 @@
     <div class="weui-cell">
       <div class="weui-cell__bd">
         <button type="button" class="weui-btn weui-btn_red" onclick="">{{_('提交')}}</button>
-      <div class="weui-cell__bd">
+      </div>
     </div>
   </div>
+
+  <!-- 售后图片点击放大弹窗 -->
+  <div class="weui-gallery" id="gallery">
+    <div class="close_img" id="closeImg">
+      <img src="/static/default/mobile/img/close.png" alt="">
+    </div>
+    <div class="">
+      <img class="gallery_img" id="galleryImg" src="//static-aliyun.kapokcloud.com/comment/2018-08-16/085921855e614452b1d70fb1e272fb37.jpg" alt="">
+    </div>
+    <div class="weui-gallery__opr">
+      <div class="prevImg" style="margin-right:30px;" id="prev">
+        <img src="/static/default/mobile/img/xiaoyu.png" alt="">
+      </div>
+      <div class="nextImg" style="margin-left:30px;" id="next">
+        <img src="/static/default/mobile/img/dayu.png" alt="">
+      </div>
+    </div>
+  </div>
+  <!-- 售后图片点击放大弹窗 end -->
 </div>
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  // 点击图片放大事件
+  $('.applyImg').click(function () {
+    var $current = $(this);
+    showImgGiant($current);
+    $('#gallery').fadeIn(100);
+
+    // 图片点击上一张按钮事件
+    $('#prev').click(function () {
+      $current = $current.prev();
+      var img_url = $current.attr('src');
+      var img_url_giant = img_url.replace('-square.middle', '-square.giant');
+      $('#galleryImg').attr("src", img_url_giant);
+      showImgGiant($current);
+    });
+
+    // 图片点击下一张按钮事件
+    $('#next').click(function () {
+      $current = $current.next();
+      var img_url = $current.attr('src');
+      var img_url_giant = img_url.replace('-square.middle', '-square.giant');
+      $('#galleryImg').attr("src", img_url_giant);
+      showImgGiant($current);
+    });
+  });
+
+  // 点击关闭弹窗事件
+  $('#closeImg').click(function () {
+    $('#gallery').fadeOut(100);
+  });
+});
+
+/**
+ * 图片放大
+ */
+function showImgGiant($current) {
+  var $prev = $current.prev();
+  var $next = $current.next();
+  var img_url = $current.attr('src');
+  var img_url_giant = img_url.replace('-square.middle', '-square.giant');
+  $('#galleryImg').attr('img_url_giant');
+
+ // 判断上一张
+  if ($prev.length <= 0) {
+    $('#prev').hide();
+  } else {
+    $('#prev').show();
+  }
+
+  // 判断下一张
+  if ($next.length <= 0) {
+    $('#next').hide();
+  } else {
+    $('#next').show();
+  }
+}
+</script>
 {% endblock %}
