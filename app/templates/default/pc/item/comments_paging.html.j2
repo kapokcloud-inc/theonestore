@@ -5,8 +5,7 @@
   {% for comment in comments %}
     <li class="comment-cnt_item">
       <div class="cnt-item_hd">
-        {% set avatar = comment.avatar if comment.avatar else "" %}
-        <img class="ava" src="{{ avatar }}" alt="">
+        <img class="ava" src="{{ comment.avatar|format_avatar(0) }}" alt="">
       </div>
       <div class="cnt-item_bd">
         <div class="review-title">
