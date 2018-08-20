@@ -102,7 +102,7 @@ def configure_before(app):
 
     @app.errorhandler(404)
     def page_not_found(error):
-        path = request.path
+        path = request.path.lower()
         if (path.find('/admin/') == 0 or path.find('/static/') == 0):
             if not request.is_xhr:
                 return render_template('admin/404.html.j2')
@@ -113,6 +113,16 @@ def configure_before(app):
             if os.path.exists(mp_verify_file):
                 return send_from_directory(uploads_path, filename)
             return _(u'文件找不到')
+        elif (path.find('/apiclient_cert.pem') or path.find('/apiclient_key.pem')):
+            admin_uid = session.get('admin_uid', None)
+            if not admin_uid:
+                return render_template('admin/404.html.j2')
+            dirname = os.path.join(os.getcwd(), 'pem')
+            filename = path[1:]
+            pemfile = os.path.join(dirname, filename)
+            if os.path.exists(pemfile):
+                return send_from_directory(dirname, filename)
+            return render_template('admin/404.html.j2')
 
     @app.errorhandler(500)
     def server_error(error):

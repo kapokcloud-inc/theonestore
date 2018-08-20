@@ -50,12 +50,26 @@ class WeixinMpForm(Form):
 
 class WeixinPayForm(Form):
     mch_id = StringField(label=_(u'微信支付商户号'),
-                    description=_(u'如：1400590602，请查看您的商户平台 "帐户中心 -> 帐户设置 -> 商户信息 -> 基本帐户信息"'),
+                    description=_(u'如：1400590602，请前往您的商户平台 "帐户中心 -> 帐户设置 -> 商户信息 -> 基本帐户信息"'),
                     validators=[Required(message=_(u'请填写微信支付商户号'))])
     
     partner_key = StringField(label=_(u'微信支付商户密钥'),
-                    description=_(u'请查看您的商户平台 "帐户中心 -> 帐户设置 -> API安全 -> API密钥"'),
+                    description=_(u'请前往您的商户平台 "帐户中心 -> 帐户设置 -> API安全 -> API密钥"'),
                     validators=[Required(message=_(u'请填写微信支付商户密钥'))])
+
+    apiclient_cert = FileField(_(u'商户证书cert'), 
+                    description=_(u'如：apiclient_cert.pem<br>请前往您的商户平台 “帐户中心 -> 帐户设置 -> API安全 -> API证书” 下载证书文件'), 
+                    validators=[
+                        FileRequired(_(u'文件未上传')), 
+                        FileAllowed(UploadSet('pem', ('pem',)), message=_(u'只允许上传pem后辍文件'))
+                ])
+    
+    apiclient_key = FileField(_(u'商户证书key'), 
+                    description=_(u'如：apiclient_key.pem<br>请前往您的商户平台 “帐户中心 -> 帐户设置 -> API安全 -> API证书” 下载证书key文件'), 
+                    validators=[
+                        FileRequired(_(u'文件未上传')), 
+                        FileAllowed(UploadSet('pem', ('pem',)), message=_(u'只允许上传pem后辍文件'))
+                ])
     
 
 class WeixinOpenForm(Form):
