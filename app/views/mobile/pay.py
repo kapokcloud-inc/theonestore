@@ -26,10 +26,17 @@ pay = Blueprint('mobile.pay', __name__)
 
 @pay.route('/success/<int:order_id>')
 def success(order_id):
-    """手机站 - 完成支付"""
+    """手机站 - 支付成功"""
 
     order = Order.query.get(order_id)
     if not order:
         return redirect(url_for('mobile.index.root'))
 
     return render_template('mobile/pay/success.html.j2', order=order)
+
+
+@pay.route('/recharge_success')
+def recharge_success():
+    """手机站 - 充值成功"""
+
+    return render_template('mobile/pay/recharge_success.html.j2')
