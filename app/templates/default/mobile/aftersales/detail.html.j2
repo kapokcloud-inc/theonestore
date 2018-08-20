@@ -96,7 +96,7 @@
       <div class="weui-cell__ft"></div>
     </a>
   </div>
-  {% if aftersales.aftersales_type in [2,3] and aftersales_service %}
+  {% if aftersales.aftersales_type in [2,3] %}
     <div class="weui-cells weui-cells_form">
       <div class="weui-cell">
         <div class="weui-cell__bd blackGap">{{_('商品寄回信息')}}</div>
@@ -105,15 +105,18 @@
         <div class="weui-form-preview__bd">
           <div class="weui-form-preview__item">
             <label class="weui-form-preview__label">{{_('收货人')}}</label>
-            <span class="weui-form-preview__value">{{ aftersales_service.consignee_name }}</span>
+            {% set consignee_name = aftersales_service.consignee_name if aftersales_service else _('商家暂无配置') %}
+            <span class="weui-form-preview__value">{{ consignee_name }}</span>
           </div>
           <div class="weui-form-preview__item">
             <label class="weui-form-preview__label">{{_('电话')}}</label>
-            <span class="weui-form-preview__value">{{ aftersales_service.consignee_mobile }}</span>
+            {% set consignee_mobile = aftersales_service.consignee_mobile if aftersales_service else _('商家暂无配置') %}
+            <span class="weui-form-preview__value">{{ consignee_mobile }}</span>
           </div>
           <div class="weui-form-preview__item">
             <label class="weui-form-preview__label">{{_('地址')}}</label>
-            <span class="weui-form-preview__value">{{ aftersales_service.consignee_address }}</span>
+            {% set consignee_address = aftersales_service.consignee_address if aftersales_service else _('商家暂无配置') %}
+            <span class="weui-form-preview__value">{{ consignee_address }}</span>
           </div>
         </div>
       </div>

@@ -113,13 +113,11 @@ def detail(aftersales_id):
     aftersales_service = {}
     if aftersales.check_status == 2:
         ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_service').first()
-        if not ss:
-            return redirect(request.headers['Referer'])
-        
-        try:
-            aftersales_service = json.loads(ss.value)
-        except Exception as e:
-            return redirect(request.headers['Referer'])
+        if ss:
+            try:
+                aftersales_service = json.loads(ss.value)
+            except Exception as e:
+                aftersales_service = {}
 
     address = AftersalesAddress.query.filter(AftersalesAddress.aftersales_id == aftersales_id).first()
 
