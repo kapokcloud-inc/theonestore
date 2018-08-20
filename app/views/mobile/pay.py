@@ -32,7 +32,10 @@ def success(order_id):
     if not order:
         return redirect(url_for('mobile.index.root'))
 
-    return render_template('mobile/pay/success.html.j2', order=order)
+    if order.order_type == 2:
+        return render_template('mobile/pay/recharge_success.html.j2', order=order)
+    else:
+        return render_template('mobile/pay/success.html.j2', order=order)
 
 
 @pay.route('/recharge_success')
