@@ -94,15 +94,15 @@
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('收货人')}}</label>
-          <span class="weui-form-preview__value">大头</span>
+          <span class="weui-form-preview__value">{{ aftersales_service['consignee_name'] }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('电话')}}</label>
-          <span class="weui-form-preview__value">13510515229</span>
+          <span class="weui-form-preview__value">{{ aftersales_service['consignee_mobile'] }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('地址')}}</label>
-          <span class="weui-form-preview__value">深圳市南山区留仙大道平山一路大园工业区8栋510</span>
+          <span class="weui-form-preview__value">{{ aftersales_service['consignee_address'] }}</span>
         </div>
       </div>
     </div>
@@ -134,5 +134,9 @@
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript"></script>
+<script type="text/javascript">
+function submit() {
+  
+}
+</script>
 {% endblock %}
