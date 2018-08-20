@@ -9,7 +9,7 @@
 <div class="user_wrap">
   <a class="weui-cell bg-white" href="{{ url_for('mobile.item.detail', goods_id=order_goods.goods_id) }}">
     <div class="weui-cell__hd avatar mar-right">
-      <img src="{{ order_goods.goods_img }}" alt="">
+      <img src="{{ order_goods.goods_img }}-square.small" alt="">
     </div>
     <div class="weui-cell__bd">
       <div class="all_title height25">{{ order_goods.goods_name }}</div>
@@ -27,14 +27,6 @@
     </div>
     <div class="create_wrap">
       <textarea id="content" name="content" class="review_text" rows="5" placeholder="{{_('请输入评价信息...')}}"></textarea>
-    </div>
-    <div class="weui-gallery" id="gallery">
-      <span class="weui-gallery__img" id="galleryImg"></span>
-      <div class="weui-gallery__opr">
-        <a href="javascript:" class="weui-gallery__del">
-          <i class="weui-icon-delete weui-icon_gallery-delete"></i>
-        </a>
-      </div>
     </div>
     <div class="weui-cell uploader_wrap">
       <div class="weui-cell__bd">
@@ -77,7 +69,9 @@ $('#uploaderInput').fileupload({
       if(data.result.ret == 0) {
         var image = data.result.data.image;
 
-        var html_text = '<li class="weui-uploader__file" style="background-image:url(' + image + ')" data-value="'+image+'"></li>';
+        var html_text = '<li class="weui-uploader__file">' +
+                          '<img src="' + image + '-square.middle" alt="" data-value="' + image + '">' +
+                        '</li>';
         $("#uploaderFiles").append(html_text);
       }
     }
@@ -109,26 +103,6 @@ $(document).ready(function(){
   $(".tag_btn").click(function(){
     $(".tag_btn").removeClass("tag_btn-on");
     $(this).addClass("tag_btn-on");
-  });
-
-  //点击图片淡入放大
-  $('#uploaderFiles').on("click", "li", function () {
-    index = $(this).index();
-    var style = this.getAttribute("style");
-    $('#galleryImg').attr("style", style);
-    $('#gallery').fadeIn(100);
-  });
-
-  //点击图片淡出消失
-  $('#gallery').on("click", function () {
-    $('#gallery').fadeOut(100);
-  });
-
-  //删除图片
-  $(".weui-gallery__del").click(function (event) {
-    event.stopPropagation();        //冒泡事件
-    $('#uploaderFiles').find("li").eq(index).remove();
-    $('#gallery').fadeOut(100);
   });
 });
 </script> 
