@@ -32,6 +32,11 @@ from app.helpers.date_time import (
     before_after_timestamp
 )
 
+from app.helpers.data_treat import(
+    format_amount,
+    format_avatar
+)
+
 from app.routes.admin import ADMIN_ROUTES
 from app.routes.mobile import MOBILE_ROUTES
 from app.routes.api import API_ROUTES
@@ -74,7 +79,9 @@ jinja_filters = {
     'toint':toint,
     'toamount':toamount,
     'get_file_uploadtype':get_file_uploadtype,
-    'request_args_to_query_string':request_args_to_query_string
+    'request_args_to_query_string':request_args_to_query_string,
+    'format_amount':format_amount,
+    'format_avatar':format_avatar
 }
 app.jinja_env.filters.update(jinja_filters)
 app.jinja_env.cache_size = 0

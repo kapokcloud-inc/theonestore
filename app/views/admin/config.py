@@ -93,26 +93,59 @@ def weixinpay():
     """微信支付"""
     g.page_title = _(u'微信支付')
 
-    form = WeixinPayForm()
+    form = WeixinPayForm(CombinedMultiDict((request.files, request.form)))
     ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixin').first()
-    if request.method == 'GET':
-        try:
-            data = json.loads(ss.value)
-        except Exception as e:
-            data = {}
-        form.fill_form(data=data)
-    else:
-        data = {'mch_id':form.mch_id.data, 'partner_key':form.partner_key.data}
-        if form.validate_on_submit():
-            if ss is None:
-                ss = SysSetting()
-                ss.key = 'config_paymethod_weixin'
-                db.session.add(ss)
-            ss.value = json.dumps(data)
-            db.session.commit()
-            return redirect(url_for('admin.index.success', title=_(u'设置微信支付成功')))
+    data = {}
+    try:
+        data = json.loads(ss.value)
+    except Exception as e:
+        data = {}
 
-    return render_template('admin/config/weixinpay.html.j2', form=form)
+    if request.method == 'GET':
+        form.fill_form(data=data)
+        form.apiclient_cert.data = data.get('apiclient_cert_url', '')
+        form.apiclient_key.data = data.get('apiclient_key_url', '')
+        return render_template('admin/config/weixinpay.html.j2', form=form)
+
+    data = {'mch_id':form.mch_id.data, 'partner_key':form.partner_key.data,
+            'apiclient_cert':data.get('apiclient_cert', ''), 'apiclient_key':data.get('apiclient_key', '')}
+    if not form.validate_on_submit():
+        form.apiclient_cert.data = data.get('apiclient_cert_url', '')
+        form.apiclient_key.data = data.get('apiclient_key_url', '')
+        return render_template('admin/config/weixinpay.html.j2', form=form)
+
+    # 证书文件cert上传
+    if form.apiclient_cert.data:
+        apiclient_cert = secure_filename(form.apiclient_cert.data.filename)
+        uploads_path = os.path.join(os.getcwd(), 'pem')
+        cert_filename = os.path.join(uploads_path, apiclient_cert)
+        if not os.path.exists(uploads_path):
+            os.makedirs(uploads_path)
+        form.apiclient_cert.data.save(cert_filename)
+        data['apiclient_cert'] = cert_filename
+        data['apiclient_cert_url'] = '/apiclient_cert.pem'
+
+    # 证书文件key上传
+    if form.apiclient_key.data:
+        apiclient_key = secure_filename(form.apiclient_key.data.filename)
+        uploads_path = os.path.join(os.getcwd(), 'pem')
+        key_filename = os.path.join(uploads_path, apiclient_key)
+        if not os.path.exists(uploads_path):
+            os.makedirs(uploads_path)
+        form.apiclient_key.data.save(key_filename)
+        data['apiclient_key'] = key_filename
+        data['apiclient_key_url'] = '/apiclient_key.pem'
+
+    if ss is None:
+        ss = SysSetting()
+        ss.key = 'config_paymethod_weixin'
+        db.session.add(ss)
+
+    ss.value = json.dumps(data)
+    db.session.commit()
+    return redirect(url_for('admin.index.success', title=_(u'设置微信支付成功')))
+
+    
 
 @config.route('/weixinopen', methods=['GET','POST'])
 def weixinopen():

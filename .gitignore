@@ -118,3 +118,6 @@ run/
 
 uploads/
 .qiniu_pythonsdk_hostscache.json
+
+#pem
+pem/

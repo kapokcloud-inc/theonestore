@@ -20,7 +20,7 @@
           ], border_bottom='line') }}
 
           {# 微信支付 form表单 #}
-          {{ libs.render_form(form, action=url_for('admin.config.weixinpay')) }}
+          {{ libs.render_form(form, action=url_for('admin.config.weixinpay'), enctype='multipart/form-data', primary_key=form.mch_id.data) }}
 
         </div>
       </div>

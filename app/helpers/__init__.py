@@ -80,11 +80,13 @@ def configure_uploads(app):
     app.config['UPLOADED_DOCUMENTS_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'documents')
     app.config['UPLOADED_IMAGES_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'images')
     app.config['UPLOADED_TEXT_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'text')
+    app.config['UPLOADED_PEM_DEST'] = os.path.join(UPLOADED_FILES_DEST, 'pem')
 
     documents = UploadSet('documents', DOCUMENTS)
     images = UploadSet('images', IMAGES)
     text = UploadSet('text', TEXT)
-    flask_configure_uploads(app, (documents, images, text))
+    pem = UploadSet('pem', ('pem',))
+    flask_configure_uploads(app, (documents, images, text, pem))
     
     # 最大上传文件大小64M，MAX_CONTENT_LENGTH=64*1024*1024
     patch_request_class(app)
