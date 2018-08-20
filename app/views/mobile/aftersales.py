@@ -38,6 +38,7 @@ from app.forms.api.aftersales import AfterSalesForm
 from app.models.sys import SysSetting
 from app.models.aftersales import (
     Aftersales,
+    AftersalesAddress,
     AftersalesLogs
 )
 
@@ -120,8 +121,10 @@ def detail(aftersales_id):
         except Exception as e:
             return redirect(request.headers['Referer'])
 
+    address = AftersalesAddress.query.filter(AftersalesAddress.aftersales_id == aftersales_id).first()
+
     data = {'aftersales':aftersales, 'log':log, 'status_text':status_text,
-            'action_code':action_code, 'aftersales_service':aftersales_service}
+            'action_code':action_code, 'aftersales_service':aftersales_service, 'address':address}
     return render_template('mobile/aftersales/detail.html.j2', **data)
 
 

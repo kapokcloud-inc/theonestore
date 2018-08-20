@@ -238,7 +238,9 @@ class AfterSaleResendService(object):
     def do(self):
         """重发商品"""
 
-        data = {'resend_status':2, 'update_time':self.current_time}
+        data = {'resend_shipping_name':self.resend_shipping_name,
+                'resend_shipping_sn':self.resend_shipping_sn,
+                'resend_status':2, 'update_time':self.current_time}
         model_update(self.aftersale, data)
 
         content = _(u'服务专员已处理换货，包裹已发出，%s，快递单号:%s，请注意查收。' % (self.resend_shipping_name, self.resend_shipping_sn))

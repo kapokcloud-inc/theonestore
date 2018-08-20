@@ -25,6 +25,9 @@
                 {% if aftersale.aftersales_type in [1,2] %}
                   {{ libs.form_control_static(_('退款金额'), aftersale.refunds_amount) }}
                 {% endif %}
+                {% if aftersale.aftersales_type == 2 %}
+                  {{ libs.form_control_static(_('收货状态'), const.AFTERSALES_DELIVER_STATUS.get(aftersale.deliver_status)) }}
+                {% endif %}
                 {{ libs.form_control_static(_('售后状态'), status_text) }}
                 {{ libs.form_control_static(_('申请时间'), aftersale.add_time|timestamp2str) }}
                 {{ libs.form_control_static(_('申请原因'), aftersale.content) }}
@@ -34,23 +37,25 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="panel">
-          <div class="panel panel-default">
-            <div class="panel-heading">{{_('收货寄回地址')}}</div>
-            <div class="panel-body">
-              <div class="row">
-                {{ libs.form_control_static(_('姓名'), address.name) }}
-                {{ libs.form_control_static(_('手机号码'), address.mobile) }}
-                {% set _address = '%s %s %s %s' % (address.province, address.city, address.district, address.address) %}
-                {{ libs.form_control_static(_('地址'), _address) }}
+    {% if aftersale.aftersales_type == 3 %}
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="panel">
+            <div class="panel panel-default">
+              <div class="panel-heading">{{_('收货寄回地址')}}</div>
+              <div class="panel-body">
+                <div class="row">
+                  {{ libs.form_control_static(_('姓名'), address.name) }}
+                  {{ libs.form_control_static(_('手机号码'), address.mobile) }}
+                  {% set _address = '%s %s %s %s' % (address.province, address.city, address.district, address.address) %}
+                  {{ libs.form_control_static(_('地址'), _address) }}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    {% endif %}
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="panel">

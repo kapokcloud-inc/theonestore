@@ -10,7 +10,7 @@
   <ul class="weui-cells weui-cells_form">
     <div class="logistics_state">{{_('流水跟踪')}}</div>
     {% for log in logs %}
-      {% set cur = 'cur' if loop.last else '' %}
+      {% set cur = 'cur' if loop.first else '' %}
       <li class="track_shipflow {{ cur }}">
         <div class="logistics_step">
           <i class="type_dot"></i>

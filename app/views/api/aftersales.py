@@ -18,7 +18,8 @@ from app.database import db
 
 from app.helpers import (
     log_info,
-    toint
+    toint,
+    model_update
 )
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import (
@@ -32,6 +33,7 @@ from app.services.api.aftersales import AfterSalesCreateService, AfterSalesStati
 from app.forms.api.aftersales import AfterSalesForm
 
 from app.models.order import Order, OrderGoods
+from app.models.aftersales import Aftersales
 
 
 aftersales = Blueprint('api.aftersales', __name__)
@@ -101,7 +103,7 @@ def refunds_amount():
     return resjson.print_json(0, u'ok', {'refunds_amount':refunds_amount})
 
 
-@aftersales.route('/return-goods')
+@aftersales.route('/return-goods', methods=['POST'])
 def return_goods():
     """寄回商品"""
     resjson.action_code = 12
@@ -110,5 +112,25 @@ def return_goods():
         return resjson.print_json(10, _(u'未登陆'))
     uid = get_uid()
 
-    aftersales_id      = toint(request.args.get('aftersales_id', '0'))
-    return_shipping_sn = request.args.get('return_shipping_sn', '').strip()
+    aftersales_id      = toint(request.form.get('aftersales_id', '0'))
+    return_shipping_sn = request.form.get('return_shipping_sn', '').strip()
+
+    if aftersales_id <= 0 or return_shipping_sn == '':
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    aftersales = Aftersales.query.\
+                    filter(Aftersales.aftersales_id == aftersales_id).\
+                    filter(Aftersales.uid == uid).first()
+    if not aftersales:
+        return resjson.print_json(10, _(u'售后不存在'))
+
+    if aftersales.aftersales_type not in [2,3]:
+        return resjson.print_json(11, _(u'售后类型错误'))
+
+    if aftersales.return_status != 1:
+        return resjson.print_json(12, _(u'寄回状态错误'))
+
+    data = {'return_shipping_sn':return_shipping_sn, 'return_status':2}
+    model_update(aftersales, data, commit=True)
+
+    return resjson.print_json(0, u'ok')
