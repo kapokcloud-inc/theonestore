@@ -174,14 +174,14 @@
                 </div>
                 <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
                 <div class="review_cnt">{{ comment.content }}</div>
-                <div class="mar-top">
-                  {% set imgs = comment.img_data|json_loads if comment.img_data %}
+                <ul class="weui-uploader__files mar-top" id="uploaderFile">
+                  {% set imgs = comment.img_data|json_loads %}
                   {% for img in imgs %}
-                    <span class="review_img">
-                      <img src="{{ img }}-square.middle" alt="">
-                    </span>
+                  <li class="weui-uploader__file">
+                    <img src="{{ img }}-square.middle" alt="">
+                  </li>
                   {% endfor %}
-                </div>
+                </ul>
               </div>
             </div>
           {% endfor %}
@@ -199,6 +199,25 @@
         </div>
       {% endif %}
     </div>
+
+    <!-- 评价图片点击放大弹窗 -->
+    <div class="weui-gallery" id="gallery">
+      <div class="close_img" id="closeImg">
+        <img src="/static/default/mobile/img/close.png" alt="">
+      </div>
+      <div class="">
+        <img class="gallery_img" id="galleryImg" src="" alt="">
+      </div>
+      <div class="weui-gallery__opr">
+        <div class="prevImg" style="margin-right:30px;" id="prev">
+          <img src="/static/default/mobile/img/xiaoyu.png" alt="">
+        </div>
+        <div class="nextImg" style="margin-left:30px;" id="next">
+          <img src="/static/default/mobile/img/dayu.png" alt="">
+        </div>
+      </div>
+    </div>
+    <!-- 评价图片点击放大弹窗 end -->
     
     <div id="nav3">
       <div class="weui-cells" id="item-detail-h5">
@@ -261,140 +280,196 @@
 {% block script %}
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js" charset="utf-8"></script>
 <script type="text/javascript">
-  $(function () {
-    $(window).scroll(function () {
-      //为页面添加页面滚动监听事件
-      var wst = $(window).scrollTop()+46 //滚动条距离顶端值
-      for (var i = 1; i < 4; i++) {             //加循环
-        var top = $('#nav'+i).offset().top;
-        if (top <= wst) { //判断滚动条位置
-          $('.detail-top_item').removeClass("on"); //清除on类
-          $('#nav'+i+i).addClass("on");	//给当前导航加c类
-        }
+$(function () {
+  $(window).scroll(function () {
+    //为页面添加页面滚动监听事件
+    var wst = $(window).scrollTop()+46 //滚动条距离顶端值
+    for (var i = 1; i < 4; i++) {             //加循环
+      var top = $('#nav'+i).offset().top;
+      if (top <= wst) { //判断滚动条位置
+        $('.detail-top_item').removeClass("on"); //清除on类
+        $('#nav'+i+i).addClass("on");	//给当前导航加c类
       }
-    })
+    }
+  })
 
-    $(".detail-top_item").click(function () {
-      $(this).addClass('on').siblings().removeClass('on');
+  $(".detail-top_item").click(function () {
+    $(this).addClass('on').siblings().removeClass('on');
+  });
+
+  // 点击图片放大事件
+  $('.weui-uploader__file').click(function () {
+    var $current = $(this);
+    showImgGiant($current);
+    $('#gallery').fadeIn(100);
+
+    // 图片点击上一张按钮事件
+    $('#prev').click(function () {
+      $current = $current.prev();
+      var img_url = $current.find('img').attr('src');
+      var img_url_giant = img_url.replace('-square.middle', '-square.giant');
+      $('#galleryImg').attr("src", img_url_giant);
+      showImgGiant($current);
+    });
+
+    // 图片点击下一张按钮事件
+    $('#next').click(function () {
+      $current = $current.next();
+      var img_url = $current.find('img').attr('src');
+      var img_url_giant = img_url.replace('-square.middle', '-square.giant');
+      $('#galleryImg').attr("src", img_url_giant);
+      showImgGiant($current);
     });
   });
 
-  //轮播图
-  $(".swiper-container").swiper({
-    loop: true,
-    //autoplay: 3000,
+  // 点击关闭弹窗事件
+  $('#closeImg').click(function () {
+    $('#gallery').fadeOut(100);
   });
 
-  //计数器
-  var MIN = 1;
-  
-  $('.num_minus').click(function (e) {
-    var $input = $(e.currentTarget).parent().find('#goods_quantity');
-    var number = parseInt($input.val() || "0") - 1;
-  
-    if (number < MIN) number = MIN;
-    $input.val(number);
-  })
+});
 
-  $('.num_add').click(function (e) {
-    var $input = $(e.currentTarget).parent().find('#goods_quantity');
-    var number = parseInt($input.val() || "0") + 1;
+/**
+ * 图片放大
+ */
+function showImgGiant($current) {
+  var $prev = $current.prev();
+  var $next = $current.next();
+  var img_url = $current.find('img').attr('src');
+  var img_url_giant = img_url.replace('-square.middle', '-square.giant');
+  $('#galleryImg').attr('img_url_giant');
 
-    $input.val(number);
-  })
-
-  var $explain = $('#explain');
-  var $specifications = $('#specifications');
-
-  //服务说明弹窗
-  function tips() {
-    // 显示弹窗
-    if ($explain.hasClass('hide')) {
-      $explain.removeClass('hide').addClass('show');
-    }
+ // 判断上一张
+  if ($prev.length <= 0) {
+    $('#prev').hide();
+  } else {
+    $('#prev').show();
   }
 
-  //服务说明弹窗
-  function know() {
-    // 关闭弹窗
-    if ($explain.hasClass('show')) {
-      $explain.removeClass('show').addClass('hide');
-    }
+  // 判断下一张
+  if ($next.length <= 0) {
+    $('#next').hide();
+  } else {
+    $('#next').show();
+  }
+}
+
+//轮播图
+$(".swiper-container").swiper({
+  loop: true,
+  //autoplay: 3000,
+});
+
+//计数器
+var MIN = 1;
+
+$('.num_minus').click(function (e) {
+  var $input = $(e.currentTarget).parent().find('#goods_quantity');
+  var number = parseInt($input.val() || "0") - 1;
+
+  if (number < MIN) number = MIN;
+  $input.val(number);
+})
+
+$('.num_add').click(function (e) {
+  var $input = $(e.currentTarget).parent().find('#goods_quantity');
+  var number = parseInt($input.val() || "0") + 1;
+
+  $input.val(number);
+})
+
+var $explain = $('#explain');
+var $specifications = $('#specifications');
+
+//服务说明弹窗
+function tips() {
+  // 显示弹窗
+  if ($explain.hasClass('hide')) {
+    $explain.removeClass('hide').addClass('show');
+  }
+}
+
+//服务说明弹窗
+function know() {
+  // 关闭弹窗
+  if ($explain.hasClass('show')) {
+    $explain.removeClass('show').addClass('hide');
+  }
+}
+
+//选择商品规格弹窗
+function choice() {
+  // 显示弹窗
+  if ($specifications.hasClass('hide')) {
+    $specifications.removeClass('hide').addClass('show');
+  }
+}
+
+//选择商品规格弹窗
+function determine() {
+  var number = parseInt($("#goods_quantity").val());
+
+  if (number <= 0) {
+    $.toast("{{_('购买数量不能小于0')}}", "text");
+    return false;
   }
 
-  //选择商品规格弹窗
-  function choice() {
-    // 显示弹窗
-    if ($specifications.hasClass('hide')) {
-      $specifications.removeClass('hide').addClass('show');
-    }
+  $("#goods_quantity_text").text('x ' + number);
+
+  // 关闭弹窗
+  if ($specifications.hasClass('show')) {
+    $specifications.removeClass('show').addClass('hide');
+  }
+}
+
+//加入购物车
+function cartTo(goods_id) {
+  var quantity = parseInt($("#goods_quantity").val());
+
+  if (quantity <= 0) {
+    $.toast("{{_('购买数量不能小于0')}}", "text");
+    return false;
   }
 
-  //选择商品规格弹窗
-  function determine() {
-    var number = parseInt($("#goods_quantity").val());
-
-    if (number <= 0) {
-      $.toast("{{_('购买数量不能小于0')}}", "text");
+  $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
+    if (json.ret != 0) {
+      $.toast(res.msg, "text");
       return false;
     }
 
-    $("#goods_quantity_text").text('x ' + number);
+    $("#cart_total").text(json.data.cart_total);
+    $.toast("{{_('已加入购物车')}}", "text");
+  });
+}
 
-    // 关闭弹窗
-    if ($specifications.hasClass('show')) {
-      $specifications.removeClass('show').addClass('hide');
-    }
-  }
+//去购物车
+function toCart() {
+  window.location.href = "{{ url_for('mobile.cart.root') }}";
+}
 
-  //加入购物车
-  function cartTo(goods_id) {
-    var quantity = parseInt($("#goods_quantity").val());
+//收藏
+function fav(dom) {
+  var $dom = $(dom);
+  var tid = $dom.attr('data-tid');
+  var params = {'like_type':2, 'ttype':1, 'tid':tid}
 
-    if (quantity <= 0) {
-      $.toast("{{_('购买数量不能小于0')}}", "text");
+  $.get("{{ url_for('api.like.action') }}", params, function(json) {
+    if (json.ret != 0) {
+      $.toast(json.msg, "text");
       return false;
     }
 
-    $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
-      if (json.ret != 0) {
-        $.toast(res.msg, "text");
-        return false;
-      }
+    if (json.data.action_code == 1) {
+      $dom.children().first().attr('src', '/static/default/mobile/img/like.png');
+    } else {
+      $dom.children().first().attr('src', '/static/default/mobile/img/notlike.png');
+    }
+  });
+}
 
-      $("#cart_total").text(json.data.cart_total);
-      $.toast("{{_('已加入购物车')}}", "text");
-    });
-  }
-
-  //去购物车
-  function toCart() {
-    window.location.href = "{{ url_for('mobile.cart.root') }}";
-  }
-
-  //收藏
-  function fav(dom) {
-    var $dom = $(dom);
-    var tid = $dom.attr('data-tid');
-    var params = {'like_type':2, 'ttype':1, 'tid':tid}
-
-    $.get("{{ url_for('api.like.action') }}", params, function(json) {
-      if (json.ret != 0) {
-        $.toast(json.msg, "text");
-        return false;
-      }
-
-      if (json.data.action_code == 1) {
-        $dom.children().first().attr('src', '/static/default/mobile/img/like.png');
-      } else {
-        $dom.children().first().attr('src', '/static/default/mobile/img/notlike.png');
-      }
-    });
-  }
-
-  //跳转登录
-  function login() {
-    window.location.href = "{{ url_for('api.weixin.login') }}";
-  }
+//跳转登录
+function login() {
+  window.location.href = "{{ url_for('api.weixin.login') }}";
+}
 </script> 
 {% endblock %}

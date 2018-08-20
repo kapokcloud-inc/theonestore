@@ -271,12 +271,18 @@ $(document).ready(function(){
       $('#giantCom').attr("src", img_url_giant);
       aftersalesImgGiant($current);
     });
+
+    // 点击关闭弹窗事件
+    $('#comment-close').click(function () {
+      $('#comment-prev').unbind('click');
+      $('#comment-next').unbind('click');
+      $(this).unbind('click');
+      $('#giantCom').attr("src", '');
+      $('#giant-comment').addClass('hide').removeClass('show');
+    });
+    
   });
 
-  // 点击关闭弹窗事件
-  $('#comment-close').click(function () {
-    $('#giant-comment').addClass('hide').removeClass('show');
-  });
 });
 
 /**
