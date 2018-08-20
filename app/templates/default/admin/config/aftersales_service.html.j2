@@ -14,11 +14,11 @@
           </p>
 
           {{ libs.build_tabs(tabs=[
-            {'label':_('售后服务'), 'endpoint':'admin.config.aftersales_server'},
+            {'label':_('售后服务'), 'endpoint':'admin.config.aftersales_service'},
           ], border_bottom='line') }}
 
           {# 售后服务 form表单 #}
-          {{ libs.render_form(form, action=url_for('admin.config.aftersales_server')) }}
+          {{ libs.render_form(form, action=url_for('admin.config.aftersales_service')) }}
 
         </div>
       </div>

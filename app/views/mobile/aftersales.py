@@ -7,6 +7,7 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import json
 
 from flask import (
     request,
@@ -34,6 +35,7 @@ from app.services.api.aftersales import (
 
 from app.forms.api.aftersales import AfterSalesForm
 
+from app.models.sys import SysSetting
 from app.models.aftersales import (
     Aftersales,
     AftersalesLogs
@@ -107,7 +109,19 @@ def detail(aftersales_id):
 
     status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersales)
 
-    data = {'aftersales':aftersales, 'log':log, 'status_text':status_text, 'action_code':action_code}
+    aftersales_service = {}
+    if aftersales.check_status == 2:
+        ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_service').first()
+        if not ss:
+            return redirect(request.headers['Referer'])
+        
+        try:
+            aftersales_service = json.loads(ss.value)
+        except Exception as e:
+            return redirect(request.headers['Referer'])
+
+    data = {'aftersales':aftersales, 'log':log, 'status_text':status_text,
+            'action_code':action_code, 'aftersales_service':aftersales_service}
     return render_template('mobile/aftersales/detail.html.j2', **data)
 
 
@@ -123,7 +137,7 @@ def track(aftersales_id):
     aftersales = Aftersales.query.filter(Aftersales.aftersales_id == aftersales_id).filter(Aftersales.uid == uid).first()
     if not aftersales:
         return redirect(request.headers['Referer'])
-    
+
     logs = AftersalesLogs.query.\
                 filter(AftersalesLogs.aftersales_id == aftersales.aftersales_id).\
                 order_by(AftersalesLogs.al_id.desc()).all()

@@ -112,8 +112,7 @@
     <div class="weui-cell">
       <div class="weui-cell__bd"></div>
       <div class="weui-cell__ft">
-        {% set limit_time = order.paid_time|before_after_timestamp({'days':7}) %}
-        {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 and limit_time >= current_time and not aftersale %}
+        {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 and not aftersale %}
           <a href="{{ url_for('mobile.aftersales.apply', order_id=order.order_id) }}">
             <button type="button" class="order_btn order-state_btn">{{_('申请退款')}}</button>
           </a>
