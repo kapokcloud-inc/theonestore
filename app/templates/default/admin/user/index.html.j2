@@ -50,7 +50,7 @@
                   {% for user in users %}
                     <tr>
                       <td>{{ user.uid }}</td>
-                      <td><img src="{{ user.avatar }}" width="50" class="img-circle" /></td>
+                      <td><img src="{{ user.avatar|format_avatar(0) }}" width="50" class="img-circle" /></td>
                       <td>{{ user.nickname }}</td>
                       <td>{{ const.GENDER.get(user.gender, _('保密')) }}</td>
                       <td>{{ user.country }} {{ user.province }} {{ user.city }}</td>

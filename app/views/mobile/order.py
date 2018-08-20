@@ -254,3 +254,9 @@ def comment_detail(og_id):
 
     return render_template('mobile/order/comment_detail.html.j2', order_goods=order_goods, comment=comment,good=good)
 
+
+@order.route('/address-change')
+def address_change():
+    """手机站 - 未付款修改地址"""
+
+    return render_template('mobile/order/address-change.html.j2')

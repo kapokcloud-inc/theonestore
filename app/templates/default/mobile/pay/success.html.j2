@@ -1,7 +1,7 @@
 {% extends '/default/mobile/layout/base.html.j2' %}
 
 {% block head %}
-<title>{{_('完成支付 - 一店')}}</title>
+<title>{{_('支付成功 - 一店')}}</title>
 {% endblock %}
 
 {% block body %}
@@ -9,31 +9,18 @@
     <div class="cmpl-img" style="background:none !important">
       <i class="weui-icon-success weui-icon_msg cmpl-pay_img"></i>
     </div>
-    <div class="cmpl-text">{{_('已完成支付')}}</div>
-    {% if order.order_type == 1 %}
-      <div class="reg_btn">
-        <a href="{{ url_for('mobile.index.root') }}">
-          <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
-        </a>
-      </div>
-      <div class="reg_btn">
-        <a href="{{ url_for('mobile.order.detail', order_id=order.order_id) }}">
-          <button type="button" class="weui-btn weui-btn_c">{{_('查看订单详情')}}</button>
-        </a>
-      </div>
-    {% else %}
-      <div class="reg_btn">
-        <a href="{{ url_for('mobile.wallet.root') }}">
-          <button type="button" class="weui-btn weui-btn_c">{{_('查看充值记录')}}</button>
-        </a>
-      </div>
-      <div class="reg_btn">
-        <a href="{{ url_for('mobile.index.root') }}">
-          <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
-        </a>
-      </div>
-    {% endif %}
-</div>
+    <div class="cmpl-text">{{_('支付成功')}}</div>
+    <div class="reg_btn">
+      <a href="{{ url_for('mobile.index.root') }}">
+        <button type="button" class="weui-btn weui-btn_red">{{_('到商城去逛逛')}}</button>
+      </a>
+    </div>
+    <div class="reg_btn">
+      <a href="{{ url_for('mobile.order.detail', order_id=order.order_id) }}">
+        <button type="button" class="weui-btn weui-btn_c">{{_('查看订单详情')}}</button>
+      </a>
+    </div>
+  </div>
 {% endblock %}
 
 {% block script %}

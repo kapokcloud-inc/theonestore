@@ -55,7 +55,7 @@
                       <td>{{ comment.comment_id }}</td>
                       <td>
                         <a href="{{url_for('admin.user.detail', uid=comment.uid)}}" target="_blank">
-                          <img src="{{ comment.avatar }}" width="50" class="img-circle" />
+                          <img src="{{ comment.avatar|format_avatar(0) }}" width="50" class="img-circle" />
                         </a>
                       </td>
                       <td>

@@ -3,7 +3,7 @@
 {% for comment in comments %}
   <div class="weui-media-box weui-media-box_appmsg">
     <div class="weui-media-box__hd">
-      <img class="weui-media-box__thumb ava" src="{{ comment.avatar }}" alt="">
+      <img class="weui-media-box__thumb ava" src="{{ comment.avatar|format_avatar(0) }}" alt="">
     </div>
     <div class="weui-media-box__bd">
       <div class="all_title">
@@ -12,14 +12,14 @@
       </div>
       <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
       <div class="review_cnt">{{ comment.content }}</div>
-      <div class="review_att">
+      <ul class="weui-uploader__files mar-top" id="uploaderFiles">
         {% set imgs = comment.img_data|json_loads %}
         {% for img in imgs %}
-          <span class="review_img">
-            <img src="{{ img }}" alt="">
-          </span>
+        <li class="weui-uploader__file">
+          <img src="{{ img }}-square.middle" alt="">
+        </li>
         {% endfor %}
-      </div>
+      </ul>
     </div>
   </div>
 {% endfor %}

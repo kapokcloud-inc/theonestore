@@ -99,3 +99,16 @@ def refunds_amount():
     refunds_amount = AfterSalesStaticMethodsService.refunds_amount(order_goods=order_goods, quantity=quantity)
 
     return resjson.print_json(0, u'ok', {'refunds_amount':refunds_amount})
+
+
+@aftersales.route('/return-goods')
+def return_goods():
+    """寄回商品"""
+    resjson.action_code = 12
+
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
+
+    aftersales_id      = toint(request.args.get('aftersales_id', '0'))
+    return_shipping_sn = request.args.get('return_shipping_sn', '').strip()

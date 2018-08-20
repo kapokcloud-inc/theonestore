@@ -1,0 +1,28 @@
+{% extends '/default/mobile/layout/base.html.j2' %}
+
+{% block head %}
+<title>{{_('充值成功 - 一店')}}</title>
+{% endblock %}
+
+{% block body %}
+  <div class="cmpl-pay">
+    <div class="cmpl-img" style="background:none !important">
+      <i class="weui-icon-success weui-icon_msg cmpl-pay_img"></i>
+    </div>
+    <div class="cmpl-text">{{_('充值成功')}}</div>
+      <div class="reg_btn">
+        <a href="{{ url_for('mobile.wallet.root') }}">
+          <button type="button" class="weui-btn weui-btn_red">{{_('查看充值记录')}}</button>
+        </a>
+      </div>
+      <div class="reg_btn">
+        <a href="{{ url_for('mobile.index.root') }}">
+          <button type="button" class="weui-btn weui-btn_c">{{_('到商城去逛逛')}}</button>
+        </a>
+      </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript"></script>
+{% endblock %}

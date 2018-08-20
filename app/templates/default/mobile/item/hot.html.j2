@@ -20,9 +20,9 @@
             <div class="title">{{ item.goods_name }}</div>
             <p class="desc">{{ item.goods_desc }}</p>
             <div class="all_price">
-              <span>￥{{ item.goods_price }}</span>
+              <span>￥{{ item.goods_price|format_amount }}</span>
               {% if item.market_price > 0 %}
-                <span class="price_del">￥{{ item.market_price }}</span>
+                <span class="price_del">￥{{ item.market_price|format_amount }}</span>
               {% endif %}
             </div>
           </div>

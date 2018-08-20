@@ -20,17 +20,10 @@
       {% set btnOn = 'btnOn' if is_img == '1' else '' %}
       <a type="button" class="review-type_btn {{ btnOn }}" href="{{ url_for('mobile.comment.index', ttype=1, tid=tid, is_img=1) }}">{{_('有图')}} {{ img_count }}</a>
     </div>
-    <div class="weui-gallery" id="gallery">
-      <div class="swiper-container">
-        <div class="swiper-wrapper"></div>
-      </div>
-      <!-- <span class="weui-gallery__img" id="galleryImg"></span> -->
-      <div class="weui-gallery__opr"></div>
-    </div>
     {% for comment in comments %}
       <div class="weui-media-box weui-media-box_appmsg">
         <div class="weui-media-box__hd">
-          <img class="weui-media-box__thumb ava" src="{{ comment.avatar }}" alt="">
+          <img class="weui-media-box__thumb ava" src="{{ comment.avatar|format_avatar(0) }}" alt="">
         </div>
         <div class="weui-media-box__bd">
           <div class="all_title">
@@ -42,7 +35,9 @@
           <ul class="weui-uploader__files mar-top" id="uploaderFiles">
             {% set imgs = comment.img_data|json_loads %}
             {% for img in imgs %}
-              <li class="weui-uploader__file" style="background-image:url('{{ img }}-square.middle')"></li>
+              <li class="weui-uploader__file">
+                <img src="{{ img }}-square.middle" alt="">
+              </li>
             {% endfor %}
           </ul>
         </div>
