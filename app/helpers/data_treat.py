@@ -17,26 +17,27 @@ def format_amount(sourcePrice=0):
         if isinstance(sourcePrice,types.IntType) or isinstance(sourcePrice,types.FloatType):
             #限制保留2位小数
             sourcePrice = toamount(sourcePrice)
+        else:
+            raise ValueError
+    except ValueError:
+        return '数据错误'
     except Exception:
         if isinstance(sourcePrice,(int,float)):
             #限制保留2位小数
             sourcePrice = toamount(sourcePrice)
-
-    try:
-        targetPrice = 0
-        if sourcePrice == None or sourcePrice == 0:
-            return targetPrice
-
-        decmiclist = (sourcePrice.split('.'))[1]
-        #小数均为0则返回整数，否则保留两位小数
-        if decmiclist and decmiclist[0] == 0 and decmiclist[1] == 0:
-            targetPrice = int(sourcePrice)
-            return targetPrice
         else:
-            targetPrice = sourcePrice
-            return targetPrice
-    except ValueError as e:
-        print(e)
+            raise ValueError
+
+    if sourcePrice == None or sourcePrice == 0:
+        return 0
+
+    decmiclist = list((str(sourcePrice).split('.'))[1])
+    #小数均为0则返回整数，否则保留两位小数
+    if decmiclist and decmiclist[0] == '0' and decmiclist[1] == '0':
+        return int(sourcePrice)
+    else:
+        return sourcePrice
+  
     
 def format_avatar(soruceImg,avatartype = 0):
     ''' 处理头像路径 '''

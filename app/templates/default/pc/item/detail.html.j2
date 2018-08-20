@@ -48,9 +48,9 @@
                     <div class="goods-name">{{ item.goods_name }}</div>
                     <div class="goods-desc mar-top">{{ item.goods_desc }}</div>
                     <div class="goods-price mar-top">
-                      <span>￥{{ item.goods_price }}</span>
+                      <span>￥{{ item.goods_price|format_amount }}</span>
                       {% if item.market_price > 0 %}
-                      <span class="price-del">￥{{ item.market_price }}</span>
+                      <span class="price-del">￥{{ item.market_price|format_amount }}</span>
                       {% endif %}
                     </div>
                     <div class="one-cell not-border mar-top">

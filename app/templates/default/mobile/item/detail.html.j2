@@ -42,9 +42,9 @@
         <div class="all_title">{{ item.goods_name }}</div>
         <div class="all_desc">{{ item.goods_desc }}</div>
         <div class="all_price">
-          <span>￥{{ item.goods_price }}</span>
+          <span>￥{{ item.goods_price|format_amount }}</span>
           {% if item.market_price > 0 %}
-          <span class="price_del">￥{{ item.market_price }}</span>
+          <span class="price_del">￥{{ item.market_price|format_amount }}</span>
           {% endif %}
         </div>
       </div>
@@ -77,7 +77,7 @@
                   <p class="all_title">{{ item.goods_name }}</p>
                 </div>
                 <div class="weui-cell__ft mar-left width46">
-                  <span class="all_price">￥{{ item.goods_price }}</span>
+                  <span class="all_price">￥{{ item.goods_price|format_amount }}</span>
                 </div>
               </div>
               <div class="weui-cell">
