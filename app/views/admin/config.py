@@ -39,7 +39,7 @@ from app.forms.admin.config import (
     SmsAlismsForm,
     StorageQiniuForm,
     StorageAliossForm,
-    AftersalesAddressForm
+    AftersalesServiceForm
 )
 from app.models.shipping import Shipping
 from app.models.sys import SysSetting
@@ -329,13 +329,13 @@ def shipping_save():
     return render_template('admin/config/shipping_detail.html.j2', form=wtf_form, shipping=shipping)
 
 
-@config.route('/aftersales_server', methods=['GET','POST'])
-def aftersales_server():
-    """售后地址"""
-    g.page_title = _(u'售后地址')
+@config.route('/aftersales_service', methods=['GET','POST'])
+def aftersales_service():
+    """售后服务"""
+    g.page_title = _(u'售后服务')
 
-    form = AftersalesAddressForm()
-    ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_server').first()
+    form = AftersalesServiceForm()
+    ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_service').first()
     if request.method == 'GET':
         try:
             data = json.loads(ss.value)
@@ -347,10 +347,10 @@ def aftersales_server():
         if form.validate_on_submit():
             if ss is None:
                 ss = SysSetting()
-                ss.key = 'config_aftersales_server'
+                ss.key = 'config_aftersales_service'
                 db.session.add(ss)
             ss.value = json.dumps(data)
             db.session.commit()
             return redirect(url_for('admin.index.success',title=_(u'设置售后地址成功')))
     
-    return render_template('admin/config/aftersales_server.html.j2',form=form)
+    return render_template('admin/config/aftersales_service.html.j2',form=form)

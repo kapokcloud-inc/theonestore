@@ -27,7 +27,7 @@
     {% set goods = goods_data[0] %}
     <div class="weui-cell">
       <div class="weui-cell__hd avatar mar-right">
-        <img src="{{ goods.goods_img }}" alt="">
+        <img src="{{ goods.goods_img }}-square.small" alt="">
       </div>
       <div class="weui-cell__bd">
         <div class="all_title height25">{{ goods.goods_name }}</div>
@@ -68,14 +68,6 @@
         </p>
         <p class="all_desc mar-top">{{_('注：退款金额将返回到您原支付账户')}}</p>
       </div>
-    </div>
-  </div>
-  <div class="weui-gallery" style="display: none">
-    <span class="weui-gallery__img"></span>
-    <div class="weui-gallery__opr">
-      <a href="javascript:" class="weui-gallery__del">
-        <i class="weui-icon-delete weui-icon_gallery-delete"></i>
-      </a>
     </div>
   </div>
   <div class="weui-cells weui-cells_form">
@@ -215,7 +207,9 @@ $('#uploaderInput').fileupload({
       if(data.result.ret == 0) {
         var image = data.result.data.image;
 
-        var html_text = '<li class="weui-uploader__file" style="background-image:url(' + image + ')"></li>';
+        var html_text = '<li class="weui-uploader__file">' +
+                          '<img src="' + image + '-square.middle" alt="" data-value="' + image + '">' +
+                        '</li>';
         $("#uploaderFiles").append(html_text);
 
         var img_data = $("#img_data").val();

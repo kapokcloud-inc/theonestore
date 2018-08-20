@@ -558,3 +558,46 @@ ul li {
   width: 70px;
   height: 70px;
 }
+.weui-uploader__file img {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+}
+.weui-gallery {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+.gallery_img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -58%);
+  display: inline-block;
+  max-width: 100%;
+  max-height: 100%;
+}
+.weui-gallery__opr {
+  line-height: 0;
+  height: 50px;
+  padding: 15px 0;
+}
+.prevImg,
+.nextImg {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+.prevImg img,
+.nextImg img {
+  width: 100%;
+}
+.close_img {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+}
+.close_img img {
+  width: 100%;
+  height: 100%;
+}
