@@ -105,17 +105,17 @@
         <div class="weui-form-preview__bd">
           <div class="weui-form-preview__item">
             <label class="weui-form-preview__label">{{_('收货人')}}</label>
-            {% set consignee_name = aftersales_service.consignee_name if aftersales_service else _('商家暂无配置') %}
+            {% set consignee_name = aftersales_service.consignee_name if aftersales_service.consignee_name else _('商家暂无配置') %}
             <span class="weui-form-preview__value">{{ consignee_name }}</span>
           </div>
           <div class="weui-form-preview__item">
             <label class="weui-form-preview__label">{{_('电话')}}</label>
-            {% set consignee_mobile = aftersales_service.consignee_mobile if aftersales_service else _('商家暂无配置') %}
+            {% set consignee_mobile = aftersales_service.consignee_mobile if aftersales_service.consignee_mobile else _('商家暂无配置') %}
             <span class="weui-form-preview__value">{{ consignee_mobile }}</span>
           </div>
           <div class="weui-form-preview__item">
             <label class="weui-form-preview__label">{{_('地址')}}</label>
-            {% set consignee_address = aftersales_service.consignee_address if aftersales_service else _('商家暂无配置') %}
+            {% set consignee_address = aftersales_service.consignee_address if aftersales_service.consignee_address else _('商家暂无配置') %}
             <span class="weui-form-preview__value">{{ consignee_address }}</span>
           </div>
         </div>
