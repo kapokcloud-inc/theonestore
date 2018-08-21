@@ -10,6 +10,7 @@
 import json
 
 from flask_babel import gettext as _
+from sqlalchemy import func
 
 from app.database import db
 
@@ -28,7 +29,10 @@ from app.helpers.date_time import (
 from app.services.api.funds import FundsService
 from app.services.admin.pay_weixin import JsapiWeixinRefundsService
 
-from app.models.order import Order
+from app.models.order import (
+    Order,
+    OrderTran
+)
 from app.models.refunds import Refunds
 
 
@@ -61,18 +65,23 @@ class RefundsService(object):
             return False
 
         # 检查
-        self.refunds = Refunds.query.filter(Refunds.order_id == self.order_id).first()
-        if self.refunds and self.refunds.refund_status == 1:
-            self.msg = _(u'已经成功退款, 请勿重复退款')
-            return False
-
-        # 检查
         if self.order.pay_method == 'funds':
             self.third_type = 1
         if self.order.pay_method in ['weixin_app', 'weixin_jsapi']:
             self.third_type = 2
         if self.third_type == 0:
             self.msg = _(u'支付方式错误')
+            return False
+
+        # 检查
+        refunds_amount_sum = db.session.query(func.sum(Refunds.refunds_amount).label('sum')).\
+                                    filter(Refunds.tran_id == self.order.tran_id).\
+                                    filter(Refunds.refunds_status == 1).first()
+        _sum  = refunds_amount_sum.sum if refunds_amount_sum.sum else 0
+        total = _sum + self.refunds_amount
+        tran  = OrderTran.query.get(self.order.tran_id)
+        if total > tran.pay_amount:
+            self.msg = _(u'退款金额超过交易已付金额')
             return False
 
         # 检查
@@ -85,6 +94,13 @@ class RefundsService(object):
                 self.msg = self.fs.msg
                 return False
 
+        # 是否创建退款记录
+        if not self.refunds:
+            data = {'tran_id':self.order.tran_id, 'order_id':self.order_id, 'refunds_amount':self.refunds_amount,
+                    'refunds_method':self.order.pay_method, 'refunds_sn':'', 'refunds_time':0, 'refunds_status':0,
+                    'remark_user':u'', 'remark_sys':u'', 'add_time':self.current_time}
+            self.refunds = model_create(Refunds, data, commit=True)
+
         # 检查
         if self.third_type == 2:
             after_year_time = before_after_timestamp(self.order.paid_time, {'years':1})
@@ -92,7 +108,7 @@ class RefundsService(object):
                 self.msg = _(u'交易时间超过一年的订单无法提交退款')
                 return False
 
-            self.jwrs = JsapiWeixinRefundsService(self.order.tran_id, self.refunds)
+            self.jwrs = JsapiWeixinRefundsService(self.refunds)
             if not self.jwrs.check():
                 self.msg = self.jwrs.msg
                 return False
@@ -103,13 +119,6 @@ class RefundsService(object):
         """退款"""
         refunds_status = 0  # 退款状态: 0.默认; 1.成功; 2.失败;
         refunds_sn     = ''
-
-        # 是否创建退款记录
-        if not self.refunds:
-            data = {'tran_id':self.order.tran_id, 'order_id':self.order_id, 'refunds_amount':self.refunds_amount,
-                    'refunds_method':self.order.pay_method, 'refunds_sn':'', 'refunds_time':0, 'refunds_status':0,
-                    'remark_user':u'', 'remark_sys':u'', 'add_time':self.current_time}
-            self.refunds = model_create(Refunds, data)
 
         # 资金支付
         if self.third_type == 1:
@@ -127,6 +136,7 @@ class RefundsService(object):
                 refunds_sn     = self.jwrs.refund_id
             else:
                 refunds_status = 2
+                return False
 
         data = {'refunds_status':refunds_status}
         if refunds_status == 1:

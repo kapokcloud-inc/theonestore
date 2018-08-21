@@ -96,56 +96,111 @@
       <div class="weui-cell__ft"></div>
     </a>
   </div>
-  <div class="weui-cells weui-cells_form">
-    <div class="weui-cell">
-      <div class="weui-cell__bd blackGap">{{_('商品寄回信息')}}</div>
-    </div>
-    <div class="weui-form-preview">
-      <div class="weui-form-preview__bd">
-        <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label">{{_('收货人')}}</label>
-          <span class="weui-form-preview__value">{{ aftersales_service['consignee_name'] }}</span>
+  {% if aftersales.aftersales_type in [2,3] %}
+    <div class="weui-cells weui-cells_form">
+      <div class="weui-cell">
+        <div class="weui-cell__bd blackGap">{{_('商品寄回信息')}}</div>
+      </div>
+      <div class="weui-form-preview">
+        <div class="weui-form-preview__bd">
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('收货人')}}</label>
+            {% set consignee_name = aftersales_service.consignee_name if aftersales_service.consignee_name else _('商家暂无配置') %}
+            <span class="weui-form-preview__value">{{ consignee_name }}</span>
+          </div>
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('电话')}}</label>
+            {% set consignee_mobile = aftersales_service.consignee_mobile if aftersales_service.consignee_mobile else _('商家暂无配置') %}
+            <span class="weui-form-preview__value">{{ consignee_mobile }}</span>
+          </div>
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('地址')}}</label>
+            {% set consignee_address = aftersales_service.consignee_address if aftersales_service.consignee_address else _('商家暂无配置') %}
+            <span class="weui-form-preview__value">{{ consignee_address }}</span>
+          </div>
         </div>
-        <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label">{{_('电话')}}</label>
-          <span class="weui-form-preview__value">{{ aftersales_service['consignee_mobile'] }}</span>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if address %}
+    <div class="weui-cells weui-cells_form">
+      <div class="weui-cell">
+        <div class="weui-cell__bd blackGap">{{_('商品收货信息')}}</div>
+      </div>
+      <div class="weui-form-preview">
+        <div class="weui-form-preview__bd">
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('收货人')}}</label>
+            <span class="weui-form-preview__value">{{ address.name }}</span>
+          </div>
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('电话')}}</label>
+            <span class="weui-form-preview__value">{{ address.mobile }}</span>
+          </div>
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('地址')}}</label>
+            {% set _address = '%s%s%s%s' % (address.province, address.city, address.district, address.address) %}
+            <span class="weui-form-preview__value">{{_address }}</span>
+          </div>
         </div>
-        <div class="weui-form-preview__item">
-          <label class="weui-form-preview__label">{{_('地址')}}</label>
-          <span class="weui-form-preview__value">{{ aftersales_service['consignee_address'] }}</span>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if aftersales.return_status == 1 %}
+    <div class="weui-cells weui-cells_form">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">{{_('填写寄回商品快递单号')}}</div>
+      </div>
+      <div class="weui-cell">
+        <div class="weui-cell__hd">
+          <label class="weui-label blackGap">{{_('快递单号：')}}</label>
+        </div>
+        <div class="weui-cell__bd">
+          <input id="return_shipping_sn" class="weui-input" type="text" placeholder="{{_('请填写快递单号')}}">
+        </div>
+      </div>
+      <div class="weui-cell">
+        <div class="weui-cells__tips">{{_('备注：快递面单信息需填写完整且需与您售后申请单信息一致；
+          务必请将申请单号备注在快递面单上再行邮寄！ 一个服务单号邮寄一个包裹！若有问题请联系客服')}}</div>
+      </div>
+      
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <button type="button" class="weui-btn weui-btn_red" onclick="submit()">{{_('提交')}}</button>
         </div>
       </div>
     </div>
-  </div>
-  <div class="weui-cells weui-cells_form">
-    <div class="weui-cell">
-      <div class="weui-cell__bd">{{_('填写寄回商品快递单号')}}</div>
-    </div>
-    <div class="weui-cell">
-      <div class="weui-cell__hd">
-        <label class="weui-label blackGap">{{_('快递单号：')}}</label>
-      </div>
-      <div class="weui-cell__bd">
-        <input class="weui-input" type="text" placeholder="{{_('请填写快递单号')}}">
-      </div>
-    </div>
-    <div class="weui-cell">
-      <div class="weui-cells__tips">{{_('备注：快递面单信息需填写完整且需与您售后申请单信息一致；
-        务必请将申请单号备注在快递面单上再行邮寄！ 一个服务单号邮寄一个包裹！若有问题请联系客服')}}</div>
-    </div>
-    
-    <div class="weui-cell">
-      <div class="weui-cell__bd">
-        <button type="button" class="weui-btn weui-btn_red" onclick="">{{_('提交')}}</button>
-      </div>
-    </div>
-  </div>
+  {% endif %}
 </div>
 {% endblock %}
 
 {% block script %}
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js" charset="utf-8"></script>
 <script type="text/javascript">
+var csrftoken = "{{ csrf_token() }}";
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
+ var aftersales_id = {{ aftersales.aftersales_id }};
+
+ function submit() {
+   var return_shipping_sn = $("#return_shipping_sn").val();
+
+   var params = {'aftersales_id':aftersales_id, 'return_shipping_sn':return_shipping_sn}
+  $.post("{{ url_for('api.aftersales.return_goods') }}", params, function(json) {
+    if (json.ret == 0) {
+      location.reload();
+    } else {
+      //优化alert ??
+      alert(json.msg);
+      return false;
+    }
+  });
+ }
+ 
 $(document).ready(function(){
   /* 点击显示大图 */
   var mySwiper = new Swiper('.swiper-container2', {

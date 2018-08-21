@@ -27,9 +27,8 @@ from app.models.sys import SysSetting
 class JsapiWeixinRefundsService(object):
     """weixin退款service"""
 
-    def __init__(self, pay_tran_id, refund):
+    def __init__(self, refund):
         self.msg         = u''
-        self.pay_tran_id = pay_tran_id
         self.refund      = refund
         self.refund_url  = 'https://api.mch.weixin.qq.com/secapi/pay/refund' # 退款url
         self.partner_key = u''
@@ -57,13 +56,13 @@ class JsapiWeixinRefundsService(object):
         appid            = config_weixin_mp.get('appid', '')
         mch_id           = config_paymethod_weixin.get('mch_id', '')
         self.partner_key = config_paymethod_weixin.get('partner_key', '')
+        self.cert_file   = config_paymethod_weixin.get('apiclient_cert', '')
+        self.key_file    = config_paymethod_weixin.get('apiclient_key', '')
 
-        if appid == '' or mch_id == '' or self.partner_key == '':
+        if appid == '' or mch_id == '' or self.partner_key == '' or self.cert_file == '' or self.key_file == '':
             self.msg = _(u'配置错误')
             return False
 
-        self.cert_file = os.path.join(os.getcwd(), 'cert', 'weixin', 'apiclient_cert.pem')
-        self.key_file  = os.path.join(os.getcwd(), 'cert', 'weixin', 'apiclient_key.pem')
         if not os.path.exists(self.cert_file) or not os.path.exists(self.key_file):
             self.msg = _(u'证书文件不存在')
             return False
@@ -73,11 +72,10 @@ class JsapiWeixinRefundsService(object):
             'mch_id':mch_id,
             'nonce_str':randomstr(32),
             'op_user_id':mch_id,
-            'out_refund_no':self.refund.refund_id,
+            'out_refund_no':self.refund.refunds_id,
             'out_trade_no':self.refund.tran_id,
-            'refund_fee':int(self.refund.refund_amount*100),
-            'total_fee':int(self.refund.refund_amount*100),
-            'transaction_id':self.pay_tran_id,
+            'refund_fee':int(self.refund.refunds_amount*100),
+            'total_fee':int(self.refund.refunds_amount*100)
         }
 
         return True

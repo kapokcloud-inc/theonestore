@@ -32,6 +32,7 @@ from app.helpers.date_time import (
 
 from app.services.admin.refunds import RefundsService
 
+from app.models.sys import SysSetting
 from app.models.order import (
     Order,
     OrderGoods,
@@ -93,6 +94,19 @@ class AfterSaleCheckService(object):
             self.order_address = OrderAddress.query.filter(OrderAddress.order_id == self.aftersale.order_id).first()
             if not self.order_address:
                 self.msg = _(u'订单地址不存在')
+                return False
+
+        # 检查
+        if self.aftersale.aftersales_type == 3:
+            ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_service').first()
+            if not ss:
+                self.msg = _(u'请先配置售后服务')
+                return False
+
+            try:
+                aftersales_service = json.loads(ss.value)
+            except Exception as e:
+                self.msg = _(u'售后服务配置格式化失败')
                 return False
 
         if self.aftersale.aftersales_type == 1:
@@ -238,7 +252,9 @@ class AfterSaleResendService(object):
     def do(self):
         """重发商品"""
 
-        data = {'resend_status':2, 'update_time':self.current_time}
+        data = {'status':2, 'resend_shipping_name':self.resend_shipping_name,
+                'resend_shipping_sn':self.resend_shipping_sn,
+                'resend_status':2, 'update_time':self.current_time}
         model_update(self.aftersale, data)
 
         content = _(u'服务专员已处理换货，包裹已发出，%s，快递单号:%s，请注意查收。' % (self.resend_shipping_name, self.resend_shipping_sn))
