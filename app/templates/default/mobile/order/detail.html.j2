@@ -58,10 +58,22 @@
             <span>x {{ item.goods_quantity }}</span>
           </div>
         </div>
-        {% set limit_time = order.shipping_time|before_after_timestamp({'days':15}) %}
-        {% if order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 and limit_time >= current_time and item.goods_quantity > item.aftersales_goods_quantity %}
+        {% set og_aftersale_status = ogs_aftersale_status.get(item.og_id, 0) %}
+        {% if og_aftersale_status == 1 %}
           <div class="weui-cell__ft applySale" data-value="{{ item.og_id }}">
             <button type="button" class="order_btn">{{_('申请售后')}}</button>
+          </div>
+        {% elif og_aftersale_status == 2 %}
+          <div class="weui-cell__ft">
+            <button type="button" class="order_btn">{{_('已退款')}}</button>
+          </div>
+        {% elif og_aftersale_status == 3 %}
+          <div class="weui-cell__ft">
+            <button type="button" class="order_btn">{{_('已换货')}}</button>
+          </div>
+        {% elif og_aftersale_status == 4 %}
+          <div class="weui-cell__ft">
+            <button type="button" class="order_btn">{{_('已退款，已换货')}}</button>
           </div>
         {% endif %}
       </div>

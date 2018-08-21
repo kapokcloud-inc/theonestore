@@ -44,6 +44,7 @@ class Order(BaseModel, db.Model):
     cancel_status = db.Column(db.Integer, default=0)
     cancel_desc = db.Column(db.String(255), default='')
     cancel_time = db.Column(db.Integer, default=0)
+    aftersale_status = db.Column(db.Integer, default=0)
     is_remove = db.Column(db.Integer, default=0)
     order_desc = db.Column(db.String(255), default='')
     user_remark = db.Column(db.Text, default=None)

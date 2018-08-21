@@ -18,7 +18,10 @@ from flask import (
 )
 from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
-from sqlalchemy import or_
+from sqlalchemy import (
+    or_,
+    func
+)
 
 from app.database import db
 
@@ -44,12 +47,15 @@ from app.services.api.cart import (
 )
 from app.services.api.funds import FundsService
 
-from app.models.aftersales import Aftersales
 from app.models.coupon import Coupon
 from app.models.shipping import Shipping
 from app.models.user import UserAddress
 from app.models.item import Goods
 from app.models.cart import Cart
+from app.models.aftersales import (
+    Aftersales,
+    AftersalesGoods
+)
 from app.models.order import (
     Order,
     OrderAddress,
@@ -761,9 +767,10 @@ class OrderStaticMethodsService(object):
         ps           = toint(params.get('ps', '10'))
         tab_status   = toint(params.get('tab_status', '0'))     # 标签状态: 0.全部; 1.待付款; 2.待收货; 3.已完成; 4.已取消;
 
-        q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.order_amount, Order.pay_status,
-                            Order.shipping_amount, Order.shipping_status, Order.deliver_status,
-                            Order.goods_quantity, Order.goods_data, Order.add_time,Order.shipping_time).\
+        q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.order_amount,
+                            Order.pay_status, Order.shipping_amount, Order.shipping_status,
+                            Order.deliver_status, Order.goods_quantity, Order.goods_data,
+                            Order.add_time,Order.shipping_time, Order.aftersale_status).\
                 filter(Order.uid == uid).\
                 filter(Order.order_type == 1).\
                 filter(Order.is_remove == 0)
@@ -851,6 +858,25 @@ class OrderStaticMethodsService(object):
 
             return (status_text, action_code)
 
+        if order.order_status == 4:
+            if order.aftersale_status == 1:
+                status_text = _(u'已退款')
+                action_code = []
+
+                return (status_text, action_code)
+
+            if order.aftersale_status == 2:
+                status_text = _(u'已换货')
+                action_code = []
+
+                return (status_text, action_code)
+
+            if order.aftersale_status == 3:
+                status_text = _(u'已退款，已换货')
+                action_code = []
+
+                return (status_text, action_code)
+
         return (status_text, action_code)
 
     @staticmethod
@@ -881,9 +907,10 @@ class OrderStaticMethodsService(object):
         if not order:
             return abort(404)
 
-        items         = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
-        order_address = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
-        text, code    = OrderStaticMethodsService.order_status_text_and_action_code(order)
+        items                = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
+        ogs_aftersale_status = OrderStaticMethodsService.order_goods_aftersale_status(items, order)
+        order_address        = OrderAddress.query.filter(OrderAddress.order_id == order_id).first()
+        text, code           = OrderStaticMethodsService.order_status_text_and_action_code(order)
 
         express_data  = None
         express_datas = []
@@ -895,7 +922,57 @@ class OrderStaticMethodsService(object):
 
         aftersale = Aftersales.query.filter(Aftersales.order_id == order_id).filter(Aftersales.status.in_([1,2,3])).first()
 
-        data = {'order':order, 'items':items, 'order_address':order_address,
-                'text':text, 'code':code, 'express_data':express_data, 'express_datas':express_datas,
+        data = {'order':order, 'items':items, 'ogs_aftersale_status':ogs_aftersale_status,
+                'order_address':order_address, 'text':text, 'code':code,
+                'express_data':express_data, 'express_datas':express_datas,
                 'aftersale':aftersale, 'current_time':current_timestamp()}
         return data
+
+    @staticmethod
+    def order_goods_aftersale_status(order_goods, order):
+        """订单商品状态"""
+        ogs_aftersale_status = {}
+        current_time         = current_timestamp()
+        limit_time           = before_after_timestamp(order.shipping_time, {'days':15})
+
+        for og in order_goods:
+            # 申请售后
+            if (order.order_status in [1,2,4]) and\
+                (order.pay_status == 2) and\
+                (order.shipping_status == 2) and\
+                (limit_time >= current_time) and\
+                (og.goods_quantity > og.aftersales_goods_quantity):
+                ogs_aftersale_status[og.og_id] = 1
+                continue
+
+            # 完成售后的状态
+            if order.order_status == 4:
+                refund_sum = db.session.\
+                                    query(func.sum(AftersalesGoods.goods_quantity).label('sum')).\
+                                    filter(AftersalesGoods.aftersales_id == Aftersales.aftersales_id).\
+                                    filter(AftersalesGoods.og_id == og.og_id).\
+                                    filter(Aftersales.aftersales_type.in_([1,2])).\
+                                    filter(Aftersales.status == 3).first()
+                _refund_sum = refund_sum.sum if refund_sum.sum else 0
+                if _refund_sum == og.goods_quantity:
+                    ogs_aftersale_status[og.og_id] = 2
+                    continue
+
+                exchange_sum = db.session.\
+                                    query(func.sum(AftersalesGoods.goods_quantity).label('sum')).\
+                                    filter(AftersalesGoods.aftersales_id == Aftersales.aftersales_id).\
+                                    filter(AftersalesGoods.og_id == og.og_id).\
+                                    filter(Aftersales.aftersales_type == 3).\
+                                    filter(Aftersales.status == 3).first()
+                _exchange_sum = exchange_sum.sum if exchange_sum.sum else 0
+                if _exchange_sum == og.goods_quantity:
+                    ogs_aftersale_status[og.og_id] = 3
+                    continue
+
+                if (_refund_sum + _exchange_sum) == og.goods_quantity:
+                    ogs_aftersale_status[og.og_id] = 4
+                    continue
+
+            ogs_aftersale_status[og.og_id] = 0
+
+        return ogs_aftersale_status

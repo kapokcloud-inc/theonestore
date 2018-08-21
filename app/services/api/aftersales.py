@@ -139,7 +139,7 @@ class AfterSalesCreateService(object):
             self.msg = _(u'订单类型错误')
             return False
 
-        if self.order.order_status not in [1,2]:
+        if self.order.order_status not in [1,2,4]:
             self.msg = _(u'订单状态错误')
             return False
 
@@ -455,7 +455,7 @@ class AfterSalesStaticMethodsService(object):
                 status_text = _(u'重新发货，已完成')
                 action_code = [2]
 
-            if aftersale.status in [3] and aftersale.resend_status in [3]:
+            if aftersale.status in [3] and aftersale.resend_status in [2,3]:
                 status_text = _(u'重新发货，已完成')
 
         return (status_text, action_code)

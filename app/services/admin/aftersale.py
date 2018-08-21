@@ -252,11 +252,15 @@ class AfterSaleResendService(object):
     def do(self):
         """重发商品"""
 
-        data = {'status':2, 'resend_shipping_name':self.resend_shipping_name,
+        data = {'status':3, 'resend_shipping_name':self.resend_shipping_name,
                 'resend_shipping_sn':self.resend_shipping_sn,
                 'resend_status':2, 'update_time':self.current_time}
         model_update(self.aftersale, data)
 
+        # 更新订单状态
+        AfterSaleStaticMethodsService.update_order_status(self.aftersale.order_id, is_commit=False)
+
+        # 添加日志
         content = _(u'服务专员已处理换货，包裹已发出，%s，快递单号:%s，请注意查收。' % (self.resend_shipping_name, self.resend_shipping_sn))
         AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
 
@@ -344,6 +348,10 @@ class AfterSaleRefundsService(object):
                             'refunds_sn':self.rs.refunds.refunds_sn, 'refunds_status':2, 'update_time':self.current_time}
                 content = _(u'服务专员已处理退款，退款金额已经到钱包，请注意查收。')
 
+            # 更新订单状态
+            AfterSaleStaticMethodsService.update_order_status(self.aftersale.order_id, is_commit=False)
+
+            # 更新售后
             data['refunds_sn'] = self.rs.refunds.refunds_sn
             model_update(self.aftersale, data)
             AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
@@ -434,3 +442,27 @@ class AfterSaleStaticMethodsService(object):
                 status_text = _(u'重新发货，已完成')
 
         return (status_text, action_code)
+
+    @staticmethod
+    def update_order_status(order_id, is_commit=False):
+        """更新订单状态"""
+
+        refund = Aftersales.query.\
+                    filter(Aftersales.order_id == order_id).\
+                    filter(Aftersales.aftersales_type.in_([1,2])).\
+                    filter(Aftersales.status == 3).first()
+        aftersale_status = 1
+
+        exchange = Aftersales.query.\
+                    filter(Aftersales.order_id == order_id).\
+                    filter(Aftersales.aftersales_type == 3).\
+                    filter(Aftersales.status == 3).first()
+        aftersale_status = 2
+
+        if refund and exchange:
+            aftersale_status = 3
+
+        order = Order.query.get(order_id)
+        model_update(order, {'order_status':4, 'aftersale_status':aftersale_status}, commit=is_commit)
+
+        return True
