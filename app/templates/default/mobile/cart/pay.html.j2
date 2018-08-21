@@ -88,7 +88,7 @@
           <span class="all_price" style="font-size:18px">￥{{ order.pay_amount|toamount }}</span>
         </div>
         <input id="order_id" type="hidden" value="{{ order.order_id }}" />
-        <div class="btn_primary" onclick="submit()">{{_('提交订单')}}</div>
+        <div class="btn_primary" onclick="submit()">{{_('立即支付')}}</div>
       </div>
     </div>
     <div class="hide ranpo" id="payList">
@@ -100,7 +100,17 @@
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="closePay()">
           </div>
           <div class="weui-cells weui-cells_form weui-cells_radio" style="margin-top:0px !important">
-            <label class="weui-cell weui-check__label">
+            <label class="weui-cell weui-check__label" style="padding:20px 15px;">
+              <div class="weui-cell__hd mar-right">
+                <img class="cancal_image" src="/static/default/mobile/img/weixin.png" alt="">
+              </div>
+              <div class="weui-cell__bd blackGap">微信支付</div>
+              <div class="weui-cell__ft">
+                <input id="weixin_pay" name="weixin_pay" class="weui-check" type="radio" checked="" onclick="choose_pay(this, 'weixin_pay')">
+                <!-- <span class="weui-icon-checked"></span> -->
+              </div>
+            </label>
+            <label class="weui-cell weui-check__label" style="padding:20px 15px;">
               <div class="weui-cell__hd mar-right">
                 <img class="cancal_image" src="/static/default/mobile/img/balancePay.png" alt="">
               </div>
@@ -110,17 +120,7 @@
               </div>
               <div class="weui-cell__ft">
                 <input id="funds_pay" name="funds_pay" class="weui-check" type="radio" onclick="choose_pay(this, 'funds_pay')">
-                <span class="weui-icon-checked"></span>
-              </div>
-            </label>
-            <label class="weui-cell weui-check__label">
-              <div class="weui-cell__hd mar-right">
-                <img class="cancal_image" src="/static/default/mobile/img/weixin.png" alt="">
-              </div>
-              <div class="weui-cell__bd blackGap">微信支付</div>
-              <div class="weui-cell__ft">
-                <input id="weixin_pay" name="weixin_pay" class="weui-check" type="radio" checked="" onclick="choose_pay(this, 'weixin_pay')">
-                <span class="weui-icon-checked"></span>
+                <!-- <span class="weui-icon-checked"></span> -->
               </div>
             </label>
           </div>
