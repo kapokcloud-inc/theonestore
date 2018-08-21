@@ -188,6 +188,7 @@ def refunds():
     if not asrs.check():
         return resjson.print_json(10, asrs.msg)
 
-    asrs.do()
+    if not asrs.do():
+        return resjson.print_json(11, asrs.msg)
 
     return resjson.print_json(0, u'ok')

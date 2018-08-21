@@ -136,6 +136,7 @@ class RefundsService(object):
                 refunds_sn     = self.jwrs.refund_id
             else:
                 refunds_status = 2
+                return False
 
         data = {'refunds_status':refunds_status}
         if refunds_status == 1:
