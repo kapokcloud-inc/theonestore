@@ -21,7 +21,7 @@ from flask import (
 )
 
 from app.database import db
-
+from app.services.response import ResponseJson
 from app.helpers import (
     get_uuid, 
     render_template,
@@ -103,9 +103,19 @@ def configure_before(app):
     @app.errorhandler(404)
     def page_not_found(error):
         path = request.path.lower()
-        if (path.find('/admin/') == 0 or path.find('/static/') == 0):
-            if not request.is_xhr:
-                return render_template('admin/404.html.j2')
+
+        # api端或者是ajax请求
+        if (path.find('/api/') == 0 or request.is_xhr):
+            resjson = ResponseJson()
+            return resjson.print_json(resjson.SYSTEM_PAGE_NOT_FOUND)
+
+        # 手机端
+        elif (path.find('/mobile/') == 0):
+            return render_template('mobile/index/404.html.j2')
+        elif (path.find('/admin/') == 0 or path.find('/static/') == 0):
+            return render_template('admin/404.html.j2')
+
+        # 微信公众号校验文件
         elif (path.find('/MP_verify_') == 0 and path[-4:] == '.txt'):
             filename = path[1:]
             uploads_path = current_app.config['UPLOADED_FILES_DEST']
@@ -113,6 +123,8 @@ def configure_before(app):
             if os.path.exists(mp_verify_file):
                 return send_from_directory(uploads_path, filename)
             return _(u'文件找不到')
+
+        # 微信退款证书
         elif (path.find('/apiclient_cert.pem') or path.find('/apiclient_key.pem')):
             admin_uid = session.get('admin_uid', None)
             if not admin_uid:
@@ -124,9 +136,21 @@ def configure_before(app):
                 return send_from_directory(dirname, filename)
             return render_template('admin/404.html.j2')
 
+        # pc页面
+        return render_template('pc/index/404.html.j2')
+
+
     @app.errorhandler(500)
     def server_error(error):
         endpoint = request.endpoint
-        if (endpoint.find('admin.') == 0):
-            if not request.is_xhr:
+        if not request.is_xhr:
+            if (endpoint.find('mobile.') == 0):
+                return render_template('mobile/index/500.html.j2')
+            elif (endpoint.find('pc.') == 0):
+                return render_template('pc/index/500.html.j2')
+            elif (endpoint.find('admin.') == 0):
                 return render_template('admin/500.html.j2')
+
+        resjson = ResponseJson()
+        return resjson.print_json(resjson.SYSTEM_BUSY)
+
