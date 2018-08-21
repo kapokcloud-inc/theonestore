@@ -27,9 +27,8 @@ from app.models.sys import SysSetting
 class JsapiWeixinRefundsService(object):
     """weixin退款service"""
 
-    def __init__(self, pay_tran_id, refund):
+    def __init__(self, refund):
         self.msg         = u''
-        self.pay_tran_id = pay_tran_id
         self.refund      = refund
         self.refund_url  = 'https://api.mch.weixin.qq.com/secapi/pay/refund' # 退款url
         self.partner_key = u''
@@ -76,8 +75,7 @@ class JsapiWeixinRefundsService(object):
             'out_refund_no':self.refund.refunds_id,
             'out_trade_no':self.refund.tran_id,
             'refund_fee':int(self.refund.refunds_amount*100),
-            'total_fee':int(self.refund.refunds_amount*100),
-            'transaction_id':self.pay_tran_id,
+            'total_fee':int(self.refund.refunds_amount*100)
         }
 
         return True

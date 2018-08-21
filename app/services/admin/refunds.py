@@ -108,7 +108,7 @@ class RefundsService(object):
                 self.msg = _(u'交易时间超过一年的订单无法提交退款')
                 return False
 
-            self.jwrs = JsapiWeixinRefundsService(self.order.tran_id, self.refunds)
+            self.jwrs = JsapiWeixinRefundsService(self.refunds)
             if not self.jwrs.check():
                 self.msg = self.jwrs.msg
                 return False
