@@ -252,7 +252,7 @@ class AfterSaleResendService(object):
     def do(self):
         """重发商品"""
 
-        data = {'resend_shipping_name':self.resend_shipping_name,
+        data = {'status':2, 'resend_shipping_name':self.resend_shipping_name,
                 'resend_shipping_sn':self.resend_shipping_sn,
                 'resend_status':2, 'update_time':self.current_time}
         model_update(self.aftersale, data)
