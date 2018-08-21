@@ -907,3 +907,26 @@ input[type=number]::-webkit-outer-spin-button {
   width: 380px;
   line-height: 80px !important;
 }
+.text-danger {
+  font-size: 80px;
+  line-height: 100px;
+  font-weight: 900;
+  color: #f33155;
+  margin: 10px 0;
+}
+.text-uppercase {
+  text-transform: uppercase;
+  font-size: 22px;
+  color: #333;
+  line-height: 30px;
+  font-weight: 300;
+  margin: 10px 0;
+}
+.text-muted {
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #8d9ea7;
+  margin: 30px 0;
+}

@@ -46,3 +46,15 @@ def root():
 def favicon():
     """favicon图标"""
     return send_file('static/favicon.ico')
+
+
+@index.route('/404')
+def pagenotfound():
+    """页面未找到"""
+    return render_template('pc/index/404.html.j2')
+
+
+@index.route('/500')
+def servererror():
+    """服务器内部发生错误"""
+    return render_template('pc/index/500.html.j2')

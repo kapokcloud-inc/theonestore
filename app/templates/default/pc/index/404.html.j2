@@ -1,0 +1,31 @@
+{% extends '/default/pc/layout/cart_base.html.j2' %}
+
+{% block head %}
+<title>{{_('页面未找到 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+{% endblock %}
+
+{% block nav %} 
+<div class="one-nav_header">
+  <span class="nav-header_type">{{_('页面未找到')}}</span>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="cart-wrap">
+  <div class="head-inner">
+    <div class="comp-box">
+      <div class="compl-img" style="width:150px">
+        <h1 class="text-danger">404</h1>
+      </div>
+      <h3 class="text-uppercase">{{_('页面未找到')}}</h3>
+      <p class="text-muted">{{_('我们有时像迷途的小孩，找不到回家的路。')}}</p>
+      <a class="not-one_btn btn-primary" style="width:160px" href="{{ url_for('pc.index.root') }}">{{_('返回首页')}}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript"></script>
+{% endblock%}

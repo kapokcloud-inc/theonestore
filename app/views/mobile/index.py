@@ -40,3 +40,15 @@ def root():
     data = {'advs':advs, 'hot_items':data_hot['items'], 'recommend_items':data_recommend['items']}
     return render_template('mobile/index/index.html.j2', **data)
 
+
+@index.route('/404')
+def pagenotfound():
+    """页面未找到"""
+    return render_template('mobile/index/404.html.j2')
+
+
+@index.route('/500')
+def servererror():
+    """服务器内部发生错误"""
+    return render_template('mobile/index/500.html.j2')
+    
