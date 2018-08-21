@@ -356,18 +356,21 @@ ul li {
   left: 50%;
   transform: translate(50%, 0%);
   background-color: #fff;
-  color: #f33155;
-  border: 1px solid #f33155;
-  padding: 0px 3px;
+  padding: 0;
 }
 .msg_badge {
   top: 3px;
   color: #fff;
   background: #f33155;
+  min-width: 0;
+  width: 24px;
+  height: 14px;
+  line-height: 14px;
 }
 .weui-uploader__file {
   width: 70px;
   height: 70px;
+  overflow: hidden;
 }
 .weui-uploader__input-box {
   width: 68px;
@@ -644,6 +647,7 @@ ul li {
   border: 1px solid #fff;
 }
 .big_img .swiper-pagination-bullet-active {
+  width: 8px !important;
   opacity: 1;
   background: #fff;
 }

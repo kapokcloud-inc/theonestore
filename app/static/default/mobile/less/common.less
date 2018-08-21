@@ -349,18 +349,21 @@ ul li{list-style:none;}
   left: 50%;
   transform: translate(50%,0%);
   background-color:@white-color;
-  color: @main-color;
-  border: 1px solid @main-color;
-  padding: 0px 3px;
+  padding: 0;
 }
 .msg_badge{
   top: 3px;
   color: @white-color;
   background: @main-color;
+  min-width: 0;
+  width: 24px;
+  height: 14px;
+  line-height: 14px;
 }
 .weui-uploader__file{
   width: 70px;
   height: 70px;
+  overflow: hidden;
 }
 .weui-uploader__input-box{
   width: 68px;
@@ -630,6 +633,7 @@ ul li{list-style:none;}
     border: 1px solid @white-color;
   }
   .swiper-pagination-bullet-active{
+    width: 8px !important;
     opacity: 1;
     background: @white-color;
   }

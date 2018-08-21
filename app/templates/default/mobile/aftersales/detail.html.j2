@@ -151,16 +151,15 @@ $(document).ready(function(){
   var mySwiper = new Swiper('.swiper-container2', {
     loop: false,
     pagination: '.swiper-pagination2',
-  })
-  $("#showGiant").on("click", ".smallImg img", function() {
-    $('#showImgGiant').addClass('show').removeClass('hide');
+  });
 
+  $("#showGiant").on("click", ".smallImg img", function() {
     var imgBox = $(this).parents(".smallImg").find("img");
     var i = $(imgBox).index(this);
-    $(".big_img .swiper-wrapper").html("")
+    $(".big_img .swiper-wrapper").html("");
 
-    for(var j = 0 ,c = imgBox.length; j < c ;j++){
-     var imgBigBox = imgBox.eq(j).attr("src").replace("-square.middle", "-square.giant");
+    for (var index = 0; index < imgBox.length; index++) {
+      var imgBigBox = imgBox.eq(index).attr("src").replace("-square.middle", "-square.giant");
       $(".big_img .swiper-wrapper").append('<div class="swiper-slide"><div class="cell"><img src="' + imgBigBox + '" / ></div></div>');
     }
     mySwiper.updateSlidesSize();
@@ -178,7 +177,6 @@ $(document).ready(function(){
       "z-index": "-1",
       "opacity": "0"
     });
-    $('#showImgGiant').addClass('hide').removeClass('show');
   });
 });
   /* 点击显示大图 */

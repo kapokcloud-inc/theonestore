@@ -32,43 +32,33 @@
           </div>
           <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
           <div class="review_cnt">{{ comment.content }}</div>
-          <ul class="weui-uploader__files mar-top" id="uploaderFiles">
-            {% set imgs = comment.img_data|json_loads %}
-            {% for img in imgs %}
-              <li class="weui-uploader__file">
-                <img src="{{ img }}-square.middle" alt="">
-              </li>
-            {% endfor %}
-          </ul>
+          <div class="weui-uploader__files mar-top">
+            <p class="comList">
+              {% set imgs = comment.img_data|json_loads %}
+              {% for img in imgs %}
+                <img class="weui-uploader__file" src="{{ img }}-square.middle" alt="">
+              {% endfor %}
+            </p>
+          </div>
         </div>
       </div>
     {% endfor %}
-  </div>
-  <!-- 评价图片点击放大弹窗 -->
-  <div class="big_img">
-    <div class="swiper-container2">
-      <div class="swiper-wrapper"></div>
+
+    <!-- 评价图片点击放大弹窗 -->
+    <div class="big_img">
+      <div class="swiper-container2">
+        <div class="swiper-wrapper"></div>
+      </div>
+      <div class="swiper-pagination2"></div>
     </div>
-    <div class="swiper-pagination2"></div>
+    <!-- 评价图片点击放大弹窗 end -->
   </div>
-  <!-- 评价图片点击放大弹窗 end -->
 </div>
 {% endblock %}
 
 {% block script %}
 {{ libs.paging_js(paging_url, 0) }}
-<script type="text/javascript">
-//点击图片淡入放大
-$('#uploaderFiles').on("click", "li", function () {
-  index = $(this).index();
-  var style = this.getAttribute("style");
-  $('#galleryImg').attr("style", style);
-  $('#gallery').fadeIn(100);
-});
 
-//点击图片淡出消失
-$('#gallery').on("click", function () {
-  $('#gallery').fadeOut(100);
-});
-</script>
+<script type="text/javascript" src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/default/mobile/js/detailcomment.js" charset="utf-8"></script>
 {% endblock %}

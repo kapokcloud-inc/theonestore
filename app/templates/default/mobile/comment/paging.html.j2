@@ -12,14 +12,15 @@
       </div>
       <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
       <div class="review_cnt">{{ comment.content }}</div>
-      <ul class="weui-uploader__files mar-top" id="uploaderFiles">
-        {% set imgs = comment.img_data|json_loads %}
-        {% for img in imgs %}
-        <li class="weui-uploader__file">
-          <img src="{{ img }}-square.middle" alt="">
-        </li>
-        {% endfor %}
-      </ul>
+      <div class="weui-uploader__files mar-top">
+        <p class="comList">
+          {% set imgs = comment.img_data|json_loads %}
+          {% for img in imgs %}
+            <img class="weui-uploader__file" src="{{ img }}-square.middle" alt="">
+          {% endfor %}
+        </p>
+      </div>
     </div>
   </div>
 {% endfor %}
+<script type="text/javascript" src="/static/default/mobile/js/detailcomment.js" charset="utf-8"></script>

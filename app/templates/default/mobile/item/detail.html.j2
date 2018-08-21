@@ -174,14 +174,14 @@
                 </div>
                 <div class="all_add" style="margin-top:5px">{{ comment.add_time|timestamp2str }}</div>
                 <div class="review_cnt">{{ comment.content }}</div>
-                <ul class="weui-uploader__files mar-top" id="uploaderFile">
-                  {% set imgs = comment.img_data|json_loads %}
-                  {% for img in imgs %}
-                  <li class="weui-uploader__file">
-                    <img src="{{ img }}-square.middle" alt="">
-                  </li>
-                  {% endfor %}
-                </ul>
+                <div class="weui-uploader__files mar-top">
+                  <p class="comList">
+                    {% set imgs = comment.img_data|json_loads %}
+                    {% for img in imgs %}
+                      <img class="weui-uploader__file" src="{{ img }}-square.middle" alt=""> 
+                    {% endfor %}
+                  </p>
+                </div>
               </div>
             </div>
           {% endfor %}
@@ -201,21 +201,11 @@
     </div>
 
     <!-- 评价图片点击放大弹窗 -->
-    <div class="weui-gallery" id="gallery">
-      <div class="close_img" id="closeImg">
-        <img src="/static/default/mobile/img/close.png" alt="">
+    <div class="big_img">
+      <div class="swiper-container2">
+        <div class="swiper-wrapper"></div>
       </div>
-      <div class="">
-        <img class="gallery_img" id="galleryImg" src="" alt="">
-      </div>
-      <div class="weui-gallery__opr">
-        <div class="prevImg" style="margin-right:30px;" id="prev">
-          <img src="/static/default/mobile/img/xiaoyu.png" alt="">
-        </div>
-        <div class="nextImg" style="margin-left:30px;" id="next">
-          <img src="/static/default/mobile/img/dayu.png" alt="">
-        </div>
-      </div>
+      <div class="swiper-pagination2"></div>
     </div>
     <!-- 评价图片点击放大弹窗 end -->
     
@@ -235,8 +225,10 @@
       </div>
       <div class="icon_wrap" onclick="toCart()">
         {% set cart_total = session.get('cart_total', 0) %}
-        {% set cart_total = cart_total if cart_total else '' %}
-        <span id="cart_total" class="weui-badge msg_badge">{{ cart_total }}</span>
+        {% if cart_total %}
+          {% set cart_total = cart_total if cart_total else '' %}
+          <span id="cart_total" class="weui-badge msg_badge" style="top:5px !important;left:35% !important;">{{ cart_total }}</span>
+        {% endif %}
         <img src="/static/default/mobile/img/cart.png" alt="">
       </div>
 
@@ -297,62 +289,40 @@ $(function () {
     $(this).addClass('on').siblings().removeClass('on');
   });
 
-  // 点击图片放大事件
-  $('.weui-uploader__file').click(function () {
-    var $current = $(this);
-    showImgGiant($current);
-    $('#gallery').fadeIn(100);
-
-    // 图片点击上一张按钮事件
-    $('#prev').click(function () {
-      $current = $current.prev();
-      var img_url = $current.find('img').attr('src');
-      var img_url_giant = img_url.replace('-square.middle', '-square.giant');
-      $('#galleryImg').attr("src", img_url_giant);
-      showImgGiant($current);
-    });
-
-    // 图片点击下一张按钮事件
-    $('#next').click(function () {
-      $current = $current.next();
-      var img_url = $current.find('img').attr('src');
-      var img_url_giant = img_url.replace('-square.middle', '-square.giant');
-      $('#galleryImg').attr("src", img_url_giant);
-      showImgGiant($current);
-    });
+  // 点击显示大图
+  var mySwiper = new Swiper('.swiper-container2', {
+    loop: false,
+    pagination: '.swiper-pagination2',
   });
 
-  // 点击关闭弹窗事件
-  $('#closeImg').click(function () {
-    $('#gallery').fadeOut(100);
+  $("#nav2").on("click", ".comList img", function () {
+    var imgBox = $(this).parents(".comList").find("img");
+    var i = $(imgBox).index(this);
+    $(".big_img .swiper-wrapper").html("");
+
+    for (var index = 0; index < imgBox.length; index++) {
+      var imgBigBox = imgBox.eq(index).attr("src").replace("-square.middle", "-square.giant");
+      $(".big_img .swiper-wrapper").append('<div class="swiper-slide"><div class="cell"><img src="' + imgBigBox + '" / ></div></div>');
+    }
+    mySwiper.updateSlidesSize();
+    mySwiper.updatePagination();
+    $(".big_img").css({
+      "z-index": 1001,
+      "opacity": "1"
+    });
+    mySwiper.slideTo(i, 0, false);
+    return false;
+  });
+
+  $(".big_img").on("click", function () {
+    $(this).css({
+      "z-index": "-1",
+      "opacity": "0"
+    });
   });
 
 });
 
-/**
- * 图片放大
- */
-function showImgGiant($current) {
-  var $prev = $current.prev();
-  var $next = $current.next();
-  var img_url = $current.find('img').attr('src');
-  var img_url_giant = img_url.replace('-square.middle', '-square.giant');
-  $('#galleryImg').attr('img_url_giant');
-
- // 判断上一张
-  if ($prev.length <= 0) {
-    $('#prev').hide();
-  } else {
-    $('#prev').show();
-  }
-
-  // 判断下一张
-  if ($next.length <= 0) {
-    $('#next').hide();
-  } else {
-    $('#next').show();
-  }
-}
 
 //轮播图
 $(".swiper-container").swiper({
