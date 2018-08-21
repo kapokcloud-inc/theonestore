@@ -94,6 +94,13 @@ class RefundsService(object):
                 self.msg = self.fs.msg
                 return False
 
+        # 是否创建退款记录
+        if not self.refunds:
+            data = {'tran_id':self.order.tran_id, 'order_id':self.order_id, 'refunds_amount':self.refunds_amount,
+                    'refunds_method':self.order.pay_method, 'refunds_sn':'', 'refunds_time':0, 'refunds_status':0,
+                    'remark_user':u'', 'remark_sys':u'', 'add_time':self.current_time}
+            self.refunds = model_create(Refunds, data, commit=True)
+
         # 检查
         if self.third_type == 2:
             after_year_time = before_after_timestamp(self.order.paid_time, {'years':1})
@@ -112,13 +119,6 @@ class RefundsService(object):
         """退款"""
         refunds_status = 0  # 退款状态: 0.默认; 1.成功; 2.失败;
         refunds_sn     = ''
-
-        # 是否创建退款记录
-        if not self.refunds:
-            data = {'tran_id':self.order.tran_id, 'order_id':self.order_id, 'refunds_amount':self.refunds_amount,
-                    'refunds_method':self.order.pay_method, 'refunds_sn':'', 'refunds_time':0, 'refunds_status':0,
-                    'remark_user':u'', 'remark_sys':u'', 'add_time':self.current_time}
-            self.refunds = model_create(Refunds, data)
 
         # 资金支付
         if self.third_type == 1:
