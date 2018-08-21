@@ -73,7 +73,7 @@ class JsapiWeixinRefundsService(object):
             'mch_id':mch_id,
             'nonce_str':randomstr(32),
             'op_user_id':mch_id,
-            'out_refund_no':self.refund.refund_id,
+            'out_refund_no':self.refund.refunds_id,
             'out_trade_no':self.refund.tran_id,
             'refund_fee':int(self.refund.refund_amount*100),
             'total_fee':int(self.refund.refund_amount*100),
