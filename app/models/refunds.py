@@ -19,7 +19,7 @@ class Refunds(BaseModel, db.Model):
     order_id = db.Column(db.Integer, default=0)
     refunds_amount = db.Column(db.Float, default=0.00)
     refunds_method = db.Column(db.String(16), default='')
-    refunds_sn = db.Column(db.String(25), default='')
+    refunds_sn = db.Column(db.String(50), default='')
     refunds_time = db.Column(db.Integer, default=0)
     refunds_status = db.Column(db.Integer, default=0)
     remark_user = db.Column(db.String(255), default='')
