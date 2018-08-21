@@ -57,13 +57,13 @@ class JsapiWeixinRefundsService(object):
         appid            = config_weixin_mp.get('appid', '')
         mch_id           = config_paymethod_weixin.get('mch_id', '')
         self.partner_key = config_paymethod_weixin.get('partner_key', '')
+        self.cert_file   = config_paymethod_weixin.get('apiclient_cert', '')
+        self.key_file    = config_paymethod_weixin.get('apiclient_key', '')
 
-        if appid == '' or mch_id == '' or self.partner_key == '':
+        if appid == '' or mch_id == '' or self.partner_key == '' or self.cert_file == '' or self.key_file == '':
             self.msg = _(u'配置错误')
             return False
 
-        self.cert_file = os.path.join(os.getcwd(), 'cert', 'weixin', 'apiclient_cert.pem')
-        self.key_file  = os.path.join(os.getcwd(), 'cert', 'weixin', 'apiclient_key.pem')
         if not os.path.exists(self.cert_file) or not os.path.exists(self.key_file):
             self.msg = _(u'证书文件不存在')
             return False
