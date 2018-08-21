@@ -103,12 +103,12 @@ class ResponseJson(object):
         self.PAGESIZE_TOO_LARGE    = 101114 #页面记录数太大
         self.G_SERVICE_CODE        = {
             self.SYSTEM_BUSY           : _(u'服务器开小差中，请稍候重试。'),
-            self.SYSTEM_PAGE_NOT_FOUND : u'页面找不到',
-            self.NOT_LOGIN             : u'用户未登录或者登录超时',
-            self.PARAM_ERROR           : u'请求参数错误',
-            self.MODULE_CODE_NONE      : u'module编码为None',
-            self.ACTION_CODE_NONE      : u'action编码为None',
-            self.PAGESIZE_TOO_LARGE    : u'页面记录数太大',
+            self.SYSTEM_PAGE_NOT_FOUND : _(u'页面找不到'),
+            self.NOT_LOGIN             : _(u'用户未登录或者登录超时'),
+            self.PARAM_ERROR           : _(u'请求参数错误'),
+            self.MODULE_CODE_NONE      : _(u'module编码为None'),
+            self.ACTION_CODE_NONE      : _(u'action编码为None'),
+            self.PAGESIZE_TOO_LARGE    : _(u'页面记录数太大'),
         }
 
     def print_json(self, ret=0, msg='ok', data=None):
@@ -119,7 +119,7 @@ class ResponseJson(object):
             msg = self.G_SERVICE_CODE.get(ret)
 
             if msg is None:
-                msg = u'未知错误'
+                msg = _(u'未知错误')
 
             res.data = to_json(ret, msg, data)
             return res
