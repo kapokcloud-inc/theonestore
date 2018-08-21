@@ -33,7 +33,7 @@ class OrderStaticMethodsService(object):
                 action_code = [2]
 
                 return (status_text, action_code)
-            
+
             if order.pay_status == 2:
                 if order.shipping_status == 1:
                     status_text = _(u'待发货')
@@ -52,12 +52,31 @@ class OrderStaticMethodsService(object):
             action_code = []
 
             return (status_text, action_code)
-        
+
         if order.order_status == 3:
             status_text = _(u'已取消')
             action_code = []
 
             return (status_text, action_code)
+
+        if order.order_status == 4:
+            if order.aftersale_status == 1:
+                status_text = _(u'已退款')
+                action_code = []
+
+                return (status_text, action_code)
+
+            if order.aftersale_status == 2:
+                status_text = _(u'已换货')
+                action_code = []
+
+                return (status_text, action_code)
+
+            if order.aftersale_status == 3:
+                status_text = _(u'已退款，已换货')
+                action_code = []
+
+                return (status_text, action_code)
 
         return (status_text, action_code)
     
@@ -81,4 +100,3 @@ class OrderStaticMethodsService(object):
             return (_(u'查询失败'), [])
 
         return ('ok', data['data'])
-

@@ -69,10 +69,11 @@ def index(page=1, page_size=20):
     paid_time_daterange     = args.get('paid_time_daterange', '').strip()
     shipping_time_daterange = args.get('shipping_time_daterange', '').strip()
 
-    q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.pay_status, Order.paid_time,
-                        Order.shipping_sn, Order.shipping_status, Order.shipping_time, Order.deliver_status,
-                        Order.goods_quantity, Order.goods_data, Order.add_time,
-                        OrderAddress.name, OrderAddress.mobile).\
+    q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.pay_status,
+                        Order.paid_time, Order.shipping_sn, Order.shipping_status,
+                        Order.shipping_time, Order.deliver_status, Order.goods_quantity,
+                        Order.goods_data, Order.add_time, OrderAddress.name, OrderAddress.mobile,
+                        Order.aftersale_status).\
             filter(Order.order_id == OrderAddress.order_id)
 
     if tab_status == 1:
@@ -150,15 +151,10 @@ def detail(order_id):
     if order.shipping_status == 2:
         express_msg, express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
 
-    return render_template('admin/order/detail.html.j2',
-        order=order,
-        user=user,
-        order_goods=order_goods,
-        order_address=order_address,
-        status_text=status_text,
-        action_code=action_code,
-        express_msg=express_msg,
-        express_data=express_data)
+    data = {'order':order, 'user':user, 'order_address':order_address,
+            'order_goods':order_goods, 'status_text':status_text, 'action_code':action_code,
+            'express_msg':express_msg, 'express_data':express_data}
+    return render_template('admin/order/detail.html.j2', **data)
 
 
 @order.route('/shipping', methods=['POST'])
