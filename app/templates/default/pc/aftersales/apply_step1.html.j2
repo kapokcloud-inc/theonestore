@@ -107,6 +107,15 @@
                   <p class="greyGap">* {{ service_text }}</p>
                 </div>
                 <div class="choice-goods">
+                  <p class="choice-goods_title">货物状态</p>
+                </div>
+                <div class="section-bd">
+                  <ul class="aftersales-type_list clearfix">
+                    <li class="aftersales-type_item">{{_('未收到货')}}</li>
+                    <li class="aftersales-type_item">{{_('已收到货')}}</li>
+                  </ul>
+                </div>
+                <div class="choice-goods">
                   <p class="choice-goods_title">产品问题描述</p>
                 </div>
                 <div class="section-bd">
@@ -123,6 +132,12 @@
                     </div>
                   </div>
                 </div>
+        
+                <p class="choice-goods_title">
+                  <span class="">{{_('退款金额：')}}</span>
+                  <span class="allOn">￥199</span>
+                  <span class="greyGap mar-left">{{_('(注：退款金额将返回到您原支付账户)')}}</span>
+                </p>
 
                 <div class="reg-btn">
                   {{ wtf_form.csrf_token }}
@@ -149,11 +164,9 @@ $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
 
-//切换服务选中状态
+//切换服务类型选中状态
 $(".aftersales-type_item").click(function () {
   $(this).addClass('allActive').siblings().removeClass('allActive');
-
-  
 });
 
 //点击数量减号

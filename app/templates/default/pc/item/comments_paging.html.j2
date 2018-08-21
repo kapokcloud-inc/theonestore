@@ -19,7 +19,7 @@
           {% set imgs = comment.img_data|json_loads %}
           {% for img in imgs %}
             <li class="commentImg">
-              <img src="{{ img }}" alt="">
+              <img src="{{ img }}-square.middle" alt="">
             </li>
           {% endfor %}   
         </ul>
