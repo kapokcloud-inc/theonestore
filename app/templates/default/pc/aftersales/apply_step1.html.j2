@@ -38,83 +38,72 @@
                   <p class="choice-goods_title">选择进行售后的商品</p>
                 </div>
                 <div class="aftersales-goods_box">
-                    <!-- 判断售后状态  aftersale_status=1(整单售后) aftersale_status=2(指定商品售后)-->
-                    {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 %}
-                      {% set aftersale_status = 1 %}
-                    {% elif order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 %}
-                      {% set aftersale_status = 2 %}
-                    {% endif %}
-
-                    {% if aftersale_status==1 %}
-                      {% for item in items %}
-                        <div class="one-cell not-oneCell">
-                          <div class="one-cell_hd avatar80">
-                            <img src="{{ item.goods_img }}-square.small" alt="">
-                          </div>
-                          <div class="one-cell_bd">
-                            <p class="blackGap">{{ item.goods_name }}</p>
-                            <p class="blackGap mar-top">数量：{{ item.goods_quantity }}</p>
+                  {% if aftersales_type == 1 %}
+                    {% for item in items %}
+                      <div class="one-cell not-oneCell">
+                        <div class="one-cell_hd avatar80">
+                          <img src="{{ item.goods_img }}-square.small" alt="">
+                        </div>
+                        <div class="one-cell_bd">
+                          <p class="blackGap">{{ item.goods_name }}</p>
+                          <p class="blackGap mar-top">数量：{{ item.goods_quantity }}</p>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% elif aftersales_type in [2,3] %}
+                    {% set order_good = goods_data[0] if goods_data %}
+                    {% if order_good %}
+                      <div class="one-cell not-oneCell">
+                        <div class="one-cell_hd avatar80">
+                          <img src="{{ order_good.goods_img }}-square.small" alt="">
+                        </div>
+                        <div class="one-cell_bd">
+                          <p class="blackGap">{{ order_good.goods_name }}</p>
+                          <div class="apply-service_num mar-top">
+                            <i class="num_minus"></i>
+                            <input class="num_ipt change_cart_quantity" type="text" id="remain_quantity" value="1"  minnum="1" maxnum='{{ order_good.maximum }}'>
+                            <i class="num_add"></i>
                           </div>
                         </div>
-                      {% endfor %}
-                    {% elif aftersale_status==2 %}
-                      {% if order_good %}
-                        <div class="one-cell not-oneCell">
-                          <div class="one-cell_hd avatar80">
-                            <img src="{{ order_good.goods_img }}-square.small" alt="">
-                          </div>
-                          <div class="one-cell_bd">
-                            <p class="blackGap">{{ order_good.goods_name }}</p>
-                            <div class="apply-service_num mar-top">
-                              {% set remain_num = order_good.goods_quantity - order_good.aftersales_goods_quantity %}
-                              <i class="num_minus"></i>
-                              <input class="num_ipt change_cart_quantity" type="text" id="remain_quantity" value="{{ remain_num }}"  minnum="1" maxnum='{{ remain_num }}'>
-                              <i class="num_add"></i>
-                            </div>
-                          </div>
-                        </div>
-                      {% endif %}
+                      </div>
                     {% endif %}
+                  {% endif %}
                 </div>
                 <div class="choice-goods">
                   <p class="choice-goods_title">为您的产品选择服务类型</p>
                 </div>
                 <div class="section-bd">
-                  <ul class="aftersales-type_list clearfix">
-                    {% if 7 in code %}
-                      {% set service_text = "抱歉，您的商品没有符合的服务!" %}
-                      <!-- 发货前的售后服务类型 -->
-                      {% if aftersale_status==1 %}
-                        <li class="aftersales-type_item" data-value="1">{{_('仅退款')}}</li>
-                        {% set service_text = "您的商品支持仅退款服务" %}
-                      {% endif %}
-                      <!-- 发货后的售后服务类型 -->
-                      {% if aftersale_status==2 %}
-                        {% set limit_time = order.shipping_time|before_after_timestamp({'days':7}) %}
-                        {% set limit_time1 = order.shipping_time|before_after_timestamp({'days':15}) %}
-                        <!-- 发货后7天内，支持退货退款和换货服务 -->
-                        {% if limit_time >= current_time %}
-                          <li class="aftersales-type_item" data-value="2">{{_('退货退款')}}</li>
-                          <li class="aftersales-type_item" data-value="3">{{_('仅换货')}}</li>
-                          {% set service_text = "您的商品支持退货退款、仅换货服务" %}
-                        {% elif limit_time1 >= current_time %}
-                          <li class="aftersales-type_item" data-value="3">{{_('仅换货')}}</li>
-                          {% set service_text = "您的商品支持仅换货服务" %}
-                        {% endif %}
-                      {% endif %}
+                  <ul class="aftersales-type_list clearfix" data-type="service">
+                    {% set service_text = "抱歉，您的商品没有符合的服务!" %}
+                    {% if aftersales_type == 1 %}
+                      <!-- 发货前支持仅退款服务 -->
+                      <li class="aftersales-type_item allActive" data-value="1">{{_('仅退款')}}</li>
+                      {% set service_text = "您的商品支持仅退款服务" %}
+                    {% elif aftersales_type == 2 %}
+                      <!-- 发货后7天内，支持退货退款和换货服务 -->
+                      <li class="aftersales-type_item allActive" data-value="2">{{_('退货退款')}}</li>
+                      <li class="aftersales-type_item" data-value="3" data-type="service">{{_('仅换货')}}</li>
+                      {% set service_text = "您的商品支持退货退款、仅换货服务" %}
+                    {% elif aftersales_type == 3 %}
+                      <!-- 发货后15天内，支持换货服务 -->
+                      <li class="aftersales-type_item allActive" data-value="3">{{_('仅换货')}}</li>
+                      {% set service_text = "您的商品支持仅换货服务" %}
                     {% endif %}
                   </ul>
                   <p class="greyGap">* {{ service_text }}</p>
                 </div>
-                <div class="choice-goods">
-                  <p class="choice-goods_title">货物状态</p>
-                </div>
-                <div class="section-bd">
-                  <ul class="aftersales-type_list clearfix">
-                    <li class="aftersales-type_item">{{_('未收到货')}}</li>
-                    <li class="aftersales-type_item">{{_('已收到货')}}</li>
-                  </ul>
-                </div>
+                {% if aftersales_type in [2,3] %}
+                  <div class="choice-goods">
+                    <p class="choice-goods_title">货物状态</p>
+                  </div>
+                  <div class="section-bd">
+                    <ul class="aftersales-type_list clearfix" data-type="deliver">
+                      <li class="aftersales-type_item" data-value="1">{{_('未收到货')}}</li>
+                      <li class="aftersales-type_item" data-value="2">{{_('已收到货')}}</li>
+                    </ul>
+                  </div>
+                {% endif %}
+                
                 <div class="choice-goods">
                   <p class="choice-goods_title">产品问题描述</p>
                 </div>
@@ -132,17 +121,18 @@
                     </div>
                   </div>
                 </div>
-        
-                <p class="choice-goods_title">
+                <!-- 换货服务则不用显示退款金额 -->
+                {% set class_type = 'hide' if aftersales_type == 3 else '' %}
+                <p class="choice-goods_title {{ class_type }}" id="refund_amount_sum" >
                   <span class="">{{_('退款金额：')}}</span>
-                  <span class="allOn">￥199</span>
+                  <span class="allOn" id='refunds_amount'>￥{{ refunds_amount }}</span>
                   <span class="greyGap mar-left">{{_('(注：退款金额将返回到您原支付账户)')}}</span>
                 </p>
 
                 <div class="reg-btn">
                   {{ wtf_form.csrf_token }}
-                  <input id="order_id" name="order_id" type="hidden" value="{{ order.order_id }}" />
-                  <input id="og_id" name="og_id" type="hidden" value="{{ order_good.og_id }}" />
+                  <input id="order_id" name="order_id" type="hidden" value="{{ order_id }}" />
+                  <input id="og_id" name="og_id" type="hidden" value="{{ og_id }}" />
                   <a id="btn_next" class="one-btn btn-primary" onclick="return doNext()">{{_('下一步')}}</a>
                 </div>
               </div>
@@ -167,6 +157,20 @@ $.ajaxSetup({
 //切换服务类型选中状态
 $(".aftersales-type_item").click(function () {
   $(this).addClass('allActive').siblings().removeClass('allActive');
+
+  var data_type = $(this).parent().attr("data-type");
+  //服务类型的选项才会影响退款金额的显示
+  if ( data_type === 'service' ){
+    var aftersales_type = $(this).attr("data-value");
+    //换货不用显示退款金额
+    if ( aftersales_type == 3 ){
+      if( !$('#refund_amount_sum').hasClass('hide') ){
+        $('#refund_amount_sum').addClass('hide')
+      }
+    }else {
+      $('#refund_amount_sum').removeClass('hide')
+    }
+  }
 });
 
 //点击数量减号
@@ -178,6 +182,10 @@ $('.num_minus').click(function (e) {
   
     if (number < MIN) number = MIN;
     $input.val(number);
+
+    //退货退款时，退款金额岁数量变化
+    calculateRefundsAmount(number);
+    
   })
 
   //点击数量加号
@@ -188,7 +196,24 @@ $('.num_add').click(function (e) {
 
     if (number > MAX) number = MAX;
     $input.val(number);
+    calculateRefundsAmount(number);
   })
+
+//退款金额计算
+function calculateRefundsAmount(quantity){
+  var aftersales_type = $("[data-type='service']").children('.allActive').attr("data-value");
+  var og_id           = parseInt($("#og_id").val()); 
+  if(aftersales_type == 2){
+    $.get("{{ url_for('api.aftersales.refunds_amount') }}", {'og_id':og_id, 'quantity':quantity}, function(json) {
+      if (json.ret == 0) {
+        $("#refunds_amount").text('￥'+json.data.refunds_amount);
+      } else {
+        alert(json.msg, "text");
+        return false;
+      }
+    });
+  }
+}
 
 //图片上传
 $('#uploaderInput').fileupload({
@@ -208,7 +233,7 @@ $('#uploaderInput').fileupload({
 
 //点击下一步按钮
 function doNext(){
-  var aftersales_type = $('li.allActive').attr("data-value");
+  var aftersales_type = $("[data-type='service']").children('.allActive').attr("data-value");
 
   var order_id = $("#order_id").val();
   var content = $("#content").val();
@@ -224,30 +249,35 @@ function doNext(){
     
     var params = {'order_id':order_id, 'aftersales_type':1, 'deliver_status':0, 'content':content, 'img_data':img_data};
     
-  }else if( aftersales_type == 2 ){//单商品退货退款，提交申请
-
+  }else if( aftersales_type == 2 || aftersales_type == 3){//单商品退货退款，提交申请
     var og_id = parseInt($("#og_id").val());
+    var deliver_status = $("[data-type='deliver']").children('.allActive').attr("data-value");
     var quantity =  parseInt($("#remain_quantity").val());
-    var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':2, 'deliver_status':2, 'content':content, 'img_data':img_data};
+    if ( typeof(deliver_status) == "undefined" ){
+      alert('请选择货物状态')
+      return false;
+    }
 
-  }else if ( aftersales_type == 3 ){//但商品换货，进入地址编辑页
-
+    var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':aftersales_type, 'deliver_status':deliver_status, 'content':content, 'img_data':img_data};
   }else{
     alert('请选择售后服务类型')
     return false;
   }
-  //仅退款和退货退款直接提交申请
+  
   if(aftersales_type == 1 || aftersales_type == 2){
+    //仅退款和退货退款直接提交申请
     $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
       if (json.ret == 0) {
         aftersales_id = json.data.aftersales_id
-        console.log(aftersales_id)
         window.location.href = "{{ url_for('pc.aftersales.apply_step3') }}" + "?aftersales_type=" + aftersales_type + "&aftersales_id=" + aftersales_id;
       } else {
         alert(json.msg,'text');
         return false;
       }
     });
+  }else{
+    //仅换货跳转地址编辑页面
+
   }
 }
 

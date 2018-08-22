@@ -111,7 +111,7 @@ ul li {
   width: 100%;
   display: flex;
   height: 50px;
-  border-top: 1px solid #ddd;
+  box-shadow: 0 3px 14px 2px rgba(0, 0, 0, 0.12);
   background: #fff;
   font-size: 12px;
   text-align: center;
@@ -353,7 +353,7 @@ ul li {
 .weui-badge {
   position: absolute;
   top: 0px;
-  left: 50%;
+  left: 47%;
   transform: translate(50%, 0%);
   background-color: #fff;
   padding: 0;
@@ -363,9 +363,8 @@ ul li {
   color: #fff;
   background: #f33155;
   min-width: 0;
-  width: 24px;
-  height: 14px;
   line-height: 14px;
+  padding: 0 4px;
 }
 .weui-uploader__file {
   width: 70px;
@@ -390,7 +389,7 @@ ul li {
   background: #f33155;
   margin-left: 10px;
   text-align: center;
-  border: 1px solid #f33155;
+  border-top: 1px solid #f33155;
 }
 .total {
   position: absolute;
@@ -413,7 +412,7 @@ ul li {
   height: 45px;
   background: #fff;
   line-height: 45px;
-  border-top: 1px solid #ccc;
+  box-shadow: 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 .hide {
   display: none;

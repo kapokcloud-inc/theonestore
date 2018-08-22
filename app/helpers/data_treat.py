@@ -8,25 +8,23 @@
     :license: BSD, see LICENSE for more details.
 """
 
-from app.helpers import log_info
+from app.helpers import log_error
 from app.helpers import toamount
 
 def format_amount(sourcePrice=0):
     ''' 处理商品价格显示 '''
     try:
-        if isinstance(sourcePrice,types.IntType) or isinstance(sourcePrice,types.FloatType):
+        if isinstance(sourcePrice, types.IntType) or isinstance(sourcePrice, types.FloatType):
             #限制保留2位小数
             sourcePrice = toamount(sourcePrice)
         else:
-            raise ValueError
-    except ValueError:
-        return '数据错误'
+            raise ValueError('参数类型错误')
     except Exception:
-        if isinstance(sourcePrice,(int,float)):
+        if isinstance(sourcePrice, (int,float)):
             #限制保留2位小数
             sourcePrice = toamount(sourcePrice)
         else:
-            raise ValueError
+            raise ValueError('参数类型错误')
 
     if sourcePrice == None or sourcePrice == 0:
         return 0
@@ -52,7 +50,7 @@ def format_avatar(soruceImg,avatartype = 0):
 
     imgtypes = {0:'-square.small', 1:'-square.middle', 2:'-square.micro', 3:'-square.large', 4:'square.large', 5:'square.giant'}
 
-    #微信头像或已是七牛小图则返回原图，否则在是七牛资源的前提下拿小图(头像样式)
+    #微信头像或已是七牛小图则返回原图，否则在为七牛资源的前提下拿小图(头像样式)
     if soruceImg.find('thirdwx.qlogo.cn') != -1 or soruceImg.find(imgtypes[avatartype]) != -1:
         return soruceImg
     else:

@@ -7,6 +7,7 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import json
 
 from flask import (
     request,
@@ -36,12 +37,16 @@ from app.services.api.order import (
     OrderStaticMethodsService
 )
 
+from app.helpers.date_time import current_timestamp
+
 from app.forms.api.aftersales import AfterSalesForm
 from app.database import db
 
+from app.models.sys import SysSetting
 from app.models.aftersales import (
     Aftersales,
-    AftersalesLogs
+    AftersalesLogs,
+    AftersalesAddress
 )
 
 from app.models.order import (
@@ -91,8 +96,24 @@ def detail(aftersales_id):
             order_by(AftersalesLogs.al_id.desc()).all()
 
     status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersales)
+    #回寄地址信息
+    aftersales_service = {}
+    if aftersales.check_status == 2:
+        ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_service').first()
+        if not ss:
+            return redirect(request.headers['Referer'])
+        
+        try:
+            aftersales_service = json.loads(ss.value)
+        except Exception as e:
+            return redirect(request.headers['Referer'])
+    #换货收货地址
+    address     = None
+    if aftersales.aftersales_type == 3:
+        address = AftersalesAddress.query.filter(AftersalesAddress.aftersales_id == aftersales_id).first()
 
-    data = {'aftersales':aftersales, 'log':log, 'status_text':status_text, 'action_code':action_code}
+    data = {'aftersales':aftersales, 'log':log, 'status_text':status_text, 'action_code':action_code, 'aftersales_service':aftersales_service, 'aftersales_address':address}
+    
     return render_template('pc/aftersales/detail.html.j2', **data)
 
 
@@ -123,29 +144,44 @@ def apply_step1():
     """pc站 - 申请售后服务-第一步"""
 
     if not check_login():
-        session['weixin_login_url'] = request.headers['Referer']
+        session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
     
-    order_id              = request.args.to_dict().get('order_id')
-    og_id                 = request.args.to_dict().get('og_id')
+    order_id              = int(request.args.to_dict().get('order_id', '0'))
+    og_id                 = int(request.args.to_dict().get('og_id', '0'))
     
-    data                  = OrderStaticMethodsService.detail_page(order_id, uid)
-    #pc端订单详情不支持再次购买，排除掉指令[5]
-    data['code']          = list(set(data['code'])-set([5]))
-    order_good            = OrderGoods.query.filter(OrderGoods.og_id==og_id).first()
-    data['order_good']    = order_good
-
-    #申请售后的存在多条售后记录
-    aftersale_all         = db.session.query(Aftersales.goods_data,Aftersales.aftersales_id).\
-                            filter(Aftersales.order_id == order_id).\
-                            filter(Aftersales.status.in_([1,2])).all()
-    data['aftersale_all'] = aftersale_all
+    if order_id <= 0 and og_id <= 0:
+        return redirect(request.headers['Referer'])
 
     wtf_form              = AfterSalesForm()
-    data['wtf_form']      = wtf_form
+    # order_id大于0则整单操作，否则指定商品操作
+    if order_id > 0:
+        ascs = AfterSalesCreateService(uid, order_id=order_id, og_id=0, quantity=1, aftersales_type=1, deliver_status=1)
+        ret  = ascs._check_order()
+        if not ret:
+            return redirect(request.headers['Referer'])
 
-    return render_template('pc/aftersales/apply_step1.html.j2',**data)
+        data = {'wtf_form':wtf_form, 'order_id':order_id, 'og_id':og_id,'items':ascs.order_goods_list, 'goods_data':ascs.goods_data, 'refunds_amount':ascs.refunds_amount,'current_time':current_timestamp(), 'aftersales_type':1}
+        log_info(data)
+        return render_template('pc/aftersales/apply_step1.html.j2', **data)
+    else:
+        aftersales_type     = 2
+        ascs = AfterSalesCreateService(uid, order_id=0, og_id=og_id, quantity=1, aftersales_type=aftersales_type, deliver_status=1)
+        ret  = ascs._check_order_goods()
+        if not ret:
+            if ascs.msg != u'超过有效退款时间':
+                return redirect(request.headers['Referer'])
+
+            aftersales_type = 3
+            ascs            = AfterSalesCreateService(uid, order_id=0, og_id=og_id, quantity=1, aftersales_type=aftersales_type, deliver_status=1)
+            ret             = ascs._check_order_goods()
+            if not ret:
+                return redirect(request.headers['Referer'])
+
+        data = {'wtf_form':wtf_form, 'order_id':order_id, 'og_id':og_id, 'items':ascs.order_goods_list, 'goods_data':ascs.goods_data, 'refunds_amount':ascs.refunds_amount, 'aftersales_type':aftersales_type, 'current_time':current_timestamp()}
+
+        return render_template('pc/aftersales/apply_step1.html.j2', **data)
 
 
 @aftersales.route('/apply/step2')

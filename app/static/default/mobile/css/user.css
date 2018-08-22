@@ -227,6 +227,12 @@
   left: 50px;
   right: 0px;
 }
+.track_first::before {
+  height: 0;
+}
+.track_first::after {
+  width: 0;
+}
 .track_shipflow::after {
   content: "";
   position: absolute;
@@ -238,10 +244,10 @@
   left: 25px;
   bottom: -17px;
 }
-.track_shipflow.last_child::before {
+.track_shipflow:last-child::before {
   height: 0;
 }
-.track_shipflow.last_child::after {
+.track_shipflow:last-child::after {
   width: 0;
 }
 .track_shipflow.cur::after {
