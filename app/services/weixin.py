@@ -130,7 +130,7 @@ class WeiXinMpMessageService(object):
         if not utb or utb.third_user_id == '':
             log_error('[ErrorServiceWeixinWeiXinMpMessageServiceCheck][UserError]  no openid.')
             return False
-        self.openid = utb.openid
+        self.openid = utb.third_user_id
 
         wmats             = WeiXinMpAccessTokenService()
         self.access_token = wmats.get_token()
