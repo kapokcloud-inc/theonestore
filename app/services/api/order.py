@@ -221,7 +221,8 @@ class OrderCreateService(object):
         db.session.commit()
         
         # 微信消息
-        WeixinMessageStaticMethodsService.create_order(self.order.uid, self.order.order_sn, toamount(self.order.pay_amount))
+        pay_amount = toamount(self.order.pay_amount).__str__()
+        WeixinMessageStaticMethodsService.create_order(self.order.uid, self.order.order_sn, pay_amount)
 
         cs = CartService(self.uid, 0)
         cs.check()
