@@ -127,7 +127,7 @@ class WeiXinMpMessageService(object):
         """检查"""
 
         utb = UserThirdBind.query.filter(UserThirdBind.uid == self.uid).first()
-        if not utb or utb.openid == '':
+        if not utb or utb.third_user_id == '':
             log_error('[ErrorServiceWeixinWeiXinMpMessageServiceCheck][UserError]  no openid.')
             return False
         self.openid = utb.openid
