@@ -32,6 +32,7 @@ from app.helpers import (
     log_info,
     log_error,
     toint,
+    toamount,
     get_count
 )
 from app.helpers.date_time import (
@@ -220,7 +221,7 @@ class OrderCreateService(object):
         db.session.commit()
         
         # 微信消息
-        WeixinMessageStaticMethodsService.create_order(self.order.uid, self.order.order_sn, self.order.pay_amount)
+        WeixinMessageStaticMethodsService.create_order(self.order.uid, self.order.order_sn, toamount(self.order.pay_amount))
 
         cs = CartService(self.uid, 0)
         cs.check()
