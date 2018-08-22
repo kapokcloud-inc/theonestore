@@ -9,6 +9,10 @@
 """
 import json
 import requests
+try:
+    from urllib.parse import urlencode
+except ImportError as identifier:
+    from urllib import urlencode
 
 from flask_babel import gettext as _
 
@@ -68,9 +72,13 @@ class WeiXinMpAccessTokenService(object):
         if not self.__check():
             return token
 
+        
+        params   = {'grant_type':'client_credential',
+                    'appid':self.appid.encode('utf8'),
+                    'secret':self.secret.encode('utf8')}
         url      = 'https://api.weixin.qq.com/cgi-bin/token'
-        data     = {'grant_type':'client_credential', 'appid':self.appid, 'secret':self.secret}
-        response = requests.get(url, data=data)
+        url      = u'%s?%s' % (url, urlencode(params))
+        response = requests.get(url)
         if response.status_code != 200:
             log_error('[ErrorServiceWeixinWeiXinMpAccessTokenServiceRequestToken][RequestError]  request error.')
             return token
