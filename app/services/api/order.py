@@ -40,6 +40,7 @@ from app.helpers.date_time import (
     before_after_timestamp
 )
 
+from app.services.weixin import WeixinMessageStaticMethodsService
 from app.services.message import MessageCreateService
 from app.services.api.cart import (
     CheckoutService,
@@ -217,6 +218,9 @@ class OrderCreateService(object):
             mcs.do()
 
         db.session.commit()
+        
+        # 微信消息
+        WeixinMessageStaticMethodsService.create_order(self.order.uid, self.order.order_sn, self.order.pay_amount)
 
         cs = CartService(self.uid, 0)
         cs.check()

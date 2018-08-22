@@ -108,8 +108,6 @@ class MessageCreateService(object):
                 'tid':self.tid, 'ttype':self.ttype, 'add_time':self.current_time, 'add_date':self.today_timestamp}
         self.message = model_create(Message, data, commit=True)
         
-        # 微信推送 ??
-
         return True
 
 
