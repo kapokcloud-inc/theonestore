@@ -73,11 +73,12 @@ class WeiXinMpAccessTokenService(object):
             return token
 
         
-        params   = {'grant_type':'client_credential',
+        params = {'grant_type':'client_credential',
                     'appid':self.appid.encode('utf8'),
                     'secret':self.secret.encode('utf8')}
-        url      = 'https://api.weixin.qq.com/cgi-bin/token'
-        url      = u'%s?%s' % (url, urlencode(params))
+        url    = 'https://api.weixin.qq.com/cgi-bin/token'
+        url    = u'%s?%s' % (url, urlencode(params))
+
         response = requests.get(url)
         if response.status_code != 200:
             log_error('[ErrorServiceWeixinWeiXinMpAccessTokenServiceRequestToken][RequestError]  request error.')
@@ -185,9 +186,10 @@ class WeixinMessageStaticMethodsService(object):
         """推送创建订单消息"""
 
         url  = ''
-        data = {'first':_(u'您的订单已创建，请尽快完成支付。'),
-                'keyword1':order_sn, 'keyword2':pay_amount,
-                'remark':_(u'请点击详情在线付款。')}
+        data = {'first':{'color':'#000000', 'value':_(u'您的订单已创建，请尽快完成支付。')},
+                'keyword1':{'color':'#000000', 'value':order_sn},
+                'keyword2':{'color':'#000000', 'value':pay_amount},
+                'remark':{'color':'#000000', 'value':_(u'请点击详情在线付款。')}}
 
         wxmms = WeiXinMpMessageService(uid, 1, data, url)
         wxmms.push()
