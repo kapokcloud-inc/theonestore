@@ -8,7 +8,7 @@
 {% block body %}
 <div class="user_wrap">
   <div class="choiceAddress">
-    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.order.address_change') }}">
+    <a class="weui-cell weui-cell_access bg-white" href="{{ url_for('mobile.order.address_change', oa_id=order_address.oa_id) }}">
       <div class="weui-cell__hd mar-right">
         <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
       </div>

@@ -55,7 +55,7 @@
                         {% if limit_time >= current_time and item.goods_quantity > item.aftersales_goods_quantity  %}
                           <!-- 未申请的商品，此按钮显示 -->
                           <div class="review-btn_wrap" data-value="">
-                            <a class="review-btn_link btn-primary" href="{{ url_for('pc.aftersales.apply_step1',order_id=order.order_id,og_id= item.og_id) }}">{{_('申请售后')}}</a>
+                            <a class="review-btn_link btn-primary" href="{{ url_for('pc.aftersales.apply_step1', og_id= item.og_id) }}">{{_('申请售后')}}</a>
                           </div>
                           <!-- 未申请的商品，此按钮显示 end -->
                         {% elif aftersale_all %}
