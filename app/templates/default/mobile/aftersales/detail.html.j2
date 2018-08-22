@@ -96,6 +96,32 @@
       <div class="weui-cell__ft"></div>
     </a>
   </div>
+
+  {% if address %}
+    <div class="weui-cells weui-cells_form">
+      <div class="weui-cell">
+        <div class="weui-cell__bd blackGap">{{_('商品收货信息')}}</div>
+      </div>
+      <div class="weui-form-preview">
+        <div class="weui-form-preview__bd">
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('收货人')}}</label>
+            <span class="weui-form-preview__value">{{ address.name }}</span>
+          </div>
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('电话')}}</label>
+            <span class="weui-form-preview__value">{{ address.mobile }}</span>
+          </div>
+          <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{{_('地址')}}</label>
+            {% set _address = '%s%s%s%s' % (address.province, address.city, address.district, address.address) %}
+            <span class="weui-form-preview__value">{{_address }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  
   {% if aftersales.aftersales_type in [2,3] %}
     <div class="weui-cells weui-cells_form">
       <div class="weui-cell">
@@ -117,31 +143,6 @@
             <label class="weui-form-preview__label">{{_('地址')}}</label>
             {% set consignee_address = aftersales_service.consignee_address if aftersales_service.consignee_address else _('商家暂无配置') %}
             <span class="weui-form-preview__value">{{ consignee_address }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endif %}
-
-  {% if address %}
-    <div class="weui-cells weui-cells_form">
-      <div class="weui-cell">
-        <div class="weui-cell__bd blackGap">{{_('商品收货信息')}}</div>
-      </div>
-      <div class="weui-form-preview">
-        <div class="weui-form-preview__bd">
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">{{_('收货人')}}</label>
-            <span class="weui-form-preview__value">{{ address.name }}</span>
-          </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">{{_('电话')}}</label>
-            <span class="weui-form-preview__value">{{ address.mobile }}</span>
-          </div>
-          <div class="weui-form-preview__item">
-            <label class="weui-form-preview__label">{{_('地址')}}</label>
-            {% set _address = '%s%s%s%s' % (address.province, address.city, address.district, address.address) %}
-            <span class="weui-form-preview__value">{{_address }}</span>
           </div>
         </div>
       </div>

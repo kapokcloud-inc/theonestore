@@ -137,6 +137,10 @@
                     <th>{{_('问题描述：')}}</th>
                     <td>{{ aftersales.content }}</td>
                   </tr>
+                  <tr>
+                    <th>{{_('申请件数')}}</th>
+                    <td>{{ aftersales.quantity }}件</td>
+                  </tr>
                   {% if aftersales.aftersales_type in [1,2] %}
                     <tr>
                       <th>{{_('退款金额：')}}</th>
@@ -156,12 +160,17 @@
                       </ul>
                     </td>
                   </tr>
-                  <!-- 只有换货的时候才显示收货信息 -->
-                  {% if aftersales.aftersales_type == 3 and aftersales_address %}
-                    <tr>
-                      <th>{{_('收货信息：')}}</th>
-                      <td>{{ aftersales_address.province }} {{ aftersales_address.city }} {{ aftersales_address.district }} {{ aftersales_address.address }}</td>
-                    </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- 服务信息 end -->
+
+            {% if aftersales.aftersales_type == 3 and aftersales_address %}
+              <!-- 商品收货信息 -->
+              <div class="order-det_info">
+                <div class="info-hd">{{_('商品收货信息')}}</div>
+                <table class="info-table">
+                  <tbody>
                     <tr>
                       <th>{{_('联系人：')}}</th>
                       <td>{{ aftersales_address.name }}</td>
@@ -170,11 +179,17 @@
                       <th>{{_('联系电话：')}}</th>
                       <td>{{ aftersales_address.mobile }}</td>
                     </tr>
-                  {% endif %}
-                </tbody>
-              </table>
-            </div>
-            <!-- 服务信息 end -->
+                    <tr>
+                      <th>{{_('收货地址：')}}</th>
+                      <td>{{ aftersales_address.province }} {{ aftersales_address.city }} {{ aftersales_address.district }} {{ aftersales_address.address
+                        }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- 商品收货信息 end -->
+            {% endif %}
 
             {% if aftersales.check_status == 2 and aftersales.aftersales_type in [2,3]  %}
               <!-- 商品寄回信息 -->
@@ -191,7 +206,7 @@
                       <td>{{ aftersales_service.get('consignee_mobile', '商家暂无配置') }}</td>
                     </tr>
                     <tr>
-                      <th>{{_('收货信息：')}}</th>
+                      <th>{{_('收货地址：')}}</th>
                       <td>{{ aftersales_service.get('consignee_address', '商家暂无配置') }}</td>
                     </tr>
                   </tbody>
