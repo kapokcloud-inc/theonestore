@@ -110,7 +110,7 @@ class WeiXinMpAccessTokenService(object):
 
         self.st = SysToken.query.filter(SysToken.token_type == 'weixin_mp').first()
         if self.st:
-            token   = self.st.token
+            token   = self.st.access_token
             expires = self.st.expires_in
 
         if (token == '') or (self.current_time > expires):
