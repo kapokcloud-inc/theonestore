@@ -157,7 +157,7 @@ class AfterSalesCreateService(object):
             return False
 
         if self.aftersales_type == 2:
-            limit_time = before_after_timestamp(self.order.paid_time, {'days':7})
+            limit_time = before_after_timestamp(self.order.shipping_time, {'days':7})
             if self.current_time >= limit_time:
                 self.msg = _(u'超过有效退款时间')
                 return False

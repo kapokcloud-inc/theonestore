@@ -33,6 +33,8 @@ from app.helpers.user import (
     get_avatar
 )
 
+from app.forms.api.order import OrderAddressForm
+
 from app.services.response import ResponseJson
 from app.services.message import MessageCreateService
 from app.services.api.pay_weixin import NativeService
@@ -51,6 +53,7 @@ from app.models.item import Goods
 from app.models.comment import Comment
 from app.models.order import (
     Order,
+    OrderAddress,
     OrderGoods
 )
 
@@ -294,7 +297,7 @@ def recharge():
     return resjson.print_json(0, u'ok', {'order_id':rocs.order.order_id, 'qrcode':qrcode})
 
 
-@order.route('/is_paid')
+@order.route('/is-paid')
 def is_paid():
     """查询订单是否支付成功"""
     resjson.action_code = 17
@@ -309,3 +312,42 @@ def is_paid():
         return resjson.print_json(0, u'ok', {'is_paid':1})
 
     return resjson.print_json(0, u'ok', {'is_paid':0})
+
+
+@order.route('/update-address', methods=["POST"])
+def update_address():
+    """更新订单收货地址"""
+    resjson.action_code = 18
+
+    if not check_login():
+        return resjson.print_json(10, _(u'未登陆'))
+    uid = get_uid()
+
+    wtf_form     = OrderAddressForm()
+    current_time = current_timestamp()
+
+    if not wtf_form.validate_on_submit():
+        for key,value in wtf_form.errors.items():
+            msg = value[0]
+        return resjson.print_json(11, msg)
+
+    order_address = OrderAddress.query.get(wtf_form.oa_id.data)
+    if not order_address:
+        return resjson.print_json(12, _(u'订单地址不存在'))
+
+    order = Order.query.\
+                    filter(Order.order_id == order_address.order_id).\
+                    filter(Order.uid == uid).first()
+    if not order:
+        return resjson.print_json(13, _(u'订单不存在'))
+
+    if order.pay_status != 1:
+        return resjson.print_json(14, _(u'未付款订单才可以修改地址'))
+
+    data = {'name':wtf_form.name.data, 'mobile':wtf_form.mobile.data,
+            'province':wtf_form.province.data, 'city':wtf_form.city.data,
+            'district':wtf_form.district.data, 'address':wtf_form.address.data,
+            'update_time':current_time}
+    model_update(order_address, data, commit=True)
+
+    return resjson.print_json(0, u'ok')

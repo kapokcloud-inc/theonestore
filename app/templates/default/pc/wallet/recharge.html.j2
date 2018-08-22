@@ -79,7 +79,7 @@ $.ajaxSetup({
 
 // 查询订单是否支付成功
 function is_paid() {
-  $.get("{{ url_for('api.order.is_paid') }}", {'order_id':order_id}, function(res) {
+  $.get("{{ url_for('api.order.is-paid') }}", {'order_id':order_id}, function(res) {
     if (res.ret == 0 && res.data.is_paid == 1) {
       window.location.href = "{{ url_for('pc.pay.recharge_success') }}";
     }
