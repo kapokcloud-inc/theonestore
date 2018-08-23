@@ -20,6 +20,8 @@ from flask import (
     url_for
 )
 
+from app.database import db
+
 from app.helpers import (
     log_info,
     log_error,
