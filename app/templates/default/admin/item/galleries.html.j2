@@ -138,16 +138,16 @@ $.toast({
 
 $(document).ready(function(){
   var drEvent = $('.dropify').dropify({
-    maxFileSize:'1M',
+    maxFileSize:'2M',
     allowedFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp'],
     messages: {
-      'default': "{{_('点击上传文件')}}",
-      'replace': "{{_('点击替换文件')}}",
+      'default': "{{_('点击上传图片<br>图片大小2M以内<br>不小于800x800正方形图片')}}",
+      'replace': "{{_('点击替换图片')}}",
       'remove':  "{{_('移除')}}",
       'error':   "{{_('出错啦:(')}}"
     },
     error: {
-      'fileSize': "{{_('文件大小不能超过1M')}}",
+      'fileSize': "{{_('文件大小不能超过2M')}}",
       'fileExtension': "{{_('仅允许上传png、jpg、jpeg、bmp图片文件')}}"
     }
   });

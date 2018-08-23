@@ -70,7 +70,7 @@ class ItemForm(Form):
 
     goods_img      = FileField(
                     _(u'封面原图'),
-                    description=_(u'图片文件'),
+                    description=_(u'请上传不小于800x800正方形图片'),
                     validators=[
                         FileRequired(_(u'文件未上传')), 
                         FileAllowed(UploadSet('images', IMAGES), message=_(u'只允许上传图片'))
@@ -142,7 +142,7 @@ class CategoryForm(Form):
 
     cat_img      = FileField(
                     _(u'分类图片'),
-                    description=_(u'图片文件'),
+                    description=_(u'请上传不小于400x400正方形图片'),
                     validators=[
                         FileRequired(_(u'文件未上传')),
                         FileAllowed(UploadSet('images', IMAGES), message=_(u'只允许上传图片'))
@@ -151,4 +151,4 @@ class CategoryForm(Form):
 
     is_show      = BooleanField(_(u'是否显示'), false_values=(0, '0', ''), default=1)
 
-    is_recommend = BooleanField(_(u'是否推荐'), false_values=(0, '0', ''))
+    is_recommend = BooleanField(_(u'推荐到电脑版导航栏'), false_values=(0, '0', ''))
