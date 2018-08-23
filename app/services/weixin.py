@@ -327,7 +327,7 @@ class WeixinMessageStaticMethodsService(object):
         first            = _(u'您好，您的售后单%s有新的客服回复' % aftersale.aftersales_sn)
         current_time     = timestamp2str(current_timestamp(), 'YYYY-MM-DD HH:mm:ss')
 
-        url  = '%s%s' % (request.host_url.strip('/'), url_for('mobile.wallet.root'))
+        url  = '%s%s' % (request.host_url.strip('/'), url_for('mobile.aftersales.detail', aftersales_id=aftersale.aftersales_id))
         data = {'first':{'color':'#000000', 'value':first},
                 'HandleType':{'color':'#000000', 'value':aftersales_type},
                 'Status':{'color':'#000000', 'value':status},
