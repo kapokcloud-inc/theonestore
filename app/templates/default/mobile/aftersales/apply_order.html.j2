@@ -86,6 +86,7 @@ $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
 
+// 图片上传
 $('#uploaderInput').fileupload({
     url: "{{ url_for('api.upload.image') }}",
     dataType: 'json',
@@ -98,6 +99,13 @@ $('#uploaderInput').fileupload({
                           '<img src="' + image + '-square.middle" alt="" data-value="' + image + '">' +
                         '</li>';
         $("#uploaderFiles").append(html_text);
+
+        // 把上传的图片加到列表上
+        var img_data = $("#img_data").val();
+        var _img_data = JSON.parse(img_data);
+        _img_data.push(image);
+        img_data = JSON.stringify(_img_data);
+        $("#img_data").val(img_data);
       }
     }
 });
@@ -105,12 +113,15 @@ $('#uploaderInput').fileupload({
 function submit() {
   var order_id = $("#order_id").val();
   var content = $("#content").val();
+  var img_data = $("#img_data").val();
   
+  /*
   var images = [];
   $(".weui-uploader__file").each(function(i){
     images.push($(this).attr('data-value'));
   });
   var img_data = JSON.stringify(images);
+  */
 
   var params = {'order_id':order_id, 'aftersales_type':1, 'deliver_status':0, 'content':content, 'img_data':img_data};
   $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
