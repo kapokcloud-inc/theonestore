@@ -40,7 +40,7 @@
       </li>
       <li class="dropdown">
         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
-          <img src="{{ session['avatar']|format_avatar(0) }}" alt="user-img" width="36" class="img-circle">
+          <img src="{{ session['avatar']|format_avatar }}" alt="user-img" width="36" class="img-circle">
           <b class="hidden-xs">{{ session['username'] }}</b>
           <span class="caret"></span>
         </a>
@@ -48,7 +48,7 @@
           <li>
             <div class="dw-user-box">
               <div class="u-img">
-                <img src="{{ session['avatar']|format_avatar(1) }}" alt="user" />
+                <img src="{{ session['avatar']|format_avatar }}" alt="user" />
               </div>
               <div class="u-text">
                 <h4>{{ session['username'] }}</h4>

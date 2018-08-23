@@ -27,7 +27,7 @@
               <div class="user-wrap">
                 <div class="one-cell">
                   <div class="one-cell_hd avatar">
-                    <img class="ava" src="{{ session.get('avatar', '')|format_avatar(2) }}" alt="">
+                    <img class="ava" src="{{ session.get('avatar', '')|format_avatar }}" alt="">
                   </div>
                   <div class="one-cell_bd username">
                     <a href="{{ url_for('pc.me.index') }}">{{ nickname }}</a>
