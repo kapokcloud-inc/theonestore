@@ -17,7 +17,7 @@ class Comment(BaseModel, db.Model):
     comment_id = db.Column(db.Integer, primary_key=True)
     uid = db.Column(db.Integer, default=0)
     nickname = db.Column(db.String(32), default='')
-    avatar = db.Column(db.String(128), default='')
+    avatar = db.Column(db.String(255), default='')
     ttype = db.Column(db.Integer, default=0)
     tid = db.Column(db.Integer, default=0)
     rating = db.Column(db.Integer, default=3)
