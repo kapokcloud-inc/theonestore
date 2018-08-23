@@ -54,7 +54,7 @@
         <div class="weui-cell__bd">
           <div class="all_title height25">{{ item.goods_name }}</div>
           <div class="all_desc height25">
-            <span class="mar-right all_price">￥{{ item.goods_price }}</span>
+            <span class="mar-right all_price">￥{{ item.goods_price|toamount }}</span>
             <span>x {{ item.goods_quantity }}</span>
           </div>
         </div>
@@ -82,22 +82,22 @@
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('商品总价')}}</label>
-          <span class="weui-form-preview__value">￥{{ order.goods_amount }}</span>
+          <span class="weui-form-preview__value">￥{{ order.goods_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('运费')}}</label>
-          <span class="weui-form-preview__value">￥{{ order.shipping_amount }}</span>
+          <span class="weui-form-preview__value">￥{{ order.shipping_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label">{{_('优惠促销')}}</label>
-          <span class="weui-form-preview__value">-￥{{ order.discount_amount }}</span>
+          <span class="weui-form-preview__value">-￥{{ order.discount_amount|toamount }}</span>
         </div>
       </div>
     </div>
     <div class="weui-cell actual_payment">
       <div class="weui-cell__bd">{{_('实际付款')}}</div>
       <div class="weui-cell__ft">
-        <span class="all_price" style="font-size:16px">￥{{ order.pay_amount }}</span>
+        <span class="all_price" style="font-size:16px">￥{{ order.pay_amount|toamount }}</span>
       </div>
     </div>
   </div>

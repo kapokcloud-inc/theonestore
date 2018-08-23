@@ -42,7 +42,7 @@
         <div class="all_title">{{ item.goods_name }}</div>
         <div class="all_desc">{{ item.goods_desc }}</div>
         <div class="all_price">
-          <span>￥{{ item.goods_price|format_amount }}</span>
+          <span style="font-size:20px">￥{{ item.goods_price|format_amount }}</span>
           {% if item.market_price > 0 %}
           <span class="price_del">￥{{ item.market_price|format_amount }}</span>
           {% endif %}
@@ -225,10 +225,8 @@
       </div>
       <div class="icon_wrap" onclick="toCart()">
         {% set cart_total = session.get('cart_total', 0) %}
-        {% if cart_total %}
-          {% set cart_total = cart_total if cart_total else '' %}
-          <span id="cart_total" class="weui-badge msg_badge" style="top:5px !important;left:35% !important;">{{ cart_total }}</span>
-        {% endif %}
+        {% set cart_total = cart_total if cart_total else '' %}
+        <span id="cart_total" class="weui-badge msg_badge" style="top:5px">{{ cart_total }}</span>
         <img src="/static/default/mobile/img/cart.png" alt="">
       </div>
 

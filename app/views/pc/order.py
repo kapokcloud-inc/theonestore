@@ -141,7 +141,6 @@ def deliver():
         return ''
 
     ods.deliver()
-    ods.commit()
 
     text, code = OrderStaticMethodsService.order_status_text_and_action_code(ods.order)
 

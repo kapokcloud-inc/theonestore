@@ -104,88 +104,32 @@
             </a>
           </div>
           <div class="tool-cnt">
-            <!-- 未登录时，购物车下拉框显示 -->
-            <div class="no-one">
-              <span>{{_('您还没有登录，请')}}
-                <a href="">{{_('登录')}}</a>
-                {{_('后查看购物车')}}
-              </span>
-            </div>
-
-            <!-- 已登录时，购物车没有商品时下拉框显示-->
-            <div class="no-one">
+            <!-- 购物车没有商品时下拉框显示 -->
+            <div class="no-one hide" id="not-content">
               <span>{{_('购物车中暂无商品，赶紧去')}}
                 <a href="{{ url_for('pc.index.root') }}">{{_('商城')}}</a>
                 {{_('选购吧')}}
               </span>
             </div>
-
-            <!-- 已登录时，购物车有商品时下拉框显示-->
-            <div id="navs_carts" class="cart-cnt">
-              <a class="one-cell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                <div class="one-cell_hd avatar">
-                  <img src="//i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg" alt="">
-                </div>
+            <!-- 购物车没有商品时下拉框显示 end-->
+            
+            <!-- 购物车有商品时下拉框显示 -->
+            <div class="hide" id="cart-content">
+              <div id="navs_carts" class="cart-cnt"></div>
+              <div class="one-cell mar-top not-before">
                 <div class="one-cell_bd">
-                  <p class="all-title">红米6A</p>
-                  <p class="all-desc">AI人脸解锁，小巧全面屏，高性能处理器</p>
+                  <p class="cart-text">
+                    <span id="cart-total_num"></span>
+                    件商品，共计
+                    <span class="cart-price" id="cart_amount"></span>
+                  </p>
+                  <a href="{{ url_for('pc.cart.root') }}">
+                    <button class="one-btn" type="button">{{_('去购物车结算')}}</button>
+                  </a>
                 </div>
-                <div class="one-cell_ft mar-left">
-                  <p class="all-price">￥1299</p>
-                  <p class="all-count">x1</p>
-                </div>
-              </a>
-              <a class="one-cell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                <div class="one-cell_hd avatar">
-                  <img src="//i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg" alt="">
-                </div>
-                <div class="one-cell_bd">
-                  <p class="all-title">红米6A</p>
-                  <p class="all-desc">AI人脸解锁，小巧全面屏，高性能处理器</p>
-                </div>
-                <div class="one-cell_ft mar-left">
-                  <p class="all-price">￥1299</p>
-                  <p class="all-count">x1</p>
-                </div>
-              </a>
-              <a class="one-cell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                <div class="one-cell_hd avatar">
-                  <img src="//i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg" alt="">
-                </div>
-                <div class="one-cell_bd">
-                  <p class="all-title">红米6A</p>
-                  <p class="all-desc">AI人脸解锁，小巧全面屏，高性能处理器</p>
-                </div>
-                <div class="one-cell_ft mar-left">
-                  <p class="all-price">￥1299</p>
-                  <p class="all-count">x1</p>
-                </div>
-              </a>
-              <a class="one-cell" href="{{ url_for('pc.item.detail', goods_id=2) }}">
-                <div class="one-cell_hd avatar">
-                  <img src="//i1.mifile.cn/a1/pms_1528719476.67789934!220x220.jpg" alt="">
-                </div>
-                <div class="one-cell_bd">
-                  <p class="all-title">红米6A</p>
-                  <p class="all-desc">AI人脸解锁，小巧全面屏，高性能处理器</p>
-                </div>
-                <div class="one-cell_ft mar-left">
-                  <p class="all-price">￥1299</p>
-                  <p class="all-count">x1</p>
-                </div>
-              </a>
-            </div>
-            <div class="one-cell mar-top not-before">
-              <div class="one-cell_bd">
-                <p class="cart-text">4件商品，共计
-                  <span class="cart-price">￥5888</span>
-                </p>
-                <a href="{{ url_for('pc.cart.root') }}">
-                  <button class="one-btn" type="button">{{_('去购物车结算')}}</button>
-                </a>
               </div>
             </div>
-            <!-- 已登录时，购物车有商品时显示 end-->
+            <!-- 购物车有商品时显示 end-->
           </div>
         </div>
         <div class="one-search">
@@ -319,14 +263,17 @@
   <!-- footer -->
 
   <script type="text/javascript" src="/static/default/pc/js/jquery.min.js" charset="utf-8"></script>
+  <script type="text/javascript" src="/static/default/pc/js/common.js" charset="utf-8"></script>
+
   <script type="text/javascript">
 
-  
-  //点击搜索图标
+  /**
+   * 点击搜索图标
+   */
   function go_search(){
     var key  = $('#head_search_key').val();
 
-    //关键字为空不响应
+    // 关键字为空不响应
     if(typeof key =='undefiined' || key == null || key.replace(/(^\s*)|(\s*$)/g,"") == ''){
       return false;
     }
@@ -334,13 +281,13 @@
     window.location.href= "{{ url_for('pc.item.index') }}"+'?p=1&ps=20&search_key='+key;
   }
 
-  //输入框键盘回车监听
+  // 输入框键盘回车监听
   $('#head_search_key').keydown(function(event){
     if(event.keyCode == 13){
       go_search();
     }
-  })
-
+  });
+  
   </script>
   
   {% block script %} {% endblock %}

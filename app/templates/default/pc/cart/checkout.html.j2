@@ -406,10 +406,10 @@ function save() {
         var _ua_id = json.data.ua_id;
 
         if (ua_id == _ua_id) {
-          $("_address"+_ua_id+"_name").text(name);
-          $("_address"+_ua_id+"_mobile").text(mobile);
-          $("_address"+_ua_id+"_pcd").text(province+' '+city+' '+district);
-          $("_address"+_ua_id+"_address").val(address);
+          $("#address"+_ua_id+"_name").text(name);
+          $("#address"+_ua_id+"_mobile").text(mobile);
+          $("#address"+_ua_id+"_pcd").text(province+' '+city+' '+district);
+          $("#address"+_ua_id+"_address").text(address);
         } else {
           $(".selected").removeClass('selected');
           var html_text = '<li class="address-body_item selected" onclick="selected_address(this)">' +

@@ -40,6 +40,7 @@ from app.helpers.date_time import (
     before_after_timestamp
 )
 
+from app.services.weixin import WeixinMessageStaticMethodsService
 from app.services.message import MessageCreateService
 from app.services.api.cart import (
     CheckoutService,
@@ -217,6 +218,9 @@ class OrderCreateService(object):
             mcs.do()
 
         db.session.commit()
+        
+        # 微信消息
+        WeixinMessageStaticMethodsService.create_order(self.order)
 
         cs = CartService(self.uid, 0)
         cs.check()
@@ -601,8 +605,8 @@ class PaidService(object):
             # 充值订单
             if order.order_type == 2:
                 # 更新余额 - 充值 - 检查
-                remark_user = u'充值'
-                remark_sys  = u'充值: 订单ID:%s 支付方式:%s 第三方支付流水号:%s' % (order_id, tran.pay_method, tran.pay_tran_id)
+                remark_user = _(u'充值成功')
+                remark_sys  = _(u'充值: 订单ID:%s 支付方式:%s 第三方支付流水号:%s' % (order_id, tran.pay_method, tran.pay_tran_id))
                 fs = FundsService(order.uid, order.goods_amount, 1, 1, self.tran_id, remark_user, remark_sys, paid_time)
                 if not fs.check():
                     log_error('[ErrorServiceApiOrderPaidServicePaid][FundsServiceError01]  remark_sys:%s' % remark_sys)
@@ -625,6 +629,12 @@ class PaidService(object):
 
             # 提交订单事务
             db.session.commit()
+
+            # 微信消息
+            if order.order_type == 2:
+                WeixinMessageStaticMethodsService.recharge(order)
+            else:
+                WeixinMessageStaticMethodsService.paid(order)
 
         return True
 
@@ -701,11 +711,6 @@ class OrderDeliverService(object):
         self.current_time     = current_timestamp() # 当前时间
         self.order            = None                # 订单实例
 
-    def commit(self):
-        """提交sql事务"""
-
-        db.session.commit()
-
     def check(self):
         """检查"""
 
@@ -740,6 +745,11 @@ class OrderDeliverService(object):
                 (self.order.order_id, mcs.msg))
         else:
             mcs.do()
+
+        db.session.commit()
+
+        # 微信消息
+        WeixinMessageStaticMethodsService.deliver(self.order)
 
 
 class OrderStaticMethodsService(object):

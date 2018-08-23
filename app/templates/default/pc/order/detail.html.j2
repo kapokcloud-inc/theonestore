@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="/static/default/pc/css/order.css">
 <link rel="stylesheet" href="/static/default/pc/css/cart.css">
 <link rel="stylesheet" href="/static/default/pc/iconfont/iconfont.css">
+<link rel="stylesheet" href="/static/default/pc/css/city-picker.css">
 {% endblock %}
 
 {% block body %}
@@ -151,15 +152,19 @@
                 <tbody>
                   <tr>
                     <th>{{_('姓名：')}}</th>
-                    <td>{{ order_address.name }}</td>
+                    <td id="address_name">{{ order_address.name }}</td>
                   </tr>
                   <tr>
                     <th>{{_('联系电话：')}}</th>
-                    <td>{{ order_address.mobile }}</td>
+                    <td id="address_mobile">{{ order_address.mobile }}</td>
                   </tr>
                   <tr>
                     <th>{{_('收货地址：')}}</th>
-                    <td>{{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address }}</td>
+                    <td id="address_pcda">{{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address }}</td>
+                    <input id="address_province" type="hidden" value="{{ order_address.province }}">
+                    <input id="address_city" type="hidden" value="{{ order_address.city }}">
+                    <input id="address_district" type="hidden" value="{{ order_address.district }}">
+                    <input id="address_address" type="hidden" value="{{ order_address.address }}">
                   </tr>
                 </tbody>
               </table>
@@ -247,22 +252,24 @@
       <div class="allPad">
         <div class="bd-flex">
           <label class="bd-label">{{_('姓名：')}}</label>
-          <input class="bd-input" type="text" placeholder="{{_('请填写收件人姓名')}}">
+          <input id="edit_address_name" class="bd-input" type="text" placeholder="{{_('请填写收件人姓名')}}">
         </div>
         <div class="bd-flex">
           <label class="bd-label">{{_('手机号码：')}}</label>
-          <input class="bd-input" type="text" placeholder="{{_('请填写收件人手机号码')}}">
+          <input id="edit_address_mobile" class="bd-input" type="text" placeholder="{{_('请填写收件人手机号码')}}">
         </div>
         <div class="bd-flex">
           <label class="bd-label">{{_('地区：')}}</label>
-          <input readonly class="bd-input city-picker-input" type="text" data-toggle="city-picker" placeholder="{{_('请选择省/市/区')}}">
+          <!--<input readonly class="bd-input city-picker-input" type="text" data-toggle="city-picker" placeholder="{{_('请选择省/市/区')}}">-->
+          <input id="edit_address_pcd" readonly type="text">
         </div>
         <div class="bd-flex">
           <label class="bd-label">{{_('详细地址：')}}</label>
-          <input class="bd-input" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}">
+          <input id="edit_address_address" class="bd-input" type="text" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}">
         </div>
       </div>
       <div class="editAdd-section_ft">
+        <input id="oa_id" type="hidden" value="{{ order_address.oa_id }}">
         <button class="save-btn btn-primary mar-right" type="button" onclick="save()">{{_('保存')}}</button>
         <button class="cancel-btn" type="button" onclick="cal()">{{_('取消')}}</button>
       </div>
@@ -290,7 +297,14 @@
 {% endblock %}
 
 {% block script %}
+<script type="text/javascript" src="/static/default/pc/js/city-picker.data.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/default/pc/js/city-picker.min.js" charset="utf-8"></script>
 <script type="text/javascript">
+var csrftoken = "{{ csrf_token() }}";
+$.ajaxSetup({
+  headers: {'X-CSRFToken':csrftoken}
+});
+
 //确认收货弹窗
 function okey(order_id) {
   var conf = confirm('确认收到此订单的商品了么？');
@@ -333,6 +347,25 @@ function review() {
 function edit() {
   $('#changeAdd').removeClass('hide');
   if (!$('#changeAdd').hasClass('show')) {
+    var name = $("#address_name").text();
+    var mobile = $("#address_mobile").text();
+    var province = $("#address_province").val();
+    var city = $("#address_city").val();
+    var district = $("#address_district").val();
+    var address = $("#address_address").val();
+
+    $("#edit_address_name").val(name);
+    $("#edit_address_mobile").val(mobile);
+    $("#edit_address_address").val(address);
+
+    $("#edit_address_pcd").citypicker('reset');
+    $("#edit_address_pcd").citypicker('destroy');
+    $("#edit_address_pcd").citypicker({
+      province: province,
+      city: city,
+      district: district
+    });
+
     $('#changeAdd').addClass('show');
   }
 
@@ -350,6 +383,36 @@ function cal() {
 function save() {
   $('#changeAdd').removeClass('show');
   if (!$('#changeAdd').hasClass('hide')) {
+    var oa_id = $("#oa_id").val();
+    var name = $("#edit_address_name").val();
+    var mobile = $("#edit_address_mobile").val();
+    var pcd = $("#edit_address_pcd").val();
+    var address = $("#edit_address_address").val();
+    var pcd_arr = pcd.split('/');
+    var province = pcd_arr[0];
+    var city = pcd_arr[1];
+    var district = pcd_arr[2];
+
+    var params = {'oa_id':oa_id, 'name':name, 'mobile':mobile, 'province':province, 'city':city, 'district':district, 'address':address}
+    $.post("{{ url_for('api.order.update_address') }}", params, function(json) {
+      if (json.ret == 0) {
+        $("#address_name").text(name);
+        $("#address_mobile").text(mobile);
+        $("#address_pcda").text(province+' '+city+' '+district+' '+address);
+        $("#address_province").val(province);
+        $("#address_city").val(city);
+        $("#address_district").val(district);
+        $("#address_address").val(address);
+      } else {
+        // 优化alert ??
+        alert(json.msg);
+        return false;
+      }
+    });
+
+    $('#userInfo').text(name + ' ' + mobile);
+    $('#addressInfo').text(province+' '+city+' '+district+' '+address);
+
     $('#changeAdd').addClass('hide');
   }
 }

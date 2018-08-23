@@ -8,25 +8,23 @@
     :license: BSD, see LICENSE for more details.
 """
 
-from app.helpers import log_info
+from app.helpers import log_error
 from app.helpers import toamount
 
 def format_amount(sourcePrice=0):
     ''' 处理商品价格显示 '''
     try:
-        if isinstance(sourcePrice,types.IntType) or isinstance(sourcePrice,types.FloatType):
+        if isinstance(sourcePrice, types.IntType) or isinstance(sourcePrice, types.FloatType):
             #限制保留2位小数
             sourcePrice = toamount(sourcePrice)
         else:
-            raise ValueError
-    except ValueError:
-        return '数据错误'
+            raise ValueError('参数类型错误')
     except Exception:
-        if isinstance(sourcePrice,(int,float)):
+        if isinstance(sourcePrice, (int,float)):
             #限制保留2位小数
             sourcePrice = toamount(sourcePrice)
         else:
-            raise ValueError
+            raise ValueError('参数类型错误')
 
     if sourcePrice == None or sourcePrice == 0:
         return 0

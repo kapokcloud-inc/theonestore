@@ -227,7 +227,7 @@
         </div>
         <input id="carts_id" type="hidden" value="{{ carts_id }}" />
         <input id="order_id" type="hidden" value="0" />
-        <div class="btn_primary" onclick="submit()">{{_('提交订单')}}</div>
+        <div class="btn_primary" onclick="submit()">{{_('立即支付')}}</div>
       </div>
     </div>
     <div class="hide ranpo" id="payList">
@@ -240,7 +240,17 @@
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="closePay()">
           </div>
           <div class="weui-cells weui-cells_form weui-cells_radio" style="margin-top:0px !important">
-            <label class="weui-cell weui-check__label">
+            <label class="weui-cell weui-check__label" style="padding:20px 15px;">
+              <div class="weui-cell__hd mar-right">
+                <img class="cancal_image" src="/static/default/mobile/img/weixin.png" alt="">
+              </div>
+              <div class="weui-cell__bd blackGap">微信支付</div>
+              <div class="weui-cell__ft">
+                <input id="weixin_pay" name="weixin_pay" class="weui-check" type="radio" checked="" onclick="choose_pay(this, 'weixin_pay')">
+                <!-- <span class="weui-icon-checked"></span> -->
+              </div>
+            </label>
+            <label class="weui-cell weui-check__label" style="padding:20px 15px;">
               <div class="weui-cell__hd mar-right">
                 <img class="cancal_image" src="/static/default/mobile/img/balancePay.png" alt="">
               </div>
@@ -250,17 +260,7 @@
               </div>
               <div class="weui-cell__ft">
                 <input id="funds_pay" name="funds_pay" class="weui-check" type="radio" onclick="choose_pay(this, 'funds_pay')">
-                <span class="weui-icon-checked"></span>
-              </div>
-            </label>
-            <label class="weui-cell weui-check__label">
-              <div class="weui-cell__hd mar-right">
-                <img class="cancal_image" src="/static/default/mobile/img/weixin.png" alt="">
-              </div>
-              <div class="weui-cell__bd blackGap">微信支付</div>
-              <div class="weui-cell__ft">
-                <input id="weixin_pay" name="weixin_pay" class="weui-check" type="radio" checked="" onclick="choose_pay(this, 'weixin_pay')">
-                <span class="weui-icon-checked"></span>
+                <!-- <span class="weui-icon-checked"></span> -->
               </div>
             </label>
           </div>
@@ -502,52 +502,6 @@ function closeCoupon(){
 
 //提交订单
 function submit() {
-  var order_id = parseInt($("#order_id").val());
-  var ua_id = parseInt($("#current_address_ua_id").val());
-  var shipping_id = parseInt($("#shipping_selected").attr('data-values'));
-  var coupon_id = $("#coupon_id").val();
-  
-  if (ua_id == 0) {
-    $.toast("{{_('请先设置收货地址')}}", "text");
-    return false;
-  }
-
-  if (shipping_id == 0) {
-    $.toast("{{_('请先选择快递')}}", "text");
-    return false;
-  }
-
-  if (order_id == 0) {
-    var carts_id = $("#carts_id").val();
-
-    if (carts_id == '') {
-      $.toast("{{_('请先选购商品')}}", "text");
-      return false;
-    }
-
-    carts_id = carts_id.split(',');
-    carts_id = JSON.stringify(carts_id);
-
-    var params = {'carts_id':carts_id, 'ua_id':ua_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id}
-    $.post("{{ url_for('api.order.create') }}", params, function(json) {
-      if (json.ret == 0) {
-        var order_id = json.data.order_id;
-        $("#order_id").val(order_id);
-      } else {
-        $.toast(json.msg, "text");
-        return false;
-      }
-    });
-  } else {
-    var params = {'order_id':order_id, 'ua_id':ua_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id}
-    $.post("{{ url_for('api.order.update') }}", params, function(json) {
-      if (json.ret != 0) {
-        $.toast(json.msg, "text");
-        return false;
-      }
-    });
-  }
-
   var pay_amount = $("#pay_amount").attr('data-value');
   var funds = $("#funds").attr('data-value');
   if (parseFloat(pay_amount) > parseFloat(funds)) {
@@ -572,6 +526,58 @@ function closePay() {
   if (!$payList.hasClass('hide')) {
     $payList.addClass('hide');
   }
+}
+
+//创建订单
+function create_order() {
+  var ua_id = parseInt($("#current_address_ua_id").val());
+  var shipping_id = parseInt($("#shipping_selected").attr('data-values'));
+  var coupon_id = $("#coupon_id").val();
+  
+  if (ua_id == 0) {
+    $.toast("{{_('请先设置收货地址')}}", "text");
+    return false;
+  }
+
+  if (shipping_id == 0) {
+    $.toast("{{_('请先选择快递')}}", "text");
+    return false;
+  }
+
+  var carts_id = $("#carts_id").val();
+
+  if (carts_id == '') {
+    $.toast("{{_('请先选购商品')}}", "text");
+    return false;
+  }
+
+  carts_id = carts_id.split(',');
+  carts_id = JSON.stringify(carts_id);
+
+  var params = {'carts_id':carts_id, 'ua_id':ua_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id}
+  $.ajax({
+    type: 'POST',
+    url: "{{ url_for('api.order.create') }}",
+    data: params,
+    dataType: 'json',
+    timeout: 300,
+    async: false,
+    success: function(json) {
+      if (json.ret == 0) {
+        var order_id = json.data.order_id;
+        $("#order_id").val(order_id);
+      } else {
+        $.toast(json.msg, "text");
+        return false;
+      }
+    },
+    error: function(xhr, type) {
+      $.toast('网络错误', "text");
+      return false;
+    }
+  });
+
+  return true;
 }
 
 //余额支付
@@ -617,6 +623,11 @@ function weixin_pay(order_id) {
 
 //选择支付
 function choose_pay(dom, pay_type) {
+  //创建订单
+  if (!create_order()) {
+    return false;
+  }
+
   var $dom = $(dom);
   var order_id = parseInt($("#order_id").val());
 

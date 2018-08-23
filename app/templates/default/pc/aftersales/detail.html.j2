@@ -137,6 +137,10 @@
                     <th>{{_('问题描述：')}}</th>
                     <td>{{ aftersales.content }}</td>
                   </tr>
+                  <tr>
+                    <th>{{_('申请件数')}}</th>
+                    <td>{{ aftersales.quantity }}件</td>
+                  </tr>
                   {% if aftersales.aftersales_type in [1,2] %}
                     <tr>
                       <th>{{_('退款金额：')}}</th>
@@ -156,69 +160,85 @@
                       </ul>
                     </td>
                   </tr>
-                  <!-- 只有换货的时候才显示收货信息 -->
-                  {% if aftersales.aftersales_type == 3 %}
-                    <tr>
-                      <th>{{_('收货信息：')}}</th>
-                      <td>广东 深圳市 南山区 大园工业园8栋510</td>
-                    </tr>
-                    <tr>
-                      <th>{{_('联系人：')}}</th>
-                      <td>heheheh</td>
-                    </tr>
-                    <tr>
-                      <th>{{_('联系电话：')}}</th>
-                      <td>13592829302</td>
-                    </tr>
-                  {% endif %}
                 </tbody>
               </table>
             </div>
             <!-- 服务信息 end -->
 
-            <!-- 商品寄回信息 -->
-            <div class="order-det_info">
-              <div class="info-hd">{{_('商品寄回信息')}}</div>
-              <table class="info-table">
-                <tbody>
-                  <tr>
-                    <th>{{_('联系人：')}}</th>
-                    <td>大头</td>
-                  </tr>
-                  <tr>
-                    <th>{{_('联系电话：')}}</th>
-                    <td>13592829302</td>
-                  </tr>
-                  <tr>
-                    <th>{{_('收货信息：')}}</th>
-                    <td>广东 深圳市 南山区 大园工业园8栋510</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- 商品寄回信息 end -->
-
-            <!-- 填写寄回商品快递单号 -->
-            <div class="order-det_info">
-              <div class="info-hd">{{_('填写寄回商品快递单号')}}</div>
-              <table class="info-table">
-                <tbody>
-                  <tr>
-                    <th style="vertical-align:middle;">{{_('快递单号：')}}</th>
-                    <td>
-                      <input class="track-num" type="text" name="" id="">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="aftersales-tips">{{_('备注：快递面单信息需填写完整且需与您售后申请单信息一致； 务必请将申请单号备注在快递面单上再行邮寄！ 一个服务单号邮寄一个包裹！若有问题请联系客服')}}</td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="reg-submit_btn">
-                <a id="btn_next" class="one-btn btn-primary" onclick="">{{_('提交')}}</a>
+            {% if aftersales.aftersales_type == 3 and aftersales_address %}
+              <!-- 商品收货信息 -->
+              <div class="order-det_info">
+                <div class="info-hd">{{_('商品收货信息')}}</div>
+                <table class="info-table">
+                  <tbody>
+                    <tr>
+                      <th>{{_('联系人：')}}</th>
+                      <td>{{ aftersales_address.name }}</td>
+                    </tr>
+                    <tr>
+                      <th>{{_('联系电话：')}}</th>
+                      <td>{{ aftersales_address.mobile }}</td>
+                    </tr>
+                    <tr>
+                      <th>{{_('收货地址：')}}</th>
+                      <td>{{ aftersales_address.province }} {{ aftersales_address.city }} {{ aftersales_address.district }} {{ aftersales_address.address
+                        }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-            </div>
-            <!-- 填写寄回商品快递单号 end -->
+              <!-- 商品收货信息 end -->
+            {% endif %}
+
+            {% if aftersales.check_status == 2 and aftersales.aftersales_type in [2,3]  %}
+              <!-- 商品寄回信息 -->
+              <div class="order-det_info">
+                <div class="info-hd">{{_('商品寄回信息')}}</div>
+                <table class="info-table">
+                  <tbody>
+                    <tr>
+                      <th>{{_('联系人：')}}</th>
+                      <td>{{ aftersales_service.get('consignee_name', '商家暂无配置') }}</td>
+                    </tr>
+                    <tr>
+                      <th>{{_('联系电话：')}}</th>
+                      <td>{{ aftersales_service.get('consignee_mobile', '商家暂无配置') }}</td>
+                    </tr>
+                    <tr>
+                      <th>{{_('收货地址：')}}</th>
+                      <td>{{ aftersales_service.get('consignee_address', '商家暂无配置') }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- 商品寄回信息 end -->
+              
+              {% if 1 in action_code and aftersales.return_status == 1 %}
+                <!-- 填写寄回商品快递单号 -->
+                <div class="order-det_info">
+                  <div class="info-hd">{{_('填写寄回商品快递单号')}}</div>
+                  <table class="info-table">
+                    <tbody>
+                      <tr>
+                        <th style="vertical-align:middle;">{{_('快递单号：')}}</th>
+                        <td>
+                          <input class="track-num" type="text" name="" id="">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="aftersales-tips">{{_('备注：快递面单信息需填写完整且需与您售后申请单信息一致； 务必请将申请单号备注在快递面单上再行邮寄！ 一个服务单号邮寄一个包裹！若有问题请联系客服')}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="reg-submit_btn">
+                    <a id="btn_next" class="one-btn btn-primary" onclick="aftersalesReturnSn({{ aftersales.aftersales_id }})">{{_('提交')}}</a>
+                  </div>
+                </div>
+                <!-- 填写寄回商品快递单号 end -->
+              {% endif %}
+            {% endif %}
+         
           </div>
           <!-- 售后图片点击放大弹窗 -->
           <div class="hide-mask hide" id="giant-comment">
@@ -271,18 +291,12 @@ $(document).ready(function(){
       $('#giantCom').attr("src", img_url_giant);
       aftersalesImgGiant($current);
     });
-
-    // 点击关闭弹窗事件
-    $('#comment-close').click(function () {
-      $('#comment-prev').unbind('click');
-      $('#comment-next').unbind('click');
-      $(this).unbind('click');
-      $('#giantCom').attr("src", '');
-      $('#giant-comment').addClass('hide').removeClass('show');
-    });
-    
   });
 
+  // 点击关闭弹窗事件
+  $('#comment-close').click(function () {
+    $('#giant-comment').addClass('hide').removeClass('show');
+  });
 });
 
 /**
@@ -329,5 +343,29 @@ $('#more').click(function(){
     }
   }
 });
+
+
+//点击提交回寄订单号
+function aftersalesReturnSn(aftersales_id){
+  var return_shipping_sn = $('.track-num').val();
+
+  if(typeof return_shipping_sn =='undefiined' || return_shipping_sn == null || return_shipping_sn.replace(/(^\s*)|(\s*$)/g,"") == ''){
+    alert('请输入寄回商品快递单号');
+    return false;
+  }
+
+  var params = {'aftersales_id':aftersales_id, 'return_shipping_sn':return_shipping_sn};
+
+  $post("{{ url_for('api.aftersales.return_goods') }}", params, function(json) {
+    if (json.ret == 0) {
+      location.reload();
+    } else {
+      //优化alert ??
+      alert(json.msg);
+      return false;
+    }
+  });
+}
+
 </script>
 {% endblock%}
