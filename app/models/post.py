@@ -28,7 +28,7 @@ class Post(BaseModel, db.Model):
 
 class PostCategories(BaseModel, db.Model):
     __bind_key__ = 'theonestore'
-    __tablename__ = 'post_categories'
+    __tablename__ = 'posts_categories'
 
     cat_id = db.Column(db.Integer, primary_key=True)
     cat_name = db.Column(db.String(32), default='')

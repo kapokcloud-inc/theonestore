@@ -1,0 +1,65 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+{% import '/default/pc/libs/libs.html.j2' as libs %}
+
+{% block head %}
+<title>{{_('文章详情页 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/order.css">
+<link rel="stylesheet" href="/static/default/pc/css/me.css">
+<link rel="stylesheet" href="/static/default/pc/css/post.css">
+{% endblock %}
+
+{% block body %}
+<div class="index_wrap clearfix">
+  <div class="type-head">
+    <div class="head-inner">
+      <p class="type-head_text">
+        <span>{{ post.cat_name }}</span>
+      </p>
+    </div>
+  </div>
+  <div class="user-main">
+    <div class="head-inner clearfix">
+      <div class="navL-wrap">
+        <div class="allPad">
+          <div class="navL-box">
+            <div class="navL-box_hd">{{ post.cat_name }}</div>
+            <ul class="navL-box_bd">
+              {% for item in posts %}
+                <li>
+                  {% set class_type = 'allOn' if item.post_id == post.post_id else "" %}
+                  <a class="{{ class_type }}" href="{{ url_for('pc.post.detail', post_id=item.post_id) }}">{{ item.post_name }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="order-wrap">
+        <div class="allPad">
+          {% set is_show = "show" if post else "hide" %}
+          <div class="{{ is_show }}">
+            <div class="one-cell post-name">
+              <span class="post-name-text">{{ post.post_name }}</span>
+            </div>
+            {% if post.post_detail != '' %}
+              <!-- 文章详情 -->
+              <div class="allCnt show" id="detail">
+                <div class="goods-detail-desc">
+                  {{ post.post_detail }}
+                </div>
+              </div>
+              <!-- 文章详情 end -->
+            {% else %}
+              <div class="not-one">
+                <p class="not-one_text">{{_('暂无内容!')}}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %} {% endblock%}
