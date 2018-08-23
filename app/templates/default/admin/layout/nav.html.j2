@@ -123,6 +123,28 @@
               },
            ]
           },
+          {'title':_('文章'),
+           'href':'javascript:;',
+           'view':'post',
+           'icon':'mdi mdi-clipboard-text',
+           'children':[
+              {'title':_('文章'),
+              'href':url_for('admin.post.index'),
+              'endpoints':['admin.post.index',
+                          'admin.post.detail',
+                          'admin.post.create',
+                          'admin.post.h5',
+                          'admin.post.save']
+              },
+              {'title':_('分类'),
+              'href':url_for('admin.post.categories'),
+              'endpoints':['admin.post.categories',
+                          'admin.post.category_create',
+                          'admin.post.category_detail',
+                          'admin.post.category_save']
+              }
+            ]
+          },
         ]
       %}
       {% for menu in menu_list %}
