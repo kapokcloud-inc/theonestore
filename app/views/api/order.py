@@ -235,7 +235,7 @@ def save_comment():
         good_count        = Comment.query.\
                                 filter(Comment.ttype == 1).\
                                 filter(Comment.tid == order_goods.goods_id).\
-                                filter(Comment.rating == 5).count()
+                                filter(Comment.rating == 3).count()
         comment_good_rate = round((Decimal(good_count)/Decimal(comment_count)) * 100)
         model_update(item, {'comment_count':comment_count, 'comment_good_rate':comment_good_rate})
 
