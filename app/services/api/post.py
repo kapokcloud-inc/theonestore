@@ -27,7 +27,9 @@ class PostStaticMethodsService(object):
     def categories():
         """文章分类列表"""
         categories = db.session.query(PostCategories.cat_id, PostCategories.cat_name).\
-                                    filter(PostCategories.is_show == 1).all()
+                                    filter(PostCategories.is_show == 1).\
+                                     order_by(PostCategories.sorting.desc()).\
+                                     order_by(PostCategories.cat_id.desc()).all()
 
         return categories
     

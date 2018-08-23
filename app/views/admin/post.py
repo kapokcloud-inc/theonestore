@@ -106,7 +106,7 @@ def category_save():
     else:
         category = model_create(PostCategories, {'add_time':current_timestamp()})
 
-    data    = {'cat_name':form.cat_name.data, 'is_show':form.is_show.data}
+    data   = {'cat_name':form.cat_name.data, 'is_show':form.is_show.data, 'sorting':form.sorting.data}
     model_update(category, data, commit=True)
 
     return redirect(url_for('admin.post.categories'))
@@ -208,16 +208,16 @@ def save():
     if not form.validate_on_submit():
         return render_template('admin/post/detail.html.j2', form=form, item=form.data)
         
-    post_id = toint(form.post_id.data)
+    post_id  = toint(form.post_id.data)
     if post_id:
         item = Post.query.get_or_404(post_id)
     else:
         item = model_create(Post, {'post_detail':'', 'add_time':current_time})
 
     cat_id   = form.cat_id.data
-    data = db.session.query(PostCategories.cat_name).filter(PostCategories.cat_id==cat_id).first()
+    data     = db.session.query(PostCategories.cat_name).filter(PostCategories.cat_id==cat_id).first()
 
-    data = {'cat_id':form.cat_id.data, 'cat_name':data[0], 'post_name':form.post_name.data, 'is_publish':form.is_publish.data, 'update_time':current_time}
+    data     = {'cat_id':form.cat_id.data, 'cat_name':data[0], 'post_name':form.post_name.data,   'is_publish':form.is_publish.data, 'sorting':form.sorting.data, 'update_time':current_time}
     model_update(item, data, commit=True)
 
     return redirect(url_for('admin.post.h5', post_id=item.post_id))
