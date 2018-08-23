@@ -89,7 +89,7 @@ def detail(aftersales_id):
 
     aftersales = Aftersales.query.filter(Aftersales.aftersales_id == aftersales_id).filter(Aftersales.uid == uid).first()
     if not aftersales:
-        return redirect(request.headers['Referer'])
+        return redirect(url_for('pc.index.pagenotfound'))
     
     log = AftersalesLogs.query.\
             filter(AftersalesLogs.aftersales_id == aftersales.aftersales_id).\
@@ -101,12 +101,12 @@ def detail(aftersales_id):
     if aftersales.check_status == 2:
         ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_service').first()
         if not ss:
-            return redirect(request.headers['Referer'])
+            return redirect(url_for('pc.index.servererror'))
         
         try:
             aftersales_service = json.loads(ss.value)
         except Exception as e:
-            return redirect(request.headers['Referer'])
+            return redirect(url_for('pc.index.servererror'))
     #换货收货地址
     address     = None
     if aftersales.aftersales_type == 3:
@@ -152,7 +152,7 @@ def apply_step1():
     og_id                 = int(request.args.to_dict().get('og_id', '0'))
     
     if order_id <= 0 and og_id <= 0:
-        return redirect(request.headers['Referer'])
+        return redirect(url_for('pc.index.pagenotfound'))
 
     wtf_form              = AfterSalesForm()
     # order_id大于0则整单操作，否则指定商品操作
@@ -160,7 +160,7 @@ def apply_step1():
         ascs = AfterSalesCreateService(uid, order_id=order_id, og_id=0, quantity=1, aftersales_type=1, deliver_status=1)
         ret  = ascs._check_order()
         if not ret:
-            return redirect(request.headers['Referer'])
+            return redirect(url_for('pc.index.pagenotfound'))
 
         data = {'wtf_form':wtf_form, 'order_id':order_id, 'og_id':og_id,'items':ascs.order_goods_list, 'goods_data':ascs.goods_data, 'refunds_amount':ascs.refunds_amount,'current_time':current_timestamp(), 'aftersales_type':1}
         log_info(data)
@@ -171,13 +171,13 @@ def apply_step1():
         ret  = ascs._check_order_goods()
         if not ret:
             if ascs.msg != u'超过有效退款时间':
-                return redirect(request.headers['Referer'])
+                return redirect(url_for('pc.index.pagenotfound'))
 
             aftersales_type = 3
             ascs            = AfterSalesCreateService(uid, order_id=0, og_id=og_id, quantity=1, aftersales_type=aftersales_type, deliver_status=1)
             ret             = ascs._check_order_goods()
             if not ret:
-                return redirect(request.headers['Referer'])
+                return redirect(url_for('pc.index.pagenotfound'))
 
         data = {'wtf_form':wtf_form, 'order_id':order_id, 'og_id':og_id, 'items':ascs.order_goods_list, 'goods_data':ascs.goods_data, 'refunds_amount':ascs.refunds_amount, 'aftersales_type':aftersales_type, 'current_time':current_timestamp()}
 

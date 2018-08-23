@@ -189,10 +189,10 @@ def create_comment(og_id):
     order_goods = OrderGoods.query.get(og_id)
     order       = Order.query.filter(Order.order_id == order_goods.order_id).filter(Order.uid == uid).first()
     if not order:
-        return redirect(request.headers['Referer'])
+        return redirect(url_for('mobile.index.pagenotfound'))
     
     if order_goods.comment_id > 0:
-        return redirect(request.headers['Referer'])
+        return redirect(url_for('mobile.index.servererror'))
     
     wtf_form = CommentOrderGoodsForm()
 
@@ -249,7 +249,7 @@ def comment_detail(og_id):
     good        = Goods.query.get(order_goods.goods_id)
     comment     = Comment.query.filter(Comment.comment_id == order_goods.comment_id).filter(Comment.uid == uid).first()
     if not comment:
-        return redirect(request.headers['Referer'])
+        return redirect(url_for('mobile.index.pagenotfound'))
 
     return render_template('mobile/order/comment_detail.html.j2', order_goods=order_goods, comment=comment,good=good)
 

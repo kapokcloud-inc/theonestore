@@ -91,7 +91,7 @@ def recharge():
         # 检查
         order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
         if not order:
-            return redirect(request.headers['Referer'])
+            return redirect(url_for('mobile.index.pagenotfound'))
         
         recharge_amount = order.pay_amount
         pay_success_url = url_for('mobile.pay.success', order_id=order_id)
@@ -119,6 +119,6 @@ def detail(fd_id):
 
     detail = FundsDetail.query.filter(FundsDetail.fd_id == fd_id).filter(FundsDetail.uid == uid).first()
     if not detail:
-        return redirect(request.headers['Referer'])
+        return redirect(url_for('mobile.index.pagenotfound'))
 
     return render_template('mobile/wallet/detail.html.j2', detail=detail)
