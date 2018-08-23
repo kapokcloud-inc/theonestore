@@ -199,6 +199,7 @@ function change_type(dom, type) {
   $("#aftersales_type").val($(dom).attr('data-value'));
 }
 
+// 图片上传
 $('#uploaderInput').fileupload({
     url: "{{ url_for('api.upload.image') }}",
     dataType: 'json',
@@ -212,6 +213,7 @@ $('#uploaderInput').fileupload({
                         '</li>';
         $("#uploaderFiles").append(html_text);
 
+        // 把上传的图片加到列表上
         var img_data = $("#img_data").val();
         var _img_data = JSON.parse(img_data);
         _img_data.push(image);

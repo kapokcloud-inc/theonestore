@@ -73,6 +73,13 @@ $('#uploaderInput').fileupload({
                           '<img src="' + image + '-square.middle" alt="" data-value="' + image + '">' +
                         '</li>';
         $("#uploaderFiles").append(html_text);
+        
+        // 把上传的图片加到列表上
+        var img_data = $("#img_data").val();
+        var _img_data = JSON.parse(img_data);
+        _img_data.push(image);
+        img_data = JSON.stringify(_img_data);
+        $("#img_data").val(img_data);
       }
     }
 });
@@ -81,12 +88,15 @@ function submit() {
   var og_id = $("#og_id").val();
   var rating = $(".tag_btn-on").attr('data-value');
   var content = $("#content").val();
+  var img_data = $("#img_data").val();
 
+  /*
   var images = [];
   $(".weui-uploader__file").each(function(i){
     images.push($(this).attr('data-value'));
   });
   var img_data = JSON.stringify(images);
+  */
 
   var params = {'og_id':og_id, 'rating':rating, 'content':content, 'img_data':img_data}
   $.post("{{ url_for('api.order.save_comment') }}", params, function(json) {
