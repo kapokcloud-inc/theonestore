@@ -163,7 +163,6 @@ def deliver():
         return resjson.print_json(10, ods.msg)
 
     ods.deliver()
-    ods.commit()
 
     return resjson.print_json(0, u'ok')
 

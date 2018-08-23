@@ -15,21 +15,36 @@ except ImportError as identifier:
     from urllib import urlencode
 
 from flask_babel import gettext as _
+from flask import (
+    request,
+    url_for
+)
 
 from app.helpers import (
     log_info,
     log_error,
     toint,
+    toamount,
     model_create,
     model_update
 )
-from app.helpers.date_time import current_timestamp
+from app.helpers.date_time import (
+    current_timestamp,
+    timestamp2str
+)
 
 from app.models.sys import (
     SysSetting,
     SysToken
 )
-from app.models.user import UserThirdBind
+from app.models.order import (
+    Order,
+    OrderGoods
+)
+from app.models.user import (
+    User,
+    UserThirdBind
+)
 from app.models.weixin import WeixinMpTemplate
 
 
@@ -182,16 +197,145 @@ class WeiXinMpMessageService(object):
 class WeixinMessageStaticMethodsService(object):
 
     @staticmethod
-    def create_order(uid, order_sn, pay_amount):
+    def create_order(order):
         """推送创建订单消息"""
 
-        url  = ''
-        data = {'first':{'color':'#000000', 'value':_(u'您的订单已创建，请尽快完成支付。')},
-                'keyword1':{'color':'#000000', 'value':order_sn},
-                'keyword2':{'color':'#000000', 'value':pay_amount},
-                'remark':{'color':'#000000', 'value':_(u'请点击详情在线付款。')}}
+        pay_amount = _(u'%s元' % toamount(order.pay_amount).__str__())
 
-        wxmms = WeiXinMpMessageService(uid, 1, data, url)
+        url  = '%s%s' % (request.host_url.strip('/'), url_for('mobile.order.detail', order_id=order.order_id))
+        data = {'first':{'color':'#000000', 'value':_(u'您的订单已创建，请尽快完成支付。')},
+                'keyword1':{'color':'#000000', 'value':order.order_sn},
+                'keyword2':{'color':'#000000', 'value':pay_amount},
+                'remark':{'color':'#000000', 'value':_(u'感谢您的支持与厚爱，请点击详情在线付款。')}}
+
+        wxmms = WeiXinMpMessageService(order.uid, 1, data, url)
+        wxmms.push()
+
+        return True
+
+    @staticmethod
+    def paid(order):
+        """推送付款成功消息"""
+
+        paymethods  = {'funds':_(u'钱包支付'), 'weixin':_(u'微信支付')}
+        paymethod   = paymethods.get(order.pay_method, '')
+        paid_time   = timestamp2str(order.paid_time, 'YYYY-MM-DD HH:mm:ss')
+        paid_amount = _(u'%s元' % toamount(order.paid_amount).__str__())
+
+        url  = '%s%s' % (request.host_url.strip('/'), url_for('mobile.order.detail', order_id=order.order_id))
+        data = {'first':{'color':'#000000', 'value':_(u'您好，您有一笔订单已经支付成功。')},
+                'keyword1':{'color':'#000000', 'value':order.order_sn},
+                'keyword2':{'color':'#000000', 'value':paid_time},
+                'keyword3':{'color':'#000000', 'value':paid_amount},
+                'keyword4':{'color':'#000000', 'value':paymethod},
+                'remark':{'color':'#000000', 'value':_(u'感谢您的支持与厚爱，请点击详情查看订单。')}}
+
+        wxmms = WeiXinMpMessageService(order.uid, 2, data, url)
+        wxmms.push()
+
+        return True
+
+    @staticmethod
+    def shipping(order):
+        """推送发货消息"""
+
+        url  = '%s%s' % (request.host_url.strip('/'), url_for('mobile.order.detail', order_id=order.order_id))
+        data = {'first':{'color':'#000000', 'value':_(u'亲，宝贝已经启程了，好想快点来到你身边。')},
+                'keyword1':{'color':'#000000', 'value':order.order_sn},
+                'keyword2':{'color':'#000000', 'value':order.shipping_name},
+                'keyword3':{'color':'#000000', 'value':order.shipping_sn},
+                'remark':{'color':'#000000', 'value':_(u'感谢您的支持与厚爱，请点击详情查看订单。')}}
+
+        wxmms = WeiXinMpMessageService(order.uid, 3, data, url)
+        wxmms.push()
+
+        return True
+
+    @staticmethod
+    def deliver(order):
+        """推送收货消息"""
+
+        add_time      = timestamp2str(order.add_time, 'YYYY-MM-DD HH:mm:ss')
+        shipping_time = timestamp2str(order.shipping_time, 'YYYY-MM-DD HH:mm:ss')
+        deliver_time  = timestamp2str(order.deliver_time, 'YYYY-MM-DD HH:mm:ss')
+
+        items  = []
+        _items = db.session.query(OrderGoods.goods_name).\
+                            filter(OrderGoods.order_id == order.order_id).all()
+        for _item in _items:
+            items.append('[%s]' % _item.goods_name)
+        items = ','.join(items)
+
+        url  = '%s%s' % (request.host_url.strip('/'), url_for('mobile.order.detail', order_id=order.order_id))
+        data = {'first':{'color':'#000000', 'value':_(u'亲：您在我们商城买的宝贝已经确认收货。')},
+                'keyword1':{'color':'#000000', 'value':order.order_sn},
+                'keyword2':{'color':'#000000', 'value':items},
+                'keyword3':{'color':'#000000', 'value':add_time},
+                'keyword4':{'color':'#000000', 'value':shipping_time},
+                'keyword5':{'color':'#000000', 'value':deliver_time},
+                'remark':{'color':'#000000', 'value':_(u'感谢您的支持与厚爱，请点击详情查看订单。')}}
+
+        wxmms = WeiXinMpMessageService(order.uid, 4, data, url)
+        wxmms.push()
+
+        return True
+
+    @staticmethod
+    def refund(refund):
+        """推送退款消息"""
+
+        order          = Order.query.get(refund.order_id)
+        refunds_amount = _(u'%s元' % toamount(refund.refunds_amount).__str__())
+
+        url  = '%s%s' % (request.host_url.strip('/'), url_for('mobile.order.detail', order_id=order.order_id))
+        data = {'first':{'color':'#000000', 'value':_(u'退款成功。')},
+                'reason':{'color':'#000000', 'value':refund.remark_user},
+                'refund':{'color':'#000000', 'value':refunds_amount},
+                'remark':{'color':'#000000', 'value':_(u'感谢您的支持与厚爱，请点击详情查看退款详情。')}}
+
+        wxmms = WeiXinMpMessageService(order.uid, 5, data, url)
+        wxmms.push()
+
+        return True
+
+    @staticmethod
+    def recharge(order):
+        """推送充值消息"""
+
+        goods_amount = _(u'%s元' % toamount(order.goods_amount).__str__())
+        user         = User.query.get(order.uid)
+
+        url  = '%s%s' % (request.host_url.strip('/'), url_for('mobile.wallet.root'))
+        data = {'first':{'color':'#000000', 'value':_(u'您好，您已成功进行会员帐号充值。')},
+                'accountType':{'color':'#000000', 'value':_(u'会员帐号')},
+                'account':{'color':'#000000', 'value':user.nickname},
+                'amount':{'color':'#000000', 'value':goods_amount},
+                'result':{'color':'#000000', 'value':_(u'充值成功')},
+                'remark':{'color':'#000000', 'value':_(u'感谢您的支持与厚爱，请点击详情查看充值详情。')}}
+
+        wxmms = WeiXinMpMessageService(order.uid, 6, data, url)
+        wxmms.push()
+
+        return True
+
+    @staticmethod
+    def aftersale_step(aftersale, status, content):
+        """推送售后处理进度消息"""
+
+        aftersales_types = {1:_(u'仅退款'), 2:_(u'退货退款'), 3:_(u'仅换货')}
+        aftersales_type  = aftersales_types.get(aftersale.aftersales_type)
+        first            = _(u'您好，您的售后单%s有新的客服回复' % aftersale.aftersales_sn)
+        current_time     = timestamp2str(current_timestamp(), 'YYYY-MM-DD HH:mm:ss')
+
+        url  = '%s%s' % (request.host_url.strip('/'), url_for('mobile.wallet.root'))
+        data = {'first':{'color':'#000000', 'value':first},
+                'HandleType':{'color':'#000000', 'value':aftersales_type},
+                'Status':{'color':'#000000', 'value':status},
+                'RowCreateDate':{'color':'#000000', 'value':current_time},
+                'LogType':{'color':'#000000', 'value':content},
+                'remark':{'color':'#000000', 'value':_(u'感谢您的支持与厚爱，请点击详情查看详细处理结果。')}}
+
+        wxmms = WeiXinMpMessageService(aftersale.uid, 7, data, url)
         wxmms.push()
 
         return True

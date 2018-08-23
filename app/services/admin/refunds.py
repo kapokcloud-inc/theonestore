@@ -26,6 +26,7 @@ from app.helpers.date_time import (
     before_after_timestamp,
 )
 
+from app.services.weixin import WeixinMessageStaticMethodsService
 from app.services.api.funds import FundsService
 from app.services.admin.pay_weixin import JsapiWeixinRefundsService
 
@@ -98,7 +99,7 @@ class RefundsService(object):
         if not self.refunds:
             data = {'tran_id':self.order.tran_id, 'order_id':self.order_id, 'refunds_amount':self.refunds_amount,
                     'refunds_method':self.order.pay_method, 'refunds_sn':'', 'refunds_time':0, 'refunds_status':0,
-                    'remark_user':u'', 'remark_sys':u'', 'add_time':self.current_time}
+                    'remark_user':_(u'申请退款'), 'remark_sys':_(u'申请退款'), 'add_time':self.current_time}
             self.refunds = model_create(Refunds, data, commit=True)
 
         # 检查
@@ -143,5 +144,8 @@ class RefundsService(object):
             data = {'refunds_sn':refunds_sn, 'refunds_time':self.current_time, 'refunds_status':refunds_status}
 
         model_update(self.refunds, data, commit=True)
+
+        # 微信消息
+        WeixinMessageStaticMethodsService.refund(self.refunds)
 
         return True
