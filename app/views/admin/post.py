@@ -220,7 +220,9 @@ def save():
     data = {'cat_id':form.cat_id.data, 'cat_name':data[0], 'post_name':form.post_name.data, 'is_publish':form.is_publish.data, 'update_time':current_time}
     model_update(item, data, commit=True)
 
-    return redirect(url_for('admin.post.index'))
+    return redirect(url_for('admin.post.h5', post_id=item.post_id))
+
+    
 
 
 @post.route('/remove')
