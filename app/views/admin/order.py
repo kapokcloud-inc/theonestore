@@ -36,6 +36,7 @@ from app.helpers.date_time import (
 
 from app.services.response import ResponseJson
 from app.services.message import MessageCreateService
+from app.services.weixin import WeixinMessageStaticMethodsService
 from app.services.admin.order import OrderStaticMethodsService
 
 from app.models.user import User
@@ -193,6 +194,9 @@ def shipping():
         mcs.do()
 
     db.session.commit()
+
+    # 微信消息
+    WeixinMessageStaticMethodsService.shipping(order)
 
     return resjson.print_json(0, u'ok')
 

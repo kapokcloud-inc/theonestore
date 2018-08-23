@@ -1,0 +1,40 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('文章'), 'href':url_for('admin.post.index')}, {'title':g.page_title, 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="white-box">
+          <ul class="nav customtab nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+              <a href="javascript:;">
+                <span class="visible-xs">{{_('基本信息')}}</span>
+                <span class="hidden-xs">{{_('基本信息')}}</span>
+              </a>
+            </li>
+            <li role="presentation">
+              {% set href = url_for('admin.post.h5', post_id=item.post_id) if item.post_id else 'javascript:;' %}
+              {% set style = '' if item.post_id else 'cursor:not-allowed' %}
+              <a href="{{ href }}" style="{{ style }}">
+                <span class="visible-xs">{{_('详情')}}</span>
+                <span class="hidden-xs">{{_('详情')}}</span>
+              </a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="home1">
+              {{ libs.render_form(form,
+              action=url_for('admin.post.save'),
+              primary_key=form.post_id.data) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

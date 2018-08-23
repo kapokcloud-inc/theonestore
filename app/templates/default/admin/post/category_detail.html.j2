@@ -1,0 +1,22 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% import '/default/admin/libs/libs.html.j2' as libs %}
+
+{% block body %}
+<div id="page-wrapper">
+  {% set breadcrumbs = [{'title':_('分类'), 'href':url_for('admin.post.categories')}, {'title':g.page_title, 'href':""}] %}
+  {{ libs.breadcrumbs(breadcrumbs) }}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="white-box">
+          <h3 class="box-title m-b-0">{{_('文章分类基本信息填写')}}</h3>
+          <p class="text-muted m-b-30 font-13">{{_('输入下面的详细信息')}}</p>
+          {{ libs.render_form(form,
+              action=url_for('admin.post.category_save'),
+              primary_key=form.cat_id.data) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

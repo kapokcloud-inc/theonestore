@@ -30,6 +30,7 @@ from app.helpers.date_time import (
     before_after_timestamp
 )
 
+from app.services.weixin import WeixinMessageStaticMethodsService
 from app.services.admin.refunds import RefundsService
 
 from app.models.sys import SysSetting
@@ -148,6 +149,9 @@ class AfterSaleCheckService(object):
 
         AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
 
+        # 微信消息
+        WeixinMessageStaticMethodsService.aftersale_step(self.aftersale, _(u'已审核'), content)
+
         return True
 
 
@@ -198,6 +202,9 @@ class AfterSaleReceivedService(object):
 
         content = _(u'退货/换货商品已抵达，需要1-3个工作日处理，请耐心等待。')
         AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
+
+        # 微信消息
+        WeixinMessageStaticMethodsService.aftersale_step(self.aftersale, _(u'已签收'), content)
 
         return True
 
@@ -263,6 +270,9 @@ class AfterSaleResendService(object):
         # 添加日志
         content = _(u'服务专员已处理换货，包裹已发出，%s，快递单号:%s，请注意查收。' % (self.resend_shipping_name, self.resend_shipping_sn))
         AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
+
+        # 微信消息
+        WeixinMessageStaticMethodsService.aftersale_step(self.aftersale, _(u'已重发'), content)
 
         return True
 
