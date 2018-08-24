@@ -31,12 +31,12 @@ post = Blueprint('pc.post', __name__)
 def detail(post_id=0):
     """获取文章详情"""
     if post_id <= 0:
-        return render_template('pc/index/404.html.j2')
+        return redirect(url_for('pc.index.pagenotfound'))
 
     post      = PostStaticMethodsService.post_detail(post_id)
     
     if not post:
-        return render_template('pc/index/404.html.j2')
+        return redirect(url_for('pc.index.pagenotfound'))
 
     posts     = []
         #文章列表
