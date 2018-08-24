@@ -26,9 +26,9 @@ index = Blueprint('admin.index', __name__)
 @index.route('/')
 def root():
     """管理后台首页"""
-    admin_uid = session['admin_uid']
+    admin_uid = session.get('admin_uid', None)
     if admin_uid:
-        return redirect(url_for('index.dashboard'))
+        return redirect(url_for('admin.index.dashboard'))
 
     return_url = request.args.get('return_url', '/admin/dashboard')
     return redirect(url_for('admin.auth.login', return_url=return_url))

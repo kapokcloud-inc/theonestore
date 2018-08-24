@@ -341,6 +341,7 @@
   overflow: hidden;
 }
 .one-uploader_file {
+  position: relative;
   float: left;
   margin-right: 9px;
   margin-bottom: 9px;
@@ -631,6 +632,7 @@
   padding: 0 10px;
   font-size: 14px;
   color: #333;
+  border: 1px solid #ccc;
 }
 .aftersales-tips {
   font-size: 12px;
@@ -642,4 +644,18 @@
 }
 .reg-submit_btn .one-btn {
   border-radius: 0;
+}
+.delete-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
 }

@@ -85,6 +85,20 @@
       </div>
     </div>
   </div>
+
+  <!-- 删除图片弹窗 -->
+  <div class="weui-gallery" id="gallery">
+    <span class="weui-gallery__img" id="galleryImg">
+      <img class="gallery-pic" src="" alt="">
+    </span>
+    <div class="weui-gallery__opr">
+      <a href="javascript:" class="weui-gallery__del">
+        <i class="weui-icon-delete weui-icon_gallery-delete"></i>
+      </a>
+    </div>
+  </div>
+  <!-- 删除图片弹窗 end -->
+
   <div id="refunds_address_box" class="weui-cells weui-cells_form" style="display:none;">
     <div class="weui-cell">
       <div class="weui-cell__bd">
@@ -136,6 +150,51 @@
 <script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
 
 <script type="text/javascript">
+
+$(document).ready(function(){
+  var index;
+
+  //点击图片淡入放大
+  $('#uploaderFiles').on("click", "li", function () {
+    var $current = $(this);
+    index = $current.index();
+    var imgurl = $current.find('img').attr("src");
+    var imgurl_giant = imgurl.replace('-square.middle', '-square.giant');
+    $('.gallery-pic').attr("src", imgurl_giant);
+    $('#gallery').fadeIn(100);
+  });
+
+  //点击图片淡出消失
+  $('#gallery').on("click", function () {
+    $('#gallery').fadeOut(100);
+  });
+
+  //删除图片
+  $(".weui-gallery__del").click(function (event) {
+    event.stopPropagation();
+    var del = $('#uploaderFiles').find("li").eq(index).remove();
+    var imgurl = $('.gallery-pic').attr("src").replace('-square.giant', '');
+    var img_data = $("#img_data").val();
+    var img_list = JSON.parse(img_data);
+    var pos = img_list.indexOf(imgurl);
+    img_list.splice(pos, 1);
+    img_data = JSON.stringify(img_list);
+    $("#img_data").val(img_data);
+    $('#gallery').fadeOut(100);
+  });
+
+
+  $("#deliver_status").select({
+    title: "货物状态",
+    items: [{ 'title': '未收到货', 'value': 1 }, { 'title': '已收到货', 'value': 2 }]
+  });
+
+  $("#edit_address_pcd").cityPicker({
+    title: "请选择所在地"
+  });
+
+});
+
 var csrftoken = $('#csrf_token').val();
 $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
@@ -204,6 +263,13 @@ $('#uploaderInput').fileupload({
     url: "{{ url_for('api.upload.image') }}",
     dataType: 'json',
     formData:{'prefix':'aftersale'},
+    add: function (e, data) {
+      var html_text = '<li class="weui-uploader__file one-loading">' +
+        '<i class="weui-loading"></i>' +
+        '</li>';
+      $("#uploaderFiles").append(html_text);
+      data.submit();
+    },
     done: function (e, data) {
       if(data.result.ret == 0) {
         var image = data.result.data.image;
@@ -211,6 +277,9 @@ $('#uploaderInput').fileupload({
         var html_text = '<li class="weui-uploader__file">' +
                           '<img src="' + image + '-square.middle" alt="" data-value="' + image + '">' +
                         '</li>';
+        var $uploaderFiels = $('#uploaderFiles');
+        var $loading = $uploaderFiels.find('li.one-loading')[0];
+        $loading.remove();
         $("#uploaderFiles").append(html_text);
 
         // 把上传的图片加到列表上
@@ -265,16 +334,5 @@ function submit() {
     }
   });
 }
-
-$(document).ready(function () {
-  $("#deliver_status").select({
-    title: "货物状态",
-    items: [{'title':'未收到货', 'value':1}, {'title':'已收到货', 'value':2}]
-  });
-
-  $("#edit_address_pcd").cityPicker({
-    title: "请选择所在地"
-  });
-});
 </script> 
 {% endblock %}

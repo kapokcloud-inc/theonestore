@@ -357,6 +357,7 @@ color: @black-color;
     overflow: hidden;
   }
   &_file{
+    position: relative;
     float: left;
     margin-right: 9px;
     margin-bottom: 9px;
@@ -652,6 +653,7 @@ color: @black-color;
   padding: 0 10px;
   font-size: @font-size14;
   color: @black-color;
+  border: @border;
 }
 .aftersales-tips{
   font-size: 12px;
@@ -663,4 +665,18 @@ color: @black-color;
   .one-btn{
     border-radius: 0;
   }
+}
+.delete-box{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  font-size: @font-size16;
+  color: @white-color;
+  cursor: pointer;
 }

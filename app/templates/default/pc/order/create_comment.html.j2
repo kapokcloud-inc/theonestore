@@ -48,9 +48,11 @@
               </div>
             </div>
           </div>
+          
           <div class="reg-btn">
             {{ wtf_form.csrf_token }}
             <input id="og_id" type="hidden" value="{{ order_goods.og_id }}" />
+            <input id="img_data" name="img_data" type="hidden" value="[]" />
             <button type="button" class="one-btn" onclick="submit()">{{_('提交')}}</button>
           </div>
         </div>
@@ -72,16 +74,54 @@ $('#uploaderInput').fileupload({
   url: "{{ url_for('api.upload.image') }}",
   dataType: 'json',
   formData: { 'prefix': 'comment' },
+  add: function (e, data) {
+    var html_text = '<li class="one-uploader_file one-loading">' +
+                      '<img class="loadingImg" src="/static/default/pc/img/loading.gif" alt="">' +
+                    '</li>';
+    $("#uploaderFiles").append(html_text);
+    data.submit();
+  },
   done: function (e, data) {
     if (data.result.ret == 0) {
       var image = data.result.data.image;
-      var html_text = '<li class="one-uploader_file">' +
+      var html_text = '<li class="one-uploader_file" onmouseover="show(this)" onmouseout="hide(this)">' +
                         '<img src="' + image + '-square.small" alt="" data-value="' + image + '">' +
+                        '<div class="delete-box" onclick="delImg(this)">' + ' 删除 ' + '</div >' +
                       '</li>';
+      var $uploaderFiels = $('#uploaderFiles');
+      var $loading = $uploaderFiels.find('li.one-loading')[0];
+      $loading.remove();
       $("#uploaderFiles").append(html_text);
+
+      // 把上传的图片加到列表上
+      var img_data = $("#img_data").val();
+      var _img_data = JSON.parse(img_data);
+      _img_data.push(image);
+      img_data = JSON.stringify(_img_data);
+      $("#img_data").val(img_data);
     }
   }
 });
+
+function show(thisObj) {
+  $(thisObj).children("div").css("display", "block");
+}
+
+function hide(thisObj) {
+  $(thisObj).children("div").css("display", "none");
+}
+
+function delImg(obj) {
+  var imgurl = $(obj).prev().attr("src").replace('-square.small', '');
+  var img_data = $("#img_data").val();
+  var img_list = JSON.parse(img_data);
+  var pos = img_list.indexOf(imgurl);
+  img_list.splice(pos, 1);
+  img_data = JSON.stringify(img_list);
+  $("#img_data").val(img_data);
+  $(obj).parent("li").remove();
+}
+
 
 var csrftoken = $('#csrf_token').val();
 $.ajaxSetup({
@@ -98,12 +138,7 @@ function submit() {
   var og_id = $("#og_id").val();
   var rating = $(".rateON").attr('data-value');
   var content = $("#content").val();
-  var images = [];
-  
-  $(".one-uploader_file").each(function(i){
-    images.push($(this).attr('data-value'));
-  });
-  var img_data = JSON.stringify(images);
+  var img_data = $("#img_data").val();
 
   var params = {'og_id':og_id, 'rating':rating, 'content':content, 'img_data':img_data}
   $.post("{{ url_for('api.order.save_comment') }}", params, function(json) {

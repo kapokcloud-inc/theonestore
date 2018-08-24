@@ -50,6 +50,14 @@ class CategoryForm(Form):
                 )
     is_show      = BooleanField(_(u'是否显示'), false_values=(0, '0', ''), default=1)
 
+    sorting      = IntegerField(
+                    _(u'优先级'),
+                    description=_(u'注意：数值越大，优先级越高，排序越靠前'),
+                    validators=[NumberRange(min=0,max=9999)],
+                    default=0
+                )
+
+
 class PostForm(Form):
     """文章form"""
     post_id       = HiddenField(default=0)
@@ -69,7 +77,14 @@ class PostForm(Form):
                         ]
                     )
 
-    is_publish        = BooleanField(_(u'是否发布'), false_values=(0, '0', ''))
+    is_publish    = BooleanField(_(u'是否发布'), false_values=(0, '0', ''))
+
+    sorting       = IntegerField(
+                        _(u'优先级'),
+                        description=_(u'注意：数值越大，优先级越高，排序越靠前'),
+                        validators=[NumberRange(min=0,max=9999)],
+                        default=0
+                    )
 
     def __init__(self, *args, **kwargs):
         super(PostForm, self).__init__(*args, **kwargs)
@@ -83,3 +98,4 @@ class PostForm(Form):
 class PostH5Form(FlaskForm):
     """文章H5form"""
     post_id = IntegerField()
+
