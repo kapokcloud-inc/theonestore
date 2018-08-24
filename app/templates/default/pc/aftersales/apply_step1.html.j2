@@ -5,6 +5,8 @@
 <title>{{_('申请售后服务-第一步 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/pc/css/order.css">
 <link rel="stylesheet" href="/static/default/pc/css/aftersales.css">
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+<link rel="stylesheet" href="/static/default/pc/css/city-picker.css">
 {% endblock %}
 
 {% block body %}
@@ -26,8 +28,8 @@
                 <div class="order-progress">
                   <!-- 申请售后服务进度条 -->
                   <ul class="progress-list clearfix">
-                    <li class="step step-first step-active">{{_('选择产品和服务')}}</li>
-                    <li class="step">{{_('填写申请单')}}</li>
+                    <li class="step step-first step-done">{{_('选择产品和服务')}}</li>
+                    <li class="step step-active">{{_('填写申请单')}}</li>
                     <li class="step step-last">{{_('完成申请')}}</li>
                   </ul>
                   <!-- 申请售后服务进度条 end -->
@@ -93,14 +95,16 @@
                   <p class="greyGap">* {{ service_text }}</p>
                 </div>
                 {% if aftersales_type in [2,3] %}
-                  <div class="choice-goods">
-                    <p class="choice-goods_title">货物状态</p>
-                  </div>
-                  <div class="section-bd">
-                    <ul class="aftersales-type_list clearfix" data-type="deliver">
-                      <li class="aftersales-type_item" data-value="1">{{_('未收到货')}}</li>
-                      <li class="aftersales-type_item" data-value="2">{{_('已收到货')}}</li>
-                    </ul>
+                  <div id="deliver_status_box">
+                    <div class="choice-goods">
+                      <p class="choice-goods_title">货物状态</p>
+                    </div>
+                    <div class="section-bd">
+                      <ul class="aftersales-type_list clearfix" data-type="deliver">
+                        <li class="aftersales-type_item" data-value="1">{{_('未收到货')}}</li>
+                        <li class="aftersales-type_item" data-value="2">{{_('已收到货')}}</li>
+                      </ul>
+                    </div>
                   </div>
                 {% endif %}
                 
@@ -121,6 +125,33 @@
                     </div>
                   </div>
                 </div>
+
+                <div id="refunds_address_box" style="display:none;">
+                  <div class="choice-goods">
+                    <p class="choice-goods_title">您的收货地址</p>
+                  </div>
+                  <div class="section-bd">
+                    <div style="width:580px">
+                      <div class="bd-flex">
+                        <label class="bd-label">{{_('姓名：')}}</label>
+                        <input id="edit_address_name" class="bd-input" type="text" value="{{ order_address.name }}" placeholder="{{_('请填写收件人姓名')}}">
+                      </div>
+                      <div class="bd-flex">
+                        <label class="bd-label">{{_('手机号码：')}}</label>
+                        <input id="edit_address_mobile" class="bd-input" type="text" value="{{ order_address.mobile }}" placeholder="{{_('请填写收件人手机号码')}}">
+                      </div>
+                      <div class="bd-flex">
+                        <label class="bd-label">{{_('地区：')}}</label>
+                        <input id="edit_address_pcd" readonly class="bd-input city-picker-input" type="text">
+                      </div>
+                      <div class="bd-flex">
+                        <label class="bd-label">{{_('详细地址：')}}</label>
+                        <input id="edit_address_address" class="bd-input" type="text" value="{{ order_address.address }}" placeholder="{{_('请填写详细地址：如街道、道路、门牌号等')}}">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- 换货服务则不用显示退款金额 -->
                 {% set class_type = 'hide' if aftersales_type == 3 else '' %}
                 <p class="choice-goods_title {{ class_type }}" id="refund_amount_sum" >
@@ -133,6 +164,7 @@
                   {{ wtf_form.csrf_token }}
                   <input id="order_id" name="order_id" type="hidden" value="{{ order_id }}" />
                   <input id="og_id" name="og_id" type="hidden" value="{{ og_id }}" />
+                  <input id="aftersales_type" name="aftersales_type" type="hidden" value="{{ aftersales_type if aftersales_type == 1 else 2 }}" />
                   <a id="btn_next" class="one-btn btn-primary" onclick="return doNext()">{{_('下一步')}}</a>
                 </div>
               </div>
@@ -148,56 +180,13 @@
 <script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/vendor/jquery.ui.widget.js"></script>
 <script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.iframe-transport.js"></script>
 <script src="/static/default/mobile/js/jQuery-File-Upload-9.19.2/js/jquery.fileupload.js"></script>
+<script type="text/javascript" src="/static/default/pc/js/city-picker.data.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="/static/default/pc/js/city-picker.min.js" charset="utf-8"></script>
 <script type="text/javascript">
 var csrftoken = $('#csrf_token').val();
 $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
-
-//切换服务类型选中状态
-$(".aftersales-type_item").click(function () {
-  $(this).addClass('allActive').siblings().removeClass('allActive');
-
-  var data_type = $(this).parent().attr("data-type");
-  //服务类型的选项才会影响退款金额的显示
-  if ( data_type === 'service' ){
-    var aftersales_type = $(this).attr("data-value");
-    //换货不用显示退款金额
-    if ( aftersales_type == 3 ){
-      if( !$('#refund_amount_sum').hasClass('hide') ){
-        $('#refund_amount_sum').addClass('hide')
-      }
-    }else {
-      $('#refund_amount_sum').removeClass('hide')
-    }
-  }
-});
-
-//点击数量减号
-$('.num_minus').click(function (e) {
-
-    var $input = $('#remain_quantity');
-    var MIN    = parseInt($input.attr('minnum'));
-    var number = parseInt($input.val() || "0") - 1;
-  
-    if (number < MIN) number = MIN;
-    $input.val(number);
-
-    //退货退款时，退款金额岁数量变化
-    calculateRefundsAmount(number);
-    
-  })
-
-  //点击数量加号
-$('.num_add').click(function (e) {
-    var $input = $('#remain_quantity');
-    var MAX    = parseInt($input.attr('maxnum'));
-    var number = parseInt($input.val() || "0") + 1;
-
-    if (number > MAX) number = MAX;
-    $input.val(number);
-    calculateRefundsAmount(number);
-  })
 
 //退款金额计算
 function calculateRefundsAmount(quantity){
@@ -208,78 +197,196 @@ function calculateRefundsAmount(quantity){
       if (json.ret == 0) {
         $("#refunds_amount").text('￥'+json.data.refunds_amount);
       } else {
-        alert(json.msg, "text");
+        alert(json.msg);
         return false;
       }
     });
   }
 }
 
-//图片上传
-$('#uploaderInput').fileupload({
-    url: "{{ url_for('api.upload.image') }}",
-    dataType: 'json',
-    formData:{'prefix':'comment'},
-    done: function (e, data) {
-      if(data.result.ret == 0) {
-        var image = data.result.data.image;
-        var html_text = '<li class="one-uploader_file">' +
-                          '<img src="' + image + '-square.small" alt="" data-value="' + image + '">' +
-                        '</li>';
-        $("#uploaderFiles").append(html_text);
-      }
-    }
-});
-
-//点击下一步按钮
-function doNext(){
-  var aftersales_type = $("[data-type='service']").children('.allActive').attr("data-value");
-
-  var order_id = $("#order_id").val();
-  var content = $("#content").val();
+//获取上传图片数据
+function get_img_data() {
   var images = [];
-  $(".one-uploader_file").each(function(i){
+
+  $(".one-uploader_file").each(function(i) {
     var $img = $(this).find('img');
     var img_url = $img.attr('data-value');
     images.push(img_url);
   });
-  var img_data = JSON.stringify(images);
 
-  if( aftersales_type == 1 ){//整单退款，提交申请
-    
-    var params = {'order_id':order_id, 'aftersales_type':1, 'deliver_status':0, 'content':content, 'img_data':img_data};
-    
-  }else if( aftersales_type == 2 || aftersales_type == 3){//单商品退货退款，提交申请
-    var og_id = parseInt($("#og_id").val());
-    var deliver_status = $("[data-type='deliver']").children('.allActive').attr("data-value");
-    var quantity =  parseInt($("#remain_quantity").val());
-    if ( typeof(deliver_status) == "undefined" ){
-      alert('请选择货物状态')
-      return false;
+  return JSON.stringify(images);
+}
+
+//提交申请
+function apply(params, aftersales_type) {
+  $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
+    if (json.ret == 0) {
+      //优化alert ??
+      var aftersales_id = json.data.aftersales_id;
+
+      window.location.href = "{{ url_for('pc.aftersales.apply_step2') }}?aftersales_type="+aftersales_type+"&aftersales_id="+aftersales_id;
+    } else {
+      alert(json.msg);
     }
+  });
+}
 
-    var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':aftersales_type, 'deliver_status':deliver_status, 'content':content, 'img_data':img_data};
-  }else{
-    alert('请选择售后服务类型')
+//aftersales_type_1
+function aftersales_type_1(params) {
+  var order_id = $("#order_id").val();
+
+  params.order_id = order_id;
+  params.aftersales_type = 1;
+  params.deliver_status = 0;
+
+  apply(params, 1);
+}
+
+//aftersales_type_2
+function aftersales_type_2(params) {
+  var og_id = $("#og_id").val();
+  var quantity = $("#remain_quantity").val();
+  var deliver_status = $("[data-type='deliver']").children('.allActive').attr("data-value");
+
+  if ( typeof(deliver_status) == "undefined" ){
+    alert('请选择货物状态');
     return false;
   }
-  
-  if(aftersales_type == 1 || aftersales_type == 2){
-    //仅退款和退货退款直接提交申请
-    $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
-      if (json.ret == 0) {
-        aftersales_id = json.data.aftersales_id
-        window.location.href = "{{ url_for('pc.aftersales.apply_step3') }}" + "?aftersales_type=" + aftersales_type + "&aftersales_id=" + aftersales_id;
-      } else {
-        alert(json.msg,'text');
-        return false;
-      }
-    });
-  }else{
-    //仅换货跳转地址编辑页面
 
+  params.og_id = og_id;
+  params.quantity = quantity;
+  params.deliver_status = deliver_status;
+  params.aftersales_type = 2;
+
+  apply(params, 2);
+}
+
+//aftersales_type_3
+function aftersales_type_3(params) {
+  var og_id = $("#og_id").val();
+  var quantity = $("#remain_quantity").val();
+  var name = $("#edit_address_name").val();
+  var mobile = $("#edit_address_mobile").val();
+  var pcd = $("#edit_address_pcd").val();
+  var address = $("#edit_address_address").val();
+  var pcd_arr = pcd.split('/');
+  var province = pcd_arr[0];
+  var city = pcd_arr[1];
+  var district = pcd_arr[2];
+
+  params.og_id = og_id;
+  params.quantity = quantity;
+  params.deliver_status = 0;
+  params.aftersales_type = 3;
+  params.name = name;
+  params.mobile = mobile;
+  params.province = province;
+  params.city = city;
+  params.district = district;
+  params.address = address;
+
+  apply(params, 3);
+}
+
+//点击下一步按钮
+function doNext(){
+  var aftersales_type = $("#aftersales_type").val();
+
+  var content = $("#content").val();
+  var img_data = get_img_data();
+  var params = {'content':content, 'img_data':img_data};
+
+  //仅退款
+  if(aftersales_type == 1) {
+    aftersales_type_1(params);
+  }
+
+  //退货退款
+  if(aftersales_type == 2) {
+    aftersales_type_2(params);
+  }
+
+  //仅退款
+  if(aftersales_type == 3) {
+    aftersales_type_3(params);
   }
 }
 
+$(document).ready(function () {
+  $("#edit_address_pcd").citypicker({
+    province: '{{ order_address.province }}',
+    city:  '{{ order_address.city }}',
+    district: '{{ order_address.district }}'
+  });
+
+  //点击数量减号
+  $('.num_minus').click(function (e) {
+    var $input = $('#remain_quantity');
+    var MIN    = parseInt($input.attr('minnum'));
+    var number = parseInt($input.val() || "0") - 1;
+
+    if (number < MIN) number = MIN;
+    $input.val(number);
+
+    //退货退款时，退款金额岁数量变化
+    calculateRefundsAmount(number);
+  });
+
+  //点击数量加号
+  $('.num_add').click(function (e) {
+      var $input = $('#remain_quantity');
+      var MAX    = parseInt($input.attr('maxnum'));
+      var number = parseInt($input.val() || "0") + 1;
+
+      if (number > MAX) number = MAX;
+      $input.val(number);
+      calculateRefundsAmount(number);
+  });
+
+  //图片上传
+  $('#uploaderInput').fileupload({
+      url: "{{ url_for('api.upload.image') }}",
+      dataType: 'json',
+      formData:{'prefix':'comment'},
+      done: function (e, data) {
+        if(data.result.ret == 0) {
+          var image = data.result.data.image;
+          var html_text = '<li class="one-uploader_file">' +
+                            '<img src="' + image + '-square.small" alt="" data-value="' + image + '">' +
+                          '</li>';
+          $("#uploaderFiles").append(html_text);
+        }
+      }
+  });
+
+  //切换服务类型选中状态
+  $(".aftersales-type_item").click(function () {
+    $(this).addClass('allActive').siblings().removeClass('allActive');
+
+    var data_type = $(this).parent().attr("data-type");
+    if ( data_type === 'service' ){
+      var aftersales_type = $(this).attr("data-value");
+
+      //换货不用显示退款金额
+      if ( aftersales_type == 3 ){
+        if( !$('#refund_amount_sum').hasClass('hide') ){
+          $('#refund_amount_sum').addClass('hide');
+        }
+        $("#refunds_address_box").show();
+      }else {
+        $('#refund_amount_sum').removeClass('hide');
+        $("#refunds_address_box").hide();
+      }
+
+      if (aftersales_type == 2) {
+        $("#deliver_status_box").show();
+      } else {
+        $("#deliver_status_box").hide();
+      }
+
+      $("#aftersales_type").val(aftersales_type);
+    }
+  });
+});
 </script>
 {% endblock%}

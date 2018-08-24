@@ -59,19 +59,23 @@
           </div>
         </div>
         {% set og_aftersale_status = ogs_aftersale_status.get(item.og_id, 0) %}
-        {% if og_aftersale_status == 1 %}
+        {% if og_aftersale_status['status_code'] == 1 %}
           <div class="weui-cell__ft applySale" data-value="{{ item.og_id }}">
             <button type="button" class="order_btn">{{_('申请售后')}}</button>
           </div>
-        {% elif og_aftersale_status == 2 %}
+        {% elif og_aftersale_status['status_code'] == 2 %}
+          <div class="weui-cell__ft">
+            <button type="button" class="order_btn">{{_('受理中')}}</button>
+          </div>
+        {% elif og_aftersale_status['status_code'] == 3 %}
           <div class="weui-cell__ft">
             <button type="button" class="order_btn">{{_('已退款')}}</button>
           </div>
-        {% elif og_aftersale_status == 3 %}
+        {% elif og_aftersale_status['status_code'] == 4 %}
           <div class="weui-cell__ft">
             <button type="button" class="order_btn">{{_('已换货')}}</button>
           </div>
-        {% elif og_aftersale_status == 4 %}
+        {% elif og_aftersale_status['status_code'] == 5 %}
           <div class="weui-cell__ft">
             <button type="button" class="order_btn">{{_('已退款，已换货')}}</button>
           </div>
@@ -124,12 +128,6 @@
     <div class="weui-cell">
       <div class="weui-cell__bd"></div>
       <div class="weui-cell__ft">
-        {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 and not aftersale %}
-          <a href="{{ url_for('mobile.aftersales.apply', order_id=order.order_id) }}">
-            <button type="button" class="order_btn order-state_btn">{{_('申请退款')}}</button>
-          </a>
-        {% endif %}
-
         {% for _code in code %}
           {% if _code == 1 %}
             <a href="{{ url_for('mobile.cart.checkout', order_id=order.order_id, is_pay_now=0) }}">
@@ -154,6 +152,11 @@
           {% endif %}
           {% if _code == 6 %}
             <button type="button" class="order_btn" onclick="del({{ order.order_id }})">{{_('删除订单')}}</button>
+          {% endif %}
+          {% if _code == 8 %}
+            <a href="{{ url_for('mobile.aftersales.apply', order_id=order.order_id) }}">
+              <button type="button" class="order_btn order-state_btn">{{_('申请退款')}}</button>
+            </a>
           {% endif %}
         {% endfor %}
       </div>

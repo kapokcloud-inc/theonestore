@@ -49,29 +49,29 @@
                         <div class="greyGap mar-top">数量 x{{ quantity }}</div>
                       </div>
 
-                      <!-- 申请售后的条件，非取消的订单，已支付，已发货，发货后15天内，对应商品还有未申请售后的 -->
-                      {% set limit_time = order.shipping_time|before_after_timestamp({'days':15}) %}
-                      {% if order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 %}
-                        {% if limit_time >= current_time and item.goods_quantity > item.aftersales_goods_quantity  %}
-                          <!-- 未申请的商品，此按钮显示 -->
-                          <div class="review-btn_wrap" data-value="">
-                            <a class="review-btn_link btn-primary" href="{{ url_for('pc.aftersales.apply_step1', og_id= item.og_id) }}">{{_('申请售后')}}</a>
-                          </div>
-                          <!-- 未申请的商品，此按钮显示 end -->
-                        {% elif aftersale_all %}
-                          <!-- 2=售后处理中 -->
-                          {% for aftersale in aftersale_all %}
-                            {% set good = aftersale.goods_data|json_loads|first() if aftersale.goods_data %}
-                            {% if item.og_id == good.og_id %}
-                              <!-- 已申请的商品，此按钮显示 -->
-                              <div class="review-btn_wrap" data-value="">
-                                <a class="review-btn_link" href="{{ url_for('pc.aftersales.detail', aftersales_id=aftersale.aftersales_id) }}">{{_('售后受理中')}}</a>
-                              </div>
-                              <!-- 已申请的商品，此按钮显示 end -->
-                            {% endif %}
-                          {% endfor %}
-                        {% endif %}
+                      {% set og_aftersale_status = ogs_aftersale_status.get(item.og_id, 0) %}
+                      {% if og_aftersale_status['status_code'] == 1 %}
+                        <div class="review-btn_wrap" data-value="">
+                          <a class="review-btn_link btn-primary" href="{{ url_for('pc.aftersales.apply_step1', og_id= item.og_id) }}">{{_('申请售后')}}</a>
+                        </div>
+                      {% elif og_aftersale_status['status_code'] == 2 %}
+                        <div class="review-btn_wrap" data-value="">
+                          <a class="review-btn_link" href="{{ url_for('pc.aftersales.detail', aftersales_id=og_aftersale_status['aftersales_id']) }}">{{_('售后受理中')}}</a>
+                        </div>
+                      {% elif og_aftersale_status['status_code'] == 3 %}
+                        <div class="review-btn_wrap" data-value="">
+                          <a class="review-btn_link" href="javascript:;">{{_('已退款')}}</a>
+                        </div>
+                      {% elif og_aftersale_status['status_code'] == 4 %}
+                        <div class="review-btn_wrap" data-value="">
+                          <a class="review-btn_link" href="javascript:;">{{_('已换货')}}</a>
+                        </div>
+                      {% elif og_aftersale_status['status_code'] == 5 %}
+                        <div class="review-btn_wrap" data-value="">
+                          <a class="review-btn_link" href="javascript:;">{{_('已退款，已换货')}}</a>
+                        </div>
                       {% endif %}
+
                     </li>
                   {% endfor %}
                 </ul>

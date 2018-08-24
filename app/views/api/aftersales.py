@@ -54,6 +54,7 @@ def apply():
     if not wtf_form.validate_on_submit():
         for key,value in wtf_form.errors.items():
             msg = value[0]
+        log_info('#####msg:%s' % msg)
         return resjson.print_json(11, msg)
 
     og_id           = toint(request.form.get('og_id', '0'))
@@ -69,9 +70,11 @@ def apply():
             'content':content, 'img_data':img_data}
     ascs = AfterSalesCreateService(**data)
     if not ascs.check():
+        log_info('#####ascs.msg:%s' % ascs.msg)
         return resjson.print_json(12, ascs.msg)
 
     aftersales_id = ascs.create()
+    log_info('#####aftersales_id:%s' % aftersales_id)
 
     return resjson.print_json(0, u'ok', {'aftersales_id':aftersales_id})
 
@@ -114,6 +117,7 @@ def return_goods():
 
     aftersales_id      = toint(request.form.get('aftersales_id', '0'))
     return_shipping_sn = request.form.get('return_shipping_sn', '').strip()
+    current_time       = current_timestamp()
 
     if aftersales_id <= 0 or return_shipping_sn == '':
         return resjson.print_json(resjson.PARAM_ERROR)
@@ -131,6 +135,9 @@ def return_goods():
         return resjson.print_json(12, _(u'寄回状态错误'))
 
     data = {'return_shipping_sn':return_shipping_sn, 'return_status':2}
-    model_update(aftersales, data, commit=True)
+    model_update(aftersales, data)
+
+    content = _(u'快递单号:%s，我们收到退货/换货商品后，需要1-3个工作日处理，请耐心等待。' % return_shipping_sn)
+    AfterSalesStaticMethodsService.add_log(aftersales_id, content, current_time, commit=True)
 
     return resjson.print_json(0, u'ok')

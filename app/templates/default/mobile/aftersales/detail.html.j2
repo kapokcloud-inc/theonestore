@@ -122,7 +122,7 @@
     </div>
   {% endif %}
   
-  {% if aftersales.aftersales_type in [2,3] %}
+  {% if aftersales.aftersales_type in [2,3] and aftersales.check_status == 2 %}
     <div class="weui-cells weui-cells_form">
       <div class="weui-cell">
         <div class="weui-cell__bd blackGap">{{_('商品寄回信息')}}</div>
@@ -185,12 +185,12 @@ $.ajaxSetup({
   headers: {'X-CSRFToken':csrftoken}
 });
 
- var aftersales_id = {{ aftersales.aftersales_id }};
+var aftersales_id = {{ aftersales.aftersales_id }};
 
- function submit() {
-   var return_shipping_sn = $("#return_shipping_sn").val();
+function submit() {
+  var return_shipping_sn = $("#return_shipping_sn").val();
 
-   var params = {'aftersales_id':aftersales_id, 'return_shipping_sn':return_shipping_sn}
+  var params = {'aftersales_id':aftersales_id, 'return_shipping_sn':return_shipping_sn};
   $.post("{{ url_for('api.aftersales.return_goods') }}", params, function(json) {
     if (json.ret == 0) {
       location.reload();
@@ -200,7 +200,7 @@ $.ajaxSetup({
       return false;
     }
   });
- }
+}
  
 $(document).ready(function(){
   /* 点击显示大图 */

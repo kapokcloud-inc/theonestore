@@ -179,16 +179,20 @@ def apply_step1():
             if not ret:
                 return redirect(url_for('pc.index.pagenotfound'))
 
-        data = {'wtf_form':wtf_form, 'order_id':order_id, 'og_id':og_id, 'items':ascs.order_goods_list, 'goods_data':ascs.goods_data, 'refunds_amount':ascs.refunds_amount, 'aftersales_type':aftersales_type, 'current_time':current_timestamp()}
-
+        data = {'wtf_form':wtf_form, 'order_id':order_id, 'og_id':og_id,
+                'items':ascs.order_goods_list, 'goods_data':ascs.goods_data,
+                'refunds_amount':ascs.refunds_amount,
+                'aftersales_type':aftersales_type, 'current_time':current_timestamp(),
+                'order_address':ascs.order_address}
         return render_template('pc/aftersales/apply_step1.html.j2', **data)
 
 
 @aftersales.route('/apply/step2')
 def apply_step2():
     """pc站 - 申请售后服务-第二步"""
+    data = request.args.to_dict()
 
-    return render_template('pc/aftersales/apply_step2.html.j2')
+    return render_template('pc/aftersales/apply_step2.html.j2', **data)
 
 
 @aftersales.route('/apply/step3/')

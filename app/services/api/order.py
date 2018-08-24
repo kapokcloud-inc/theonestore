@@ -824,7 +824,7 @@ class OrderStaticMethodsService(object):
         """获取订单状态和订单指令"""
 
         status_text = u''   # 订单状态: 已取消; 待付款; 待收货; 待评价; 已完成;
-        action_code = []    # 订单指令: 0.无指令; 1.付款; 2.取消订单; 3.查看物流; 4.确认收货; 5.再次购买; 6.删除订单; 7.申请售后;
+        action_code = []    # 订单指令: 0.无指令; 1.付款; 2.取消订单; 3.查看物流; 4.确认收货; 5.再次购买; 6.删除订单; 7.申请售后; 8.申请退款;
 
         current_time = current_timestamp()
         min_pay_time = min_pay_time if min_pay_time else before_after_timestamp(current_time, {'days':1})
@@ -846,7 +846,7 @@ class OrderStaticMethodsService(object):
             if order.pay_status == 2:
                 if order.shipping_status == 1:
                     status_text = _(u'待收货')
-                    action_code = [5,7]
+                    action_code = [5,8]
 
                     return (status_text, action_code)
 
@@ -952,8 +952,18 @@ class OrderStaticMethodsService(object):
                 (order.shipping_status == 2) and\
                 (limit_time >= current_time) and\
                 (og.goods_quantity > og.aftersales_goods_quantity):
-                ogs_aftersale_status[og.og_id] = 1
+                ogs_aftersale_status[og.og_id] = {'status_code':1, 'aftersales_id':0}
                 continue
+
+            # 售后处理中
+            aftersales_goods = db.session.query(AftersalesGoods.ag_id, Aftersales.aftersales_id).\
+                                    filter(AftersalesGoods.aftersales_id == Aftersales.aftersales_id).\
+                                    filter(AftersalesGoods.og_id == og.og_id).\
+                                    filter(Aftersales.status.in_([1,2])).first()
+            if aftersales_goods:
+                ogs_aftersale_status[og.og_id] = {'status_code':2, 'aftersales_id':aftersales_goods.aftersales_id}
+                continue
+                                    
 
             # 完成售后的状态
             if order.order_status == 4:
@@ -965,7 +975,7 @@ class OrderStaticMethodsService(object):
                                     filter(Aftersales.status == 3).first()
                 _refund_sum = refund_sum.sum if refund_sum.sum else 0
                 if _refund_sum == og.goods_quantity:
-                    ogs_aftersale_status[og.og_id] = 2
+                    ogs_aftersale_status[og.og_id] = {'status_code':3, 'aftersales_id':0}
                     continue
 
                 exchange_sum = db.session.\
@@ -976,11 +986,11 @@ class OrderStaticMethodsService(object):
                                     filter(Aftersales.status == 3).first()
                 _exchange_sum = exchange_sum.sum if exchange_sum.sum else 0
                 if _exchange_sum == og.goods_quantity:
-                    ogs_aftersale_status[og.og_id] = 3
+                    ogs_aftersale_status[og.og_id] = {'status_code':4, 'aftersales_id':0}
                     continue
 
                 if (_refund_sum + _exchange_sum) == og.goods_quantity:
-                    ogs_aftersale_status[og.og_id] = 4
+                    ogs_aftersale_status[og.og_id] = {'status_code':5, 'aftersales_id':0}
                     continue
 
             ogs_aftersale_status[og.og_id] = 0
