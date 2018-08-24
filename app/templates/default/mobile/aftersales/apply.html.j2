@@ -293,16 +293,16 @@ $('#uploaderInput').fileupload({
 });
 
 function submit() {
-  var og_id = $("#og_id").val();
-  var quantity = $("#quantity").val();
-  var aftersales_type = $("#aftersales_type").val();
-  var deliver_status = $("#deliver_status").attr('data-values');
+  var og_id = parseInt($("#og_id").val());
+  var quantity = parseInt($("#quantity").val());
+  var aftersales_type = parseInt($("#aftersales_type").val());
+  var deliver_status = parseInt($("#deliver_status").attr('data-values'));
   var content = $("#content").val();
   var img_data = $("#img_data").val();
 
-  //if (aftersales_type == 2 || aftersales_type == 3) {
-  //  deliver_status = 2;
-  //}
+  if (aftersales_type == 3) {
+    deliver_status = 2;
+  }
 
   var params = {'og_id':og_id, 'quantity':quantity, 'aftersales_type':aftersales_type, 'deliver_status':deliver_status, 'content':content, 'img_data':img_data, 'name':name, 'mobile':mobile, 'province':province, 'city':city, 'district':district,
   'address':address};

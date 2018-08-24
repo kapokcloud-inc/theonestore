@@ -216,12 +216,9 @@ class AfterSalesCreateService(object):
             return False
 
         # 检查
-        if self.aftersales_type == 1:
-            if self.og_id > 0 and self.deliver_status == 0:
-                self.msg = _(u'请选择货物状态')
-                return False
-        else:
-            self.deliver_status = 2
+        if self.aftersales_type == 2 and self.deliver_status == 0:
+            self.msg = _(u'请选择货物状态')
+            return False
 
         # 检查
         if not self.content:
@@ -241,6 +238,9 @@ class AfterSalesCreateService(object):
             if self.aftersales_type == 3:
                 if not self.__check_address():
                     return False
+
+        if self.aftersales_type == 3:
+            self.deliver_status = 2
 
         return True
 

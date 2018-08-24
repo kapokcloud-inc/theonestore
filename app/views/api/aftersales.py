@@ -54,7 +54,6 @@ def apply():
     if not wtf_form.validate_on_submit():
         for key,value in wtf_form.errors.items():
             msg = value[0]
-        log_info('#####msg:%s' % msg)
         return resjson.print_json(11, msg)
 
     og_id           = toint(request.form.get('og_id', '0'))
@@ -70,11 +69,9 @@ def apply():
             'content':content, 'img_data':img_data}
     ascs = AfterSalesCreateService(**data)
     if not ascs.check():
-        log_info('#####ascs.msg:%s' % ascs.msg)
         return resjson.print_json(12, ascs.msg)
 
     aftersales_id = ascs.create()
-    log_info('#####aftersales_id:%s' % aftersales_id)
 
     return resjson.print_json(0, u'ok', {'aftersales_id':aftersales_id})
 
