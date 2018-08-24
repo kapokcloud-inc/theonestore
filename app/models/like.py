@@ -18,7 +18,7 @@ class Like(BaseModel, db.Model):
     like_type = db.Column(db.Integer, default=0)
     uid = db.Column(db.Integer, default=0)
     nickname = db.Column(db.String(32), default='')
-    avatar = db.Column(db.String(128), default='')
+    avatar = db.Column(db.String(255), default='')
     ttype = db.Column(db.Integer, default=0)
     tid = db.Column(db.Integer, default=0)
     tname = db.Column(db.String(255), default='')

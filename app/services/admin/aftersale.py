@@ -457,17 +457,21 @@ class AfterSaleStaticMethodsService(object):
     def update_order_status(order_id, is_commit=False):
         """更新订单状态"""
 
+        aftersale_status = 0
+
         refund = Aftersales.query.\
                     filter(Aftersales.order_id == order_id).\
                     filter(Aftersales.aftersales_type.in_([1,2])).\
                     filter(Aftersales.status == 3).first()
-        aftersale_status = 1
+        if refund:
+            aftersale_status = 1
 
         exchange = Aftersales.query.\
                     filter(Aftersales.order_id == order_id).\
                     filter(Aftersales.aftersales_type == 3).\
                     filter(Aftersales.status == 3).first()
-        aftersale_status = 2
+        if exchange:
+            aftersale_status = 2
 
         if refund and exchange:
             aftersale_status = 3

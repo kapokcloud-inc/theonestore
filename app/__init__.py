@@ -68,6 +68,7 @@ def configure_before(app):
                 # 未读消息数
                 g.unread_count = UserStaticMethodsService.unread_count(uid)
         
+        
         # PC待评价数
         if (endpoint.find('pc.order') == 0) or (endpoint.find('pc.aftersales') == 0) or (endpoint.find('pc.me')  == 0) or (endpoint.find('pc.wallet')  == 0):
 

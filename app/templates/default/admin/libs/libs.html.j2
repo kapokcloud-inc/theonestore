@@ -201,9 +201,9 @@
     <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3{%if field.errors%} has-error{%endif%}">
     {# 布尔类型 #}
     {% if field.type == 'BooleanField' %}
-      <div class="checkbox checkbox-success `">
-          {{ field(**kwargs) }}
-          <label for="{{ field.id }}">{{ field.description|safe }}</label>
+      <div class="checkbox checkbox-success ">
+        {{ field(**kwargs) }}
+        <label for="{{ field.id }}">{{ field.description|safe }}</label>
       </div>
     {% else %}
       {% set class_ = 'form-control' %}
@@ -212,19 +212,15 @@
         {% set class_ = class_ + ' input-file' %}
         {% set uploadtype = field|get_file_uploadtype %}
         {% if field.flags.required and not field.data %}
-          {{ field(class_=class_, required='', uploadtype=uploadtype, **kwargs) }}
+          {{ field(class_=class_, required=True, uploadtype=uploadtype, **kwargs) }}
         {% else %}
-          {{ field(class_=class_, uploadtype=uploadtype, **kwargs) }}
+          {{ field(class_=class_, required=False, uploadtype=uploadtype, **kwargs) }}
         {% endif %}
 
       {% elif field.type in ('TextField', 'TextAreaField', 'PasswordField', 
             'DecimalField', 'SelectField', 'IntegerField', 
             'StringField') %}
-        {% if field.flags.required %}
-          {{ field(class_=class_, required='', **kwargs) }}
-        {% else %}
-          {{ field(class_=class_, **kwargs) }}
-        {% endif %}
+        {{ field(class_=class_, required=field.flags.required, **kwargs) }}
       {% endif %}
     {% endif %}
 

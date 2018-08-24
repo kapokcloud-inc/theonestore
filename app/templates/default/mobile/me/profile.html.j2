@@ -16,7 +16,7 @@
       <div class="weui-cell__bd all-ava">
         <input id="image" name="image" class="weui-uploader__input" type="file" accept="image/*">
         <input id="avatar" name="avatar" type="hidden" value="{{ user.avatar }}" />
-        <img id="avatar_img" src="{{ user.avatar|format_avatar(0) }}" alt="" class="all-ava_img">
+        <img id="avatar_img" src="{{ user.avatar|format_avatar }}" alt="" class="all-ava_img">
       </div>
     </div>
     <div class="weui-cell">

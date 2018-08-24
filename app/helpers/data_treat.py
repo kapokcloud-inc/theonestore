@@ -37,22 +37,41 @@ def format_amount(sourcePrice=0):
         return sourcePrice
   
     
-def format_avatar(soruceImg,avatartype = 0):
-    ''' 处理头像路径 '''
-    if soruceImg == None or soruceImg == "":
+def format_avatar(soruceImg, avatartype = 1):
+    """ 处理头像路径 
+    @param soruceImg, 源图片url
+    @param avatartype, 头像类型
+            0:-square.micro, 超小正方形50x50
+            1:-square.small, 小正方形100x100
+            2:-square.middle, 中正方形200x200
+            3:-square.large, 大正方形400x400
+            4:-square.giant, 超大正方形800x800
+    """
+
+    if not soruceImg:
         return ''
 
-    if soruceImg.find('thirdwx.qlogo.cn') == -1 and soruceImg.find('aliyun.kapokcloud.com') == -1:
-        return soruceImg
-
-    soruceImg = soruceImg.replace('http:','')
-    soruceImg = soruceImg.replace('https:','')
-
-    imgtypes = {0:'-square.small', 1:'-square.middle', 2:'-square.micro', 3:'-square.large', 4:'square.large', 5:'square.giant'}
-
-    #微信头像或已是七牛小图则返回原图，否则在为七牛资源的前提下拿小图(头像样式)
-    if soruceImg.find('thirdwx.qlogo.cn') != -1 or soruceImg.find(imgtypes[avatartype]) != -1:
-        return soruceImg
-    else:
-        return soruceImg + imgtypes[avatartype]
+    http = 'http:'
+    https =  'https:'
+    # http://theonestore.cn/default.png => //theonestore.cn/default.png
+    if soruceImg[:5] == http:
+        soruceImg = soruceImg[5:]
     
+    # https://theonestore.cn/default.png => //theonestore.cn/default.png
+    elif soruceImg[:6] == https:
+        soruceImg = soruceImg[6:]
+
+    imgtypes = {
+        0:'-square.micro', 
+        1:'-square.small', 
+        2:'-square.middle', 
+        3:'-square.large', 
+        4:'-square.giant', 
+    }
+
+    # 微信头像
+    if soruceImg.find('//thirdwx.qlogo.cn') == 0:
+        return soruceImg
+
+    # 阿里云或者七牛图片资源
+    return soruceImg + imgtypes[avatartype]

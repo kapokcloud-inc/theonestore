@@ -168,7 +168,7 @@ def address(ua_id):
     if ua_id > 0:
         address = UserAddress.query.filter(UserAddress.ua_id == ua_id).filter(UserAddress.uid == uid).first()
         if not address:
-            return redirect(request.headers['Referer'])
+            return redirect(url_for('mobile.index.pagenotfound'))
 
     wtf_form = AddressForm()
 

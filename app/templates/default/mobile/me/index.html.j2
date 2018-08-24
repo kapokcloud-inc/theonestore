@@ -11,7 +11,7 @@
   <div class="weui-cells weui-cells_form">
     <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.me.profile') }}">
       <div class="weui-cell__hd avatar mar-right">
-        <img src="{{ avatar|format_avatar(0) }}" alt="">
+        <img src="{{ avatar|format_avatar }}" alt="">
       </div>
       <div class="weui-cell__bd">{{ nickname }}</div>
       <div class="weui-cell__ft">{{_('修改')}}</div>

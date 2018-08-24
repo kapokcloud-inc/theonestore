@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+.post-name{
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+    margin-bottom: 20px
+}
+
+.post-name-text{
+    color: #666;
+    font-size: 36px
+}

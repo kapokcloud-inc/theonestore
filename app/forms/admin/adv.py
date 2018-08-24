@@ -98,7 +98,7 @@ class AdvForm(Form):
 
     img     = FileField(
                     _(u'封面原图'),
-                    description=_(u'图片文件'),
+                    description=_(u'电脑端图片最佳尺寸1170x440<br>移动端图片最佳尺寸1080x540'),
                     validators=[
                         FileRequired(_(u'文件未上传')), 
                         FileAllowed(UploadSet('images', IMAGES), message=_(u'只允许上传图片'))

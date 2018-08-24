@@ -17,3 +17,4 @@ from .aftersales import aftersales
 from .pay import pay
 from .me import me
 from .wallet import wallet
+from .post import post
