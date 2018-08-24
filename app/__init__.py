@@ -68,19 +68,6 @@ def configure_before(app):
                 # 未读消息数
                 g.unread_count = UserStaticMethodsService.unread_count(uid)
         
-        if endpoint.find('pc.') == 0:
-            from app.services.api.post import PostStaticMethodsService
-            # foot 文章分类列表
-            posts_categories = PostStaticMethodsService.categories()
-            # 文章列表
-            posts      = {}
-
-            for category in posts_categories:
-                posts[category.cat_id] = PostStaticMethodsService.posts(category.cat_id)
-            
-            g.pc_posts_categories = posts_categories
-            g.pc_posts            = posts
-
         
         # PC待评价数
         if (endpoint.find('pc.order') == 0) or (endpoint.find('pc.aftersales') == 0) or (endpoint.find('pc.me')  == 0) or (endpoint.find('pc.wallet')  == 0):

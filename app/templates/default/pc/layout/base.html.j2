@@ -179,16 +179,78 @@
     <div class="bg-white clearfix">
       <div class="head-inner">
         <div class="footer-links clearfix">
-          {% for item in g.pc_posts_categories %}
-            <dl class="col-links">
-              <dt>{{ item.cat_name }}</dt>
-              {% for post in g.pc_posts.get(item.cat_id,[]) %}
-                <dd>
-                <a href="{{ url_for('pc.post.detail', post_id=post.post_id) }}">{{ post.post_name }}</a>
-                </dd>
-              {% endfor %}
-            </dl>
-          {% endfor %}
+           <dl class="col-links">
+            <dt>服务保障</dt>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=1) }}">正品保证</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=2) }}">7天无理由退款</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=3) }}">15天无理由换货</a>
+            </dd>
+          </dl>
+         <dl class="col-links">
+            <dt>购物指南</dt>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=4) }}">购物流程</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=5) }}">会员介绍</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=6) }}">常见问题</a>
+            </dd>
+          </dl>
+          <dl class="col-links">
+            <dt>配送方式</dt>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=7) }}">免运费政策</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=8) }}">配送范围及运费</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=9) }}">验货与签收</a>
+            </dd>
+          </dl>
+          <dl class="col-links">
+            <dt>支付方式</dt>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=10) }}">微信支付</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=11) }}">支付宝支付</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=12) }}">货到付款支付</a>
+            </dd>
+          </dl>
+          <dl class="col-links">
+            <dt>售后服务</dt>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=13) }}">退款政策</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=14) }}">退货退款政策</a>
+            </dd>
+            <dd>
+             <a href="{{ url_for('pc.post.detail',post_id=15) }}">换货政策</a>
+            </dd>
+          </dl>
+          <dl class="col-links">
+            <dt>关注我们</dt>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=16) }}">新浪微博</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=17) }}">官方微信</a>
+            </dd>
+            <dd>
+              <a href="{{ url_for('pc.post.detail',post_id=18) }}">联系我们</a>
+            </dd>
+          </dl>
           <div class="col-contact">
             <p class="col-contact_phone">189-2842-1920</p>
             <p class="col-contact_time"> 周一至周日 9:00-19:00</p>

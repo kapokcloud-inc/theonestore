@@ -31,14 +31,16 @@ post = Blueprint('pc.post', __name__)
 def detail(post_id=0):
     """获取文章详情"""
     if post_id <= 0:
-        return redirect(request.headers['Referer'])
+        return render_template('pc/index/404.html.j2')
 
     post      = PostStaticMethodsService.post_detail(post_id)
     
+    if not post:
+        return render_template('pc/index/404.html.j2')
+
     posts     = []
-    if post:
         #文章列表
-        posts = PostStaticMethodsService.posts(post.cat_id)
+    posts = PostStaticMethodsService.posts(post.cat_id)
 
     data      = {'post':post, 'posts':posts}
     
