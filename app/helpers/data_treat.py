@@ -11,8 +11,13 @@
 from app.helpers import log_error
 from app.helpers import toamount
 
-def format_amount(sourcePrice=0):
-    ''' 处理商品价格显示 '''
+def format_amount(sourcePrice=0, format_type=0):
+    ''' 处理商品价格显示 
+        @param sourcePrice, 源价格
+        @param format_type, 转换类型 
+                0=为0则为整数0，小数均为0则返回整数，否则保留两位小数
+                1=为0则为整数0，否则均保留两位小数
+    '''
     try:
         if isinstance(sourcePrice, types.IntType) or isinstance(sourcePrice, types.FloatType):
             #限制保留2位小数
@@ -29,11 +34,14 @@ def format_amount(sourcePrice=0):
     if sourcePrice == None or sourcePrice == 0:
         return 0
 
-    decmiclist = list((str(sourcePrice).split('.'))[1])
-    #小数均为0则返回整数，否则保留两位小数
-    if decmiclist and decmiclist[0] == '0' and decmiclist[1] == '0':
-        return int(sourcePrice)
-    else:
+    if format_type == 0:
+        #小数均为0则返回整数，否则保留两位小数
+        decmiclist = list((str(sourcePrice).split('.'))[1])
+        if decmiclist and decmiclist[0] == '0' and decmiclist[1] == '0':
+            return int(sourcePrice)
+        else:
+            return sourcePrice
+    elif format_type == 1:
         return sourcePrice
   
     

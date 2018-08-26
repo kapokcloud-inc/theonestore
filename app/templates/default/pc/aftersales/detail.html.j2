@@ -302,7 +302,7 @@ function aftersalesImgGiant($current) {
 function aftersalesReturnSn(aftersales_id){
   var return_shipping_sn = $('.track-num').val();
 
-  if(typeof return_shipping_sn =='undefiined' || return_shipping_sn == null || return_shipping_sn.replace(/(^\s*)|(\s*$)/g,"") == ''){
+  if(typeof return_shipping_sn == 'undefiined' || return_shipping_sn == null || return_shipping_sn.replace(/(^\s*)|(\s*$)/g,"") == ''){
     alert('请输入寄回商品快递单号');
     return false;
   }
