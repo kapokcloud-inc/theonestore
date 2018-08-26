@@ -113,11 +113,16 @@
                     </p>
                     <div class="delivery-list_box">
                       <ul class="delivery-list">
-                        <!-- <li class="delivery-list_item first">深圳市:中国邮政速递物流股份有限公司深圳市南山分公司塘朗揽安排投递（ 投递员姓名：李爱胜;联系电话：13510592901） 2018-07-10 16:41:30</li>
-                        <li class="delivery-list_item">深圳市:离开深圳市 发往深圳站 2018-07-10 12:45:00</li>
-                        <li class="delivery-list_item">深圳市:到达 深圳市 处理中心 2018-07-10 11:56:00</li>
-                        <li class="delivery-list_item">深圳市:已离开深圳市南油速递营销部，发往深圳市 2018-07-10 11:33:42</li>
-                        <li class="delivery-list_item last">深圳市:深圳市南油速递营销部已收件（揽投员姓名：陈东光,联系电话:） 2018-07-10 11:21:00</li> -->
+                        {% for item_data in express_datas %}
+                          {% if loop.first %}
+                            {% set class_type = 'first' if loop.length > 1 else 'firstOn' %}
+                          {% elif loop.last %}
+                            {% set class_type = 'last' %}
+                          {% else %}
+                            {% set class_type = '' %}
+                          {% endif %}
+                           <li class="delivery-list_item {{ class_type }}">{{ item_data.context }} {{ item_data.time }}</li>
+                        {% endfor %}
                       </ul>
                     </div>
                   </div>
@@ -260,7 +265,6 @@
         </div>
         <div class="bd-flex">
           <label class="bd-label">{{_('地区：')}}</label>
-          <!--<input readonly class="bd-input city-picker-input" type="text" data-toggle="city-picker" placeholder="{{_('请选择省/市/区')}}">-->
           <input id="edit_address_pcd" readonly type="text">
         </div>
         <div class="bd-flex">
