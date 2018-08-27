@@ -116,11 +116,13 @@
                     <textarea class="aftersales-reason" name="" id="content" placeholder="请输入具体问题..."></textarea>
                   </div>
                   <p class="label-title">{{_('上传商品图片（单张不超过3MB。请注意拍摄画质尽量清晰，突出商品问题。非必填项）')}}</p>
-                  <div class="one-uploader">
-                    <div class="one-uploader_bd">
-                      <ul class="one-uploader_files" id="uploaderFiles"></ul>
-                      <div class="one-uploader_input-box">
-                        <input id="uploaderInput" name="image" class="one-uploader_input" type="file" accept="image/*" multiple="">
+                  <div class="uploader_wrap">
+                    <div class="one-uploader">
+                      <div class="one-uploader_bd">
+                        <ul class="one-uploader_files" id="uploaderFiles"></ul>
+                        <div class="one-uploader_input-box">
+                          <input id="uploaderInput" name="image" class="one-uploader_input" type="file" accept="image/*" multiple="">
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -164,6 +166,7 @@
                   {{ wtf_form.csrf_token }}
                   <input id="order_id" name="order_id" type="hidden" value="{{ order_id }}" />
                   <input id="og_id" name="og_id" type="hidden" value="{{ og_id }}" />
+                  <input id="img_data" name="img_data" type="hidden" value="[]" />
                   <input id="aftersales_type" name="aftersales_type" type="hidden" value="{{ aftersales_type if aftersales_type == 1 else 2 }}" />
                   <a id="btn_next" class="one-btn btn-primary" onclick="return doNext()">{{_('下一步')}}</a>
                 </div>
@@ -202,19 +205,6 @@ function calculateRefundsAmount(quantity){
       }
     });
   }
-}
-
-//获取上传图片数据
-function get_img_data() {
-  var images = [];
-
-  $(".one-uploader_file").each(function(i) {
-    var $img = $(this).find('img');
-    var img_url = $img.attr('data-value');
-    images.push(img_url);
-  });
-
-  return JSON.stringify(images);
 }
 
 //提交申请
@@ -293,7 +283,7 @@ function doNext(){
   var aftersales_type = parseInt($("#aftersales_type").val());
 
   var content = $("#content").val();
-  var img_data = get_img_data();
+  var img_data = $("#img_data").val();
   var params = {'content':content, 'img_data':img_data};
 
   //仅退款
@@ -310,6 +300,28 @@ function doNext(){
   if(aftersales_type == 3) {
     aftersales_type_3(params);
   }
+}
+
+//图片删除按钮显示
+function show(thisObj) {
+  $(thisObj).children("div").css("display", "block");
+}
+
+//图片删除按钮隐藏
+function hide(thisObj) {
+  $(thisObj).children("div").css("display", "none");
+}
+
+//图片删除
+function delImg(obj) {
+  var imgurl = $(obj).prev().attr("src").replace('-square.small', '');
+  var img_data = $("#img_data").val();
+  var img_list = JSON.parse(img_data);
+  var pos = img_list.indexOf(imgurl);
+  img_list.splice(pos, 1);
+  img_data = JSON.stringify(img_list);
+  $("#img_data").val(img_data);
+  $(obj).parent("li").remove();
 }
 
 $(document).ready(function () {
@@ -348,13 +360,31 @@ $(document).ready(function () {
       url: "{{ url_for('api.upload.image') }}",
       dataType: 'json',
       formData:{'prefix':'comment'},
+      add: function (e, data) {
+        var html_text = '<li class="one-uploader_file one-loading">' +
+                          '<img class="loadingImg" src="/static/default/pc/img/loading.gif" alt="">' +
+                        '</li>';
+        $("#uploaderFiles").append(html_text);
+        data.submit();
+      },
       done: function (e, data) {
         if(data.result.ret == 0) {
           var image = data.result.data.image;
-          var html_text = '<li class="one-uploader_file">' +
+          var html_text = '<li class="one-uploader_file" onmouseover="show(this)" onmouseout="hide(this)">' +
                             '<img src="' + image + '-square.small" alt="" data-value="' + image + '">' +
+                            '<div class="delete-box" onclick="delImg(this)">' + ' 删除 ' + '</div >' +
                           '</li>';
+          var $uploaderFiels = $('#uploaderFiles');
+          var $loading = $uploaderFiels.find('li.one-loading')[0];
+          $loading.remove();
           $("#uploaderFiles").append(html_text);
+
+          // 把上传的图片加到列表上
+          var img_data = $("#img_data").val();
+          var _img_data = JSON.parse(img_data);
+          _img_data.push(image);
+          img_data = JSON.stringify(_img_data);
+          $("#img_data").val(img_data);
         }
       }
   });
