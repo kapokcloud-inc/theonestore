@@ -48,19 +48,12 @@
               {% if 4 in code %}
                 <a class="order-type_btn btn-primary mar-right" href="javascript:;" onclick="okey({{ order.order_id }})">{{_('确认收货')}}</a>
               {% endif %}
-
-              <!-- 含有售后指令才显示售后按钮 -->
-              {% if 7 in code %}
-                <!-- 创建的订单，已支付，没发货，没售后记录的允许申请退款 -->
-                {% if order.order_status == 1 and order.pay_status == 2 and order.shipping_status == 1 and not aftersale %}
-                  <a class="order-type_btn mar-right" href="{{ url_for('pc.aftersales.apply_step1',order_id=order.order_id,og_id=0) }}">{{_('申请退款')}}</a>
-                {% endif %}
-                {% set limit_time = 0 %}
-                <!-- 创建的订单，已支付，已发货，据支付时间15天以内，允许申请售后 -->
-                {% set limit_time = order.shipping_time|before_after_timestamp({'days':15}) %}
-                {% if order.order_status in [1,2] and order.pay_status == 2 and order.shipping_status == 2 and limit_time >= current_time  %}
-                  <a class="order-type_btn mar-right" href="{{ url_for('pc.aftersales.apply_step0',order_id=order.order_id) }}">{{_('申请售后')}}</a>
-                {% endif %}
+              
+              <!-- 含有申请退款指令，有申请退款按钮 -->
+              {% if 8 in code %}
+                <a class="order-type_btn mar-right" href="{{ url_for('pc.aftersales.apply_step1',order_id=order.order_id,og_id=0) }}">{{_('申请退款')}}</a>
+              {% else %}
+                <a class="order-type_btn mar-right" href="{{ url_for('pc.aftersales.apply_step0',order_id=order.order_id) }}">{{_('申请售后')}}</a>
               {% endif %}
             </div>
           </div>

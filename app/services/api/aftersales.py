@@ -68,7 +68,7 @@ class AfterSalesCreateService(object):
         self.order_goods      = None                    # 订单商品实例
         self.order_goods_list = []                      # 订单商品实例列表
         self.address_data     = {}                      # 售后地址数据
-
+        self.aftersales       = None                    # 售后记录
     def _check_order(self):
         """检查订单"""
 
@@ -95,6 +95,7 @@ class AfterSalesCreateService(object):
     
         aftersales = Aftersales.query.filter(Aftersales.order_id == self.order_id).filter(Aftersales.status.in_([1,2,3])).first()
         if aftersales:
+            self.aftersales = aftersales
             self.msg = _(u'售后状态错误')
             return False
 

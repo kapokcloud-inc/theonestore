@@ -160,10 +160,16 @@ def apply_step1():
         ascs = AfterSalesCreateService(uid, order_id=order_id, og_id=0, quantity=1, aftersales_type=1, deliver_status=1)
         ret  = ascs._check_order()
         if not ret:
+            if ascs.msg == u'售后状态错误' and ascs.aftersales:
+                return redirect(url_for('pc.aftersales.detail', aftersales_id=ascs.aftersales.aftersales_id ))
+
             return redirect(url_for('pc.index.pagenotfound'))
 
-        data = {'wtf_form':wtf_form, 'order_id':order_id, 'og_id':og_id,'items':ascs.order_goods_list, 'goods_data':ascs.goods_data, 'refunds_amount':ascs.refunds_amount,'current_time':current_timestamp(), 'aftersales_type':1}
-        log_info(data)
+        data = {'wtf_form':wtf_form, 'order_id':order_id, 'og_id':og_id, 
+                'items':ascs.order_goods_list, 'goods_data':ascs.goods_data, 
+                'refunds_amount':ascs.refunds_amount, 'current_time':current_timestamp(), 
+                'aftersales_type':1, 'order_address':ascs.order_address}
+        
         return render_template('pc/aftersales/apply_step1.html.j2', **data)
     else:
         aftersales_type     = 2
@@ -181,9 +187,9 @@ def apply_step1():
 
         data = {'wtf_form':wtf_form, 'order_id':order_id, 'og_id':og_id,
                 'items':ascs.order_goods_list, 'goods_data':ascs.goods_data,
-                'refunds_amount':ascs.refunds_amount,
-                'aftersales_type':aftersales_type, 'current_time':current_timestamp(),
-                'order_address':ascs.order_address}
+                'refunds_amount':ascs.refunds_amount, 'aftersales_type':aftersales_type, 
+                'current_time':current_timestamp(), 'order_address':ascs.order_address}
+                
         return render_template('pc/aftersales/apply_step1.html.j2', **data)
 
 

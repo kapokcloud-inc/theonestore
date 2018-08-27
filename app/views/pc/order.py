@@ -72,7 +72,7 @@ def index():
             action_code[order.order_id] = list(temp)
 
     data['tab_status'] = request.args.get('tab_status', '0')
-
+    
     return render_template('pc/order/index.html.j2', **data)
 
 
