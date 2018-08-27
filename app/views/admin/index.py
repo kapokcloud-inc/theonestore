@@ -33,8 +33,15 @@ from app.database import db
 from app.helpers import (
     render_template,
     log_info,
-    kt_to_dict
+    kt_to_dict,
+    get_count
 )
+
+from app.helpers.date_time import(
+    current_timestamp,
+    some_day_timestamp
+)
+
 
 
 index = Blueprint('admin.index', __name__)
@@ -56,11 +63,25 @@ def dashboard():
     if not admin_uid:
         return_url = request.args.get('return_url', '/admin/dashboard')
         return redirect(url_for('admin.auth.login', return_url=return_url))
+    
+    # 今天0点0时0分时间戳
+    today_time_stamp   = some_day_timestamp(current_timestamp(),0)
+
     #用户数
-    sum_user           = User.query.count()
+    q                  = db.session.query(User.uid)
+    sum_user           = get_count(q)
+
+    q                  = db.session.query(User.uid).filter(User.add_time >= today_time_stamp)
+    day_user           = get_count(q)
+    
 
     #订单数
-    sum_order          = Order.query.count()
+    q                  = db.session.query(Order.order_id)
+    sum_order          = get_count(q)
+
+    q                  = db.session.query(Order.order_id).filter(Order.add_time >= today_time_stamp)
+    day_order          = get_count(q)
+
 
     #订单交易总额
     _sum_order_amount  = db.session.query(func.sum(Order.order_amount).label('sum_order_amount')).\
@@ -68,8 +89,18 @@ def dashboard():
                             filter(Order.pay_status == 2).first()
     sum_order_amount   = _sum_order_amount.sum_order_amount if _sum_order_amount else Decimal('0.00')
 
+    _day_order_amount  = db.session.query(func.sum(Order.order_amount).label('day_order_amount')).\
+                            filter(Order.order_type == 1).\
+                            filter(Order.pay_status == 2).\
+                            filter(Order.add_time >= today_time_stamp).first()
+    day_order_amount   = _day_order_amount.day_order_amount if _day_order_amount else Decimal('0.00')
+    log_info(day_order_amount)
     #售后数
-    sum_aftersales     = Aftersales.query.count()
+    q                  = db.session.query(Aftersales.order_id)
+    sum_aftersales     = get_count(q)
+
+    q                  = db.session.query(Aftersales.aftersales_id).filter(Aftersales.add_time >= today_time_stamp)
+    day_aftersales     = get_count(q)
 
     #会员充值(连表查，3条数据)
     funds_orders       = db.session.query(Order.order_id, Order.order_amount, Order.add_time,
@@ -107,10 +138,14 @@ def dashboard():
                                         Comment.rating, Comment.content, Comment.img_data).\
                                         order_by(Comment.comment_id.desc()).limit(3).all()
                                         
-    data = {'sum_user':sum_user, 
+    data = {'sum_user':sum_user,
+            'day_user':day_user,
             'sum_order':sum_order, 
-            'sum_order_amount':sum_order_amount, 
-            'sum_aftersales':sum_aftersales, 
+            'day_order':day_order,
+            'sum_order_amount':sum_order_amount,
+            'day_order_amount':day_order_amount,
+            'sum_aftersales':sum_aftersales,
+            'day_aftersales':day_aftersales,
             'fund_orders_amount':fund_orders_amount,
             'funds_orders':funds_orders,
             'orders':orders,

@@ -25,56 +25,64 @@
     <div class="row">
       <div class="col-lg-3 col-sm-6 col-xs-12">
         <div class="white-box analytics-info">
-          <h3 class="box-title">{{_('总用户数')}}</h3>
+          <h3 class="box-title">{{_('用户数')}}</h3>
           <ul class="list-inline two-part">
             <li>
-              <div id="sparklinedash"></div>
-            </li>
-            <li class="text-right">
+              <!-- <div id="sparklinedash"></div> -->
               <i class="text-success"></i>
               <span class="counter text-success">{{ sum_user }}</span>
             </li>
+            <li class="text-right">
+              <i class="text-success"></i>
+              <span class="counter text-success">{{ day_user }}</span>
+            </li>
           </ul>
         </div>
       </div>
       <div class="col-lg-3 col-sm-6 col-xs-12">
         <div class="white-box analytics-info">
-          <h3 class="box-title">{{_('总订单数')}}</h3>
+          <h3 class="box-title">{{_('订单数')}}</h3>
           <ul class="list-inline two-part">
             <li>
-              <div id="sparklinedash2"></div>
-            </li>
-            <li class="text-right">
+              <!-- <div id="sparklinedash2"></div> -->
               <i class="text-purple"></i>
               <span class="counter text-purple">{{ sum_order }}</span>
             </li>
+            <li class="text-right">
+              <i class="text-purple"></i>
+              <span class="counter text-purple">{{ day_order }}</span>
+            </li>
           </ul>
         </div>
       </div>
       <div class="col-lg-3 col-sm-6 col-xs-12">
         <div class="white-box analytics-info">
-          <h3 class="box-title">{{_('总订单交易额')}}</h3>
+          <h3 class="box-title">{{_('订单交易额')}}</h3>
           <ul class="list-inline two-part">
             <li>
-              <div id="sparklinedash3"></div>
+              <!-- <div id="sparklinedash3"></div> -->
+              <i class="text-info"></i>
+              <span class="counter text-info">￥{{ sum_order_amount|format_amount }}</span>
             </li>
             <li class="text-right">
               <i class="text-info"></i>
-              <span class="counter text-info">￥{{ sum_order_amount|format_amount(0) }}</span>
+              <span class="counter text-info">￥{{ day_order_amount|format_amount }}</span>
             </li>
           </ul>
         </div>
       </div>
       <div class="col-lg-3 col-sm-6 col-xs-12">
         <div class="white-box analytics-info">
-          <h3 class="box-title">{{_('总售后数')}}</h3>
+          <h3 class="box-title">{{_('售后数')}}</h3>
           <ul class="list-inline two-part">
             <li>
-              <div id="sparklinedash4"></div>
+              <!-- <div id="sparklinedash4"></div> -->
+              <i class="text-danger"></i>
+              <span class="text-danger">{{ sum_aftersales }}</span>
             </li>
             <li class="text-right">
               <i class="text-danger"></i>
-              <span class="text-danger">{{ sum_aftersales }}</span>
+              <span class="text-danger">{{ day_aftersales }}</span>
             </li>
           </ul>
         </div>
@@ -146,11 +154,11 @@
           <ul class="list-inline text-right">
             <li>
               <h5>
-                <i class="fa fa-circle m-r-5 text-info"></i>Mac</h5>
+                <i class="fa fa-circle m-r-5 text-info"></i>订单</h5>
             </li>
             <li>
               <h5>
-                <i class="fa fa-circle m-r-5 text-inverse"></i>Windows</h5>
+                <i class="fa fa-circle m-r-5 text-inverse"></i>金额</h5>
             </li>
           </ul>
           <div id="ct-visits" style="height: 405px;">
@@ -163,7 +171,7 @@
             <div class="row">
               <div class="col-xs-8">
                 <h4 class="m-b-0">{{_('最近会员充值')}}</h4>
-                <h2 class="m-t-0 font-medium">￥{{ fund_orders_amount|format_amount(0) }}</h2>
+                <h2 class="m-t-0 font-medium">￥{{ fund_orders_amount|format_amount }}</h2>
               </div>
             </div>
           </div>

@@ -18,6 +18,9 @@ def format_amount(sourcePrice=0, format_type=0):
                 0=为0则为整数0，小数均为0则返回整数，否则保留两位小数
                 1=为0则为整数0，否则均保留两位小数
     '''
+    if sourcePrice == None or sourcePrice == 0:
+        return 0
+
     try:
         if isinstance(sourcePrice, types.IntType) or isinstance(sourcePrice, types.FloatType):
             #限制保留2位小数
@@ -31,8 +34,7 @@ def format_amount(sourcePrice=0, format_type=0):
         else:
             raise ValueError('参数类型错误')
 
-    if sourcePrice == None or sourcePrice == 0:
-        return 0
+    
 
     if format_type == 0:
         #小数均为0则返回整数，否则保留两位小数
@@ -41,6 +43,7 @@ def format_amount(sourcePrice=0, format_type=0):
             return int(sourcePrice)
         else:
             return sourcePrice
+            
     elif format_type == 1:
         return sourcePrice
   
