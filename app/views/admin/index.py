@@ -85,7 +85,8 @@ def dashboard():
     #最近订单
     goods_orders       = db.session.query(Order.order_id, Order.order_sn, Order.order_amount, 
                                         Order.order_status, Order.pay_status, Order.shipping_status, 
-                                        Order.deliver_status, Order.add_time, User.nickname, User.avatar).\
+                                        Order.deliver_status, Order.aftersale_status, Order.add_time, 
+                                        User.nickname, User.avatar).\
                                     filter(Order.uid == User.uid).\
                                     filter(Order.order_type == 1).\
                                     filter(Order.pay_status == 2).\
