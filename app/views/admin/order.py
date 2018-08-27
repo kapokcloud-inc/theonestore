@@ -178,6 +178,9 @@ def shipping():
 
     if order.pay_status != 2:
         return resjson.print_json(12, _(u'未付款订单'))
+    
+    if shipping_sn == '':
+        return resjson.print_json(13, _(u'请填写快递单号'))
 
     order.shipping_sn     = shipping_sn
     order.shipping_status = 2

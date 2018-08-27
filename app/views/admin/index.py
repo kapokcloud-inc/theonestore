@@ -105,7 +105,7 @@ def dashboard():
     #最近评论
     comments           = db.session.query(Comment.nickname, Comment.avatar, Comment.add_time, 
                                         Comment.rating, Comment.content, Comment.img_data).\
-                                        order_by(Comment.comment_id.desc()).limit(4).all()
+                                        order_by(Comment.comment_id.desc()).limit(3).all()
                                         
     data = {'sum_user':sum_user, 
             'sum_order':sum_order, 
