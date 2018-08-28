@@ -5,66 +5,15 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    <div class="row bg-title">
-      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
-        {% set tab_status = request.args.get('tab_status', '0') %}
-
-        {% set active_0 = 'active' if tab_status == '0' else '' %}
-        <li role="presentation" class="{{ active_0 }}">
-          <a href="{{ url_for('admin.aftersale.index', tab_status=0) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('全部')}}</span>
-          </a>
-        </li>
-        {% set active_1 = 'active' if tab_status == '1' else '' %}
-        <li role="presentation" class="{{ active_1 }}">
-          <a href="{{ url_for('admin.aftersale.index', tab_status=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('仅退款')}}</span>
-          </a>
-        </li>
-        {% set active_2 = 'active' if tab_status == '2' else '' %}
-        <li role="presentation" class="{{ active_2 }}">
-          <a href="{{ url_for('admin.aftersale.index', tab_status=2) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-email"></i>
-            </span>
-            <span class="hidden-xs">{{_('退货退款')}}</span>
-          </a>
-        </li>
-        {% set active_3 = 'active' if tab_status == '3' else '' %}
-        <li role="presentation" class="{{ active_3 }}">
-          <a href="{{ url_for('admin.aftersale.index', tab_status=3) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-email"></i>
-            </span>
-            <span class="hidden-xs">{{_('换货')}}</span>
-          </a>
-        </li>
-        {% set active_4 = 'active' if tab_status == '4' else '' %}
-        <li role="presentation" class="{{ active_4 }}">
-          <a href="{{ url_for('admin.aftersale.index', tab_status=4) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-email"></i>
-            </span>
-            <span class="hidden-xs">{{_('待收货')}}</span>
-          </a>
-        </li>
-        {% set active_5 = 'active' if tab_status == '5' else '' %}
-        <li role="presentation" class="{{ active_5 }}">
-          <a href="{{ url_for('admin.aftersale.index', tab_status=5) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-email"></i>
-            </span>
-            <span class="hidden-xs">{{_('待发货')}}</span>
-          </a>
-        </li>
-      </ul>
-    </div>
+    {% set tab_status = request.args.get('tab_status', '0') %}
+    {{ libs.build_tabs([
+        {'label':_('全部'), 'value':0, 'endpoint':'admin.aftersale.index'},
+        {'label':_('仅退款'), 'value':1, 'endpoint':'admin.aftersale.index'},
+        {'label':_('退货退款'), 'value':2, 'endpoint':'admin.aftersale.index'},
+        {'label':_('换货'), 'value':3, 'endpoint':'admin.aftersale.index'},
+        {'label':_('待收货'), 'value':4, 'endpoint':'admin.aftersale.index'},
+        {'label':_('待发货'), 'value':5, 'endpoint':'admin.aftersale.index'},
+      ], 'tab_status') }}
     <div class="row">
       <div class="col-lg-12">
         <div class="white-box">
@@ -90,7 +39,7 @@
                       <td>{{ aftersale.refunds_amount }}</td>
                       <td>{{ aftersale.content }}</td>
                       <td>
-                        {% set imgs = aftersale.img_data|json_loads %}
+                        {% set imgs = aftersale.img_data|json_loads if aftersale.img_data %}
                         {% for img in imgs %}
                           <img src="{{ img }}" width="50" />
                         {% endfor %}
@@ -105,7 +54,7 @@
                     </tr>
                   {% endfor %}
                 </tbody>
-                {{ libs.pagination_html(pagination, 9) }}
+                {{ libs.pagination_html(pagination, 20) }}
             </table>
           </div>
         </div>

@@ -5,65 +5,20 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    <div class="row bg-title">
-      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
-        {% set tab_status = request.args.get('tab_status', '0') %}
-
-        {% set active = 'active' if tab_status == '0' else '' %}
-        <li role="presentation" class="{{ active }}">
-          <a href="{{ url_for('admin.item.index', tab_status=0) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('全部商品')}}</span>
-          </a>
-        </li>
-        {% set active = 'active' if tab_status == '1' else '' %}
-        <li role="presentation" class="{{ active }}">
-          <a href="{{ url_for('admin.item.index', tab_status=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('销售中')}}</span>
-          </a>
-        </li>
-        {% set active = 'active' if tab_status == '2' else '' %}
-        <li role="presentation" class="{{ active }}">
-          <a href="{{ url_for('admin.item.index', tab_status=2) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('已下架')}}</span>
-          </a>
-        </li>
-        {% set active = 'active' if tab_status == '3' else '' %}
-        <li role="presentation" class="{{ active }}">
-          <a href="{{ url_for('admin.item.index', tab_status=3) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-email"></i>
-            </span>
-            <span class="hidden-xs">{{_('热卖')}}</span>
-          </a>
-        </li>
-        {% set active = 'active' if tab_status == '4' else '' %}
-        <li role="presentation" class="{{ active }}">
-          <a href="{{ url_for('admin.item.index', tab_status=4) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-email"></i>
-            </span>
-            <span class="hidden-xs">{{_('推荐')}}</span>
-          </a>
-        </li>
-        <a href="{{ url_for('admin.item.create') }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display: block !important;background: #f33155 !important;border: 1px solid #f33155 !important;">
-          {{_('添加商品')}}
-        </a>
-      </ul>
-    </div>
+    {% set tab_status = request.args.get('tab_status', '0') %}
+    {{ libs.build_tabs([
+        {'label':_('全部商品'), 'value':0, 'endpoint':'admin.item.index'},
+        {'label':_('销售中'), 'value':1, 'endpoint':'admin.item.index'},
+        {'label':_('已下架'), 'value':2, 'endpoint':'admin.item.index'},
+        {'label':_('热卖'), 'value':3, 'endpoint':'admin.item.index'},
+        {'label':_('推荐'), 'value':4, 'endpoint':'admin.item.index'},
+      ], 'tab_status', btns=[{'label':_('添加商品'), 'href':url_for('admin.item.create')}]) }}
     <div class="row">
       <div class="col-md-12">
         <div class="white-box">
           {% set 
             form_fields = [
+              {'label':'页面类型', 'name':'tab_status', 'type':'hidden'},
               {'label':'是否在售', 'name':'is_sale', 'type':'hidden'},
               {'label':'热卖', 'name':'is_hot', 'type':'hidden'},
               {'label':'名称', 'name':'goods_name'},

@@ -39,7 +39,9 @@ from app.helpers import (
 
 from app.helpers.date_time import(
     current_timestamp,
-    some_day_timestamp
+    some_day_timestamp,
+    date_range,
+    timestamp2str
 )
 
 
@@ -76,10 +78,10 @@ def dashboard():
     
 
     #订单数
-    q                  = db.session.query(Order.order_id)
+    q                  = db.session.query(Order.order_id).filter(Order.order_type == 1)
     sum_order          = get_count(q)
 
-    q                  = db.session.query(Order.order_id).filter(Order.add_time >= today_time_stamp)
+    q                  = q.filter(Order.add_time >= today_time_stamp)
     day_order          = get_count(q)
 
 
@@ -94,7 +96,7 @@ def dashboard():
                             filter(Order.pay_status == 2).\
                             filter(Order.add_time >= today_time_stamp).first()
     day_order_amount   = _day_order_amount.day_order_amount if _day_order_amount else Decimal('0.00')
-    log_info(day_order_amount)
+    
     #售后数
     q                  = db.session.query(Aftersales.order_id)
     sum_aftersales     = get_count(q)
@@ -137,7 +139,13 @@ def dashboard():
     comments           = db.session.query(Comment.nickname, Comment.avatar, Comment.add_time, 
                                         Comment.rating, Comment.content, Comment.img_data).\
                                         order_by(Comment.comment_id.desc()).limit(3).all()
-                                        
+
+
+    # 今天限制时间
+    start      = some_day_timestamp(current_timestamp(), 0)
+    end        = some_day_timestamp(current_timestamp(), 1)
+    today_date_rang = timestamp2str(start, 'YYYY-MM-DD') + ' - ' +  timestamp2str(end, 'YYYY-MM-DD')
+
     data = {'sum_user':sum_user,
             'day_user':day_user,
             'sum_order':sum_order, 
@@ -150,7 +158,8 @@ def dashboard():
             'funds_orders':funds_orders,
             'orders':orders,
             'orders_amount':goods_orders_amount,
-            'comments':comments
+            'comments':comments,
+            'today_date_rang':today_date_rang
             }
             
     return render_template('admin/dashboard/index.html.j2', **data)

@@ -37,7 +37,7 @@ from app.helpers import (
 from app.helpers.date_time import (
     current_timestamp,
     date_range,
-    some_day_timestamp
+    some_day_timestamp,
 )
 
 from app.models.user import User

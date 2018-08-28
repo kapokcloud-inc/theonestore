@@ -75,7 +75,8 @@ def index(page=1, page_size=20):
                         Order.shipping_time, Order.deliver_status, Order.goods_quantity,
                         Order.goods_data, Order.add_time, OrderAddress.name, OrderAddress.mobile,
                         Order.aftersale_status).\
-            filter(Order.order_id == OrderAddress.order_id)
+            filter(Order.order_id == OrderAddress.order_id).\
+            filter(Order.order_type == 1)
 
     if tab_status == 1:
         q = q.filter(Order.order_status == 1).filter(Order.pay_status == 1)
@@ -97,7 +98,7 @@ def index(page=1, page_size=20):
 
     name_orders_id = None
     if name:
-        name_orders_id = db.session.query(OrderAddress.order_id).filter(OrderAddress.mobile == name).all()
+        name_orders_id = db.session.query(OrderAddress.order_id).filter(OrderAddress.name == name).all()
         name_orders_id = [_order.order_id for _order in name_orders_id]
 
     orders_id = None

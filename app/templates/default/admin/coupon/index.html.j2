@@ -15,47 +15,18 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    <div class="row bg-title">
-      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
-        {% set tab_status = request.args.get('tab_status', '0') %}
-
-        {% set all_active = 'active' if tab_status == '0' else '' %}
-        <li role="presentation" class="{{ all_active }}">
-          <a href="{{ url_for('admin.coupon.index', tab_status=0) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('全部')}}</span>
-          </a>
-        </li>
-        {% set unpaid_active = 'active' if tab_status == '1' else '' %}
-        <li role="presentation" class="{{ unpaid_active }}">
-          <a href="{{ url_for('admin.coupon.index', tab_status=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('使用中')}}</span>
-          </a>
-        </li>
-        {% set unshipped_active = 'active' if tab_status == '2' else '' %}
-        <li role="presentation" class="{{ unshipped_active }}">
-          <a href="{{ url_for('admin.coupon.index', tab_status=2) }}" aria-controls="system" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-email"></i>
-            </span>
-            <span class="hidden-xs">{{_('已过期')}}</span>
-          </a>
-        </li>
-        <a href="{{ url_for('admin.coupon.create') }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display: block !important;background: #f33155 !important;border: 1px solid #f33155 !important;">
-          {{_('添加优惠券')}}
-        </a>
-      </ul>
-    </div>
+    {% set tab_status = request.args.get('tab_status', '0') %}
+    {{ libs.build_tabs([
+        {'label':_('全部'), 'value':0, 'endpoint':'admin.coupon.index'},
+        {'label':_('使用中'), 'value':1, 'endpoint':'admin.coupon.index'},
+        {'label':_('已过期'), 'value':2, 'endpoint':'admin.coupon.index'},
+      ], 'tab_status') }}
     <div class="row">
       <div class="col-md-12">
         <div class="white-box">
           {% set 
             form_fields = [
+              {'label':'页面类型', 'name':'tab_status', 'type':'hidden'},
               {'label':'批次名称', 'name':'cb_name'}
             ]
           %}

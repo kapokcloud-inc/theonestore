@@ -28,7 +28,10 @@ from app.helpers import (
     log_error,
     toint
 )
-from app.helpers.date_time import current_timestamp
+from app.helpers.date_time import (
+    current_timestamp,
+    date_range
+)
 
 from app.services.response import ResponseJson
 from app.services.admin.order import OrderStaticMethodsService
@@ -67,6 +70,7 @@ def index(page=1, page_size=20):
 
     args                    = request.args
     tab_status              = toint(args.get('tab_status', '0'))
+    add_time_daterange      = args.get('add_time_daterange', '').strip()
 
     q = Aftersales.query
 
@@ -80,6 +84,10 @@ def index(page=1, page_size=20):
         q = q.filter(Aftersales.status == 2).filter(Aftersales.return_status == 2)
     elif tab_status == 5:
         q = q.filter(Aftersales.status == 2).filter(Aftersales.return_status == 3).filter(Aftersales.resend_status == 1)
+
+    if add_time_daterange:
+        start, end = date_range(add_time_daterange)
+        q          = q.filter(Aftersales.add_time >= start).filter(Aftersales.add_time < end)
 
     aftersalses = q.order_by(Aftersales.aftersales_id.desc()).offset((page-1)*page_size).limit(page_size).all()
     pagination  = Pagination(None, page, page_size, q.count(), None)

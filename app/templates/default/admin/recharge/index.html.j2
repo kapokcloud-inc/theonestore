@@ -23,7 +23,7 @@
       <div class="col-md-12">
         <div class="white-box">
           {% set tab_status = request.args.get('tab_status', '0') %}
-          {% if tab_status == '0' %}
+          {% if tab_status == '0' or tab_status == '' %}
             {% set 
               form_fields = [
                 {'label':'页面类型', 'name':'tab_status', 'type':'hidden'},

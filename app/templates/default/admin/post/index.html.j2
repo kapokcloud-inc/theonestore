@@ -5,46 +5,18 @@
 {% block body %}
 <div id="page-wrapper">
   <div class="container-fluid">
-    <div class="row bg-title">
-      <ul class="nav customtab nav-tabs" role="tablist" style="border-bottom:none !important">
-        {% set tab_status = request.args.get('tab_status', '0') %}
-        {% set active = 'active' if tab_status == '0' else '' %}
-        <li role="presentation" class="{{ active }}">
-          <a href="{{ url_for('admin.post.index') }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('全部文章')}}</span>
-          </a>
-        </li>
-        {% set active = 'active' if tab_status == '1' else '' %}
-        <li role="presentation" class="{{ active }}">
-          <a href="{{ url_for('admin.post.index', tab_status=1) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('已发布')}}</span>
-          </a>
-        </li>
-        {% set active = 'active' if tab_status == '2' else '' %}
-        <li role="presentation" class="{{ active }}">
-          <a href="{{ url_for('admin.post.index', tab_status=2) }}" aria-controls="save" role="tab" aria-expanded="false" style="background:none !important">
-            <span class="visible-xs">
-              <i class="ti-user"></i>
-            </span>
-            <span class="hidden-xs">{{_('未发布')}}</span>
-          </a>
-        </li>
-        <a href="{{ url_for('admin.post.create') }}" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" style="display: block !important;background: #f33155 !important;border: 1px solid #f33155 !important;">
-          {{_('添加文章')}}
-        </a>
-      </ul>
-    </div>
+    {% set tab_status = request.args.get('tab_status', '0') %}
+    {{ libs.build_tabs([
+        {'label':_('全部文章'), 'value':0, 'endpoint':'admin.post.index'},
+        {'label':_('已发布'), 'value':1, 'endpoint':'admin.post.index'},
+        {'label':_('未发布'), 'value':2, 'endpoint':'admin.post.index'},
+      ], 'tab_status', btns=[{'label':_('添加文章'), 'href':url_for('admin.post.create')}]) }}
     <div class="row">
       <div class="col-md-12">
         <div class="white-box">
           {% set 
             form_fields = [
+              {'label':'页面类型', 'name':'tab_status', 'type':'hidden'},
               {'label':'名称', 'name':'post_name'},
               {'label':'分类', 'name':'cat_id', 'type':'select', 'options':cats}
             ]

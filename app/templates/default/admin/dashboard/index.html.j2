@@ -30,11 +30,15 @@
             <li>
               <!-- <div id="sparklinedash"></div> -->
               <i class="text-success"></i>
-              <span class="counter text-success">{{ sum_user }}</span>
+              <a href="{{ url_for('admin.user.index') }}">
+                <span class="counter text-success">{{ sum_user }}</span>
+              </a>
             </li>
             <li class="text-right">
               <i class="text-success"></i>
-              <span class="counter text-success">{{ day_user }}</span>
+              <a href="{{ url_for('admin.user.index', add_time_daterange=today_date_rang) }}">
+                <span class="counter text-success" >{{ day_user }}</span>
+              </a>
             </li>
           </ul>
         </div>
@@ -46,11 +50,15 @@
             <li>
               <!-- <div id="sparklinedash2"></div> -->
               <i class="text-purple"></i>
-              <span class="counter text-purple">{{ sum_order }}</span>
+              <a href="{{ url_for('admin.order.index') }}">
+                <span class="counter text-success">{{ sum_order }}</span>
+              </a>
             </li>
             <li class="text-right">
               <i class="text-purple"></i>
-              <span class="counter text-purple">{{ day_order }}</span>
+              <a href="{{ url_for('admin.order.index', add_time_daterange=today_date_rang) }}">
+                <span class="counter text-success" >{{ day_order }}</span>
+              </a>
             </li>
           </ul>
         </div>
@@ -62,11 +70,15 @@
             <li>
               <!-- <div id="sparklinedash3"></div> -->
               <i class="text-info"></i>
-              <span class="counter text-info">￥{{ sum_order_amount|format_amount }}</span>
+              <a href="{{ url_for('admin.order.index') }}">
+                <span class="counter text-info">￥{{ sum_order_amount|format_amount }}</span>              
+              </a>
             </li>
             <li class="text-right">
               <i class="text-info"></i>
-              <span class="counter text-info">￥{{ day_order_amount|format_amount }}</span>
+              <a href="{{ url_for('admin.order.index', add_time_daterange=today_date_rang) }}">
+                <span class="counter text-info">￥{{ day_order_amount|format_amount }}</span>
+              </a>
             </li>
           </ul>
         </div>
@@ -78,11 +90,15 @@
             <li>
               <!-- <div id="sparklinedash4"></div> -->
               <i class="text-danger"></i>
-              <span class="text-danger">{{ sum_aftersales }}</span>
+              <a href="{{ url_for('admin.aftersale.index') }}">
+                <span class="text-danger">{{ sum_aftersales }}</span>
+              </a>
             </li>
             <li class="text-right">
               <i class="text-danger"></i>
-              <span class="text-danger">{{ day_aftersales }}</span>
+              <a href="{{ url_for('admin.aftersale.index', add_time_daterange=today_date_rang) }}">
+                <span class="text-danger">{{ day_aftersales }}</span>
+              </a>
             </li>
           </ul>
         </div>
@@ -171,7 +187,9 @@
             <div class="row">
               <div class="col-xs-8">
                 <h4 class="m-b-0">{{_('最近会员充值')}}</h4>
-                <h2 class="m-t-0 font-medium">￥{{ fund_orders_amount|format_amount }}</h2>
+                <a href="{{ url_for('admin.recharge.index') }}"> 
+                  <h2 class="m-t-0 font-medium">￥{{ fund_orders_amount|format_amount }}</h2>
+                </a>
               </div>
             </div>
           </div>
@@ -215,7 +233,9 @@
               <p>{{_('订单列表')}}</p>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-6 ">
-              <h1 class="text-right text-info m-t-20">￥{{ orders_amount|format_amount }}</h1>
+              <a href="{{ url_for('admin.order.index') }}">
+                <h1 class="text-right text-info m-t-20">￥{{ orders_amount|format_amount }}</h1>
+              </a>
             </div>
           </div>
           <div class="table-responsive">
@@ -259,27 +279,29 @@
             <div class="comment-center p-t-10">
               {% if comments %}
                 {% for comment in comments %}
-                  {% set class_line = 'b-none' if loop.last else '' %}
-                  <div class="comment-body {{ class_line }}">
-                    <div class="user-img">
-                      <img src="{{ comment.avatar|format_avatar(1) }}" alt="user" class="img-circle">
+                  <a href="{{ url_for('admin.comment.index') }}">
+                    {% set class_line = 'b-none' if loop.last else '' %}
+                    <div class="comment-body {{ class_line }}">
+                      <div class="user-img">
+                        <img src="{{ comment.avatar|format_avatar }}" alt="user" class="img-circle">
+                      </div>
+                      <div class="mail-contnet">
+                        <h5>{{ comment.nickname }}</h5>
+                        <span class="time">{{ comment.add_time|timestamp2str }}</span>
+                        <span class="label label-rouded {{ const.RATING_TEXT_LABEL.get(comment.rating,'') }}">{{ const.RATING_TEXT.get(comment.rating,'') }}</span>
+                        <br/>
+                        <span class="mail-desc">{{ comment.content }}</span>
+                        <td>
+                          {% set img_data = comment.img_data|json_loads if comment.img_data %}
+                          {% for img in img_data %}
+                            <a href="{{ img }}" title="" class="image-popup-no-margins">
+                              <img src="{{ img }}" width="50" />
+                            </a>
+                          {% endfor %}
+                        </td>
+                      </div>
                     </div>
-                    <div class="mail-contnet">
-                      <h5>{{ comment.nickname }}</h5>
-                      <span class="time">{{ comment.add_time|timestamp2str }}</span>
-                      <span class="label label-rouded {{ const.RATING_TEXT_LABEL.get(comment.rating,'') }}">{{ const.RATING_TEXT.get(comment.rating,'') }}</span>
-                      <br/>
-                      <span class="mail-desc">{{ comment.content }}</span>
-                      <td>
-                        {% set img_data = comment.img_data|json_loads if comment.img_data %}
-                        {% for img in img_data %}
-                          <a href="{{ img }}" title="" class="image-popup-no-margins">
-                            <img src="{{ img }}" width="50" />
-                          </a>
-                        {% endfor %}
-                      </td>
-                    </div>
-                  </div>
+                  </a>
                 {% endfor %}
               {% else %}
                 <div class="comment-body b-none">
