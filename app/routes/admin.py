@@ -16,6 +16,7 @@ ADMIN_ROUTES = (
     (admin.config,      '/admin/config'),
     (admin.item,        '/admin/item'),
     (admin.order,       '/admin/order'),
+    (admin.recharge,    '/admin/recharge'),
     (admin.coupon,      '/admin/coupon'),
     (admin.adv,         '/admin/adv'),
     (admin.aftersale,   '/admin/aftersale'),

@@ -1,0 +1,128 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+
+{% block head %}
+<!-- Color picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/css/asColorPicker.css" rel="stylesheet">
+  <!-- Date picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+  <!-- Daterange picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+  <link href="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    {{ libs.build_tabs([
+        {'label':_('全部充值记录'), 'value':0, 'endpoint':'admin.recharge.index'},
+        {'label':_('今天'), 'value':1, 'endpoint':'admin.recharge.index'},
+        {'label':_('昨天'), 'value':2, 'endpoint':'admin.recharge.index'},
+        {'label':_('一周内'), 'value':3, 'endpoint':'admin.recharge.index'},
+      ], 'tab_status') }}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="white-box">
+          {% set tab_status = request.args.get('tab_status', '0') %}
+          {% if tab_status == '0' %}
+            {% set 
+              form_fields = [
+                {'label':'页面类型', 'name':'tab_status', 'type':'hidden'},
+                {'label':'订单编号', 'name':'order_sn'},
+                {'label':'支付流水号', 'name':'pay_tran_id'},
+                {'label':'用户编号', 'name':'uid'},
+                {'label':'金额', 'name':'order_amount', 'type':'select', 'options':amounts},
+                {'label':'充值日期', 'name':'paid_time_daterange', 'type':'daterange'},
+              ]
+            %}
+          {% elif tab_status in ['1','2','3'] %}
+            {% set 
+              form_fields = [
+                {'label':'页面类型', 'name':'tab_status', 'type':'hidden'},
+                {'label':'订单编号', 'name':'order_sn'},
+                {'label':'支付流水号', 'name':'pay_tran_id'},
+                {'label':'用户编号', 'name':'uid'},
+                {'label':'金额', 'name':'order_amount', 'type':'select', 'options':amounts},
+              ]
+            %}
+          {% else %}
+            {% set form_fields = [] %}
+          {% endif %}
+          {{ libs.build_search_form(form_fields) }}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="white-box">
+          <div class="table-responsive">
+            <table class="table table-hover product-overview footable" id="myTable">
+              <thead>
+                <tr>
+                  <th>{{_('用户头像')}}</th>
+                  <th>{{_('用户昵称')}}</th>
+                  <th>{{_('订单编号')}}</th>
+                  <th>{{_('充值金额')}}</th>
+                  <th>{{_('支付流水号')}}</th>
+                  <th>{{_('充值时间')}}</th>
+                </tr>
+              </thead>
+                <tbody>
+                  {% for order in orders %}
+                    <tr>
+                      <td>
+                        <div class="user-img">
+                          <img src="{{ order.avatar|format_avatar }}" alt="user" class="img-circle" width="50">
+                        </div>
+                      </td>
+                      <td>{{ order.nickname }}</td>
+                      <td>{{ order.order_sn }}</td>
+                      <td>￥{{ order.order_amount }}</td>
+                      <td>{{ order.pay_tran_id }}</td>
+                      {% set paid_time = order['paid_time']|timestamp2str if order['paid_time'] else '' %}
+                      <td>{{ paid_time }}</td>
+                      <td>
+                        <a href="" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">
+                          <i class="ti-pencil-alt"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                {{ libs.pagination_html(pagination, 20) }}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<!-- Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/moment/moment.js"></script>
+<!-- Clock Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>
+<!-- Color Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asColor.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/libs/jquery-asGradient.js"></script>
+<script src="/static/default/admin/plugins/bower_components/jquery-asColorPicker-master/dist/jquery-asColorPicker.min.js"></script>
+<!-- Date Picker Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js?v=35"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  // Daterange picker
+  $('.input-daterange-datepicker').daterangepicker({
+    format: 'YYYY-MM-DD',
+    buttonClasses: ['btn', 'btn-sm'],
+    applyClass: 'btn-success',
+    cancelClass: 'btn-info',
+    clearClass: 'btn-inverse'
+  });
+});
+</script>
+{% endblock %}
+
