@@ -56,7 +56,7 @@
                       <td>{{ item.goods_name }}</td>
                       <td> <img src="{{ item.goods_img|format_avatar }}" alt="" width="80"> </td>
                       <td>{{ item.cat_name }}</td>
-                      <td>{{ item.goods_price }}</td>
+                      <td>{{ item.goods_price|format_amount(1) }}</td>
                       <td>{{ item.stock_quantity }}</td>
                       <td>
                         <span class="label {{ const.YES_OR_NO_LABEL.get(item.is_sale, 'label-danger') }} font-weight-100">
@@ -85,7 +85,7 @@
                     </tr>
                   {% endfor %}
                 </tbody>
-                {{ libs.pagination_html(pagination, 9) }}
+                {{ libs.pagination_html(pagination, 20) }}
             </table>
           </div>
         </div>

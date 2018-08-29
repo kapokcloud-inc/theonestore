@@ -9,7 +9,9 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('售后'), 'href':url_for('admin.aftersale.index')}, {'title':g.page_title, 'href':""}] %}
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')},
+                        {'title':_('售后'), 'href':url_for('admin.aftersale.index')}, 
+                        {'title':g.page_title, 'href':""}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
     <div class="row">
@@ -23,7 +25,7 @@
                 {{ libs.form_control_static(_('售后号'), aftersale.aftersales_sn) }}
                 {{ libs.form_control_static(_('类型'), const.AFTERSALES_TYPE.get(aftersale.aftersales_type)) }}
                 {% if aftersale.aftersales_type in [1,2] %}
-                  {{ libs.form_control_static(_('退款金额'), aftersale.refunds_amount) }}
+                  {{ libs.form_control_static(_('退款金额'), '￥' ~ aftersale.refunds_amount|format_amount(1)) }}
                 {% endif %}
                 {% if aftersale.aftersales_type == 2 %}
                   {{ libs.form_control_static(_('收货状态'), const.AFTERSALES_DELIVER_STATUS.get(aftersale.deliver_status)) }}
@@ -94,7 +96,7 @@
                 {% for img in img_data %}
                   <div class="col-xs-6 col-sm-4 ol-md-3 col-lg-2">
                     <a href="{{ img }}" title="">
-                      <img class="img-responsive" src="{{ img }}" />
+                      <img class="img-responsive" src="{{ img|format_avatar(2) }}" />
                     </a>
                   </div>
                 {% endfor %}
@@ -115,12 +117,12 @@
 
                 {{ libs.form_control_static(_('订单编号'), order.order_sn) }}
                 {{ libs.form_control_static(_('订单状态'), order_status_text) }}
-                {{ libs.form_control_static(_('商品金额'), order.goods_amount) }}
-                {{ libs.form_control_static(_('订单金额'), order.order_amount) }}
-                {{ libs.form_control_static(_('优惠金额'), order.discount_amount) }}
-                {{ libs.form_control_static(_('快递金额'), order.shipping_amount) }}
-                {{ libs.form_control_static(_('应付金额'), order.pay_amount) }}
-                {{ libs.form_control_static(_('实付金额'), order.paid_amount) }}
+                {{ libs.form_control_static(_('商品金额'), '￥' ~ order.goods_amount|format_amount(1)) }}
+                {{ libs.form_control_static(_('订单金额'), '￥' ~ order.order_amount|format_amount(1)) }}
+                {{ libs.form_control_static(_('优惠金额'), '￥' ~ order.discount_amount|format_amount(1)) }}
+                {{ libs.form_control_static(_('快递金额'), '￥' ~ order.shipping_amount|format_amount(1)) }}
+                {{ libs.form_control_static(_('应付金额'), '￥' ~ order.pay_amount|format_amount(1)) }}
+                {{ libs.form_control_static(_('实付金额'), '￥' ~ order.paid_amount|format_amount(1)) }}
                 {{ libs.form_control_static(_('支付方式'), const.PAY_METHOD.get(order.pay_method)) }}
                 {{ libs.form_control_static(_('流水号'), order.pay_tran_id) }}
                 {{ libs.form_control_static(_('支付时间'), order.paid_time|timestamp2str) }}
@@ -143,7 +145,7 @@
                   {% for _order_goods in order_goods %}
                     <tr>
                       <td>{{ _order_goods.goods_name }}</td>
-                      <td>{{ _order_goods.goods_price }}</td>
+                      <td>￥{{ _order_goods.goods_price|format_amount(1) }}</td>
                       <td>{{ _order_goods.goods_quantity }}</td>
                     </tr>
                   {% endfor %}

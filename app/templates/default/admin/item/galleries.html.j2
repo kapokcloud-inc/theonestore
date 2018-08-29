@@ -63,7 +63,7 @@
                 {% for gallery in galleries %}
                   <div class="col-xs-6 col-sm-4 ol-md-3 col-lg-2">
                     <a href="{{ gallery.img }}" title="">
-                      <img class="img-responsive" src="{{ gallery.img }}" />
+                      <img class="img-responsive" src="{{ gallery.img|format_avatar(2) }}" />
                     </a>
                     <br />
                     <p class="text-center">

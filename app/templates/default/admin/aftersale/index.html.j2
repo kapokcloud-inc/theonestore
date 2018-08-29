@@ -36,7 +36,7 @@
                     <tr>
                       <td>{{ aftersale.aftersales_sn }}</td>
                       <td>{{ const.AFTERSALES_TYPE.get(aftersale.aftersales_type) }}</td>
-                      <td>{{ aftersale.refunds_amount }}</td>
+                      <td>￥{{ aftersale.refunds_amount|format_amount(1) }}</td>
                       <td>{{ aftersale.content }}</td>
                       <td>
                         {% set imgs = aftersale.img_data|json_loads if aftersale.img_data %}

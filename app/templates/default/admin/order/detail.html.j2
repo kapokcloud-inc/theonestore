@@ -2,9 +2,12 @@
 {% import '/default/admin/libs/libs.html.j2' as libs %}
 {% import '/default/admin/libs/const.html.j2' as const %}
 
+  
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('订单'), 'href':url_for('admin.order.index')}, {'title':g.page_title, 'href':""}] %}
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')},
+                        {'title':_('订单'), 'href':url_for('admin.order.index')}, 
+                        {'title':g.page_title, 'href':""}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
     <div class="row">
@@ -65,41 +68,48 @@
               <table class="table table-hover product-overview footable" id="myTable">
                 <thead>
                   <tr>
-                    <th>{{_('商品名称')}}</th>
-                    <th width="80">{{_('商品图片')}}</th>
-                    <th width="80">{{_('商品数量')}}</th>
-                    <th width="80">{{_('销售价格')}}</th>
+                    <th>{{_('图片')}}</th>
+                    <th>{{_('名称')}}</th>
+                    <th>{{_('数量')}}</th>
+                    <th>{{_('价格')}}</th>
+                    <th class="order-td-right">{{_('小计')}}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for goods in order_goods %}
                     <tr>
                       <td>
+                        <img src="{{ goods['goods_img']|format_avatar(0) }}" width="50" />
+                      </td>
+                      <td>
                         <a href="{{ url_for('admin.item.detail', goods_id=goods.goods_id) }}">{{ goods.goods_name }}</a>
                       </td>
-                      <td><img src="{{ goods['goods_img'] }}" width="50" /></td>
                       <td>{{ goods.goods_quantity }}</td>
-                      <td>{{ goods.goods_price }}</td>
+                      <td>￥{{ goods.goods_price|format_amount(1) }}</td>
+                      <td class="order-td-right">￥{{ (goods.goods_price * goods.goods_quantity)|format_amount(1) }}</td>
                     </tr>
                   {% endfor %}
                 </tbody>
-            </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="panel">
-          <div class="panel panel-default">
-            <div class="panel-heading">{{_('费用信息')}}</div>
-            <div class="panel-body">
-              <div class="row">
-                {{ libs.form_control_static(_('小计'), order.goods_amount) }}
-                {{ libs.form_control_static(_('运费'), order.shipping_amount) }}
-                {{ libs.form_control_static(_('优惠金额'), order.discount_amount) }}
-                {{ libs.form_control_static(_('应付金额'), order.pay_amount) }}
+              </table>
+              <div class="foot-amount">
+                <ul class="foot-amount-ul">
+                  <li>
+                    <span class="foot-amount-span-title">{{_('商品金额：')}}</span>
+                    <span class="foot-amount-span-content">￥{{ order.goods_amount|format_amount(1) }}</span>
+                  </li>
+                  <li>
+                    <span class="foot-amount-span-title">{{_('运&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：')}}</span>
+                    <span class="foot-amount-span-content">+￥{{ order.shipping_amount|format_amount(1) }}</span>
+                  </li>
+                  <li>
+                    <span class="foot-amount-span-title">{{_('优惠金额：')}}</span>
+                    <span class="foot-amount-span-content">-￥{{ order.discount_amount|format_amount(1) }}</span>
+                  </li>
+                  <li>
+                    <span class="foot-amount-span-title allOn">{{_('应付金额：')}}</span>
+                    <span class="foot-amount-span-content allOn">￥{{ order.paid_amount|format_amount(1) }}</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

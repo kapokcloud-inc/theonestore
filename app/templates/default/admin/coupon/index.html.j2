@@ -63,8 +63,8 @@
                       <td>{{ begin_time }}</td>
                       {% set end_time = _('无限制') if batch.end_time == 0 else batch.end_time|timestamp2str %}
                       <td>{{ end_time }}</td>
-                      <td>{{ batch.coupon_amount }}</td>
-                      <td>{{ batch.limit_amount }}</td>
+                      <td>￥{{ batch.coupon_amount|format_amount(1) }}</td>
+                      <td>￥{{ batch.limit_amount|format_amount(1) }}</td>
                       <td>{{ const.YES_OR_NO.get(batch.is_valid, '错误') }}</td>
                       <td>{{ batch.add_time|timestamp2str }}</td>
                       <td>
@@ -75,7 +75,7 @@
                     </tr>
                   {% endfor %}
                 </tbody>
-                {{ libs.pagination_html(pagination, 9) }}
+                {{ libs.pagination_html(pagination, 20) }}
             </table>
           </div>
         </div>

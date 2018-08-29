@@ -76,15 +76,10 @@
                       </td>
                       <td>{{ order.nickname }}</td>
                       <td>{{ order.order_sn }}</td>
-                      <td>￥{{ order.order_amount }}</td>
+                      <td>￥{{ order.order_amount|format_amount(1) }}</td>
                       <td>{{ order.pay_tran_id }}</td>
                       {% set paid_time = order['paid_time']|timestamp2str if order['paid_time'] else '' %}
                       <td>{{ paid_time }}</td>
-                      <td>
-                        <a href="" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">
-                          <i class="ti-pencil-alt"></i>
-                        </a>
-                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>

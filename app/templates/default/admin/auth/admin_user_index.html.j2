@@ -3,7 +3,7 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('管理员'), 'href':""}] %}
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')}, {'title':_('管理员'), 'href':""}] %}
   {% set button = {'title':_('添加管理员'), 'href':url_for('admin.auth.create')} %}
   {{ libs.breadcrumbs(breadcrumbs, button) }}
   <div class="container-fluid">

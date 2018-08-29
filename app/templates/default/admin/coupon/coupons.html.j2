@@ -14,7 +14,7 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':g.page_title, 'href':""}] %}
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')}, {'title':g.page_title, 'href':""}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
     <div class="row">
@@ -59,8 +59,8 @@
                       <td>{{ begin_time }}</td>
                       {% set end_time = _('无限制') if coupon.end_time == 0 else coupon.end_time|timestamp2str %}
                       <td>{{ end_time }}</td>
-                      <td>{{ coupon.coupon_amount }}</td>
-                      <td>{{ coupon.limit_amount }}</td>
+                      <td>￥{{ coupon.coupon_amount|format_amount(1) }}</td>
+                      <td>￥{{ coupon.limit_amount|format_amount(1) }}</td>
                       <td>{{ const.YES_OR_NO.get(coupon.is_valid, '错误') }}</td>
                       {% set is_used = '是' if coupon.order_id else '否' %}
                       <td>{{ is_used }}</td>

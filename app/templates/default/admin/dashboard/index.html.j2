@@ -66,13 +66,13 @@
               <!-- <div id="sparklinedash3"></div> -->
               <i class="text-info"></i>
               <a href="{{ url_for('admin.order.index') }}">
-                <span class="counter text-info">￥{{ sum_order_amount|format_amount }}</span>              
+                <span class="counter text-info">￥{{ sum_order_amount|format_amount(1) }}</span>              
               </a>
             </li>
             <li class="text-right">
               <i class="text-info"></i>
               <a href="{{ url_for('admin.order.index', add_time_daterange=today_date_rang) }}">
-                <span class="counter text-info">￥{{ day_order_amount|format_amount }}</span>
+                <span class="counter text-info">￥{{ day_order_amount|format_amount(1) }}</span>
               </a>
             </li>
           </ul>
@@ -183,7 +183,7 @@
               <div class="col-xs-8">
                 <h4 class="m-b-0">{{_('最近会员充值')}}</h4>
                 <a href="{{ url_for('admin.recharge.index') }}"> 
-                  <h2 class="m-t-0 font-medium">￥{{ fund_orders_amount|format_amount }}</h2>
+                  <h2 class="m-t-0 font-medium">￥{{ fund_orders_amount|format_amount(1) }}</h2>
                 </a>
               </div>
             </div>
@@ -202,7 +202,7 @@
                       <span class="text-muted">{{ fund_order.add_time|timestamp2str }}</span>
                     </div>
                     <div class="er-count ">￥
-                      <span class="counter">{{ fund_order.order_amount|format_amount }}</span>
+                      <span class="counter">{{ fund_order.order_amount|format_amount(1) }}</span>
                     </div>
                   </div>
                 </li>
@@ -229,7 +229,7 @@
             </div>
             <div class="col-md-6 col-sm-6 col-xs-6 ">
               <a href="{{ url_for('admin.order.index') }}">
-                <h1 class="text-right text-info m-t-20">￥{{ orders_amount|format_amount }}</h1>
+                <h1 class="text-right text-info m-t-20">￥{{ orders_amount|format_amount(1) }}</h1>
               </a>
             </div>
           </div>
@@ -251,7 +251,7 @@
                       <td>{{ order.order_id }}</td>
                       <td class="txt-oflo">{{ order.order_sn }}</td>
                       <td>
-                        <span class="{{ const.ORDER_TEXT_LABEL.get(order.order_status,'') }}">￥{{ order.order_amount|format_amount(0) }}</span>
+                        <span class="{{ const.ORDER_TEXT_LABEL.get(order.order_status,'') }}">￥{{ order.order_amount|format_amount(1) }}</span>
                       </td>
                       <td>
                         <span class="label {{ const.ORDER_STATUS_LABEL.get(order.order_status,'') }} label-rouded">{{ order.status_text }}</span>

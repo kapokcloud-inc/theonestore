@@ -16804,3 +16804,38 @@ ul li {
   left: 50%;
   transform: translate(-50%, 0%);
 }
+
+.order-td-right{
+  text-align: right;
+  width: 100px;
+}
+
+.foot-amount{
+  border-top: 1px solid #e4e7ea;
+  padding-top: 10px;
+}
+
+.foot-amount-ul{
+  float: right;
+}
+
+.foot-amount-span-title{
+  font-size: 14px;
+  margin-top: 10px;
+  color: #263238;
+  display: inline-block;
+  font-weight: 500;
+}
+
+.foot-amount-span-content{
+  font-size: 14px;
+  color: #797979;
+  margin-top: 10px;
+  display: inline-block;
+  width: 130px;
+  text-align: right;
+}
+
+.allOn{
+  color: #f33155 !important;  
+}

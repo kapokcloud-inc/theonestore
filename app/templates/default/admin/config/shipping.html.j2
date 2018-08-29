@@ -30,8 +30,8 @@
                     <td>{{ shipping.shipping_id }}</td>
                     <td>{{ shipping.shipping_name }}</td>
                     {% if shipping.free_limit_amount > 0 %}
-                      <td>{{ shipping.free_limit_amount }}</td>
-                      <td>{{ shipping.shipping_amount }}</td>
+                      <td>￥{{ shipping.free_limit_amount|format_amount(1) }}</td>
+                      <td>￥{{ shipping.shipping_amount|format_amount(1) }}</td>
                     {% else %}
                       <td colspan="2">{{_('免运费')}}</td>
                     {% endif %}

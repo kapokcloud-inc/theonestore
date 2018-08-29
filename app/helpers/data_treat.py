@@ -16,9 +16,11 @@ def format_amount(sourcePrice=0, format_type=0):
         @param sourcePrice, 源价格
         @param format_type, 转换类型 
                 0=为0则为整数0，小数均为0则返回整数，否则保留两位小数
-                1=为0则为整数0，否则均保留两位小数
+                1=为0则为整数0.00，否则均保留两位小数
     '''
     if sourcePrice == None or sourcePrice == 0:
+        if format_type == 1:
+            return toamount(0)
         return 0
 
     try:

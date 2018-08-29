@@ -4,7 +4,9 @@
 {% block body %}
 <!-- Page Content -->
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('管理员'), 'href':url_for('admin.auth.index')}, {'title':_('添加管理员'), 'href':''}] %}
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')},
+                        {'title':_('管理员'), 'href':url_for('admin.auth.index')}, 
+                        {'title':_('添加管理员'), 'href':''}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
     <!--.row-->
