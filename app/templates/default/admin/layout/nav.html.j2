@@ -14,39 +14,17 @@
       {% set _view = request.path.split('/')[2] %}
       {%
         set menu_list = [
-          {'title':_('管理员'),
-           'href':url_for('admin.auth.index'),
-           'view':'auth',
-           'icon':'mdi mdi-account-card-details',
+          {'title':_('首页'),
+           'href':url_for('admin.index.dashboard'),
+           'view':'index',
+           'icon':'mdi mdi-apps',
            'children':None
           },
-          {'title':_('商品'),
-           'href':'javascript:;',
-           'view':'item',
-           'icon':'mdi mdi-cart-outline',
-           'children':[
-              {'title':_('商品'),
-              'href':url_for('admin.item.index'),
-              'endpoints':['admin.item.index',
-                           'admin.item.create',
-                           'admin.item.detail',
-                           'admin.item.h5',
-                           'admin.item.galleries',
-                           'admin.item.save']
-              },
-              {'title':_('分类'),
-              'href':url_for('admin.item.categories'),
-              'endpoints':['admin.item.categories',
-                           'admin.item.category_create',
-                           'admin.item.category_detail',
-                           'admin.item.category_save']
-              }
-            ]
-          },
-          {'title':_('订单'),
-           'href':url_for('admin.order.index'),
-           'view':'order',
-           'icon':'mdi mdi-truck-delivery',
+          {'type':'devider'},
+          {'title':_('用户'),
+           'href':url_for('admin.user.index'),
+           'view':'user',
+           'icon':'mdi mdi-account',
            'children':None
           },
           {'title':_('充值'),
@@ -55,132 +33,168 @@
            'icon':'mdi mdi-wallet',
            'children':None
           },
-          {'title':_('售后'),
-           'href':url_for('admin.aftersale.index'),
-           'view':'aftersale',
-           'icon':'mdi mdi-headphones',
-           'children':None
-          },
-          {'title':_('用户'),
-           'href':url_for('admin.user.index'),
-           'view':'user',
-           'icon':'mdi mdi-account',
-           'children':None
-          },
           {'title':_('评论'),
            'href':url_for('admin.comment.index'),
            'view':'comment',
            'icon':'mdi mdi-comment',
            'children':None
           },
-          {'title':_('优惠券'),
-           'href':'javascript:;',
-           'view':'coupon',
-           'icon':'mdi mdi-credit-card',
-           'children':[
-              {'title':_('优惠券'),
-              'href':url_for('admin.coupon.index'),
-              'endpoints':['admin.coupon.index',
-                           'admin.coupon.create',
-                           'admin.coupon.detail',
-                           'admin.coupon.save']
-              },
-              {'title':_('用户优惠券'),
-              'href':url_for('admin.coupon.coupons'),
-              'endpoints':['admin.coupon.coupons']
-              }
-            ]
-          },
-          {'title':_('广告'),
-           'href':url_for('admin.adv.index'),
-           'view':'adv',
-           'icon':'mdi mdi-monitor-multiple',
-           'children':None
-          },
-          {'title':_('配置项'),
-           'href':url_for('admin.config.sms_yunpian'),
-           'view':'config',
-           'icon':'mdi mdi-settings',
-           'children':[
-              {'title':_('微信'),
-              'href':url_for('admin.config.mp'),
-              'endpoints':['admin.config.mp',
-                           'admin.config.weixinpay',
-                           'admin.config.weixinopen']
-              },
-              {'title':_('短信'),
-              'href':url_for('admin.config.sms_yunpian'),
-              'endpoints':['admin.config.sms_yunpian',
-                           'admin.config.sms_alisms']
-              },
-              {'title':_('存储'),
-              'href':url_for('admin.config.storage_qiniu'),
-              'endpoints':['admin.config.storage_qiniu',
-                           'admin.config.storage_alioss']
-              },
-              {'title':_('快递'),
-              'href':url_for('admin.config.shipping'),
-              'endpoints':['admin.config.shipping',
-                           'admin.config.shipping_detail']
-              },
-               {'title':_('售后'),
-              'href':url_for('admin.config.aftersales_service'),
-              'endpoints':['admin.config.aftersales_service']
-              },
-           ]
-          },
-          {'title':_('文章'),
-           'href':'javascript:;',
-           'view':'post',
-           'icon':'mdi mdi-clipboard-text',
-           'children':[
-              {'title':_('文章'),
-              'href':url_for('admin.post.index'),
-              'endpoints':['admin.post.index',
-                          'admin.post.detail',
-                          'admin.post.create',
-                          'admin.post.h5',
-                          'admin.post.save']
-              },
-              {'title':_('分类'),
-              'href':url_for('admin.post.categories'),
-              'endpoints':['admin.post.categories',
-                          'admin.post.category_create',
-                          'admin.post.category_detail',
-                          'admin.post.category_save']
-              }
-            ]
-          },
+          {'type':'devider'},
+          {'title':_('商品'),
+          'href':'javascript:;',
+          'view':'item',
+          'icon':'mdi mdi-cart-outline',
+          'children':[
+            {'title':_('商品'),
+            'href':url_for('admin.item.index'),
+            'endpoints':['admin.item.index',
+                          'admin.item.create',
+                          'admin.item.detail',
+                          'admin.item.h5',
+                          'admin.item.galleries',
+                          'admin.item.save']
+            },
+            {'title':_('分类'),
+            'href':url_for('admin.item.categories'),
+            'endpoints':['admin.item.categories',
+                          'admin.item.category_create',
+                          'admin.item.category_detail',
+                          'admin.item.category_save']
+            }
+          ]
+        },
+        {'title':_('优惠券'),
+          'href':'javascript:;',
+          'view':'coupon',
+          'icon':'mdi mdi-credit-card',
+          'children':[
+            {'title':_('优惠券'),
+            'href':url_for('admin.coupon.index'),
+            'endpoints':['admin.coupon.index',
+                          'admin.coupon.create',
+                          'admin.coupon.detail',
+                          'admin.coupon.save']
+            },
+            {'title':_('用户优惠券'),
+            'href':url_for('admin.coupon.coupons'),
+            'endpoints':['admin.coupon.coupons']
+            }
+          ]
+        },
+        {'title':_('订单'),
+          'href':url_for('admin.order.index'),
+          'view':'order',
+          'icon':'mdi mdi-truck-delivery',
+          'children':None
+        },
+        {'title':_('售后'),
+          'href':url_for('admin.aftersale.index'),
+          'view':'aftersale',
+          'icon':'mdi mdi-headphones',
+          'children':None
+        },
+        {'type':'devider'},
+        {'title':_('文章'),
+          'href':'javascript:;',
+          'view':'post',
+          'icon':'mdi mdi-clipboard-text',
+          'children':[
+            {'title':_('文章'),
+            'href':url_for('admin.post.index'),
+            'endpoints':['admin.post.index',
+                        'admin.post.detail',
+                        'admin.post.create',
+                        'admin.post.h5',
+                        'admin.post.save']
+            },
+            {'title':_('分类'),
+            'href':url_for('admin.post.categories'),
+            'endpoints':['admin.post.categories',
+                        'admin.post.category_create',
+                        'admin.post.category_detail',
+                        'admin.post.category_save']
+            }
+          ]
+        },
+        {'title':_('广告'),
+          'href':url_for('admin.adv.index'),
+          'view':'adv',
+          'icon':'mdi mdi-monitor-multiple',
+          'children':None
+        },
+        {'type':'devider'},
+        {'title':_('管理员'),
+          'href':url_for('admin.auth.index'),
+          'view':'auth',
+          'icon':'mdi mdi-account-card-details',
+          'children':None
+        },
+        {'title':_('配置项'),
+          'href':url_for('admin.config.sms_yunpian'),
+          'view':'config',
+          'icon':'mdi mdi-settings',
+          'children':[
+            {'title':_('微信'),
+            'href':url_for('admin.config.mp'),
+            'endpoints':['admin.config.mp',
+                          'admin.config.weixinpay',
+                          'admin.config.weixinopen']
+            },
+            {'title':_('短信'),
+            'href':url_for('admin.config.sms_yunpian'),
+            'endpoints':['admin.config.sms_yunpian',
+                          'admin.config.sms_alisms']
+            },
+            {'title':_('存储'),
+            'href':url_for('admin.config.storage_qiniu'),
+            'endpoints':['admin.config.storage_qiniu',
+                          'admin.config.storage_alioss']
+            },
+            {'title':_('快递'),
+            'href':url_for('admin.config.shipping'),
+            'endpoints':['admin.config.shipping',
+                          'admin.config.shipping_detail']
+            },
+              {'title':_('售后'),
+            'href':url_for('admin.config.aftersales_service'),
+            'endpoints':['admin.config.aftersales_service']
+            },
+          ]
+        },
         ]
       %}
       {% for menu in menu_list %}
-        <li>
-          {% set is_active = 'active' if menu['view'] == _view else '' %}
-          {% if menu['children'] == None %}
-            <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
-              <i class="{{ menu['icon'] }} fa-fw"></i>
-              <span class="hide-menu">{{ menu['title'] }}</span>
-            </a>
-          {% else %}
-            <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
-              <i class="{{ menu['icon'] }} fa-fw"></i>
-              <span class="hide-menu">{{ menu['title'] }}<span class="fa arrow"></span></span>
-            </a>
-            {% set aria_expanded = 'true' if menu['view'] == _view else 'false' %}
-            {% set collapse_in = 'collapse in' if menu['view'] == _view else '' %}
-            <ul class="nav nav-second-level {{ collapse_in }}" aria-expanded="{{ aria_expanded }}">
-              {% for child in menu['children'] %}
-                <li>
-                  {% set _is_active = 'active' if request.endpoint in child['endpoints'] else '' %}
-                  <a href="{{ child['href'] }}" class="{{ _is_active }}">
-                    <i class="fa-fw"></i>
-                    <span class="hide-menu">{{ child['title'] }}</span>
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </li>
+        {% if menu['type'] == 'devider' %}
+          <li class="devider" ></li>
+        {% else %}
+          <li>
+            {% set is_active = 'active' if menu['view'] == _view else '' %}
+            {% if menu['children'] == None %}
+              <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
+                <i class="{{ menu['icon'] }} fa-fw"></i>
+                <span class="hide-menu">{{ menu['title'] }}</span>
+              </a>
+            {% else %}
+              <a href="{{ menu['href'] }}" class="waves-effect {{ is_active }}">
+                <i class="{{ menu['icon'] }} fa-fw"></i>
+                <span class="hide-menu">{{ menu['title'] }}<span class="fa arrow"></span></span>
+              </a>
+              {% set aria_expanded = 'true' if menu['view'] == _view else 'false' %}
+              {% set collapse_in = 'collapse in' if menu['view'] == _view else '' %}
+              <ul class="nav nav-second-level {{ collapse_in }}" aria-expanded="{{ aria_expanded }}">
+                {% for child in menu['children'] %}
+                  <li>
+                    {% set _is_active = 'active' if request.endpoint in child['endpoints'] else '' %}
+                    <a href="{{ child['href'] }}" class="{{ _is_active }}">
+                      <i class="fa-fw"></i>
+                      <span class="hide-menu">{{ child['title'] }}</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </li>
+        {% endif %}
       {% endfor %}
     </ul>
   </div>

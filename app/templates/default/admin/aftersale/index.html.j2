@@ -41,7 +41,7 @@
                       <td>
                         {% set imgs = aftersale.img_data|json_loads if aftersale.img_data %}
                         {% for img in imgs %}
-                          <img src="{{ img }}" width="50" />
+                          <img src="{{ img|format_avatar(0) }}" width="50" />
                         {% endfor %}
                       </td>
                       <td>{{ texts.get(aftersale.aftersales_id) }}</td>

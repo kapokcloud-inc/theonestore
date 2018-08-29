@@ -29,7 +29,7 @@
                 <tr id="category-{{category.cat_id}}">
                   <td>{{ category.cat_id }}</td>
                   <td>{{ category.cat_name }}</td>
-                  <td> <img src="{{ category.cat_img }}" alt="" width="80"> </td>
+                  <td> <img src="{{ category.cat_img|format_avatar }}" alt="" width="80"> </td>
                   <td>
                     <span class="label {{ const.YES_OR_NO_LABEL.get(category.is_show, 'label-danger') }} font-weight-100">
                       {{ const.YES_OR_NO.get(category.is_show, _('未知错误')) }}

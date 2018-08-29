@@ -54,7 +54,7 @@
                     <tr id="item-{{item.goods_id}}">
                       <td>{{ item.goods_id }}</td>
                       <td>{{ item.goods_name }}</td>
-                      <td> <img src="{{ item.goods_img }}" alt="" width="80"> </td>
+                      <td> <img src="{{ item.goods_img|format_avatar }}" alt="" width="80"> </td>
                       <td>{{ item.cat_name }}</td>
                       <td>{{ item.goods_price }}</td>
                       <td>{{ item.stock_quantity }}</td>

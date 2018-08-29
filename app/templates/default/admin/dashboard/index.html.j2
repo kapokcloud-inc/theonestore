@@ -14,11 +14,6 @@
       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <h4 class="page-title">{{_('数据统计')}}</h4>
       </div>
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-        <a href="#" target="_blank" 
-        class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light" 
-        style="display:block!important">Buy Admin Now</a>
-      </div>
       <!-- /.col-lg-12 -->
     </div>
     <!-- 数据统计 -->
@@ -200,14 +195,14 @@
                   <li>
                   <div class="er-row">
                     <div class="er-pic">
-                      <img src="{{ fund_order.avatar|format_avatar(1) }}" alt="varun" width="60" class="img-circle">
+                      <img src="{{ fund_order.avatar|format_avatar }}" alt="varun" width="60" class="img-circle">
                     </div>
                     <div class="er-text">
                       <h3>{{ fund_order.nickname }}</h3>
                       <span class="text-muted">{{ fund_order.add_time|timestamp2str }}</span>
                     </div>
                     <div class="er-count ">￥
-                      <span class="counter">{{ fund_order.order_amount|format_amount(0) }}</span>
+                      <span class="counter">{{ fund_order.order_amount|format_amount }}</span>
                     </div>
                   </div>
                 </li>
@@ -295,7 +290,7 @@
                           {% set img_data = comment.img_data|json_loads if comment.img_data %}
                           {% for img in img_data %}
                             <a href="{{ img }}" title="" class="image-popup-no-margins">
-                              <img src="{{ img }}" width="50" />
+                              <img src="{{ img|format_avatar(0) }}" width="50" />
                             </a>
                           {% endfor %}
                         </td>

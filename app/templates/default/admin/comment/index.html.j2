@@ -60,7 +60,7 @@
                       </td>
                       <td>
                         <a href="{{url_for('admin.item.detail', goods_id=comment.goods_id)}}" target="_blank">
-                          <img src="{{ comment.goods_img }}" width="50" />
+                          <img src="{{ comment.goods_img|format_avatar(0) }}" width="50" />
                         </a>
                       </td>
                       <td>{{ comment.rating }}</td>
@@ -71,7 +71,7 @@
                           <!--<div class="zoom-gallery">-->
                             {% for img in img_data %}
                               <a href="{{ img }}" title="" class="image-popup-no-margins">
-                                <img src="{{ img }}" width="50" />
+                                <img src="{{ img|format_avatar(0) }}" width="50" />
                               </a>
                             {% endfor %}
                           <!--</div>-->

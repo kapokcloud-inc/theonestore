@@ -105,9 +105,9 @@
                     <tr>
                       <td>{{ order.order_sn }}</td>
                       <td>
-                        {% set items = order['goods_data']|json_loads %}
+                        {% set items = order['goods_data']|json_loads if order['goods_data'] %}
                         {% for item in items %}
-                          <img src="{{ item['goods_img'] }}" width="50" />
+                          <img src="{{ item['goods_img']|format_avatar(0) }}" width="50" />
                         {% endfor %}
                       </td>
                       <td>{{ order['goods_quantity'] }}</td>
