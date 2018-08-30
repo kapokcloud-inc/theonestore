@@ -64,10 +64,10 @@ def index(page=1, page_size=20):
     
     # 金额筛选项
     amounts = [
-            {'name': '请选择...', 'value': '-1'},
-            {'name': '50元以下', 'value': '0'},
-            {'name': '100元以下', 'value': '1'},
-            {'name': '100元以上', 'value': '2'}
+            {'name': _(u'请选择...'), 'value': '-1'},
+            {'name': _(u'50元以下'), 'value': '0'},
+            {'name': _(u'100元以下'), 'value': '1'},
+            {'name': _(u'100元以上'), 'value': '2'}
         ]
 
     args                    = request.args
@@ -85,46 +85,44 @@ def index(page=1, page_size=20):
                             filter(Order.pay_status == 2).\
                             filter(Order.order_type == 2)
 
-    
+    # 今天
     if tab_status == 1:
-        # 今天
-        start      = some_day_timestamp(current_timestamp(), 0)
-        end        = some_day_timestamp(current_timestamp(), 1)
-        q          = q.filter(Order.paid_time >= start).filter(Order.paid_time < end)
-    elif tab_status == 2:
-        # 昨天
-        start      = some_day_timestamp(current_timestamp(), -1)
-        end        = some_day_timestamp(current_timestamp(), 0)
-        q          = q.filter(Order.paid_time >= start).filter(Order.paid_time < end)
-    elif tab_status == 3:
-        # 一周内
-        start      = some_day_timestamp(current_timestamp(), -7)
-        end        = some_day_timestamp(current_timestamp(), 0)
-        q          = q.filter(Order.paid_time >= start).filter(Order.paid_time < end)
-    elif tab_status == 0 and paid_time_daterange:
-        # 自定义时间段
-        start, end = date_range(paid_time_daterange)
-        q          = q.filter(Order.paid_time >= start).filter(Order.paid_time < end)
+        start = some_day_timestamp(current_timestamp(), 0)
+        end   = some_day_timestamp(current_timestamp(), 1)
+        q     = q.filter(Order.paid_time > = start).filter(Order.paid_time < end)
 
+    # 昨天
+    elif tab_status == 2:
+        start = some_day_timestamp(current_timestamp(), -1)
+        end   = some_day_timestamp(current_timestamp(), 0)
+        q     = q.filter(Order.paid_time > = start).filter(Order.paid_time < end)
+
+    # 一周内
+    elif tab_status == 3:
+        start = some_day_timestamp(current_timestamp(), -7)
+        end   = some_day_timestamp(current_timestamp(), 0)
+        q     = q.filter(Order.paid_time > = start).filter(Order.paid_time < end)
+
+    # 自定义时间段
+    elif tab_status == 0 and paid_time_daterange:
+        start, end = date_range(paid_time_daterange)
+        q          = q.filter(Order.paid_time > = start).filter(Order.paid_time < end)
 
     if order_sn:
-        q          = q.filter(Order.order_sn == order_sn)
+        q = q.filter(Order.order_sn =  = order_sn)
     
     if pay_tran_id:
-        q          = q.filter(Order.pay_tran_id == pay_tran_id)
+        q = q.filter(Order.pay_tran_id =  = pay_tran_id)
     
     if uid:
-        q          = q.filter(Order.uid == uid)
-    
-    
+        q = q.filter(Order.uid =  = uid)
     
     if order_amount == 0:
-        q          = q.filter(Order.order_amount < 50)
+        q = q.filter(Order.order_amount < 50)
     elif order_amount == 1:
-        q          = q.filter(Order.order_amount < 100)
+        q = q.filter(Order.order_amount < 100)
     elif  order_amount == 2:
-        q          = q.filter(Order.order_amount >= 100)
-    
+        q = q.filter(Order.order_amount > = 100)
         
     orders = q.order_by(Order.order_id.desc()).offset((page-1)*page_size).limit(page_size).all()
     pagination = Pagination(None, page, page_size, q.count(), None)
