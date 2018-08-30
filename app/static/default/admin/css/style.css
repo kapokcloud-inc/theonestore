@@ -16804,7 +16804,7 @@ ul li {
   left: 50%;
   transform: translate(-50%, 0%);
 }
-
+/*admin order detail amount*/
 .order-td-right{
   text-align: right;
   width: 100px;
@@ -16839,7 +16839,9 @@ ul li {
 .allOn{
   color: #f33155 !important;  
 }
+/*admin order detail amount*/
 
+/*admin list table limit td */
 .td-limit-label{
   width: 300px;
   word-break: break-all;

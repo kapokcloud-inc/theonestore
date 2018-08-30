@@ -279,7 +279,7 @@ class AfterSalesCreateService(object):
                 data = {'aftersales_goods_quantity':order_goods.goods_quantity, 'update_time':self.current_time}
                 model_update(order_goods, data)
         
-        AfterSalesStaticMethodsService.add_log(aftersales.aftersales_id, _(u'申请售后服务，等待商家审核。'), self.current_time, False)
+        AfterSalesStaticMethodsService.add_log(aftersales.aftersales_id, _(u'申请售后服务，等待商家审核。'), 1, self.current_time, False)
 
         # 售后地址
         if self.address_data:
@@ -383,14 +383,23 @@ class AfterSalesStaticMethodsService(object):
         return toamount(refunds_amount)
 
     @staticmethod
-    def add_log(aftersales_id, content, current_time=0, commit=True):
-        """添加日志"""
+    def add_log(aftersales_id, content, al_type=0, current_time=0, commit=True):
+        """添加日志
+            @param al_type 类型：
+                        0_默认，
+                        1_申请，
+                        2_审核，
+                        3_收货(商家)，
+                        4_退款，
+                        5_寄货(商家)
+                        6_寄货(用户)，
+        """
 
         current_time = current_time if current_time else current_timestamp()
 
         aftersales = Aftersales.query.get(aftersales_id)
         if aftersales:
-            data = {'aftersales_id':aftersales_id, 'content':content, 'add_time':current_time}
+            data = {'aftersales_id':aftersales_id, 'content':content, 'al_type':al_type, 'add_time':current_time}
             model_create(AftersalesLogs, data)
 
             data = {'latest_log':content, 'update_time':current_time}

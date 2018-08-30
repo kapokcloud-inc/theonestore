@@ -79,6 +79,7 @@ class AftersalesLogs(BaseModel, db.Model):
     __tablename__ = 'aftersales_logs'
 
     al_id = db.Column(db.Integer, primary_key=True)
+    al_type = db.Column(db.Integer, default=0)
     aftersales_id = db.Column(db.Integer, default=0)
     content = db.Column(db.String(255), default='')
     add_time = db.Column(db.Integer, default=0)

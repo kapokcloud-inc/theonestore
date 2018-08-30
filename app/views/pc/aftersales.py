@@ -91,9 +91,13 @@ def detail(aftersales_id):
     if not aftersales:
         return redirect(url_for('pc.index.pagenotfound'))
     
-    log = AftersalesLogs.query.\
-            filter(AftersalesLogs.aftersales_id == aftersales.aftersales_id).\
-            order_by(AftersalesLogs.al_id.desc()).all()
+    logs       = AftersalesLogs.query.\
+                            filter(AftersalesLogs.aftersales_id == aftersales.aftersales_id).\
+                            order_by(AftersalesLogs.al_id.desc()).all()
+        
+    logs_time   = {}
+    for log in logs:
+        logs_time[log.al_type] = log.add_time
 
     status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersales)
     #回寄地址信息
@@ -112,7 +116,7 @@ def detail(aftersales_id):
     if aftersales.aftersales_type == 3:
         address = AftersalesAddress.query.filter(AftersalesAddress.aftersales_id == aftersales_id).first()
 
-    data = {'aftersales':aftersales, 'log':log, 'status_text':status_text, 'action_code':action_code, 'aftersales_service':aftersales_service, 'aftersales_address':address}
+    data = {'aftersales':aftersales, 'logs':logs, 'logs_time':logs_time,'status_text':status_text, 'action_code':action_code, 'aftersales_service':aftersales_service, 'aftersales_address':address}
     
     return render_template('pc/aftersales/detail.html.j2', **data)
 

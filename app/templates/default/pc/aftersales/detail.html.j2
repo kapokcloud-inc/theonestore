@@ -37,13 +37,13 @@
                       {% set step_zero_type = 'step-done' if aftersales.check_status in [2,3] else "step-active" %}
                       <li class="step step-first {{ step_zero_type }}">
                         <div>{{_('申请服务')}}</div>
-                        <div class="progress-info">{{ aftersales.add_time|timestamp2str }}</div>
+                        <div class="progress-info">{{ logs_time[1]|timestamp2str }}</div>
                       </li>
 
                       {% set step_one_text = const.AFTERSALES_STATUS_CHECK.get(aftersales.check_status,'审核') %}
                       {% set step_one_type = 'step-active' if aftersales.check_status in [2,3] else '' %}
                       {% set step_one_type = 'step-done' if aftersales.refunds_status in [2,3] or aftersales.return_status in [3] or aftersales.resend_status in [3] or aftersales.status in [3] else step_one_type %}
-                      {% set step_one_time = '2018-07-31 21:06:05' if aftersales.check_status in [2,3] else '' %}
+                      {% set step_one_time = logs_time[2]|timestamp2str if aftersales.check_status in [2,3] else '' %}
                       <li class="step {{ step_one_type }}">
                         <div>{{ step_one_text }}</div>
                         <div class="progress-info">{{ step_one_time }}</div>
@@ -54,7 +54,7 @@
                         {% set step_two_text = const.AFTERSALES_STATUS_RECEIVER.get(aftersales.return_status,'商家收货') %}
                         {% set step_two_type = 'step-active' if aftersales.return_status in [3] else '' %}
                         {% set step_two_type = 'step-done' if aftersales.refunds_status in [2,3] or aftersales.resend_status in [3]  or aftersales.status in [3] else step_two_type %}
-                        {% set step_two_time = '2018-07-31 21:06:05' if aftersales.return_status in [3] else '' %}
+                        {% set step_two_time = logs_time[3]|timestamp2str if aftersales.return_status in [3] else '' %}
                         <li class="step {{ step_two_type }}">
                           <div>{{ step_two_text }}</div>
                           <div class="progress-info">{{ step_two_time }}</div>
@@ -66,13 +66,13 @@
                         {% set step_three_text = const.AFTERSALES_STATUS_REFUND.get(aftersales.refunds_status,'退款') %}
                         {% set step_three_type = 'step-active' if aftersales.refunds_status in [2,3] else '' %}
                         {% set step_three_type = 'step-done' if aftersales.status in [3] else step_three_type %}
-                        {% set step_three_time = '2018-07-31 21:06:05' if aftersales.refunds_status in [2,3] else '' %}
+                        {% set step_three_time = logs_time[4]|timestamp2str if aftersales.refunds_status in [2,3] else '' %}
                       <!-- 仅换货有该流程 -->
                       {% elif aftersales.aftersales_type == 3 %}
                         {% set step_three_text = const.AFTERSALES_STATUS_DELIVERY.get(aftersales.resend_status,'客户收货') %}
-                        {% set step_three_type = 'step-active' if aftersales.resend_status in [3] else '' %}
+                        {% set step_three_type = 'step-active' if aftersales.resend_status in [2,3] else '' %}
                         {% set step_three_type = 'step-done' if aftersales.status in [3] else step_three_type %}
-                        {% set step_three_time = '2018-07-31 21:06:05' if aftersales.resend_status in [3] else '' %}
+                        {% set step_three_time = logs_time[5]|timestamp2str if aftersales.resend_status in [2,3] else '' %}
                       {% endif %}
                       <li class="step {{ step_three_type }}">
                         <div>{{ step_three_text }}</div>
@@ -81,7 +81,11 @@
  
                       {% set step_four_text = const.AFTERSALES_STATUS_RESULT.get(aftersales.status,"完成") %}
                       {% set step_four_type = 'step-active' if aftersales.status in [3] else '' %}
-                      {% set step_four_time = '2018-07-31 21:06:05' if aftersales.status in [3] else '' %}
+                      {% if aftersales.aftersales_type in [1,2] %}
+                        {% set step_four_time = logs_time[4]|timestamp2str if aftersales.status in [3] else '' %}
+                      {% elif aftersales.aftersales_type == 3 %}
+                        {% set step_four_time = logs_time[5]|timestamp2str if aftersales.status in [3] else '' %}
+                      {% endif %}
                       <li class="step step-last {{ step_four_type }}">
                         <div>{{ step_four_text }}</div>
                         <div class="progress-info">{{ step_four_time }}</div>
@@ -91,7 +95,7 @@
                 <div class="order-delivery hide">
                   <div class="delivery-list_box">
                     <ul class="delivery-list mar-top">
-                      {% for log_item in log %}
+                      {% for log_item in logs %}
                         {% if loop.first %}
                           {% set type = 'first' if loop.length > 1 else 'firstOn' %}
                         {% elif loop.last %}

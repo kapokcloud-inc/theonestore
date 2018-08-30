@@ -147,7 +147,7 @@ class AfterSaleCheckService(object):
 
         model_update(self.aftersale, data)
 
-        AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
+        AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, 2, self.current_time, commit=True)
 
         # 微信消息
         WeixinMessageStaticMethodsService.aftersale_step(self.aftersale, _(u'已审核'), content)
@@ -201,7 +201,7 @@ class AfterSaleReceivedService(object):
         model_update(self.aftersale, data)
 
         content = _(u'退货/换货商品已抵达，需要1-3个工作日处理，请耐心等待。')
-        AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
+        AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, 3, self.current_time, commit=True)
 
         # 微信消息
         WeixinMessageStaticMethodsService.aftersale_step(self.aftersale, _(u'已签收'), content)
@@ -269,7 +269,7 @@ class AfterSaleResendService(object):
 
         # 添加日志
         content = _(u'服务专员已处理换货，包裹已发出，%s，快递单号:%s，请注意查收。' % (self.resend_shipping_name, self.resend_shipping_sn))
-        AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
+        AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, 5, self.current_time, commit=True)
 
         # 微信消息
         WeixinMessageStaticMethodsService.aftersale_step(self.aftersale, _(u'已重发'), content)
@@ -364,7 +364,7 @@ class AfterSaleRefundsService(object):
             # 更新售后
             data['refunds_sn'] = self.rs.refunds.refunds_sn
             model_update(self.aftersale, data)
-            AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, self.current_time, commit=True)
+            AfterSaleStaticMethodsService.add_log(self.aftersales_id, content, 4, self.current_time, commit=True)
 
         return True
 
@@ -374,14 +374,23 @@ class AfterSaleStaticMethodsService(object):
 
 
     @staticmethod
-    def add_log(aftersales_id, content, current_time=0, commit=True):
-        """添加日志"""
+    def add_log(aftersales_id, content, al_type=0, current_time=0, commit=True):
+        """添加日志
+            @param al_type 类型：
+                        0_默认，
+                        1_申请，
+                        2_审核，
+                        3_收货(商家)，
+                        4_退款，
+                        5_寄货(商家)
+                        6_寄货(用户)，
+        """
 
         current_time = current_time if current_time else current_timestamp()
 
         aftersales = Aftersales.query.get(aftersales_id)
         if aftersales:
-            data = {'aftersales_id':aftersales_id, 'content':content, 'add_time':current_time}
+            data = {'aftersales_id':aftersales_id, 'content':content, 'al_type':al_type, 'add_time':current_time}
             model_create(AftersalesLogs, data)
 
             data = {'latest_log':content, 'update_time':current_time}

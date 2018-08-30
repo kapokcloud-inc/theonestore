@@ -135,6 +135,6 @@ def return_goods():
     model_update(aftersales, data)
 
     content = _(u'快递单号:%s，我们收到退货/换货商品后，需要1-3个工作日处理，请耐心等待。' % return_shipping_sn)
-    AfterSalesStaticMethodsService.add_log(aftersales_id, content, current_time, commit=True)
+    AfterSalesStaticMethodsService.add_log(aftersales_id, content, 6, current_time, commit=True)
 
     return resjson.print_json(0, u'ok')
