@@ -65,7 +65,11 @@
                       <td>{{ end_time }}</td>
                       <td>￥{{ batch.coupon_amount|format_amount(1) }}</td>
                       <td>￥{{ batch.limit_amount|format_amount(1) }}</td>
-                      <td>{{ const.YES_OR_NO.get(batch.is_valid, '错误') }}</td>
+                      <td>
+                        <span class="label {{ const.YES_OR_NO_LABEL.get(batch.is_valid, 'label-danger') }} font-weight-100">
+                          {{ const.YES_OR_NO.get(batch.is_valid, '') }}
+                        </span>
+                      </td>
                       <td>{{ batch.add_time|timestamp2str }}</td>
                       <td>
                         <a href="{{ url_for('admin.coupon.detail', cb_id=batch.cb_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">

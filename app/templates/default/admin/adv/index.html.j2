@@ -45,12 +45,16 @@
                   <td>{{ const.PLATFORM_TYPE.get(adv.platform_type) }}</td>
                   <td>{{ const.ADV_AC.get(adv.ac_id, '') }}</td>
                   <td> <img src="{{ adv.img }}-rectangle.small" alt="" width="80"> </td>
-                  <td>{{ adv.desc }}</td>
+                  <td class="td-limit-label">{{ adv.desc }}</td>
                   <td>{{ const.ADV_TTYPE.get(adv.ttype, '') }}</td>
                   <td>{{ adv.tid }}</td>
-                  <td>{{ adv.url }}</td>
+                  <td class="td-limit-label">{{ adv.url }}</td>
                   <td>{{ adv.sorting }}</td>
-                  <td>{{ const.YES_OR_NO.get(adv.is_show, '') }}</td>
+                  <td>
+                    <span class="label {{ const.YES_OR_NO_LABEL.get(adv.is_show, 'label-danger') }} font-weight-100">
+                          {{ const.YES_OR_NO.get(adv.is_show, '') }}
+                    </span>
+                  </td>
                   <td>
                     <a href="{{ url_for('admin.adv.detail', adv_id=adv.adv_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
                       <i class="ti-pencil-alt"></i>

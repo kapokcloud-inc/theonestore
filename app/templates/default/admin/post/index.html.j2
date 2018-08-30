@@ -48,7 +48,7 @@
                       <td>{{ item.cat_name }}</td>
                       <td>
                         <span class="label {{ const.YES_OR_NO_LABEL.get(item.is_publish, 'label-danger') }} font-weight-100">
-                          {{ const.YES_OR_NO.get(item.is_publish, _('未知错误')) }}
+                          {{ const.YES_OR_NO.get(item.is_publish, _('')) }}
                         </span>
                       </td>
                       <td>{{ item.add_time|timestamp2str }}</td>

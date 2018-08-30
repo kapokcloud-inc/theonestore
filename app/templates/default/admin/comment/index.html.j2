@@ -64,7 +64,7 @@
                         </a>
                       </td>
                       <td>{{ comment.rating }}</td>
-                      <td>{{ comment.content }}</td>
+                      <td class="td-limit-label">{{ comment.content }}</td>
                       <td>
                         {% set img_data = comment.img_data|json_loads %}
                         {% if img_data %}

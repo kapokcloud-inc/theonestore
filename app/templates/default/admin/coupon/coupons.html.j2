@@ -46,7 +46,7 @@
                   <th>{{_('是否有效')}}</th>
                   <th>{{_('是否已使用')}}</th>
                   <th>{{_('领取时间')}}</th>
-                  <th>{{_('操作')}}</th>
+                  <!-- <th>{{_('操作')}}</th> -->
                 </tr>
               </thead>
                 <tbody>
@@ -61,19 +61,27 @@
                       <td>{{ end_time }}</td>
                       <td>￥{{ coupon.coupon_amount|format_amount(1) }}</td>
                       <td>￥{{ coupon.limit_amount|format_amount(1) }}</td>
-                      <td>{{ const.YES_OR_NO.get(coupon.is_valid, '错误') }}</td>
-                      {% set is_used = '是' if coupon.order_id else '否' %}
-                      <td>{{ is_used }}</td>
-                      <td>{{ coupon.add_time|timestamp2str }}</td>
                       <td>
+                        <span class="label {{ const.YES_OR_NO_LABEL.get(coupon.is_valid, 'label-danger') }} font-weight-100">
+                          {{ const.YES_OR_NO.get(coupon.is_valid, '') }}
+                        </span>
+                      </td>
+                      {% set is_used = 1 if coupon.order_id else 0 %}
+                      <td>
+                        <span class="label {{ const.YES_OR_NO_LABEL.get(is_used, 'label-danger') }} font-weight-100">
+                          {{ const.YES_OR_NO.get(is_used, '') }}
+                        </span>
+                      </td>
+                      <td>{{ coupon.add_time|timestamp2str }}</td>
+                      <!-- <td>
                         <a href="javascript:void(0);" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
                           <i class="ti-pencil-alt"></i>
                         </a>
-                      </td>
+                      </td> -->
                     </tr>
                   {% endfor %}
                 </tbody>
-                {{ libs.pagination_html(pagination, 9) }}
+                {{ libs.pagination_html(pagination, 20) }}
             </table>
           </div>
         </div>
