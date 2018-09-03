@@ -76,7 +76,7 @@ def fundspay_req():
 
     tran        = ps.tran
     tran_id     = tran.tran_id
-    pay_amount -= Decimal(tran.pay_amount)
+    pay_amount -= Decimal(tran.pay_amount).quantize(Decimal('0.00'))
 
     # 更新资金 - 使用资金支付 - 检查
     remark_user = _(u'支付订单')
