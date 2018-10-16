@@ -16,3 +16,4 @@ from .order import order
 from .pay import pay
 from .aftersales import aftersales
 from .upload import upload
+from .item import item
