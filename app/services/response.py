@@ -34,8 +34,10 @@ def to_json(ret=0, msg='ok', data=None):
 def json_encode(data):
     def _any(data):
         ret = None
-        if isinstance(data, (list, tuple)):
+        if isinstance(data, list):
             ret = _list(data)
+        elif isinstance(data, tuple):
+            ret = _tuple(data)
         elif isinstance(data, dict):
             ret = _dict(data)
         elif isinstance(data, Decimal):
@@ -67,6 +69,9 @@ def json_encode(data):
         for v in data:
             ret.append(_any(v))
         return ret
+
+    def _tuple(data):
+        return data._asdict()
 
     def _dict(data): 
         ret = {}
