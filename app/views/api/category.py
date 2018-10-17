@@ -19,23 +19,23 @@ from app.database import db
 
 from app.helpers import (
     log_info,
-    ml_to_dl
 )
 
 from app.services.response import ResponseJson
 
 from app.services.api.item import ItemStaticMethodsService
 
-item = Blueprint('api.item', __name__)
+
+category = Blueprint('api.category', __name__)
 
 resjson = ResponseJson()
-resjson.module_code = 11
+resjson.module_code = 18
 
-@item.route('/goods')
-def goods():
-    """ 商品列表分页 """
+@category.route('/')
+def root():
+    """ 分类列表 """
     resjson.action_code = 10
-    log_info(request.args.to_dict())
-    items = ItemStaticMethodsService.items(request.args.to_dict(), False)
+
+    categories = ItemStaticMethodsService.categories()
     
-    return resjson.print_json(0, u'ok', {'goods':items})
+    return resjson.print_json(0, u'ok', {'category':categories})
