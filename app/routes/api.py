@@ -20,5 +20,6 @@ API_ROUTES = (
     (api.aftersales,'/api/aftersales'),
     (api.upload,    '/api/upload'),
     (api.item,      '/api/item'),
-    (api.category,  '/api/category')
+    (api.category,  '/api/category'),
+    (api.index,     '/api/index')
 )
