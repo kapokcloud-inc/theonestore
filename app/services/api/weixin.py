@@ -15,7 +15,10 @@ try:
 except ImportError as identifier:
     from urllib import urlencode
 
-from flask import session
+from flask import (
+    request,
+    session
+)
 
 from flask_babel import gettext as _
 
@@ -33,7 +36,7 @@ from app.models.sys import SysSetting
 class WeiXinLoginService(object):
     """微信登录Service"""
 
-    def __init__(self, login_type, request):
+    def __init__(self, login_type):
         self.msg          = u''
         self.appid        = ''
         self.secret       = ''
@@ -50,15 +53,15 @@ class WeiXinLoginService(object):
         uris   = {'mp':'https://open.weixin.qq.com/connect/oauth2/authorize', 'qrcode':'https://open.weixin.qq.com/connect/qrconnect'}
         scopes = {'mp':'snsapi_userinfo', 'qrcode':'snsapi_login'}
 
-        uri = uris.get(self.login_type)
-        params = OrderedDict()
-        params['appid'] = self.appid
-        params['redirect_uri'] = self.request.url
+        uri                     = uris.get(self.login_type)
+        params                  = OrderedDict()
+        params['appid']         = self.appid
+        params['redirect_uri']  = self.request.url
         params['response_type'] = 'code'
-        params['scope'] = scopes.get(self.login_type)
-        params['state'] = randomstr(32)
-        query_string = urlencode(params)
-        self.code_url = u'%s?%s#wechat_redirect' % (uri, query_string)
+        params['scope']         = scopes.get(self.login_type)
+        params['state']         = randomstr(32)
+        query_string            = urlencode(params)
+        self.code_url           = u'%s?%s#wechat_redirect' % (uri, query_string)
 
         session['weixin_login_state'] = params['state']
         return True
@@ -142,7 +145,46 @@ class WeiXinLoginService(object):
     def __connect_xiao(self):
         """连接小程序"""
 
-        return
+        false    = (False, '', '', {}, {})
+        jscode   = self.request.args.get('jscode', '')
+        nickname = self.request.args.get('nickname', '')
+        avatar   = self.request.args.get('avatar', '')
+
+        if not jscode:
+            self.msg = _(u'缺少jscode')
+            return false
+
+        if not nickname or not avatar:
+            self.msg = _(u'缺少用户信息')
+            return false
+
+        user_data = {'nickname':nickname, 'avatar':avatar, 'gender':0, 'country':'', 'province':'', 'city':''}
+
+        uri                  = 'https://api.weixin.qq.com/sns/jscode2session'
+        params               = OrderedDict()
+        params['appid']      = self.appid
+        params['secret']     = self.secret
+        params['js_code']    = jscode
+        params['grant_type'] = 'authorization_code'
+        query_string         = urlencode(params)
+        url                  = u'%s?%s' % (uri, query_string)
+
+        response  = requests.get(url)
+        if response.status_code != 200:
+            self.msg = _(u'连接请求错误')
+            return false
+
+        data    = response.json()
+        errcode = data.get('errcode', 0)
+        if errcode > 0:
+            self.msg = _(u'登录请求错误')
+            return false
+
+        openid      = data.get('openid')
+        session_key = data.get('session_key')
+        unionid     = data.get('unionid')
+
+        return (True, openid, unionid, data, user_data)
 
     def __connect(self):
         """连接第三方"""
