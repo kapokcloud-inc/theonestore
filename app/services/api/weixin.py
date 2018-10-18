@@ -15,30 +15,19 @@ try:
 except ImportError as identifier:
     from urllib import urlencode
 
-from flask import (
-    request,
-    session
-)
+from flask import session
 
 from flask_babel import gettext as _
 
 from app.helpers import (
     log_info,
-    toint,
-    randomstr,
-    model_create,
-    model_update
+    randomstr
 )
 from app.helpers.date_time import current_timestamp
-from app.helpers.user import set_user_session
 
-from app.services.api.user import (
-    UserCreateService,
-    UserStaticMethodsService
-)
+from app.services.api.bind import BindService
 
 from app.models.sys import SysSetting
-from app.models.user import User, UserThirdBind
 
 
 class WeiXinLoginService(object):
@@ -53,6 +42,7 @@ class WeiXinLoginService(object):
         self.request      = request
         self.current_time = current_timestamp()
         self.config_types = {'mp':'config_weixin_mp', 'open':'config_weixin_open'}
+        self.third_types  = {'mp':1, 'open':2}
         self.code_url     = ''
 
     def __code_url(self):
@@ -65,7 +55,7 @@ class WeiXinLoginService(object):
         uri = uris.get(self.login_type)
         params = OrderedDict()
         params['appid'] = self.appid
-        params['redirect_uri'] = request.url
+        params['redirect_uri'] = self.request.url
         params['response_type'] = 'code'
         params['scope'] = scopes.get(self.login_type)
         params['state'] = randomstr(32)
@@ -158,6 +148,8 @@ class WeiXinLoginService(object):
         if errcode > 0:
             return False
 
+        third_type = self.third_types.get(self.config_type)
+
         openid        = data.get('openid')
         access_token  = data.get('access_token')
         refresh_token = data.get('refresh_token')
@@ -190,34 +182,8 @@ class WeiXinLoginService(object):
             user_data[key1] = data.get(key2, '')
 
         # 绑定登录
-        utb = UserThirdBind.query.\
-                    filter(UserThirdBind.third_type == 1).\
-                    filter(UserThirdBind.third_user_id == openid).first()
-        if not utb:
-            ucs = UserCreateService(user_data, self.current_time)
-            if not ucs.check():
-                return False
-
-            # 创建用户
-            ucs.create()
-            ucs.commit()
-            user = ucs.user
-
-            # 创建帐户
-            UserStaticMethodsService.create_account(user.uid, self.current_time, is_commit=False)
-
-            # 创建绑定
-            data = {'uid':user.uid, 'third_type':1,
-                    'third_user_id':openid, 'third_unionid':unionid,
-                    'third_res_text':json.dumps(data), 'add_time':self.current_time}
-            utb  = model_create(UserThirdBind, data)
-        else:
-            user = User.query.get(utb.uid)
-            if not user:
-                return False
-
-        model_update(utb, {'update_time':self.current_time}, commit=True)
-
-        set_user_session(user)
+        bs = BindService(third_type, openid, unionid, data, user_data, self.current_time)
+        if not bs.bind():
+            return False
 
         return True
