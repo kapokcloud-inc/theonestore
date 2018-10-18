@@ -33,23 +33,21 @@ from app.models.sys import SysSetting
 class WeiXinLoginService(object):
     """微信登录Service"""
 
-    def __init__(self, config_type, login_type, request):
+    def __init__(self, login_type, request):
         self.msg          = u''
         self.appid        = ''
         self.secret       = ''
-        self.config_type  = config_type         # 配置类型: mp或open
-        self.login_type   = login_type          # 登录类型: mp或qrcode
+        self.login_type   = login_type          # 登录类型: mp或qrcode或xiao
         self.request      = request
         self.current_time = current_timestamp()
-        self.config_types = {'mp':'config_weixin_mp', 'open':'config_weixin_open'}
-        self.third_types  = {'mp':1, 'open':2}
+        self.config_types = {'mp':'config_weixin_mp', 'qrcode':'config_weixin_open', 'xiao':'config_weixin_xiao'}
+        self.third_types  = {'mp':1, 'qrcode':2, 'xiao':3}
         self.code_url     = ''
 
     def __code_url(self):
         """code url"""
 
-        uris   = {'mp':'https://open.weixin.qq.com/connect/oauth2/authorize',
-                    'qrcode':'https://open.weixin.qq.com/connect/qrconnect'}
+        uris   = {'mp':'https://open.weixin.qq.com/connect/oauth2/authorize', 'qrcode':'https://open.weixin.qq.com/connect/qrconnect'}
         scopes = {'mp':'snsapi_userinfo', 'qrcode':'snsapi_login'}
 
         uri = uris.get(self.login_type)
@@ -87,18 +85,83 @@ class WeiXinLoginService(object):
 
         return userinfo_url
 
+    def __connect_mp_open(self):
+        """连接公众平台或开放平台"""
+
+        false = (False, '', '', {}, {})
+        code  = self.request.args.get('code', '')
+        state = self.request.args.get('state', '')
+
+        if session.get('weixin_login_state') != state:
+            return false
+
+        # 获取token
+        token_url = self.__token_url(code)
+        response  = requests.get(token_url)
+        if response.status_code != 200:
+            return false
+
+        data    = response.json()
+        errcode = data.get('errcode', 0)
+        if errcode > 0:
+            return false
+
+        openid        = data.get('openid')
+        access_token  = data.get('access_token')
+        refresh_token = data.get('refresh_token')
+        expires_in    = data.get('expires_in')
+
+        session['weixin_login_openid']        = openid
+        session['weixin_login_access_token']  = access_token
+        session['weixin_login_refresh_token'] = refresh_token
+        session['weixin_login_expires_in']    = expires_in
+        session['weixin_login_token_time']    = self.current_time
+
+        # 获取用户信息
+        userinfo_url      = self.__userinfo_url(access_token, openid)
+        response          = requests.get(userinfo_url)
+        response.encoding = 'utf8'
+        if response.status_code != 200:
+            return false
+
+        data    = response.json()
+        errcode = data.get('errcode', 0)
+        if errcode > 0:
+            return false
+
+        openid    = data.get('openid')
+        unionid   = data.get('unionid')
+        user_data = {}
+        key1_key2 = {'nickname':'nickname', 'avatar':'headimgurl', 'gender':'sex',
+                        'country':'country', 'province':'province', 'city':'city'}
+        for key1, key2 in key1_key2.items():
+            user_data[key1] = data.get(key2, '')
+
+        return (True, openid, unionid, data, user_data)
+
+    def __connect_xiao(self):
+        """连接小程序"""
+
+        return
+
+    def __connect(self):
+        """连接第三方"""
+
+        if self.login_type in ['mp', 'qrcode']:
+            data = self.__connect_mp_open()
+        else:
+            data = self.__connect_xiao()
+
+        return data
+
     def check(self):
         """检查"""
 
-        if self.config_type not in ['mp', 'open']:
+        if self.login_type not in ['mp', 'qrcode', 'xiao']:
             self.msg = _(u'参数错误')
             return False
 
-        if self.login_type not in ['mp', 'qrcode']:
-            self.msg = _(u'参数错误')
-            return False
-
-        config_key = self.config_types.get(self.config_type)
+        config_key = self.config_types.get(self.login_type)
         ss         = SysSetting.query.filter(SysSetting.key == config_key).first()
         if not ss:
             self.msg = _(u'配置错误')
@@ -131,58 +194,16 @@ class WeiXinLoginService(object):
     def login(self):
         """登陆"""
 
-        code  = self.request.args.get('code', '')
-        state = self.request.args.get('state', '')
+        # 绑定类型
+        third_type = self.third_types.get(self.login_type)
 
-        if session.get('weixin_login_state') != state:
+        # 连接第三方
+        ret, openid, unionid, res_text, user_data = self.__connect()
+        if not ret:
             return False
-
-        # 获取token
-        token_url = self.__token_url(code)
-        response  = requests.get(token_url)
-        if response.status_code != 200:
-            return False
-
-        data    = response.json()
-        errcode = data.get('errcode', 0)
-        if errcode > 0:
-            return False
-
-        third_type = self.third_types.get(self.config_type)
-
-        openid        = data.get('openid')
-        access_token  = data.get('access_token')
-        refresh_token = data.get('refresh_token')
-        expires_in    = data.get('expires_in')
-
-        session['weixin_login_openid']        = openid
-        session['weixin_login_access_token']  = access_token
-        session['weixin_login_refresh_token'] = refresh_token
-        session['weixin_login_expires_in']    = expires_in
-        session['weixin_login_token_time']    = self.current_time
-
-        # 获取用户信息
-        userinfo_url      = self.__userinfo_url(access_token, openid)
-        response          = requests.get(userinfo_url)
-        response.encoding = 'utf8'
-        if response.status_code != 200:
-            return False
-
-        data    = response.json()
-        errcode = data.get('errcode', 0)
-        if errcode > 0:
-            return False
-
-        openid    = data.get('openid')
-        unionid   = data.get('unionid')
-        user_data = {}
-        key1_key2 = {'nickname':'nickname', 'avatar':'headimgurl', 'gender':'sex',
-                        'country':'country', 'province':'province', 'city':'city'}
-        for key1, key2 in key1_key2.items():
-            user_data[key1] = data.get(key2, '')
 
         # 绑定登录
-        bs = BindService(third_type, openid, unionid, data, user_data, self.current_time)
+        bs = BindService(third_type, openid, unionid, res_text, user_data, self.current_time)
         if not bs.bind():
             return False
 

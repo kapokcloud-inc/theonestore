@@ -35,7 +35,7 @@ def login():
 
     url  = url_for('mobile.index.root')
 
-    wxls = WeiXinLoginService('mp', 'mp', request)
+    wxls = WeiXinLoginService('mp', request)
     if not wxls.check():
         return redirect(url)
 
@@ -57,7 +57,7 @@ def login_qrcode():
 
     url  = url_for('pc.index.root')
 
-    wxls = WeiXinLoginService('open', 'qrcode', request)
+    wxls = WeiXinLoginService('qrcode', request)
     if not wxls.check():
         return redirect(url)
 
