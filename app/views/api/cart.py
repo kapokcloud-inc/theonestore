@@ -29,8 +29,7 @@ from app.helpers import (
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import (
     check_login,
-    get_uid,
-    get_session_id
+    get_uid
 )
 
 from app.services.response import ResponseJson
@@ -59,7 +58,7 @@ def index():
     resjson.action_code = 10
 
     uid        = get_uid()
-    session_id = get_session_id()
+    session_id = session.sid
     is_login   = 1 if uid else 0
 
     cs = CartService(uid, session_id)
@@ -76,7 +75,7 @@ def add():
     resjson.action_code = 11
 
     uid        = get_uid()
-    session_id = get_session_id()
+    session_id = session.sid
 
     args         = request.args
     order_id     = toint(args.get('order_id', '0'))
@@ -143,7 +142,7 @@ def update():
     resjson.action_code = 12
 
     uid        = get_uid()
-    session_id = get_session_id()
+    session_id = session.sid
 
     args         = request.args
     cart_id      = toint(args.get('cart_id', 0))
@@ -192,7 +191,7 @@ def remove():
     resjson.action_code = 13
 
     uid        = get_uid()
-    session_id = get_session_id()
+    session_id = session.sid
 
     carts_id = request.args.get('carts_id', '').strip()
     carts_id = carts_id.split(',')
@@ -232,7 +231,7 @@ def checked():
     resjson.action_code = 14
 
     uid        = get_uid()
-    session_id = get_session_id()
+    session_id = session.sid
 
     carts        = request.args.get('carts', '[]').strip()
     current_time = current_timestamp()

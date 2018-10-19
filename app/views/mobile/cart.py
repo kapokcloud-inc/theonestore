@@ -32,8 +32,7 @@ from app.helpers import (
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import (
     check_login,
-    get_uid,
-    get_session_id
+    get_uid
 )
 
 from app.services.api.cart import (
@@ -52,7 +51,7 @@ def root():
     """手机站 - 我的购物车"""
 
     uid        = get_uid()
-    session_id = get_session_id()
+    session_id = session.sid
 
     msg = request.args.get('msg', '').strip()
 
@@ -69,7 +68,7 @@ def edit(cart_id):
     """手机站 - 购物车编辑"""
 
     uid        = get_uid()
-    session_id = get_session_id()
+    session_id = session.sid
 
     q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
 

@@ -12,3 +12,4 @@ qiniu==7.2.2
 oss2==2.5.0
 pyqrcode==1.2.1
 pypng==0.0.18
+Flask-Session==0.3.1

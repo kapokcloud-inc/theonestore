@@ -55,9 +55,3 @@ def get_avatar():
     """获取用户头像"""
 
     return session.get('avatar', '')
-
-
-def get_session_id():
-    """获取用户session_id"""
-
-    return session.get('session_id', '')
