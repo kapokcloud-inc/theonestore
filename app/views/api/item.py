@@ -22,6 +22,8 @@ from app.helpers import (
     toint
 )
 
+from app.helpers.user import get_uid
+
 from app.services.response import ResponseJson
 
 from app.services.api.item import ItemStaticMethodsService
@@ -30,6 +32,7 @@ item = Blueprint('api.item', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 11
+
 
 @item.route('/goods')
 def goods():
@@ -41,26 +44,45 @@ def goods():
     resjson.action_code = 10
     params = request.args.to_dict()
 
-    p            = toint(params.get('p', '1'))
-    ps           = toint(params.get('ps', '10'))
-    cat_id       = toint(params.get('cat_id', '0'))
-    is_hot       = toint(params.get('is_hot', '0'))
+    p = toint(params.get('p', '1'))
+    ps = toint(params.get('ps', '10'))
+    cat_id = toint(params.get('cat_id', '0'))
+    is_hot = toint(params.get('is_hot', '0'))
     is_recommend = toint(params.get('is_recommend', '0'))
 
     if cat_id < 0 or p <= 0 or ps <= 0:
         return resjson.print_json(10, u'参数错误')
 
-    if not is_hot in [0,1,2]:
+    if not is_hot in [0, 1, 2]:
         return resjson.print_json(10, u'参数错误')
 
-    if not is_recommend in [0,1,2]:
+    if not is_recommend in [0, 1, 2]:
         return resjson.print_json(10, u'参数错误')
 
     params['is_hot'] = is_hot - 1
     params['is_recommend'] = is_recommend - 1
-   
+
     result = ItemStaticMethodsService.items(params, False)
-    
-    data = {'goods':result['items'], 'current_cate':result['category']}
+
+    data = {'goods': result['items'], 'current_cate': result['category']}
+
+    return resjson.print_json(0, u'ok', data)
+
+
+@item.route('/detail')
+def detail():
+    """ 商品详情
+        @param goods_id, 商品id
+    """
+    resjson.action_code = 11
+
+    goods_id  = toint(request.args.to_dict().get('goods_id', '0'))
+
+    if goods_id <= 0:
+        return resjson.print_json(10, u'参数错误')
+
+    uid       = get_uid()
+    data      = ItemStaticMethodsService.detail_page(goods_id, uid)
+    data.pop('pagination')
 
     return resjson.print_json(0, u'ok', data)
