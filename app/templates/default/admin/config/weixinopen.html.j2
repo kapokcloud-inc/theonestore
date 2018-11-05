@@ -14,9 +14,11 @@
           </p>
 
           {{ libs.build_tabs(tabs=[
+            {'label':_('基本信息'), 'endpoint':'admin.config.weixin_baseinfo'},
             {'label':_('微信公众号'), 'endpoint':'admin.config.mp'},
             {'label':_('微信支付'), 'endpoint':'admin.config.weixinpay'},
-            {'label':_('微信开放平台'), 'endpoint':'admin.config.weixinopen'}
+            {'label':_('微信开放平台'), 'endpoint':'admin.config.weixinopen'},
+            {'label':_('微信小程序'), 'endpoint':'admin.config.weixin_sort'}
           ], border_bottom='line') }}
 
           {# 微信开放平台 form表单 #}

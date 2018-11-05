@@ -13,7 +13,11 @@ from flask_wtf.file import (
     FileAllowed, 
     FileRequired
 )
-from flask_uploads import UploadSet, TEXT
+from flask_uploads import (
+    UploadSet, 
+    TEXT, 
+    IMAGES
+)
 
 from wtforms import (
     IntegerField,
@@ -26,7 +30,7 @@ from wtforms.validators import (
     Required,
     Length,
     EqualTo,
-    NumberRange
+    NumberRange,
 )
 
 from app.forms import Form
@@ -80,7 +84,45 @@ class WeixinOpenForm(Form):
     secret = StringField(label=_(u'微信开放平台密码(AppSecret)'),
                     description=_(u'登录微信开放平台，"管理中心 -> 网站应用 -> 应用详情"查看AppSecret。若还没有申请应用，请在微信开放平台申请"网站应用"。'),
                     validators=[Required(message=_(u'请填写微信开放平台密码(AppSecret)'))])
+
+class WeixinBaseInfoForm(Form):
+    app_name = StringField(
+                        _name='app_name',
+                        label=_(u'应用名称'),
+                        description=_(u'请设置应用的名称，如：一店、京东、天猫等'),
+                        validators=[Required(message=_(u'请填写应用名称'))]
+                        )
+
+    app_logo = FileField(
+                    _(u'logo图标'),
+                    description=_(u'请上传不小于400x400的正方形图片'),
+                    validators=[
+                        FileRequired(_(u'文件未上传')), 
+                        FileAllowed(UploadSet('images', IMAGES), message=_(u'只允许上传图片'))
+                    ]
+                )
+
+    app_recommend = StringField(
+                        _name='app_recommend',
+                        label=_(u'一句话简介'),
+                        description=_(u'请用一句话描述你的应用'),
+                        validators=[Required(message=_(u'请用一句描述应用'))]
+                        )
                     
+class WeixinSortForm(Form):
+    appid = StringField(label=_(u'小程序ID(AppID)'),
+                    description=_(u'如：wxf7337ac7caaac670<br>请查看您的小程序 “设置->开发设置 '),
+                    validators=[Required(message=_(u'请填写小程序ID(AppID)'))])
+
+    secret = StringField(label=_(u'小程序密钥(AppSecret)'),
+                    description=_(u'如：b1946ac92492d2347c6235b4d2611184<br>请查看您的小程序 “设置->开发设置'),
+                    validators=[Required(message=_(u'请填写小程序密钥(AppSecret)'))])
+
+    sort_verify = FileField(_(u'小程序校验文件'), 
+                    description=_(u'如：sort_verify_zprDbONIS74q99hQ.txt<br>请前往您的小程序 “设置 -> 开发设置 -> 服务器域名” 下载校验文件'), 
+                    validators=[
+                        FileAllowed(UploadSet('text', TEXT), message=_(u'只允许上传txt文本文件'))
+                ])
 
 class SmsYunpianForm(Form):
     ak = StringField(_name='ak', 

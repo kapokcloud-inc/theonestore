@@ -21,5 +21,6 @@ API_ROUTES = (
     (api.upload,    '/api/upload'),
     (api.item,      '/api/item'),
     (api.category,  '/api/category'),
-    (api.index,     '/api/index')
+    (api.index,     '/api/index'),
+    (api.config,    '/api/config')
 )

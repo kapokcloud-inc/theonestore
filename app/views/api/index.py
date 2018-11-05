@@ -30,7 +30,7 @@ from app.services.response import ResponseJson
 index = Blueprint('api.index', __name__)
 
 resjson = ResponseJson()
-resjson.module_code = 19
+resjson.module_code = 20
 
 @index.route('/home')
 def home():

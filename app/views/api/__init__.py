@@ -19,3 +19,4 @@ from .upload import upload
 from .item import item
 from .category import category
 from .index import index
+from .config import config

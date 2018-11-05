@@ -326,8 +326,8 @@
 {# 其它 - form-control-static #}
 {% macro setting_page_tabs() %}
 {{ build_tabs(tabs=[
-  {'label':_('微信'), 'endpoint':'admin.config.mp', 
-      'endpoint_list':('admin.config.mp', 'admin.config.weixinpay', 'admin.config.weixinopen')},
+  {'label':_('微信'), 'endpoint':'admin.config.weixin_baseinfo', 
+      'endpoint_list':('admin.config.weixin_baseinfo', 'admin.config.mp', 'admin.config.weixinpay', 'admin.config.weixinopen', 'admin.config.weixin_sort')},
   {'label':_('短信'), 'endpoint':'admin.config.sms_yunpian',
       'endpoint_list':('admin.config.sms_yunpian', 'admin.config.sms_alisms')},
   {'label':_('存储'), 'endpoint':'admin.config.storage_qiniu',
