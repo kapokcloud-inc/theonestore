@@ -211,10 +211,8 @@ def weixin_baseinfo():
         except Exception as e:
             form.app_logo.errors = (_(u'上传失败，请检查云存储配置'))
             return render_template('admin/item/weixin_baseinfo.html.j2', form=form)
-    log_info(data)
     app_logo = app_logo if app_logo else data.get('app_logo','')
     data = {'app_name': form.app_name.data, 'app_logo': app_logo, 'app_recommend': form.app_recommend.data}
-    log_info(data)
     # 配置表中没该key,先添加该key
     if ss is None:
         ss = SysSetting()
@@ -261,7 +259,6 @@ def weixin_sort():
         sort_verify = '/'+sort_verify
         data['sort_verify'] = sort_verify
 
-    log_info(data)
     ss.value = json.dumps(data)
     db.session.commit()
     return redirect(url_for('admin.index.success', title=_(u'设置微信小程序成功')))
