@@ -134,10 +134,13 @@
           'view':'config',
           'icon':'mdi mdi-settings',
           'children':[
+           {'title':_('信息'),
+            'href':url_for('admin.config.info_base'),
+            'endpoints':['admin.config.info_base']
+            },
             {'title':_('微信'),
-            'href':url_for('admin.config.weixin_baseinfo'),
-            'endpoints':['admin.config.weixin_baseinfo',
-                          'admin.config.mp',
+            'href':url_for('admin.config.mp'),
+            'endpoints':['admin.config.mp',
                           'admin.config.weixinpay',
                           'admin.config.weixinopen',
                           'admin.config.weixin_sort']

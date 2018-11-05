@@ -41,7 +41,7 @@ from app.forms.admin.config import (
     StorageQiniuForm,
     StorageAliossForm,
     AftersalesServiceForm,
-    WeixinBaseInfoForm,
+    InfoBaseForm,
     WeixinSortForm
 )
 from app.models.shipping import Shipping
@@ -179,13 +179,13 @@ def weixinopen():
     return render_template('admin/config/weixinopen.html.j2', form=form)
 
 
-@config.route('/weixin/baseinfo', methods=['GET', 'POST'])
-def weixin_baseinfo():
+@config.route('/info_base', methods=['GET', 'POST'])
+def info_base():
     """基本信息"""
     g.page_title = _(u'基本信息')
 
-    form = WeixinBaseInfoForm(CombinedMultiDict((request.files, request.form)))
-    ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_baseinfo').first()
+    form = InfoBaseForm(CombinedMultiDict((request.files, request.form)))
+    ss = SysSetting.query.filter(SysSetting.key == 'config_info_base').first()
 
     data = {}
     try:
@@ -195,10 +195,10 @@ def weixin_baseinfo():
 
     if request.method == 'GET':
         form.fill_form(data=data)
-        return render_template('admin/config/weixin_baseinfo.html.j2', form=form)
+        return render_template('admin/config/info_base.html.j2', form=form)
 
     if not form.validate_on_submit():
-        return render_template('admin/config/weixin_baseinfo.html.j2', form=form)
+        return render_template('admin/config/info_base.html.j2', form=form)
 
     # 校验图片上传
     app_logo = ''
@@ -210,20 +210,20 @@ def weixin_baseinfo():
             app_logo = fus.save_storage(form.app_logo.data, 'applogo')
         except Exception as e:
             form.app_logo.errors = (_(u'上传失败，请检查云存储配置'))
-            return render_template('admin/item/weixin_baseinfo.html.j2', form=form)
+            return render_template('admin/config/info_base.html.j2', form=form)
     app_logo = app_logo if app_logo else data.get('app_logo','')
     data = {'app_name': form.app_name.data, 'app_logo': app_logo, 'app_recommend': form.app_recommend.data}
     # 配置表中没该key,先添加该key
     if ss is None:
         ss = SysSetting()
-        ss.key = 'config_weixin_baseinfo'
+        ss.key = 'config_info_base'
         db.session.add(ss)
 
     ss.value = json.dumps(data)
     db.session.commit()
     return redirect(url_for('admin.index.success', title=_(u'设置基本信息成功')))
 
-@config.route('/weixin/soet', methods=['GET', 'POST'])
+@config.route('/weixin/sort', methods=['GET', 'POST'])
 def weixin_sort():
     """ 配置微信小程序 """
 

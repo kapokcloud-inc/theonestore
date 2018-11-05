@@ -35,7 +35,7 @@ def base():
     """微信_基本信息"""
     resjson.action_code = 10
     
-    ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_baseinfo').first()
+    ss = SysSetting.query.filter(SysSetting.key == 'config_info_base').first()
     if not ss:
         return resjson.print_json(11, u'请先配置应用基本信息')
     base = {}

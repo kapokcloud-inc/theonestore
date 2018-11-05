@@ -85,7 +85,7 @@ class WeixinOpenForm(Form):
                     description=_(u'登录微信开放平台，"管理中心 -> 网站应用 -> 应用详情"查看AppSecret。若还没有申请应用，请在微信开放平台申请"网站应用"。'),
                     validators=[Required(message=_(u'请填写微信开放平台密码(AppSecret)'))])
 
-class WeixinBaseInfoForm(Form):
+class InfoBaseForm(Form):
     app_name = StringField(
                         _name='app_name',
                         label=_(u'应用名称'),
