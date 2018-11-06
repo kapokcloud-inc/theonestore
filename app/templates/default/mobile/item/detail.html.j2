@@ -2,7 +2,12 @@
 {% import '/default/mobile/libs/const.html.j2' as const %}
 
 {% block head %}
-<title>{{_('商品详情 - 一店')}}</title>
+{%- if item and item.is_delete == 0 -%}
+<title>{{ item.goods_name }}</title>
+{{ libs.share_weixin(item.goods_name, '售价：￥'+item.goods_price+'。'+item.goods_desc, item.goods_img+'-square.small') }}
+{%- else -%}
+<title>{{ _('商品不存在 - 一店') }}</title>
+{%- endif -%}
 <link rel="stylesheet" href="/static/default/mobile/css/item.css">
 <link rel="stylesheet" href="/static/default/mobile/css/index.css">
 <link rel="stylesheet" href="/static/default/mobile/css/cart.css">

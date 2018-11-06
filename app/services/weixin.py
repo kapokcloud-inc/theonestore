@@ -64,19 +64,19 @@ class WeiXinMpAccessTokenService(object):
 
         ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_mp').first()
         if not ss:
-            log_error('[ErrorServiceWeixinWeiXinMpAccessTokenServiceCheck][ConfigError]  config is none.')
+            log_error('[WeiXinMpAccessTokenService][ConfigError]  config is none.')
             return False
 
         try:
             config = json.loads(ss.value)
         except Exception as e:
-            log_error('[ErrorServiceWeixinWeiXinMpAccessTokenServiceCheck][ConfigError]  config data error.')
+            log_error('[WeiXinMpAccessTokenService][ConfigError]  config data error.')
             return False
 
         self.appid  = config.get('appid', '')
         self.secret = config.get('secret', '')
         if (not self.appid) or (not self.secret):
-            log_error('[ErrorServiceWeixinWeiXinMpAccessTokenServiceCheck][ConfigError]  config is empty.')
+            log_error('[WeiXinMpAccessTokenService][ConfigError]  config is empty.')
             return False
 
         return True
@@ -84,10 +84,8 @@ class WeiXinMpAccessTokenService(object):
     def __request_token(self):
         """获取token"""
 
-        token = ''
-
         if not self.__check():
-            return token
+            raise Exception(_(u'请先配置公众号'))
 
         
         params = {'grant_type':'client_credential',
@@ -98,16 +96,16 @@ class WeiXinMpAccessTokenService(object):
 
         response = requests.get(url)
         if response.status_code != 200:
-            log_error('[ErrorServiceWeixinWeiXinMpAccessTokenServiceRequestToken][RequestError]  request error.')
-            return token
+            log_error('[WeixinAccesstoken][RequestError]  request error.')
+            raise Exception(_(u'网络错误'))
 
         data    = response.json()
         errcode = data.get('errcode', 0)
         errmsg  = data.get('errmsg', '')
         if errcode > 0:
-            log_error('[ErrorServiceWeixinWeiXinMpAccessTokenServiceRequestToken][RequestError]  errcode:%s  errmsg:%s' %\
+            log_error('[WeixinAccesstoken][RequestError]  errcode:%s  errmsg:%s' %\
                 (errcode, errmsg))
-            return token
+            raise Exception(errmsg)
 
         token      = data.get('access_token', '')
         expires_in = data.get('expires_in', 0)
@@ -125,7 +123,7 @@ class WeiXinMpAccessTokenService(object):
         token   = ''
         expires = 0
 
-        self.st = SysToken.query.filter(SysToken.token_type == 'weixin_mp').first()
+        self.st = SysToken.query.filter(SysToken.token_type == 'weixin_mp_token').first()
         if self.st:
             token   = self.st.access_token
             expires = self.st.expires_in
@@ -135,7 +133,61 @@ class WeiXinMpAccessTokenService(object):
 
         return token
 
+    
+    def get_weixin_mp_ticket(self):
+        """获取微信公众号ticket"""
+        st = SysToken.query.filter(SysToken.token_type == 'weixin_mp_ticket').first()
+        if st and st.access_token and st.expires_in > self.current_time:
+            return st.access_token
 
+        try:
+            return self.__request_ticket()
+        except Exception as e:
+            raise e
+        
+
+    
+    def __request_ticket(self):
+        try:
+            token = self.get_token()
+        except Exception as e:
+            log_error(_(u'[Error] [WeiXinMpAccessTokenService] [__request_ticket] 获取token失败. %s' % e))
+            raise e
+
+        params = {'access_token':token, 'type':'jsapi'}
+        url = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket'
+        res = requests.get(url, params)
+        if res.status_code != 200:
+            log_error('[WeixinTicket][RequestError]  request error.')
+            raise Exception(_(u'网络错误'))
+
+        data = res.json()
+        errcode = data.get('errcode', 0)
+        errmsg  = data.get('errmsg', '')
+        if errcode > 0:
+            log_error('[WeixinTicket][RequestError]  errcode:%s  errmsg:%s' %\
+                (errcode, errmsg))
+            raise Exception(errmsg)
+
+        ticket = data.get('ticket', '')
+        expires_in = data.get('expires_in', 0)
+        if not ticket or not expires_in:
+            log_error(_(u'[Error] [WeiXinMpAccessTokenService] [__request_ticket] 获取ticket失败. ticket:%s, expires_in:%s' % (ticket, expires_in)))
+            raise Exception(_(u'微信返回参数有误'))
+        
+        expires_in = self.current_time + expires_in - 60
+        st = SysToken()
+        st.token_type   = 'weixin_mp_ticket'
+        st.access_token = ticket
+        st.expires_in   = expires_in
+        st.add_time     = self.current_time
+        st.update_time  = 0
+        db.session.add(st)
+        db.session.commit()
+
+        return ticket
+            
+       
 class WeiXinMpMessageService(object):
     """微信公众平台模板消息Service"""
 
@@ -158,8 +210,13 @@ class WeiXinMpMessageService(object):
             return False
         self.openid = utb.third_user_id
 
-        wmats             = WeiXinMpAccessTokenService()
-        self.access_token = wmats.get_token()
+        wmats = WeiXinMpAccessTokenService()
+        try:
+            self.access_token = wmats.get_token()
+        except Exception as e:
+            log_error(u'[WeiXinMpMessageService] 获取token失败. %s' % e)
+            return False
+        
         if self.access_token == '':
             log_error('[ErrorServiceWeixinWeiXinMpMessageServiceCheck][AccessTokenError]  no token.')
             return False

@@ -105,3 +105,14 @@
   </footer>
 {% endmacro %}
 
+{#
+微信公众号分享函数
+:title 分享标题
+:desc 分享描述
+:imgUrl 分享图片100x100 
+#}
+{%- macro share_weixin(title='一店商城 完全免费 代码全公开 10万+商家选择的商城', desc='木棉花云提供计算服务', imgUrl='https://static-aliyun.kapokcloud.com/applogo/kapokcloud-logo-108x108.png') -%}
+<meta name="wx-share-title" content="{{ title }}">
+<meta name="wx-share-desc" content="{{ desc }}">
+<meta name="wx-share-imgUrl" content="{{ imgUrl }}">
+{%- endmacro -%}

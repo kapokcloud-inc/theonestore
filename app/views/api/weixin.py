@@ -17,8 +17,10 @@ from flask import (
 from flask_babel import gettext as _
 
 from app.database import db
-
+from app.models.sys import SysToken
+from app.services.response import ResponseJson
 from app.services.api.weixin import WeiXinLoginService
+from app.services.weixin import WeiXinMpAccessTokenService
 
 from app.helpers import (
     log_info,
@@ -28,6 +30,10 @@ from app.helpers.date_time import current_timestamp
 
 
 weixin = Blueprint('api.weixin', __name__)
+
+resjson = ResponseJson()
+resjson.module_code = 18
+
 
 @weixin.route('/login')
 def login():
@@ -71,3 +77,16 @@ def login_qrcode():
         session.pop('weixin_login_state', None)
 
     return redirect(url)
+
+
+@weixin.route('/ticket')
+def ticket():
+    """微信分享ticket"""
+    resjson.action_code = 10
+    service = WeiXinMpAccessTokenService()
+    try:
+        ticket = service.get_weixin_mp_ticket()
+    except Exception as e:
+        return resjson.print_json(11, u'%s'%e)
+    
+    return resjson.print_json(0, 'ok', {'ticket':ticket})
