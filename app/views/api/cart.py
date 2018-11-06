@@ -279,7 +279,7 @@ def checkout_amounts():
     resjson.action_code = 15
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     args = request.args

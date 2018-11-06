@@ -69,7 +69,7 @@ def create():
     resjson.action_code = 10
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     form        = request.form
@@ -98,7 +98,7 @@ def update():
     resjson.action_code = 11
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     form        = request.form
@@ -122,7 +122,7 @@ def cancel():
     resjson.action_code = 12
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     args        = request.args
@@ -149,7 +149,7 @@ def deliver():
     resjson.action_code = 13
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     args     = request.args
@@ -173,7 +173,7 @@ def remove():
     resjson.action_code = 14
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     order_id = toint(request.args.get('order_id', 0))
@@ -200,7 +200,7 @@ def save_comment():
     resjson.action_code = 15
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid      = get_uid()
     nickname = get_nickname()
     avatar   = get_avatar()
@@ -258,7 +258,7 @@ def recharge():
     resjson.action_code = 16
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     form            = request.form
@@ -302,7 +302,7 @@ def is_paid():
     resjson.action_code = 17
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     order_id = toint(request.args.get('order_id', '0'))
@@ -319,7 +319,7 @@ def update_address():
     resjson.action_code = 18
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     wtf_form     = OrderAddressForm()

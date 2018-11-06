@@ -46,7 +46,7 @@ def image():
     resjson.action_code = 10
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
 
     wtf_form = UploadImageForm()
     if not wtf_form.validate_on_submit():

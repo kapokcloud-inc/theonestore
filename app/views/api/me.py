@@ -53,7 +53,7 @@ def update():
     resjson.action_code = 10
     
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     wtf_form     = ProfileForm()
@@ -81,7 +81,7 @@ def address_save():
     resjson.action_code = 11
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     wtf_form     = AddressForm()
@@ -130,7 +130,7 @@ def address_remove():
     resjson.action_code = 12
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     ua_id = toint(request.args.get('ua_id', '0'))

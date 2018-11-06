@@ -40,7 +40,7 @@ def action():
     resjson.action_code = 10
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
 
     args      = request.args
     like_type = toint(args.get('like_type', 0))
