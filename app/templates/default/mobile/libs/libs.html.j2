@@ -114,5 +114,12 @@
 {%- macro share_weixin(title='一店商城 完全免费 代码全公开 10万+商家选择的商城', desc='木棉花云提供计算服务', imgUrl='https://static-aliyun.kapokcloud.com/applogo/kapokcloud-logo-108x108.png') -%}
 <meta name="wx-share-title" content="{{ title }}">
 <meta name="wx-share-desc" content="{{ desc }}">
-<meta name="wx-share-imgUrl" content="{{ imgUrl }}">
+{% if imgUrl[:2] == '//' %}
+  {% set protocol = request.url[:request.url.find('://')] %}
+  <meta name="wx-share-imgUrl" content="{{ protocol }}:{{ imgUrl }}">
+{% else %}
+  <meta name="wx-share-imgUrl" content="{{ imgUrl }}">
+{% endif %}
+
+
 {%- endmacro -%}
