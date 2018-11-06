@@ -84,7 +84,7 @@ def ticket():
     except Exception as e:
         return resjson.print_json(11, u'%s'%e)
     
-    return resjson.print_json(0, 'ok', {'ticket':ticket})
+    return resjson.print_json(0, 'ok', {'ticket':ticket, 'appid':service.appid})
 
 
 @weixin.route('/login-xiao')
