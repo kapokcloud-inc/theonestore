@@ -3,7 +3,11 @@
 {% block head %}
 {%- if item and item.is_delete == 0 -%}
 <title>{{ item.goods_name }}</title>
-{{ libs.share_weixin(item.goods_name, '售价：￥'+item.goods_price+'。'+item.goods_desc, item.goods_img+'-square.small') }}
+{{ libs.share_weixin(title=item.goods_name, 
+desc='售价：￥%s。%s' % (item.goods_price, item.goods_desc),
+imgUrl=item.goods_img+'-square.small')
+}}
+
 {%- else -%}
 <title>{{ _('商品不存在 - 一店') }}</title>
 {%- endif -%}
