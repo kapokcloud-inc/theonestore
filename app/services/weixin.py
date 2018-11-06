@@ -136,6 +136,9 @@ class WeiXinMpAccessTokenService(object):
     
     def get_weixin_mp_ticket(self):
         """获取微信公众号ticket"""
+        if self.__check() is False:
+            raise Exception(_(u'获取微信公众号配置错误'))
+
         st = SysToken.query.filter(SysToken.token_type == 'weixin_mp_ticket').first()
         if st and st.access_token and st.expires_in > self.current_time:
             return st.access_token
