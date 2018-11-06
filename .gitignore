@@ -121,3 +121,6 @@ uploads/
 
 #pem
 pem/
+
+#flask_session file
+flask_session/

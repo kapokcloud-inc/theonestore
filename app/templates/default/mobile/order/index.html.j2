@@ -31,6 +31,7 @@
     </div>
   </div>
   {% if not orders %}
+  <div class="order_list">
     <div class="not-product">
       <div class="not-product_img">
         <img class="notproduct" src="/static/default/mobile/img/notorder.png" alt="">
@@ -42,6 +43,7 @@
         </a>
       </div>
     </div>
+  </div>
   {% else %}
     <div id="paging-data-list" class="order_list">
       {% for order in orders %}

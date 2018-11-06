@@ -85,7 +85,7 @@
           <div class="form-group">
             <label>{{ label }}</label>
             {% if type == 'input' %}
-              <input type="text" class="form-control" id="{{ name }}" name="{{ name }}" placeholder="{{ placeholder }}"  value="{{ value }}">
+              <input type="text" class="form-control" id="{{ name }}" name="{{ name }}" placeholder="{{ placeholder }}">
             {% elif type == 'textarea' %}
               <textarea class="form-control" id="{{ name }}" name="{{ name }}" >{{ value }}</textarea>
             {% elif type == 'select' %}
@@ -99,6 +99,8 @@
               </select>
             {% elif type == 'daterange' %}
               <input class="form-control input-daterange-datepicker" type="text" name="{{ name }}" value="{{ value }}" />
+            {% elif type == 'number' %}
+              <input class="form-control recharge-input" type="number" id="{{ name }}" name="{{ name }}" min="10" max="10000" placeholder="{{_('请输入充值金额')}}" />
             {% endif %}
           </div>
         </div>
@@ -110,7 +112,7 @@
     <div class="col-lg-1">
       <div class="form-group">
         <button id="search_form_submit" type="submit" class="btn btn-info">
-          {{_('提交')}}
+          {{ _('提交') }} 
         </button>
       </div>
     </div>
@@ -191,7 +193,7 @@
   :param enctype: multipart/form-data|application/x-www-form-urlencoded|text/plain
   :param primary_key:主键，如果主键为0或者空值则认为是新添加数据，其它具体值则认为是编辑
 #}
-{% macro render_form(form, action='', method='POST', enctype='', primary_key='') %}
+{% macro render_form(form, action='', method='POST', enctype='', primary_key='', button_name='保存') %}
 <form class="form-horizontal" action="{{ action }}" method="{{ method }}"{% if enctype %} enctype="{{ enctype }}"{% endif %}>
   <input type="hidden" name="primary_key" id="primary_key" value="{{ primary_key }}">
 {%- for field in form -%}
@@ -209,7 +211,7 @@
       {% set class_ = 'form-control' %}
       {# 文件类型 #}
       {% if field.type == 'FileField' %}
-        {% set class_ = class_ + ' input-file' %}
+        {% set class_ = class_ + 'input-file' + field.render_kw["class"]|default("") %}
         {% set uploadtype = field|get_file_uploadtype %}
         {% if field.flags.required and not field.data %}
           {{ field(class_=class_, required=True, uploadtype=uploadtype, **kwargs) }}
@@ -218,9 +220,13 @@
         {% endif %}
 
       {% elif field.type in ('TextField', 'TextAreaField', 'PasswordField', 
-            'DecimalField', 'SelectField', 'IntegerField', 
+            'DecimalField', 'SelectField', 'IntegerField', 'SelectMultipleField',
             'StringField') %}
-        {{ field(class_=class_, required=field.flags.required, **kwargs) }}
+        {% if field.render_kw["readonly"] %}
+          {{ field(class_=class_, required=field.flags.required, readonly=field.render_kw["readonly"], **kwargs) }}
+        {% else %}
+          {{ field(class_=class_, required=field.flags.required, **kwargs) }}
+        {% endif %}
       {% endif %}
     {% endif %}
 
@@ -254,7 +260,7 @@
   {{ form.csrf_token }}
   <div class="form-group">
     <div class="col-sm-offset-3 col-md-offset-2 col-lg-offset-2 col-xs-12 col-sm-7 col-md-5 col-lg-3">
-      <button type="submit" class="btn btn-danger btn-md " id="submit">保存</button>
+      <button type="submit" class="btn btn-danger btn-md " id="submit">{{ button_name }}</button>
     </div>
   </div>
 </form>
@@ -268,7 +274,7 @@
 
 
 {# 其它 - 面包屑html #}
-{% macro breadcrumbs(breadcrumbs=[], button={}) %}
+{% macro breadcrumbs(breadcrumbs=[], button={}, buttons=[]) %}
   <div class="container-fluid">
     <div class="row bg-title">
       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -292,10 +298,18 @@
           </a>
         {% endif %}
       </div>
+       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <div class='pull-right m-l-20'>
+          {% for _button in buttons %}
+            <a href="{{ _button['href'] }}" class="btn btn-danger hidden-xs hidden-sm waves-effect waves-light" style="display:inlike_block !important">
+              {{ _button['title'] }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </div>
 {% endmacro %}
-
 
 {# 其它 - form-control-static #}
 {% macro form_control_static(label, content) %}
@@ -312,8 +326,10 @@
 {# 其它 - form-control-static #}
 {% macro setting_page_tabs() %}
 {{ build_tabs(tabs=[
+  {'label':_('信息'), 'endpoint':'admin.config.info_base', 
+      'endpoint_list':('admin.config.info_base')},
   {'label':_('微信'), 'endpoint':'admin.config.mp', 
-      'endpoint_list':('admin.config.mp', 'admin.config.weixinpay', 'admin.config.weixinopen')},
+      'endpoint_list':('admin.config.mp', 'admin.config.weixinpay', 'admin.config.weixinopen', 'admin.config.weixin_sort')},
   {'label':_('短信'), 'endpoint':'admin.config.sms_yunpian',
       'endpoint_list':('admin.config.sms_yunpian', 'admin.config.sms_alisms')},
   {'label':_('存储'), 'endpoint':'admin.config.storage_qiniu',

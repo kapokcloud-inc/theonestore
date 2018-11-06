@@ -32,10 +32,6 @@ from app.helpers import (
 def configure_before(app):
     @app.before_request
     def before_request():
-        session_id = session.get('session_id', '')
-        if not session_id:
-            session['session_id'] = get_uuid()
-
         endpoint = request.endpoint
         if endpoint is None:
             return

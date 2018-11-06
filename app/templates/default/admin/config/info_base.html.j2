@@ -1,0 +1,32 @@
+{% extends '/default/admin/layout/base.html.j2' %}
+{% block body %}
+<div id="page-wrapper">
+  <div class="container-fluid">
+    {{ libs.setting_page_tabs() }}
+
+    <!-- .row -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="white-box">
+          <h3 class="box-title"><a target="_blank">{{ _('基本信息') }}</a></h3>
+          <p class="text-muted m-b-30">
+            {{ _('基本信息配置 - 让用户更了解你的商城') }}
+          </p>
+
+           {{ libs.build_tabs(tabs=[
+            {'label':_('基本信息'), 'endpoint':'admin.config.info_base'}
+          ], border_bottom='line') }}
+
+          {# 售后服务 form表单 #}
+          {{ libs.render_form(form, 
+              action=url_for('admin.config.info_base'),
+              enctype="multipart/form-data",
+              primary_key=form.app_name.data)
+          }}
+        </div>
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+</div>
+{% endblock %}

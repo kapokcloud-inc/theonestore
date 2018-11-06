@@ -3,7 +3,7 @@
     theonestore
     https://github.com/kapokcloud-inc/theonestore
     ~~~~~~~~~~~
-    
+
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
@@ -25,12 +25,13 @@ from werkzeug.datastructures import CombinedMultiDict
 
 from app.database import db
 from app.helpers import (
-    render_template, 
+    render_template,
     log_info,
     toint
 )
 
 from app.forms.admin.shipping import ShippingForm
+from app.services.uploads import FileUploadService
 from app.forms.admin.config import (
     WeixinMpForm,
     WeixinPayForm,
@@ -39,7 +40,9 @@ from app.forms.admin.config import (
     SmsAlismsForm,
     StorageQiniuForm,
     StorageAliossForm,
-    AftersalesServiceForm
+    AftersalesServiceForm,
+    InfoBaseForm,
+    WeixinSortForm
 )
 from app.models.shipping import Shipping
 from app.models.sys import SysSetting
@@ -47,11 +50,12 @@ from app.models.sys import SysSetting
 
 config = Blueprint('admin.config', __name__)
 
+
 @config.route('/mp', methods=['GET', 'POST'])
 def mp():
     """微信公众号"""
     g.page_title = _(u'微信公众号')
-    
+
     form = WeixinMpForm(CombinedMultiDict((request.files, request.form)))
     ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_mp').first()
     data = {}
@@ -94,7 +98,8 @@ def weixinpay():
     g.page_title = _(u'微信支付')
 
     form = WeixinPayForm(CombinedMultiDict((request.files, request.form)))
-    ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixin').first()
+    ss = SysSetting.query.filter(
+        SysSetting.key == 'config_paymethod_weixin').first()
     data = {}
     try:
         data = json.loads(ss.value)
@@ -107,8 +112,8 @@ def weixinpay():
         form.apiclient_key.data = data.get('apiclient_key_url', '')
         return render_template('admin/config/weixinpay.html.j2', form=form)
 
-    data = {'mch_id':form.mch_id.data, 'partner_key':form.partner_key.data,
-            'apiclient_cert':data.get('apiclient_cert', ''), 'apiclient_key':data.get('apiclient_key', '')}
+    data = {'mch_id': form.mch_id.data, 'partner_key': form.partner_key.data,
+            'apiclient_cert': data.get('apiclient_cert', ''), 'apiclient_key': data.get('apiclient_key', '')}
     if not form.validate_on_submit():
         form.apiclient_cert.data = data.get('apiclient_cert_url', '')
         form.apiclient_key.data = data.get('apiclient_key_url', '')
@@ -145,15 +150,15 @@ def weixinpay():
     db.session.commit()
     return redirect(url_for('admin.index.success', title=_(u'设置微信支付成功')))
 
-    
 
-@config.route('/weixinopen', methods=['GET','POST'])
+@config.route('/weixinopen', methods=['GET', 'POST'])
 def weixinopen():
     """微信开放平台"""
     g.page_title = _(u'微信开放平台')
 
     form = WeixinOpenForm()
-    ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_open').first()
+    ss = SysSetting.query.filter(
+        SysSetting.key == 'config_weixin_open').first()
     if request.method == 'GET':
         try:
             data = json.loads(ss.value)
@@ -161,7 +166,7 @@ def weixinopen():
             data = {}
         form.fill_form(data=data)
     else:
-        data = {'appid':form.appid.data, 'secret':form.secret.data}
+        data = {'appid': form.appid.data, 'secret': form.secret.data}
         if form.validate_on_submit():
             if ss is None:
                 ss = SysSetting()
@@ -169,11 +174,97 @@ def weixinopen():
                 db.session.add(ss)
             ss.value = json.dumps(data)
             db.session.commit()
-            return redirect(url_for('admin.index.success',title=_(u'设置微信开放平台成功')))
+            return redirect(url_for('admin.index.success', title=_(u'设置微信开放平台成功')))
+
+    return render_template('admin/config/weixinopen.html.j2', form=form)
+
+
+@config.route('/info_base', methods=['GET', 'POST'])
+def info_base():
+    """基本信息"""
+    g.page_title = _(u'基本信息')
+
+    form = InfoBaseForm(CombinedMultiDict((request.files, request.form)))
+    ss = SysSetting.query.filter(SysSetting.key == 'config_info_base').first()
+
+    data = {}
+    try:
+        data = json.loads(ss.value)
+    except Exception as e:
+        data = {}
+
+    if request.method == 'GET':
+        form.fill_form(data=data)
+        return render_template('admin/config/info_base.html.j2', form=form)
+
+    if not form.validate_on_submit():
+        return render_template('admin/config/info_base.html.j2', form=form)
+
+    # 校验图片上传
+    app_logo = ''
+    if form.app_logo.data:
+        fus = FileUploadService()
+        log_info('上传的图片')
+        log_info(fus)
+        try:
+            app_logo = fus.save_storage(form.app_logo.data, 'applogo')
+        except Exception as e:
+            form.app_logo.errors = (_(u'上传失败，请检查云存储配置'))
+            return render_template('admin/config/info_base.html.j2', form=form)
+    app_logo = app_logo if app_logo else data.get('app_logo','')
+    data = {'app_name': form.app_name.data, 'app_logo': app_logo, 'app_recommend': form.app_recommend.data}
+    # 配置表中没该key,先添加该key
+    if ss is None:
+        ss = SysSetting()
+        ss.key = 'config_info_base'
+        db.session.add(ss)
+
+    ss.value = json.dumps(data)
+    db.session.commit()
+    return redirect(url_for('admin.index.success', title=_(u'设置基本信息成功')))
+
+@config.route('/weixin/sort', methods=['GET', 'POST'])
+def weixin_sort():
+    """ 配置微信小程序 """
+
+    g.page_title = _(u'微信小程序')
+
+    form = WeixinSortForm()
+    ss   = SysSetting.query.filter(SysSetting.key == 'config_weixin_sort').first()
+
+    data = {}
+    try:
+        data = json.loads(ss.value)
+    except Exception as e:
+        data = {}
+
+    if request.method == 'GET':
+        form.fill_form(data=data)
+        return render_template('admin/config/weixin_sort.html.j2', form=form)
+
+    if not form.validate_on_submit():
+        return render_template('admin/config/weixin_sort.html.j2', form=form)
+
+    data = {'appid':form.appid.data, 'secret':form.secret.data}
+    if ss is None:
+        ss = SysSetting()
+        ss.key = 'config_weixin_sort'
+        db.session.add(ss)
+
+    # 校验文件上传
+    if form.sort_verify.data:
+        sort_verify = secure_filename(form.sort_verify.data.filename)
+        uploads_path = current_app.config['UPLOADED_FILES_DEST']
+        form.sort_verify.data.save(os.path.join(uploads_path, sort_verify))
+        sort_verify = '/'+sort_verify
+        data['sort_verify'] = sort_verify
+
+    ss.value = json.dumps(data)
+    db.session.commit()
+    return redirect(url_for('admin.index.success', title=_(u'设置微信小程序成功')))
+
+
     
-    return render_template('admin/config/weixinopen.html.j2',form=form)
-
-
 
 @config.route('/sms/yunpian', methods=["GET", "POST"])
 def sms_yunpian():

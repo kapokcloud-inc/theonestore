@@ -4,8 +4,11 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('用户'), 'href':url_for('admin.user.index')}, {'title':g.page_title, 'href':""}] %}
-  {{ libs.breadcrumbs(breadcrumbs) }}
+  {% set breadcrumbs = [{'title':_('用户'), 'href':url_for('admin.user.index')}, 
+                        {'title':g.page_title, 'href':""}] %}
+  {% set buts = [{'title':_('余额充值'), 'href':url_for('admin.user.recharge', uid=user.uid)},
+                {'title':_('发优惠券'), 'href':url_for('admin.user.coupon', uid=user.uid)}] %}
+  {{ libs.breadcrumbs(breadcrumbs, {}, buts) }}
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-4 col-xs-12">
@@ -26,7 +29,7 @@
             </div>
             <div class="col-md-6 col-sm-6 text-center">
               <p class="text-purple">{{_('钱包')}}</p>
-              <h3>{{ funds.funds }}</h3>
+              <h3>{{ funds.funds|format_amount(1) }}</h3>
             </div>
           </div>
         </div>
@@ -45,20 +48,20 @@
                           <thead>
                             <tr>
                               <th width="90">{{_('上次余额')}}</th>
-                              <th width="40">{{_('变更')}}</th>
+                              <th width="90">{{_('变更')}}</th>
                               <th width="90">{{_('当前余额')}}</th>
-                              <th>{{_('说明')}}</th>
+                              <th width="400">{{_('说明')}}</th>
                               <th width="148">{{_('变更时间')}}</th>
                             </tr>
                           </thead>
                             <tbody>
                               {% for funds_detail in funds_details %}
                                 <tr>
-                                  <td>{{ funds_detail.funds_prev }}</td>
-                                  <td>{{ funds_detail.funds_change }}</td>
-                                  <td>{{ funds_detail.funds }}</td>
-                                  <td>{{ funds_detail.remark_sys }}</td>
-                                  <td>{{ funds_detail.add_time|timestamp2str }}</td>
+                                  <td width="90">￥{{ funds_detail.funds_prev|format_amount(1) }}</td>
+                                  <td width="90">￥{{ funds_detail.funds_change|format_amount(1) }}</td>
+                                  <td width="90">￥{{ funds_detail.funds|format_amount(1) }}</td>
+                                  <td width="400">{{ funds_detail.remark_sys }}</td>
+                                  <td width="148">{{ funds_detail.add_time|timestamp2str }}</td>
                                 </tr>
                               {% endfor %}
                             </tbody>

@@ -8,21 +8,24 @@
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="white-box">
-          <h3 class="box-title"><a target="_blank" href="https://mp.weixin.qq.com/">{{ _('微信公众号') }}</a></h3>
+          <h3 class="box-title"><a target="_blank">{{ _('基本信息') }}</a></h3>
           <p class="text-muted m-b-30">
-            {{ _('再小的个体，也有自己的品牌。') }}
+            {{ _('微信小程序 - 一种新的开放能力，可以在微信内被便捷地获取和传播，同时具有出色的使用体验。') }}
           </p>
 
-          {{ libs.build_tabs(tabs=[
+           {{ libs.build_tabs(tabs=[
             {'label':_('微信公众号'), 'endpoint':'admin.config.mp'},
             {'label':_('微信支付'), 'endpoint':'admin.config.weixinpay'},
             {'label':_('微信开放平台'), 'endpoint':'admin.config.weixinopen'},
             {'label':_('微信小程序'), 'endpoint':'admin.config.weixin_sort'}
           ], border_bottom='line') }}
 
-          {# 微信公众号 form表单 #}
-          {{ libs.render_form(form, action=url_for('admin.config.mp'), enctype='multipart/form-data', primary_key=form.appid.data) }}
-
+          {# 售后服务 form表单 #}
+          {{ libs.render_form(form, 
+            action=url_for('admin.config.weixin_sort'),
+            enctype="multipart/form-data",
+            primary_key=form.appid.data)
+          }}
         </div>
       </div>
     </div>

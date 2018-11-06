@@ -47,7 +47,7 @@ def apply():
     resjson.action_code = 10
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     wtf_form = AfterSalesForm()
@@ -82,7 +82,7 @@ def refunds_amount():
     resjson.action_code = 11
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     og_id    = toint(request.args.get('og_id', '0'))
@@ -109,7 +109,7 @@ def return_goods():
     resjson.action_code = 12
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     aftersales_id      = toint(request.form.get('aftersales_id', '0'))

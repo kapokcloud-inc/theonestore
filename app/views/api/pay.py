@@ -54,7 +54,7 @@ def fundspay_req():
     resjson.action_code = 10
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     paid_time  = current_timestamp()
@@ -76,7 +76,7 @@ def fundspay_req():
 
     tran        = ps.tran
     tran_id     = tran.tran_id
-    pay_amount -= Decimal(tran.pay_amount)
+    pay_amount -= Decimal(tran.pay_amount).quantize(Decimal('0.00'))
 
     # 更新资金 - 使用资金支付 - 检查
     remark_user = _(u'支付订单')
@@ -117,7 +117,7 @@ def weixinjspay_req():
     resjson.action_code = 12
 
     if not check_login():
-        return resjson.print_json(10, _(u'未登陆'))
+        return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
     args          = request.args

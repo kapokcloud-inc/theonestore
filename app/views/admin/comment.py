@@ -52,9 +52,9 @@ def index(page=1, page_size=20):
     q = db.session.query(Comment.comment_id, Comment.uid, Comment.nickname, Comment.avatar,
                             Comment.rating, Comment.content, Comment.img_data, Comment.add_time,
                             Goods.goods_id, Goods.goods_name, Goods.goods_img).\
-            filter(Comment.tid == Goods.goods_id).\
-            filter(Comment.ttype == 1).\
-            filter(Comment.is_show == 1)
+                        filter(Comment.tid == Goods.goods_id).\
+                        filter(Comment.ttype == 1).\
+                        filter(Comment.is_show == 1)
 
     if goods_id > 0:
         q = q.filter(Comment.tid == goods_id)

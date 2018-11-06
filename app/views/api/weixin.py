@@ -9,7 +9,6 @@
 """
 from flask import (
     Blueprint,
-    request,
     redirect,
     url_for,
     session
@@ -17,23 +16,19 @@ from flask import (
 from flask_babel import gettext as _
 
 from app.database import db
-from app.models.sys import SysToken
-from app.services.response import ResponseJson
-from app.services.api.weixin import WeiXinLoginService
-from app.services.weixin import WeiXinMpAccessTokenService
-
 from app.helpers import (
     log_info,
     toint
 )
 from app.helpers.date_time import current_timestamp
-
+from app.services.response import ResponseJson
+from app.services.api.weixin import WeiXinLoginService
+from app.services.weixin import WeiXinMpAccessTokenService
 
 weixin = Blueprint('api.weixin', __name__)
 
 resjson = ResponseJson()
-resjson.module_code = 18
-
+resjson.module_code = 19
 
 @weixin.route('/login')
 def login():
@@ -41,7 +36,7 @@ def login():
 
     url  = url_for('mobile.index.root')
 
-    wxls = WeiXinLoginService('mp', 'mp', request)
+    wxls = WeiXinLoginService('mp')
     if not wxls.check():
         return redirect(url)
 
@@ -63,7 +58,7 @@ def login_qrcode():
 
     url  = url_for('pc.index.root')
 
-    wxls = WeiXinLoginService('open', 'qrcode', request)
+    wxls = WeiXinLoginService('qrcode')
     if not wxls.check():
         return redirect(url)
 
@@ -90,3 +85,18 @@ def ticket():
         return resjson.print_json(11, u'%s'%e)
     
     return resjson.print_json(0, 'ok', {'ticket':ticket})
+
+
+@weixin.route('/login-xiao')
+def login_xiao():
+    """微信小程序登陆"""
+    resjson.action_code = 10
+
+    wxls = WeiXinLoginService('xiao')
+    if not wxls.check():
+        return resjson.print_json(10, _(u'登陆失败'))
+
+    if not wxls.login():
+        return resjson.print_json(11, _(u'登陆失败'))
+
+    return resjson.print_json(0, u'ok')
