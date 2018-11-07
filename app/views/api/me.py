@@ -140,7 +140,6 @@ def address_remove():
         return resjson.print_json(0, u'ok')
 
     model_delete(user_address, commit=True)
-
     return resjson.print_json(0, u'ok')
 
 @me.route('/address/list', methods=["GET"])
@@ -149,9 +148,9 @@ def address_list():
 
     resjson.action_code = 13
 
-    # if not check_login():
-    #     return resjson.print_json(resjson.NOT_LOGIN)
-    # uid = get_uid()
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
 
     address_list = UserAddress.query.filter(UserAddress.uid == 1).order_by(UserAddress.is_default.desc()).all()
     
