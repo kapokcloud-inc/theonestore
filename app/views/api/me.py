@@ -74,7 +74,6 @@ def update():
 
     return resjson.print_json(0, u'ok')
 
-
 @me.route('/address-save', methods=["POST"])
 def address_save():
     """保存地址"""
@@ -143,3 +142,18 @@ def address_remove():
     model_delete(user_address, commit=True)
 
     return resjson.print_json(0, u'ok')
+
+@me.route('/address/list', methods=["GET"])
+def address_list():
+    """地址管理"""
+
+    resjson.action_code = 13
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    address_list = UserAddress.query.filter(UserAddress.uid == uid).order_by(UserAddress.is_default.desc()).all()
+    
+    data = {'address_list': address_list}
+    return resjson.print_json(0, u'ok', data)
