@@ -32,6 +32,7 @@ from app.helpers import (
 
 from app.forms.admin.shipping import ShippingForm
 from app.services.uploads import FileUploadService
+from app.services.sms import SmsService
 from app.forms.admin.config import (
     WeixinMpForm,
     WeixinPayForm,
@@ -204,15 +205,14 @@ def info_base():
     app_logo = ''
     if form.app_logo.data:
         fus = FileUploadService()
-        log_info('上传的图片')
-        log_info(fus)
         try:
             app_logo = fus.save_storage(form.app_logo.data, 'applogo')
         except Exception as e:
             form.app_logo.errors = (_(u'上传失败，请检查云存储配置'))
             return render_template('admin/config/info_base.html.j2', form=form)
-    app_logo = app_logo if app_logo else data.get('app_logo','')
-    data = {'app_name': form.app_name.data, 'app_logo': app_logo, 'app_recommend': form.app_recommend.data}
+    app_logo = app_logo if app_logo else data.get('app_logo', '')
+    data = {'app_name': form.app_name.data, 'app_logo': app_logo,
+            'app_recommend': form.app_recommend.data}
     # 配置表中没该key,先添加该key
     if ss is None:
         ss = SysSetting()
@@ -223,6 +223,7 @@ def info_base():
     db.session.commit()
     return redirect(url_for('admin.index.success', title=_(u'设置基本信息成功')))
 
+
 @config.route('/weixin/sort', methods=['GET', 'POST'])
 def weixin_sort():
     """ 配置微信小程序 """
@@ -230,7 +231,8 @@ def weixin_sort():
     g.page_title = _(u'微信小程序')
 
     form = WeixinSortForm()
-    ss   = SysSetting.query.filter(SysSetting.key == 'config_weixin_sort').first()
+    ss = SysSetting.query.filter(
+        SysSetting.key == 'config_weixin_sort').first()
 
     data = {}
     try:
@@ -245,7 +247,7 @@ def weixin_sort():
     if not form.validate_on_submit():
         return render_template('admin/config/weixin_sort.html.j2', form=form)
 
-    data = {'appid':form.appid.data, 'secret':form.secret.data}
+    data = {'appid': form.appid.data, 'secret': form.secret.data}
     if ss is None:
         ss = SysSetting()
         ss.key = 'config_weixin_sort'
@@ -264,33 +266,46 @@ def weixin_sort():
     return redirect(url_for('admin.index.success', title=_(u'设置微信小程序成功')))
 
 
-    
-
 @config.route('/sms/yunpian', methods=["GET", "POST"])
 def sms_yunpian():
     """配置云片短信"""
     g.page_title = _(u'云片短信')
 
     form = SmsYunpianForm()
-    ss   = SysSetting.query.filter(SysSetting.key == 'config_sms_yunpian').first()
+    yunpian = SysSetting.query.filter(SysSetting.key == 'config_sms_yunpian').first()
+    vendor = SysSetting.query.filter(SysSetting.key == 'sms_vendor').first()
 
     if request.method == "GET":
+        data = {}
         try:
-            data = json.loads(ss.value)
+            data = json.loads(yunpian.value)
         except Exception as e:
             data = {}
-        form.fill_form(data=data)
-    else:
-        data = {'ak':form.ak.data, 'app_name':form.app_name.data}
-        if form.validate_on_submit():
-            if ss is None:
-                ss = SysSetting()
-                ss.key = 'config_sms_yunpian'
-                db.session.add(ss)
-            ss.value = json.dumps(data)
-            db.session.commit()
-            return redirect(url_for('admin.config.sms_yunpian'))
 
+        if vendor is not None:
+            data['is_use'] = 1 if vendor.value == 'sms_yunpian' else 0
+            
+        form.fill_form(data=data)
+        return render_template('admin/config/sms_yunpian.html.j2', form=form, data=data)
+
+    if form.validate_on_submit():
+        # 设置云片信息
+        data_yunpian = {'ak': form.ak.data, 'app_name': form.app_name.data}
+        if yunpian is None: 
+            yunpian     = SysSetting()
+            yunpian.key = 'config_sms_yunpian'
+            db.session.add(yunpian)
+        yunpian.value = json.dumps(data_yunpian)
+        db.session.commit()
+        # 设置短信当前启用方式（云片或阿里）
+        data_vendor = 'sms_yunpian' if form.is_use.data else ''
+        if vendor is None: 
+            vendor     = SysSetting()
+            vendor.key = 'sms_vendor'
+            db.session.add(vendor)
+        vendor.value = data_vendor
+        db.session.commit()
+        return redirect(url_for('admin.config.sms_yunpian'))
     return render_template('admin/config/sms_yunpian.html.j2', form=form, data=data)
 
 
@@ -300,30 +315,44 @@ def sms_alisms():
     g.page_title = _(u'阿里短信')
 
     form = SmsAlismsForm()
-    ss   = SysSetting.query.filter(SysSetting.key == 'config_sms_alisms').first()
+    alisms = SysSetting.query.filter(SysSetting.key == 'config_sms_alisms').first()
+    vendor  = SysSetting.query.filter(SysSetting.key == 'sms_vendor').first()
 
     if request.method == "GET":
+        data = {}
         try:
-            data = json.loads(ss.value)
+            data = json.loads(alisms.value)
         except Exception as e:
             data = {}
+
+        if vendor is not None:
+            data['is_use'] = 1 if vendor.value == 'sms_alisms' else 0
+            
         form.fill_form(data=data)
-    else:
-        data = {'access_key_id':form.access_key_id.data,
-                'access_key_secret':form.access_key_secret.data,
-                'app_name':form.app_name.data}
-        if form.validate_on_submit():
-            if ss is None:
-                ss = SysSetting()
-                ss.key = 'config_sms_yunpian'
-                db.session.add(ss)
-            ss.value = json.dumps(data)
-            db.session.commit()
+        return render_template('admin/config/sms_alisms.html.j2', form=form, data=data)
+  
+    if form.validate_on_submit():
+        data_ali = {'access_key_id': form.access_key_id.data,
+            'access_key_secret': form.access_key_secret.data,
+            'app_name'         : form.app_name.data}
+        if alisms is None:
+            alisms     = SysSetting()
+            alisms.key = 'config_sms_alisms'
+            db.session.add(alisms)
+        alisms.value = json.dumps(data_ali)
+        db.session.commit()
 
-            return redirect(url_for('admin.config.sms_alisms'))
+        data_vendor = 'sms_alisms' if form.is_use.data else ''
+        if vendor is None: 
+            vendor     = SysSetting()
+            vendor.key = 'sms_vendor'
+            db.session.add(vendor)
+        vendor.value = data_vendor
+        db.session.commit()
 
+        return redirect(url_for('admin.config.sms_alisms'))
     return render_template('admin/config/sms_alisms.html.j2', form=form, data=data)
-
+  
 
 @config.route('/storage/qiniu', methods=["GET", "POST"])
 def storage_qiniu():
@@ -331,7 +360,7 @@ def storage_qiniu():
     g.page_title = _(u'七牛云存储')
 
     form = StorageQiniuForm()
-    ss   = SysSetting.query.filter(SysSetting.key == 'config_storage_qiniu').first()
+    ss = SysSetting.query.filter(SysSetting.key == 'config_storage_qiniu').first()
 
     data = {}
     if request.method == "GET":
@@ -343,10 +372,10 @@ def storage_qiniu():
         form.fill_form(data=data)
         return render_template('admin/config/storage_qiniu.html.j2', form=form, data=data)
 
-    data = {'access_key':form.access_key.data,
-            'secret_key':form.secret_key.data,
-            'bucket_name':form.bucket_name.data,
-            'cname':form.cname.data}
+    data = {'access_key': form.access_key.data,
+            'secret_key': form.secret_key.data,
+            'bucket_name': form.bucket_name.data,
+            'cname': form.cname.data}
     if not form.validate_on_submit():
         return render_template('admin/config/storage_qiniu.html.j2', form=form, data=data)
 
@@ -365,7 +394,8 @@ def storage_alioss():
     g.page_title = _(u'阿里云OSS存储')
 
     form = StorageAliossForm()
-    ss   = SysSetting.query.filter(SysSetting.key == 'config_storage_alioss').first()
+    ss = SysSetting.query.filter(
+        SysSetting.key == 'config_storage_alioss').first()
 
     if request.method == "GET":
         try:
@@ -374,11 +404,11 @@ def storage_alioss():
         except Exception as e:
             data = {}
     else:
-        data = {'access_key_id':form.access_key_id.data,
-                'access_key_secret':form.access_key_secret.data,
-                'bucket_name':form.bucket_name.data,
-                'endpoint':form.endpoint.data,
-                'cname':form.cname.data}
+        data = {'access_key_id': form.access_key_id.data,
+                'access_key_secret': form.access_key_secret.data,
+                'bucket_name': form.bucket_name.data,
+                'endpoint': form.endpoint.data,
+                'cname': form.cname.data}
         if form.validate_on_submit():
             if ss is None:
                 ss = SysSetting()
@@ -397,7 +427,8 @@ def shipping():
     g.page_title = _(u'快递')
 
     shipping_list = Shipping.query.\
-                        order_by(Shipping.is_default.desc(), Shipping.is_enable.desc(), Shipping.sorting.desc()).all()
+        order_by(Shipping.is_default.desc(), Shipping.is_enable.desc(),
+                 Shipping.sorting.desc()).all()
 
     return render_template('admin/config/shipping.html.j2', shipping_list=shipping_list)
 
@@ -425,21 +456,21 @@ def shipping_save():
     """保存快递"""
     g.page_title = _(u'保存快递')
 
-    wtf_form    = ShippingForm()
+    wtf_form = ShippingForm()
     shipping_id = wtf_form.shipping_id.data
-    shipping    = Shipping.query.get_or_404(shipping_id)
+    shipping = Shipping.query.get_or_404(shipping_id)
 
     if wtf_form.validate_on_submit():
-        shipping.shipping_amount   = wtf_form.shipping_amount.data
+        shipping.shipping_amount = wtf_form.shipping_amount.data
         shipping.free_limit_amount = wtf_form.free_limit_amount.data
-        shipping.is_enable         = wtf_form.is_enable.data
-        shipping.is_default        = wtf_form.is_default.data
-        shipping.sorting           = wtf_form.sorting.data
+        shipping.is_enable = wtf_form.is_enable.data
+        shipping.is_default = wtf_form.is_default.data
+        shipping.sorting = wtf_form.sorting.data
 
         if shipping.is_default == 1:
             _shipping_list = Shipping.query.\
-                                filter(Shipping.shipping_id != shipping_id).\
-                                filter(Shipping.is_default == 1).all()
+                filter(Shipping.shipping_id != shipping_id).\
+                filter(Shipping.is_default == 1).all()
             for _shipping in _shipping_list:
                 _shipping.is_default = 0
 
@@ -448,18 +479,19 @@ def shipping_save():
         return redirect(url_for('admin.config.shipping'))
 
     wtf_form.shipping_name.data = shipping.shipping_name
-    shipping                    = wtf_form.data
+    shipping = wtf_form.data
 
     return render_template('admin/config/shipping_detail.html.j2', form=wtf_form, shipping=shipping)
 
 
-@config.route('/aftersales_service', methods=['GET','POST'])
+@config.route('/aftersales_service', methods=['GET', 'POST'])
 def aftersales_service():
     """售后服务"""
     g.page_title = _(u'售后服务')
 
     form = AftersalesServiceForm()
-    ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_service').first()
+    ss = SysSetting.query.filter(
+        SysSetting.key == 'config_aftersales_service').first()
     if request.method == 'GET':
         try:
             data = json.loads(ss.value)
@@ -467,7 +499,8 @@ def aftersales_service():
             data = {}
         form.fill_form(data=data)
     else:
-        data = {'consignee_name':form.consignee_name.data, 'consignee_mobile':form.consignee_mobile.data, 'consignee_address':form.consignee_address.data}
+        data = {'consignee_name': form.consignee_name.data, 'consignee_mobile':
+                form.consignee_mobile.data, 'consignee_address': form.consignee_address.data}
         if form.validate_on_submit():
             if ss is None:
                 ss = SysSetting()
@@ -475,6 +508,6 @@ def aftersales_service():
                 db.session.add(ss)
             ss.value = json.dumps(data)
             db.session.commit()
-            return redirect(url_for('admin.index.success',title=_(u'设置售后地址成功')))
-    
-    return render_template('admin/config/aftersales_service.html.j2',form=form)
+            return redirect(url_for('admin.index.success', title=_(u'设置售后地址成功')))
+
+    return render_template('admin/config/aftersales_service.html.j2', form=form)

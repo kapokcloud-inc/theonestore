@@ -326,7 +326,7 @@
 {# 其它 - form-control-static #}
 {% macro setting_page_tabs() %}
 {{ build_tabs(tabs=[
-  {'label':_('信息'), 'endpoint':'admin.config.info_base', 
+  {'label':_('基本信息'), 'endpoint':'admin.config.info_base', 
       'endpoint_list':('admin.config.info_base')},
   {'label':_('微信'), 'endpoint':'admin.config.mp', 
       'endpoint_list':('admin.config.mp', 'admin.config.weixinpay', 'admin.config.weixinopen', 'admin.config.weixin_sort')},
