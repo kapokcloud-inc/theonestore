@@ -94,6 +94,10 @@ class SmsService(object):
         return service
 
     def send_sms_code(self, mobile, code):
+        """ 发送短息验证码
+            @parmas mobile 电话号码
+            @params code 验证码
+        """
         current_service = self.get_service()
 
         if current_service == None:
