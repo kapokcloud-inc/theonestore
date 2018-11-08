@@ -117,9 +117,10 @@ class YunpianSmsService(object):
             raise ConfigNotExistException(_(u'云片服务api_key为空'))
 
         clnt = YunpianClient(self.api_key)
-        param = {YC.MOBILE: mobile,YC.TEXT:'%s您的验证码是%s' % (('' if self.sms_prefix == '' else '【' + self.sms_prefix + '】'), code)}
+        param = {YC.MOBILE: mobile, YC.TEXT: u'%s您的验证码是%s' % ((u'' if self.sms_prefix == u'' else u'【' + self.sms_prefix + u'】'), code)}
+        
         r = clnt.sms().single_send(param)
-        result_info = 'code:%s，msg:%s，data:%s，prefix:%s' % (str(r.code()), r.msg(), (r.data() if r.data() else '[]'), self.sms_prefix)
+        result_info = u'code:%s，msg:%s，data:%s，prefix:%s' % (str(r.code()), r.msg(), (r.data() if r.data() else u'[]'), self.sms_prefix)
         if r.code() != 0 :
             log_error(result_info)
             return False
