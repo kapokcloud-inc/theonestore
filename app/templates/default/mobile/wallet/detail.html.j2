@@ -12,7 +12,8 @@
     <div class="weui-form-preview__hd">
       {% set type = _('入账金额') if detail.funds_change > 0 else _('出账金额') %}
       <label class="weui-form-preview__label">{{ type }}</label>
-      <em class="weui-form-preview__value changeChu">{{ detail.funds_change }}</em>
+      {% set color = 'changeRu' if detail.funds_change > 0 else 'changeChu' %}
+      <em class="weui-form-preview__value {{ color }}">{{ detail.funds_change }}</em>
     </div>
     <div class="weui-form-preview__bd">
       <div class="weui-form-preview__item">
