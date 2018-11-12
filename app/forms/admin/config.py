@@ -24,7 +24,8 @@ from wtforms import (
     StringField,
     DecimalField,
     SelectField,
-    TextAreaField
+    TextAreaField,
+    BooleanField
 )
 from wtforms.validators import (
     Required,
@@ -133,6 +134,11 @@ class SmsYunpianForm(Form):
                     description=_(u'例如：【一店】，则填写 一店，不需填写方括号'),
                     validators=[Required(message=_(u'请填写前缀'))])
 
+    is_use      = BooleanField(_(u'是否显示'), 
+                    description=_(u'注意：使用云片短信，会自动禁用阿里云短信'),
+                    false_values=(0, '0', '', 'sms_alisms'),
+                    default='')
+
 
 class SmsAlismsForm(Form):
     access_key_id = StringField(_name='access_key_id', 
@@ -148,6 +154,11 @@ class SmsAlismsForm(Form):
                     label=_(u'短信前辍'), 
                     description=_(u'例如：【一店】，则填写 一店，不需填写方括号'), 
                     validators=[Required(message=_(u'请填写短信前缀'))])
+
+    is_use      = BooleanField(_(u'是否启用'), 
+                    description=_(u'注意：使用阿里云短信，会自动禁用云片'),
+                    false_values=(0, '0', '', 'sms_yunpian'), 
+                    default='')
 
 
 class StorageQiniuForm(Form):

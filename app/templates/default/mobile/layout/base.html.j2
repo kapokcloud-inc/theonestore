@@ -1,3 +1,5 @@
+{% import '/default/mobile/libs/const.html.j2' as const %}
+{% import '/default/mobile/libs/libs.html.j2' as libs %}
 <!DOCTYPE html>
 <html>
 
@@ -20,6 +22,9 @@
   </div>
 
   {% block script %} {% endblock %}
+  <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+  <script src="/static/default/mobile/js/sha1.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/static/default/mobile/js/share.js" type="text/javascript" charset="utf-8"></script>
 </body>
 
 </html>
