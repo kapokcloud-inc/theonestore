@@ -117,7 +117,6 @@ def address_save():
             default.is_default = 0
 
     user_address = model_update(user_address, data)
-
     db.session.commit()
 
     return resjson.print_json(0, u'ok', {'ua_id':user_address.ua_id})
