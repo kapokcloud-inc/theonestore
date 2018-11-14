@@ -178,6 +178,11 @@ class StorageQiniuForm(Form):
                     description=_(u'<p>不需要填写https或者http开头，只需要填写域名</p><p>例如：static.theonestore.cn</p>'),
                     validators=[Required(message=_(u'请填写CDN加速域名'))])
 
+    is_use = BooleanField(_(u'是否启用'), 
+                    description=_(u'注意：使用七牛云存储，会自动禁用阿里云'),
+                    false_values=(0, '0', '', 'aliyunoss'), 
+                    default='')
+
 
 class StorageAliossForm(Form):
     access_key_id = StringField(label=_('AccessKey ID'),
@@ -198,6 +203,11 @@ class StorageAliossForm(Form):
     cname = StringField(label=_(u'CDN加速域名'), 
                     description=_(u'<p>不需要填写https或者http开头，只需要填写域名</p><p>例如：static.theonestore.cn</p>'),
                     validators=[Required(message=_(u'请填写CDN加速域名'))])
+
+    is_use = BooleanField(_(u'是否启用'),
+                    description=_(u'注意：使用阿里云存储，会自动禁用七牛云'),
+                    false_values=(0, '0', '', 'qiniu'), 
+                    default='')
 
 
 class AftersalesServiceForm(Form):

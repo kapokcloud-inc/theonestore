@@ -203,6 +203,11 @@
     <div class="col-xs-12 col-sm-8 col-md-5 col-lg-3{%if field.errors%} has-error{%endif%}">
     {# 布尔类型 #}
     {% if field.type == 'BooleanField' %}
+      <!-- 暂时不会实现点击监听 -->
+      <!-- <div style="padding-top: 7px">
+        <input type="checkbox" class="js-switch" data-color="#99d683" data-size="small"/>
+        <label for="{{ field.id }}">{{ field.description|safe }}</label>
+      </div> -->
       <div class="checkbox checkbox-success ">
         {{ field(**kwargs) }}
         <label for="{{ field.id }}">{{ field.description|safe }}</label>

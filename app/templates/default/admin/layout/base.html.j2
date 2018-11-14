@@ -22,6 +22,8 @@
   <link href="/static/default/admin/plugins/bower_components/footable/css/footable.core.css" rel="stylesheet">
   <!-- Select CSS -->
   <link href="/static/default/admin/plugins/bower_components/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+  <!-- switch CSS -->
+  <link href="/static/default/admin/plugins/bower_components/switchery/dist/switchery.min.css" rel="stylesheet">
   <link href="/static/default/admin/plugins/bower_components/custom-select/custom-select.css" rel="stylesheet" type="text/css">
   <link href="/static/default/admin/plugins/bower_components/switchery/dist/switchery.min.css" rel="stylesheet">
   <link href="/static/default/admin/plugins/bower_components/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
@@ -89,7 +91,18 @@
   
   <!-- comm.js -->
   <script src="/static/default/admin/js/comm.js"></script>
-  {% block footer %}{% endblock %}
+  {% block footer %}
+  <script>
+  jQuery(document).ready(function() {
+    // Switchery
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    $('.js-switch').each(function() {
+      console.log( $(this).data())
+      new Switchery($(this)[0], $(this).data());
+    });
+  })
+  </script>
+  {% endblock %}
 </body>
 
 </html>

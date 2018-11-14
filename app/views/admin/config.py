@@ -316,7 +316,7 @@ def sms_alisms():
 
     form = SmsAlismsForm()
     alisms = SysSetting.query.filter(SysSetting.key == 'config_sms_alisms').first()
-    vendor  = SysSetting.query.filter(SysSetting.key == 'sms_vendor').first()
+    vendor = SysSetting.query.filter(SysSetting.key == 'sms_vendor').first()
 
     if request.method == "GET":
         data = {}
@@ -333,8 +333,8 @@ def sms_alisms():
   
     if form.validate_on_submit():
         data_ali = {'access_key_id': form.access_key_id.data,
-            'access_key_secret': form.access_key_secret.data,
-            'app_name'         : form.app_name.data}
+                    'access_key_secret': form.access_key_secret.data,
+                    'app_name'         : form.app_name.data}
         if alisms is None:
             alisms     = SysSetting()
             alisms.key = 'config_sms_alisms'
@@ -360,31 +360,47 @@ def storage_qiniu():
     g.page_title = _(u'七牛云存储')
 
     form = StorageQiniuForm()
-    ss = SysSetting.query.filter(SysSetting.key == 'config_storage_qiniu').first()
+    qiniu = SysSetting.query.filter(SysSetting.key == 'config_storage_qiniu').first()
+    vendor = SysSetting.query.filter(SysSetting.key == 'storage_vendor').first()
 
-    data = {}
+    
     if request.method == "GET":
-        if ss and ss.value:
+        data = {}
+        if qiniu and qiniu.value:
             try:
-                data = json.loads(ss.value)
+                data = json.loads(qiniu.value)
             except Exception as identifier:
                 pass
+        if vendor is not None:
+            data['is_use'] = 1 if vendor.value == 'qiniu' else 0
+
         form.fill_form(data=data)
+        return render_template('admin/config/storage_qiniu.html.j2', form=form, data=data)
+
+    
+    if not form.validate_on_submit():
         return render_template('admin/config/storage_qiniu.html.j2', form=form, data=data)
 
     data = {'access_key': form.access_key.data,
             'secret_key': form.secret_key.data,
             'bucket_name': form.bucket_name.data,
             'cname': form.cname.data}
-    if not form.validate_on_submit():
-        return render_template('admin/config/storage_qiniu.html.j2', form=form, data=data)
 
-    if ss is None:
-        ss = SysSetting()
-        ss.key = 'config_storage_qiniu'
-        db.session.add(ss)
-    ss.value = json.dumps(data)
+    if qiniu is None:
+        qiniu = SysSetting()
+        qiniu.key = 'config_storage_qiniu'
+        db.session.add(qiniu)
+    qiniu.value = json.dumps(data)
     db.session.commit()
+
+    data_vendor = 'qiniu' if form.is_use.data else ''
+    if vendor is None: 
+        vendor     = SysSetting()
+        vendor.key = 'storage_vendor'
+        db.session.add(vendor)
+    vendor.value = data_vendor
+    db.session.commit()
+
     return redirect(url_for('admin.config.storage_qiniu'))
 
 
@@ -394,31 +410,50 @@ def storage_alioss():
     g.page_title = _(u'阿里云OSS存储')
 
     form = StorageAliossForm()
-    ss = SysSetting.query.filter(
-        SysSetting.key == 'config_storage_alioss').first()
+    aliyun = SysSetting.query.filter(SysSetting.key == 'config_storage_alioss').first()
+    vendor = SysSetting.query.filter(SysSetting.key == 'storage_vendor').first()
 
     if request.method == "GET":
+        data = {}
         try:
-            data = json.loads(ss.value)
+            data = json.loads(aliyun.value)
             form.fill_form(data=data)
         except Exception as e:
             data = {}
-    else:
-        data = {'access_key_id': form.access_key_id.data,
-                'access_key_secret': form.access_key_secret.data,
-                'bucket_name': form.bucket_name.data,
-                'endpoint': form.endpoint.data,
-                'cname': form.cname.data}
-        if form.validate_on_submit():
-            if ss is None:
-                ss = SysSetting()
-                ss.key = 'config_storage_alioss'
-                db.session.add(ss)
-            ss.value = json.dumps(data)
-            db.session.commit()
-            return redirect(url_for('admin.config.storage_alioss'))
+    
+        if vendor is not None:
+            data['is_use'] = 1 if vendor.value == 'aliyunoss' else 0
 
-    return render_template('admin/config/storage_alioss.html.j2', form=form, data=data)
+        form.fill_form(data=data)
+        return render_template('admin/config/storage_alioss.html.j2', form=form, data=data)
+
+    if not form.validate_on_submit():
+        return render_template('admin/config/storage_alioss.html.j2', form=form, data=data)
+
+    data = {'access_key_id': form.access_key_id.data,
+            'access_key_secret': form.access_key_secret.data,
+            'bucket_name': form.bucket_name.data,
+            'endpoint': form.endpoint.data,
+            'cname': form.cname.data}
+
+    if aliyun is None:
+        aliyun = SysSetting()
+        aliyun.key = 'config_storage_alioss'
+        db.session.add(aliyun)
+    aliyun.value = json.dumps(data)
+    db.session.commit()
+
+    data_vendor = 'aliyunoss' if form.is_use.data else ''
+    if vendor is None: 
+        vendor     = SysSetting()
+        vendor.key = 'storage_vendor'
+        db.session.add(vendor)
+    vendor.value = data_vendor
+    db.session.commit()
+
+    return redirect(url_for('admin.config.storage_alioss'))
+
+    
 
 
 @config.route('/shipping')
