@@ -61,6 +61,8 @@ def root():
 @index.route('/dashboard')
 def dashboard():
     """dashboard页"""
+    g.page_title = _(u'首页')
+
     admin_uid = session.get('admin_uid', None)
     if not admin_uid:
         return_url = request.args.get('return_url', '/admin/dashboard')
