@@ -8,31 +8,33 @@
 {% block body %}
 <div class="user_wrap">
   <div class="weui-cells weui-cells_form">
-    {% if express_data %}
-      <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.order.track', order_id=order.order_id) }}">
-        <div class="weui-cell__hd mar-right">
-          <img src="/static/default/mobile/img/deliverInfo.png" alt="" style="width:20px">
-        </div>
-        <div class="weui-cell__bd">
+    <a class="weui-cell weui-cell_access" href="{{ url_for('mobile.order.track', order_id=order.order_id) }}">
+      <div class="weui-cell__hd mar-right">
+        <img src="/static/default/mobile/img/deliverInfo.png" alt="" style="width:20px">
+      </div>
+      <div class="weui-cell__bd">
+        {% if express_data %}
           <div class="logistics_info">{{ express_data['context'] }}</div>
           <div class="all_add">{{ express_data['ftime'] }}</div>
-        </div>
-        <div class="weui-cell__ft"></div>
-      </a>
-    {% endif %}
+        {% endif %}
+          <div class="logistics_info">暂无物流信息</div>
+      </div>
+      <div class="weui-cell__ft"></div>
+    </a>
     <div class="weui-cell not_before">
       <div class="weui-cell__hd mar-right">
         <img src="/static/default/mobile/img/address.png" alt="" style="width:20px">
       </div>
       <div class="weui-cell__bd">
         <div class="blackGap">
-          <span>{{_('收件人：')}}</span>
+          <!-- <span>{{_('收件人：')}}</span> -->
           <span>{{ order_address.name }}</span>
           <span class="mar-left">{{ order_address.mobile }}</span>
         </div>
-        <div class="address blackGap">
-          <span>{{_('收货地址：')}}</span>
-          <span>{{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address }}</span>
+        <div class="address">
+          <!-- <span>{{_('收货地址：')}}</span> -->
+          <span>{{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address
+            }}</span>
         </div>
       </div>
     </div>

@@ -22,5 +22,6 @@ API_ROUTES = (
     (api.item,      '/api/item'),
     (api.category,  '/api/category'),
     (api.index,     '/api/index'),
-    (api.config,    '/api/config')
+    (api.config,    '/api/config'),
+    (api.sys,       '/api/sys')
 )
