@@ -39,6 +39,7 @@ from app.services.response import ResponseJson
 from app.services.message import MessageCreateService
 from app.services.api.pay_weixin import NativeService
 from app.services.api.order import (
+    OrderStaticMethodsService,
     OrderCreateService,
     OrderUpdateService,
     OrderCancelService,
@@ -62,6 +63,19 @@ order = Blueprint('api.order', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 14
+@order.route('/')
+def index():
+    """订单列表页"""
+    resjson.action_code = 10
+    
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    data               = OrderStaticMethodsService.orders(uid, request.args.to_dict())
+    data['tab_status'] = request.args.get('tab_status', '0')
+
+    return resjson.print_json(0, u'ok', data)
 
 @order.route('/create', methods=['POST'])
 def create():
