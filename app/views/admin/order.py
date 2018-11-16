@@ -93,24 +93,11 @@ def index(page=1, page_size=20):
 
     mobile_orders_id = None
     if mobile:
-        mobile_orders_id = db.session.query(OrderAddress.order_id).filter(OrderAddress.mobile == mobile).all()
-        mobile_orders_id = [_order.order_id for _order in mobile_orders_id]
+        q = q.filter(OrderAddress.mobile == mobile)
 
     name_orders_id = None
     if name:
-        name_orders_id = db.session.query(OrderAddress.order_id).filter(OrderAddress.name == name).all()
-        name_orders_id = [_order.order_id for _order in name_orders_id]
-
-    orders_id = None
-    if mobile_orders_id is not None and name_orders_id is not None:
-        orders_id = list(set(mobile_orders_id).intersection(set(name_orders_id)))
-    elif mobile_orders_id is not None and name_orders_id is None:
-        orders_id = mobile_orders_id
-    elif mobile_orders_id is None and name_orders_id is not None:
-        orders_id = name_orders_id
-    if orders_id is not None:
-        orders_id = [-1] if len(orders_id) == 0 else orders_id
-        q = q.filter(Order.order_id.in_(orders_id))
+        q = q.filter(OrderAddress.name == name)
 
     if add_time_daterange:
         start, end = date_range(add_time_daterange)
