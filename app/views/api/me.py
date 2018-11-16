@@ -20,7 +20,8 @@ from app.helpers import (
     model_update,
     model_delete,
     log_info,
-    toint
+    toint,
+    get_count
 )
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import (
@@ -36,16 +37,46 @@ from app.forms.api.me import (
     AddressForm
 )
 
+from app.models.aftersales import Aftersales
+from app.models.message import Message
+from app.models.order import (
+    Order,
+    OrderGoods
+)
+from app.models.funds import Funds
+from app.models.coupon import Coupon
+from app.models.item import Goods
+from app.models.like import Like
 from app.models.user import (
     User,
     UserAddress
 )
-
+from app.services.api.user import UserStaticMethodsService
+from app.services.api.me import MeStaticMethodsService
 
 me = Blueprint('api.me', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 13
+
+
+@me.route('/', methods=['GET'])
+def index():
+    resjson.action_code = 10
+    
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    data = MeStaticMethodsService.detail(uid)
+    
+    # 未读消息数
+    unread_count = UserStaticMethodsService.unread_count(uid)
+    data['unread_count'] = unread_count
+    return resjson.print_json(0, u'ok', data)
+
+
+
 
 @me.route('/update', methods=["POST"])
 def update():
