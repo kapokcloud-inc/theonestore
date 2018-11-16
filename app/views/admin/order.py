@@ -61,6 +61,7 @@ def index(page=1, page_size=20):
     g.page_title = _(u'订单')
 
     args                    = request.args
+    # 标签选项 0:全部订单 1:待付款 2:待发货 3:已发货
     tab_status              = toint(args.get('tab_status', '0'))
     order_sn                = args.get('order_sn', '').strip()
     shipping_sn             = args.get('shipping_sn', '').strip()
@@ -85,55 +86,39 @@ def index(page=1, page_size=20):
     elif tab_status == 3:
         q = q.filter(Order.order_status == 1).filter(Order.pay_status == 2).filter(Order.shipping_status == 2)
 
+    # 订单编号
     if order_sn:
         q = q.filter(Order.order_sn == order_sn)
 
+    # 快递号
     if shipping_sn:
         q = q.filter(Order.shipping_sn == shipping_sn)
 
-    mobile_orders_id = None
+    # 收件人手机号
     if mobile:
-        mobile_orders_id = db.session.query(OrderAddress.order_id).filter(OrderAddress.mobile == mobile).all()
-        mobile_orders_id = [_order.order_id for _order in mobile_orders_id]
+        q = q.filter(OrderAddress.mobile == mobile)
 
-    name_orders_id = None
+    # 收件人姓名
     if name:
-        name_orders_id = db.session.query(OrderAddress.order_id).filter(OrderAddress.name == name).all()
-        name_orders_id = [_order.order_id for _order in name_orders_id]
+        q = q.filter(OrderAddress.name == name)
 
-    orders_id = None
-    if mobile_orders_id is not None and name_orders_id is not None:
-        orders_id = list(set(mobile_orders_id).intersection(set(name_orders_id)))
-    elif mobile_orders_id is not None and name_orders_id is None:
-        orders_id = mobile_orders_id
-    elif mobile_orders_id is None and name_orders_id is not None:
-        orders_id = name_orders_id
-    if orders_id is not None:
-        orders_id = [-1] if len(orders_id) == 0 else orders_id
-        q = q.filter(Order.order_id.in_(orders_id))
-
+    # 下单日期
     if add_time_daterange:
         start, end = date_range(add_time_daterange)
-        q          = q.filter(Order.add_time >= start).filter(Order.add_time < end)
+        q = q.filter(Order.add_time >= start).filter(Order.add_time < end)
 
+    # 付款日期
     if paid_time_daterange:
         start, end = date_range(paid_time_daterange)
-        q          = q.filter(Order.paid_time >= start).filter(Order.paid_time < end)
+        q = q.filter(Order.paid_time >= start).filter(Order.paid_time < end)
 
+    # 发货日期
     if shipping_time_daterange:
         start, end = date_range(shipping_time_daterange)
-        q          = q.filter(Order.shipping_time >= start).filter(Order.shipping_time < end)
+        q = q.filter(Order.shipping_time >= start).filter(Order.shipping_time < end)
 
-    _orders    = q.order_by(Order.order_id.desc()).offset((page-1)*page_size).limit(page_size).all()
+    orders = q.order_by(Order.order_id.desc()).offset((page-1)*page_size).limit(page_size).all()
     pagination = Pagination(None, page, page_size, q.count(), None)
-
-    orders = []
-    for _order in _orders:
-        status_text, action_code = OrderStaticMethodsService.order_status_text_and_action_code(_order)
-        _order                   = kt_to_dict(_order)
-        _order['status_text']    = status_text
-        orders.append(_order)
-
     return render_template('admin/order/index.html.j2', pagination=pagination, orders=orders)
 
 

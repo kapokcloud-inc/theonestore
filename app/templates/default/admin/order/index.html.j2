@@ -118,7 +118,7 @@
                       <td>{{ order['shipping_sn'] }}</td>
                       {% set shipping_time = order['shipping_time']|timestamp2str if order['shipping_time'] else '' %}
                       <td>{{ shipping_time }}</td>
-                      <td>{{ order['status_text'] }}</td>
+                      <td>{{ libs.order_status_text(order) }}</td>
                       <td>{{ order['add_time']|timestamp2str }}</td>
                       <td>
                         <a href="{{url_for('admin.order.detail', order_id=order['order_id'])}}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">

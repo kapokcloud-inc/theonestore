@@ -389,3 +389,30 @@
 
 </div>
 {% endmacro %}
+
+{#
+获取订单状态
+:params order 订单object
+#}
+{% macro order_status_text(order) %}
+{%- set order_status = order.order_status -%} {# 订单状态: 0.默认; 1.创建订单; 2.已完成; 3.已取消; 4.已售后; #}
+{%- set pay_status = order.pay_status -%} {# 支付状态: 0.默认; 1.待付款; 2.已付款; #}
+{%- set shipping_status = order.shipping_status -%} {# 发货状态: 0.默认; 1.未发货; 2.已发货; #}
+{%- set deliver_status = order.deliver_status -%} {# 收货状态: 0.默认; 1.待收货; 2.已收货; #}
+{%- set aftersale_status = order.aftersale_status -%} {# 售后状态: 0.默认; 1.已退款; 2.已换货; 3.已退款，已换货; #}
+{%- if order_status == 1 -%}
+  {%- if pay_status == 1 -%}待付款
+  {%- elif pay_status == 2 -%}
+    {%- if shipping_status == 1 -%}待发货
+    {%- elif shipping_status == 2 and deliver_status == 1 -%}已发货
+    {%- endif -%}
+  {%- endif -%}
+{%- elif order_status == 2 -%}已完成
+{%- elif order_status == 3 -%}已取消
+{%- elif order_status == 4 -%}
+  {%- if aftersale_status == 1 -%}已退款
+  {%- elif aftersale_status == 2 -%}已换货
+  {%- elif aftersale_status == 3 -%}已退款&已换货
+  {%- endif -%}
+{%- endif -%}
+{% endmacro -%}
