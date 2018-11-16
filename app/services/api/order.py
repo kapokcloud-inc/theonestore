@@ -817,7 +817,7 @@ class OrderStaticMethodsService(object):
             if aftersale:
                 aftersales[order.order_id] = aftersale
             
-        return {'orders':orders, 'pagination':pagination, 'texts':texts, 'codes':codes,'aftersales':aftersales,'current_time':current_timestamp()}
+        return {'orders':orders, 'pagination':pagination, 'texts':texts, 'codes':codes, 'aftersales':aftersales,'current_time':current_timestamp()}
 
     @staticmethod
     def order_status_text_and_action_code(order, min_pay_time=0):

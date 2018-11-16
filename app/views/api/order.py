@@ -63,7 +63,9 @@ order = Blueprint('api.order', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 14
-@order.route('/')
+
+
+@order.route('/index', methods=['GET'])
 def index():
     """订单列表页"""
     resjson.action_code = 10
@@ -71,7 +73,7 @@ def index():
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
-
+    uid = 1
     data               = OrderStaticMethodsService.orders(uid, request.args.to_dict())
     data['tab_status'] = request.args.get('tab_status', '0')
 
