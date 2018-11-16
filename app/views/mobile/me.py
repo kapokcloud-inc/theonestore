@@ -36,6 +36,7 @@ from app.helpers.user import (
 from app.services.message import MessageStaticMethodsService
 from app.services.api.like import LikeStaticMethodsService
 from app.services.api.user import UserStaticMethodsService
+from app.services.api.me import MeStaticMethodsService
 
 from app.forms.api.me import (
     ProfileForm,
@@ -66,63 +67,8 @@ def index():
         session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
     uid          = get_uid()
-    nickname     = get_nickname()
-    avatar       = get_avatar()
-    current_time = current_timestamp()
 
-    # 优惠券
-    q = Coupon.query.\
-            filter(Coupon.uid == uid).\
-            filter(Coupon.is_valid == 1).\
-            filter(Coupon.begin_time <= current_time).\
-            filter(Coupon.end_time >= current_time)
-    coupon_count = get_count(q)
-
-    # 未付款订单
-    q = db.session.query(Order.order_id).\
-            filter(Order.uid == uid).\
-            filter(Order.order_type == 1).\
-            filter(Order.is_remove == 0).\
-            filter(Order.order_status == 1).\
-            filter(Order.pay_status == 1)
-    unpaid_count = get_count(q)
-
-    # 待收货订单
-    q = db.session.query(Order.order_id).\
-            filter(Order.uid == uid).\
-            filter(Order.order_type == 1).\
-            filter(Order.is_remove == 0).\
-            filter(Order.order_status == 1).\
-            filter(Order.pay_status == 2).\
-            filter(Order.deliver_status.in_([0,1]))
-    undeliver_count = get_count(q)
-
-    completed = db.session.query(Order.order_id).\
-                    filter(Order.uid == uid).\
-                    filter(Order.order_type == 1).\
-                    filter(Order.is_remove == 0).\
-                    filter(Order.order_status == 2).\
-                    filter(Order.pay_status == 2).\
-                    filter(Order.deliver_status == 2).all()
-    completed = [order.order_id for order in completed]
-
-    # 待评价
-    q = db.session.query(OrderGoods.og_id).\
-            filter(OrderGoods.order_id.in_(completed)).\
-            filter(OrderGoods.comment_id == 0)
-    uncomment_count = get_count(q)
-
-    # 退款售后
-    q = db.session.query(Aftersales.aftersales_id).\
-            filter(Aftersales.status.in_([1,2])).\
-            filter(Aftersales.uid == uid)
-    aftersales_count = get_count(q)
-
-    funds = Funds.query.filter(Funds.uid == uid).first()
-
-    data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'coupon_count':coupon_count,
-            'unpaid_count':unpaid_count, 'undeliver_count':undeliver_count, 'uncomment_count':uncomment_count,
-            'aftersales_count':aftersales_count, 'funds':funds}
+    data = MeStaticMethodsService.detail(uid)
     return render_template('mobile/me/index.html.j2', **data)
 
 
