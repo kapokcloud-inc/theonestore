@@ -7,6 +7,7 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import json
 import time
 import requests
 from hashlib import sha256
@@ -100,3 +101,35 @@ class OrderStaticMethodsService(object):
             return (_(u'查询失败'), [])
 
         return ('ok', data['data'])
+
+
+    @staticmethod
+    def order_status_text(order):
+        """获取订单状态文本"""
+        return OrderStaticMethodsService.order_status_text_and_action_code(order)[0]
+
+
+    @staticmethod
+    def goods_list_text(goods_data):
+        """获取商品列表数据转成text文本"""
+        goods_list = []
+        try:
+            goods_list = json.loads(goods_data)
+        except Exception as identifier:
+            pass
+
+        lst = []
+        for goods in goods_list:
+            item = u'%s x%d' % (goods.get('goods_name', ''), goods.get('quantity', 0))
+            lst.append(item)
+        return '\n'.join(lst)
+
+    
+    @staticmethod
+    def order_address_text(order_address):
+        """获取订单地址文本"""
+        if not order_address:
+            return ''
+
+        return u'%s %s %s %s' % (order_address.province, order_address.city, 
+                    order_address.district, order_address.address)

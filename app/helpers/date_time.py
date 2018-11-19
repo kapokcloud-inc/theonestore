@@ -16,10 +16,11 @@ from app.helpers import log_info
 
 def timestamp2str(timestamp, format_style='YYYY-MM-DD HH:mm:ss', timezone='UTC+8'):
     """时间戳转换为指定格式时间"""
-
+    if (timestamp == 0):
+        return ''
+        
     utc = arrow.get(timestamp)
     loc = utc.to(timezone)
-
     return loc.format(format_style)
 
 
@@ -28,13 +29,11 @@ def str2timestamp(_str, format_style='YYYY-MM-DD HH:mm:ss', timezone='UTC+8'):
 
     utc = arrow.get(_str, format_style)
     loc = utc.replace(tzinfo=timezone)
-
     return loc.timestamp
 
 
 def current_timestamp():
     """当前时间戳"""
-
     return int(time.time())
 
 
@@ -45,7 +44,6 @@ def some_day_timestamp(timestamp, days):
     a_loc = a_utc.to('local')
     a_loc = a_loc.floor('day')
     a_loc = a_loc.shift(days=days)
-
     return a_loc.timestamp
 
 
@@ -55,7 +53,6 @@ def before_after_timestamp(timestamp, kwargs):
     a_utc = arrow.get(timestamp)
     a_loc = a_utc.to('local')
     a_loc = a_loc.shift(**kwargs)
-
     return a_loc.timestamp
 
 
@@ -66,7 +63,6 @@ def date_range(_range, format_style='YYYY-MM-DD'):
     start  = str2timestamp(_range[0], format_style)
     end    = str2timestamp(_range[1], format_style)
     end    = some_day_timestamp(end, 1)
-
     return (start, end)
 
 

@@ -62,12 +62,12 @@
 {# 分页 - 分页URL #}
 {% macro pagination_href(page, page_size=None) %}
   {% set page_size = page_size if page_size else request.view_args.get('page_size', None) %}
-  {{ url_for(request.endpoint, page=page, page_size=page_size) }}{% if request.query_string %}{{ '?' + request.query_string }}{% endif %}
+  {{ url_for(request.endpoint, page=page, page_size=page_size) }}{% if request.query_string %}{{ '?'|string + request.query_string|string }}{% endif %}
 {% endmacro %}
 
 
 {# 搜索表单 #}
-{% macro build_search_form(form_fields, action="", method="GET") %}
+{% macro build_search_form(form_fields, action="", method="GET", is_export=False) %}
 <form id="search_form" class="form" action="{{ action }}" method="{{ method }}">
   <div class="row">
     {% for field in form_fields %}
@@ -76,7 +76,7 @@
       {% set value       = request.args.get(name, '') %}
       {% set type        = field.get('type', 'input') %}
       {% set placeholder = field.get('placeholder', '') %}
-      {% set _class      = field.get('_class', 'col-lg-3') %}
+      {% set _class      = field.get('_class', 'col-lg-2') %}
 
       {% if type == 'hidden' %}
         <input type="hidden" id="{{ name }}" name="{{ name }}" value="{{ value }}">
@@ -109,11 +109,14 @@
   </div>
   <div class="row"><div class="col-lg-12"><div class="hr-line-dashed"></div></div></div>
   <div class="row">
-    <div class="col-lg-1">
+    <div class="col-lg-12">
       <div class="form-group">
-        <button id="search_form_submit" type="submit" class="btn btn-info">
-          {{ _('提交') }} 
+        <button id="search_form_submit" name="submit" value="search" type="submit" class="btn btn-info">
+          {{ _('查询') }} 
         </button>
+      {% if is_export %}
+        <button style="margin-left:20px;" name="submit" value="export" class="btn btn-danger" id="search_form_export">{{ _('导出') }}</button>
+      {% endif %}
       </div>
     </div>
   </div>
@@ -401,18 +404,18 @@
 {%- set deliver_status = order.deliver_status -%} {# 收货状态: 0.默认; 1.待收货; 2.已收货; #}
 {%- set aftersale_status = order.aftersale_status -%} {# 售后状态: 0.默认; 1.已退款; 2.已换货; 3.已退款，已换货; #}
 {%- if order_status == 1 -%}
-  {%- if pay_status == 1 -%}待付款
+  {%- if pay_status == 1 -%}{{_('待付款')}}
   {%- elif pay_status == 2 -%}
-    {%- if shipping_status == 1 -%}待发货
-    {%- elif shipping_status == 2 and deliver_status == 1 -%}已发货
+    {%- if shipping_status == 1 -%}{{_('待发货')}}
+    {%- elif shipping_status == 2 and deliver_status == 1 -%}{{_('已发货')}}
     {%- endif -%}
   {%- endif -%}
-{%- elif order_status == 2 -%}已完成
-{%- elif order_status == 3 -%}已取消
+{%- elif order_status == 2 -%}{{_('已完成')}}
+{%- elif order_status == 3 -%}{{_('已取消')}}
 {%- elif order_status == 4 -%}
-  {%- if aftersale_status == 1 -%}已退款
-  {%- elif aftersale_status == 2 -%}已换货
-  {%- elif aftersale_status == 3 -%}已退款&已换货
+  {%- if aftersale_status == 1 -%}{{_('已退款')}}
+  {%- elif aftersale_status == 2 -%}{{_('已换货')}}
+  {%- elif aftersale_status == 3 -%}{{_('已退款&已换货')}}
   {%- endif -%}
 {%- endif -%}
 {% endmacro -%}

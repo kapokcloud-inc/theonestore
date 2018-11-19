@@ -2,7 +2,7 @@ PyMySQL==0.8.1
 SQLAlchemy==1.2.7
 Flask==1.0.2
 Flask-SQLAlchemy==2.3.2
-Requests==2.18.4
+Requests==2.20.0
 Flask-Babel==0.11.2
 Flask-WTF==0.14.2
 arrow==0.12.1
@@ -14,3 +14,5 @@ pyqrcode==1.2.1
 pypng==0.0.18
 Flask-Session==0.3.1
 yunpian-python-sdk==1.0.0
+Flask-Excel==0.0.7
+pyexcel-xlsx==0.5.6

@@ -92,16 +92,6 @@
   <!-- comm.js -->
   <script src="/static/default/admin/js/comm.js"></script>
   {% block footer %}
-  <script>
-  jQuery(document).ready(function() {
-    // Switchery
-    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-    $('.js-switch').each(function() {
-      console.log( $(this).data())
-      new Switchery($(this)[0], $(this).data());
-    });
-  })
-  </script>
   {% endblock %}
 </body>
 

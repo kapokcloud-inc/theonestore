@@ -21,7 +21,6 @@ from flask_babel import gettext as _
 from flask_sqlalchemy import Pagination
 
 from app.database import db
-
 from app.helpers import (
     render_template, 
     log_info,
@@ -31,13 +30,15 @@ from app.helpers import (
 )
 from app.helpers.date_time import (
     current_timestamp,
-    date_range
+    date_range,
+    timestamp2str
 )
 
 from app.services.response import ResponseJson
 from app.services.message import MessageCreateService
 from app.services.weixin import WeixinMessageStaticMethodsService
 from app.services.admin.order import OrderStaticMethodsService
+from app.services.admin.export import ExportService
 
 from app.models.user import User
 from app.models.order import (
@@ -70,52 +71,121 @@ def index(page=1, page_size=20):
     add_time_daterange      = args.get('add_time_daterange', '').strip()
     paid_time_daterange     = args.get('paid_time_daterange', '').strip()
     shipping_time_daterange = args.get('shipping_time_daterange', '').strip()
+    submit                  = args.get('submit', 'search') 
+    
+    # 是否导出 0:否 1:是
+    is_export = 1 if submit == u'export' else 0
 
+    export_filename = _(u'全部订单')
     q = db.session.query(Order.order_id, Order.order_sn, Order.order_status, Order.pay_status,
-                        Order.paid_time, Order.shipping_sn, Order.shipping_status,
-                        Order.shipping_time, Order.deliver_status, Order.goods_quantity,
-                        Order.goods_data, Order.add_time, OrderAddress.name, OrderAddress.mobile,
-                        Order.aftersale_status).\
-            filter(Order.order_id == OrderAddress.order_id).\
+                Order.paid_time, Order.shipping_sn, Order.shipping_status,
+                Order.shipping_time, Order.deliver_status, Order.goods_quantity,
+                Order.goods_data, Order.add_time, OrderAddress.name, OrderAddress.mobile,
+                Order.aftersale_status)
+    if is_export == 1:
+        q = db.session.query(
+                # 基本信息
+                Order.order_id, Order.order_sn, Order.add_time, Order.paid_time, 
+                Order.order_status, Order.pay_status, Order.shipping_status, 
+                Order.deliver_status, Order.aftersale_status,
+                Order.goods_quantity, Order.goods_data, Order.goods_amount, 
+                Order.shipping_amount, Order.discount_amount, Order.pay_amount, Order.paid_amount,
+
+                # 快递信息
+                Order.shipping_name, Order.shipping_code, Order.shipping_sn, Order.shipping_time, 
+
+                # 收件信息
+                OrderAddress.name, OrderAddress.mobile, OrderAddress.province,
+                OrderAddress.city, OrderAddress.district, OrderAddress.address
+            )
+        
+    q = q.filter(Order.order_id == OrderAddress.order_id).\
             filter(Order.order_type == 1)
 
     if tab_status == 1:
         q = q.filter(Order.order_status == 1).filter(Order.pay_status == 1)
+        export_filename = _(u'待付款')
     elif tab_status == 2:
-        q = q.filter(Order.order_status == 1).filter(Order.pay_status == 2).filter(Order.shipping_status == 1)
+        q = q.filter(Order.order_status == 1).filter(Order.pay_status == 2).\
+                filter(Order.shipping_status == 1)
+        export_filename = _(u'待发货')
     elif tab_status == 3:
-        q = q.filter(Order.order_status == 1).filter(Order.pay_status == 2).filter(Order.shipping_status == 2)
+        q = q.filter(Order.order_status == 1).filter(Order.pay_status == 2).\
+                filter(Order.shipping_status == 2)
+        export_filename = _(u'已发货')
 
     # 订单编号
     if order_sn:
         q = q.filter(Order.order_sn == order_sn)
+        export_filename += _(u' - 订单编号：') + order_sn
 
     # 快递号
     if shipping_sn:
         q = q.filter(Order.shipping_sn == shipping_sn)
+        export_filename += _(u' - 快递号：') + shipping_sn
 
     # 收件人手机号
     if mobile:
         q = q.filter(OrderAddress.mobile == mobile)
+        export_filename += _(u' - 手机号：') + mobile
 
     # 收件人姓名
     if name:
         q = q.filter(OrderAddress.name == name)
+        export_filename += _(u' - 收件人姓名：') + name
 
     # 下单日期
     if add_time_daterange:
         start, end = date_range(add_time_daterange)
         q = q.filter(Order.add_time >= start).filter(Order.add_time < end)
+        export_filename += _(u' - 下单日期：') + add_time_daterange
 
     # 付款日期
     if paid_time_daterange:
         start, end = date_range(paid_time_daterange)
         q = q.filter(Order.paid_time >= start).filter(Order.paid_time < end)
+        export_filename += _(u' - 付款日期：') + paid_time_daterange
 
     # 发货日期
     if shipping_time_daterange:
         start, end = date_range(shipping_time_daterange)
         q = q.filter(Order.shipping_time >= start).filter(Order.shipping_time < end)
+        export_filename += _(u' - 发货日期：') + shipping_time_daterange
+
+    # 导出
+    if is_export == 1:
+        now = timestamp2str(current_timestamp())
+        export_filename += _(u' - 导出时间：') + now
+        order_list = q.order_by(Order.order_id.desc()).all()
+        field_list = [
+            # 订单基本信息
+            {'title':_(u'订单ID'), 'field':'order_id'},
+            {'title':_(u'订单编号'), 'field':'order_sn'},
+            {'title':_(u'下单时间'), 'field':'add_time', 'func':timestamp2str},
+            {'title':_(u'订单状态'), 'func':OrderStaticMethodsService.order_status_text},
+            {'title':_(u'付款时间'), 'field':'paid_time', 'func':timestamp2str},
+            {'title':_(u'商品'), 'field':'goods_data', 'func':OrderStaticMethodsService.goods_list_text},
+            {'title':_(u'商品数量'), 'field':'goods_quantity'},
+            {'title':_(u'商品金额'), 'field':'goods_amount'},
+            {'title':_(u'快递费用'), 'field':'shipping_amount'},
+            {'title':_(u'优惠金额'), 'field':'discount_amount'},
+            {'title':_(u'应付款'), 'field':'pay_amount'},
+            {'title':_(u'实付款'), 'field':'paid_amount'},
+
+            # 收件信息
+            {'title':_(u'收件人'), 'field':'name'},
+            {'title':_(u'手机'), 'field':'mobile'},
+            {'title':_(u'地址'), 'func':OrderStaticMethodsService.order_address_text},
+
+            # 快递信息
+            {'title':_(u'快递名称'), 'field':'shipping_name'},
+            {'title':_(u'快递编码'), 'field':'shipping_code'},
+            {'title':_(u'快递单号'), 'field':'shipping_sn'},
+            {'title':_(u'发货时间'), 'field':'shipping_time', 'func':timestamp2str},
+
+        ]
+        es = ExportService(order_list, field_list, export_filename)
+        return es.export()
 
     orders = q.order_by(Order.order_id.desc()).offset((page-1)*page_size).limit(page_size).all()
     pagination = Pagination(None, page, page_size, q.count(), None)

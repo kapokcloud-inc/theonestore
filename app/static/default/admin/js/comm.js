@@ -14,6 +14,14 @@ $(document).ready(function () {
         e.preventDefault();
         previewFile(this);
     });
+    
+    // Switchery
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    $('.js-switch').each(function() {
+      console.log( $(this).data())
+      new Switchery($(this)[0], $(this).data());
+    });
+
 });
 
 function previewFile(input) {

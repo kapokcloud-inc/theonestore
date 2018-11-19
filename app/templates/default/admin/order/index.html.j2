@@ -76,7 +76,7 @@
           {% else %}
             {% set form_fields = [] %}
           {% endif %}
-          {{ libs.build_search_form(form_fields) }}
+          {{ libs.build_search_form(form_fields, is_export=True) }}
         </div>
       </div>
     </div>

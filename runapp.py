@@ -12,6 +12,7 @@ from json import loads as json_loads
 from flask_babel import Babel
 from flask_wtf.csrf import CSRFProtect
 from flask_session import Session
+import flask_excel as excel
 
 from app import configure_before
 
@@ -73,6 +74,8 @@ csrf.exempt('app.views.api.pay.notify')
 
 # flask session
 Session(app)
+
+excel.init_excel(app)
 
 # 注册jinja模板过滤器
 jinja_filters = {
