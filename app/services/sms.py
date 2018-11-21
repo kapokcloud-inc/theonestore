@@ -113,15 +113,23 @@ class SmsService(object):
 
         return current_service.send_sms_code(mobile, code)
     
-    def send_tpl_sms(self, mobile, tpl_id, params):
+    def send_tpl_sms(self, mobile, tpl_id, tpl_params):
+        """ 发送模版短信 
+            @parmas mobile 电话号码
+            @params tpl_id 模版id
+            @params params 模版内容
+        """
         current_service = self.get_service()
 
         if current_service == None:
             return False
         
-        return current_service.send_tpl_sms(mobile, tpl_id, params)
+        return current_service.send_tpl_sms(mobile, tpl_id, tpl_params)
 
     def send_mutil_sms(self, params):
+        """ 批量发短信
+            params必须包含  mobile 、text  两个key
+        """
         current_service = self.get_service()
 
         if current_service == None:
@@ -171,34 +179,28 @@ class YunpianSmsService(object):
         return self.get_result(r)
         
     
-    def send_tpl_sms(self, mobile='', tpl_id=0, params=None):
-        """ 指定模版，单发短信 
-            @mobile 手机号
-            @tpl_id 模版id long数据类型
-            @params 指定内容，与模版匹配，字典，key例：#code#
-        """
+    def send_tpl_sms(self, mobile='', tpl_id=0, tpl_params=None):
+        """ 指定模版，单发短信 """
         if not self.check_before:
             return False
 
-        if not mobile or not tpl_id or not params:
+        if not mobile or not tpl_id or not tpl_params:
             log_error(_(u'参数错误'))
             return False
 
         clnt = YunpianClient(self.api_key)
         tpl_value = ''
         try:
-            tpl_value = urllib.urlencode(params)
+            tpl_value = urllib.urlencode(tpl_params)
         except Exception as e:
-            tpl_value = urllib.parse.urlencode(params)
+            tpl_value = urllib.parse.urlencode(tpl_params)
         
         param = {YC.MOBILE: mobile, YC.TPL_ID: tpl_id, YC.TPL_VALUE: tpl_value}
         r = clnt.sms().tpl_single_send(param)
         return self.get_result(r)
 
     def send_mutil_sms(self, params):
-        """ 指定模版，群发短信
-            @params 字典 例{'mobile':'XXXX,XXXXX', 'text':'xxxxxx,xxxxxxxx'}
-        """
+        """ 群发短信 """
         if not self.check_before:
             return False
 
