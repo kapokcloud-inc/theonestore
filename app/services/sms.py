@@ -31,6 +31,14 @@ from app.exception import ConfigNotExistException
 from yunpian_python_sdk.model import constant as YC
 from yunpian_python_sdk.ypclient import YunpianClient
 
+import urllib
+try:
+    import urlparse
+except Exception as e:
+    from urllib.parse import urlparse
+
+
+
 class SmsService(object):
     """ 发送短信实例 """
 
@@ -104,28 +112,114 @@ class SmsService(object):
             return False
 
         return current_service.send_sms_code(mobile, code)
+    
+    def send_tpl_sms(self, mobile, tpl_id, params):
+        current_service = self.get_service()
+
+        if current_service == None:
+            return False
+        
+        return current_service.send_tpl_sms(mobile, tpl_id, params)
+
+    def send_mutil_sms(self, params):
+        current_service = self.get_service()
+
+        if current_service == None:
+            return False
+        
+        return current_service.send_mutil_sms(params)
 
 class YunpianSmsService(object):
     """ 云片短信服务 """
     def __init__(self, params):
         self.api_key = params['ak']
         self.sms_prefix = params['app_name']
-
-    def send_sms_code(self, mobile, code):
+    
+    def check_before(self):
+        """ 发送前检测 """
         if not self.api_key:
             self.api_key = ''
-            raise ConfigNotExistException(_(u'云片服务api_key为空'))
+            log_error(_(u'云片服务api_key为空'))
+            return False
+    
+    def get_result(self, result=None):
+        """ 发送反馈 """
+        if not result:
+            return False
+            
+        result_info = u'code:%s，msg:%s，data:%s，prefix:%s' % (str(result.code()), result.msg(), (result.data() if result.data() else u'[]'), self.sms_prefix)
+
+        if result.code() != 0 :
+            log_error(result_info)
+            return False
+        log_info(result_info)
+        return True
+
+    def send_sms_code(self, mobile='', code=''):
+        """ 发送验证码 """
+        if not self.check_before:
+            return False
+        
+        if not mobile or not code:
+            log_error(_(u'参数错误'))
+            return False
 
         clnt = YunpianClient(self.api_key)
         param = {YC.MOBILE: mobile, YC.TEXT: u'%s您的验证码是%s' % ((u'' if self.sms_prefix == u'' else u'【' + self.sms_prefix + u'】'), code)}
         
         r = clnt.sms().single_send(param)
-        result_info = u'code:%s，msg:%s，data:%s，prefix:%s' % (str(r.code()), r.msg(), (r.data() if r.data() else u'[]'), self.sms_prefix)
-        if r.code() != 0 :
-            log_error(result_info)
+        return self.get_result(r)
+        
+    
+    def send_tpl_sms(self, mobile='', tpl_id=0, params=None):
+        """ 指定模版，单发短信 
+            @mobile 手机号
+            @tpl_id 模版id long数据类型
+            @params 指定内容，与模版匹配，字典，key例：#code#
+        """
+        if not self.check_before:
             return False
-        log_info(result_info)
-        return True
+
+        if not mobile or not tpl_id or not params:
+            log_error(_(u'参数错误'))
+            return False
+
+        clnt = YunpianClient(self.api_key)
+        tpl_value = ''
+        try:
+            tpl_value = urllib.urlencode(params)
+        except Exception as e:
+            tpl_value = urllib.parse.urlencode(params)
+        
+        param = {YC.MOBILE: mobile, YC.TPL_ID: tpl_id, YC.TPL_VALUE: tpl_value}
+        r = clnt.sms().tpl_single_send(param)
+        return self.get_result(r)
+
+    def send_mutil_sms(self, params):
+        """ 指定模版，群发短信
+            @params 字典 例{'mobile':'XXXX,XXXXX', 'text':'xxxxxx,xxxxxxxx'}
+        """
+        if not self.check_before:
+            return False
+
+        if not params.mobile or not params.text:
+            log_error(_(u'参数错误'))
+            return False
+        
+        if len(params.mobile.split(',')) > 1000 or len(params.text.split(',')) > 1000:
+            log_error(_(u'单次最多批量发送1000条'))
+            return False
+
+        if len(params.mobile.split(',')) !=  len(params.text.split(',')):
+            log_error(_(u'手机号数与内容条数不相等'))
+            return False
+        
+        param = {YC.MOBILE: params.mobile, YC.TEXT: params.text}
+
+        clnt = YunpianClient(self.api_key)
+        r = clnt.sms().multi_send(param)
+        return self.get_result(r)
+
 
 class AliyunSmsService(object):
     """ 阿里云短信服务 """
@@ -138,4 +232,5 @@ class AliyunSmsService(object):
 
     def send_sms_code(self):
         log_info('执行发阿里云短信了')
-        pass
+        log_info('尚未支持')
+        return False
