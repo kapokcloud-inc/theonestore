@@ -63,9 +63,9 @@ def index():
 
     cs = CartService(uid, session_id)
     cs.check()
-
+    log_info(cs)
     data = {'is_login':is_login, 'carts':cs.carts, 'cart_total':cs.cart_total,
-            'cart_amount':cs.cart_amount}
+            'cart_amount':cs.cart_amount, 'items_amount':cs.items_amount, 'items_quantity':cs.items_quantity}
     return resjson.print_json(0, u'ok', data)
 
 
@@ -240,7 +240,6 @@ def checked():
         carts = json.loads(carts)
     except Exception as e:
         return resjson.print_json(resjson.PARAM_ERROR)
-
     for cart in carts:
         cart_id    = toint(cart.get('cart_id', 0))
         is_checked = toint(cart.get('is_checked', -1))
