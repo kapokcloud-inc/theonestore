@@ -204,19 +204,21 @@ class YunpianSmsService(object):
         if not self.check_before:
             return False
 
-        if not params.mobile or not params.text:
+        mobile = params.get('mobile', '')
+        text = params.get('text', '')
+        if not mobile or not text:
             log_error(_(u'参数错误'))
             return False
         
-        if len(params.mobile.split(',')) > 1000 or len(params.text.split(',')) > 1000:
+        if len(mobile.split(',')) > 1000 or len(text.split(',')) > 1000:
             log_error(_(u'单次最多批量发送1000条'))
             return False
 
-        if len(params.mobile.split(',')) !=  len(params.text.split(',')):
+        if len(mobile.split(',')) !=  len(text.split(',')):
             log_error(_(u'手机号数与内容条数不相等'))
             return False
         
-        param = {YC.MOBILE: params.mobile, YC.TEXT: params.text}
+        param = {YC.MOBILE: mobile, YC.TEXT: text}
 
         clnt = YunpianClient(self.api_key)
         r = clnt.sms().multi_send(param)
