@@ -63,9 +63,17 @@ resjson.module_code = 13
 @me.route('/', methods=['GET'])
 def index():
     resjson.action_code = 10
+
+    from flask import session
+
+    session['uid']        = 1
+    session['nickname']   = 'eason'
+    session['avatar']     = '//static-aliyun.kapokcloud.com/avatar/2018-08-01/968e30714cba4c25990e2258284e171b.jpg'
+    session['session_id'] = 'edad8468-fb1a-4213-ae98-c45330dec77d'
     
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
+
     uid = get_uid()
 
     data = MeStaticMethodsService.detail(uid)
@@ -73,10 +81,10 @@ def index():
     # 未读消息数
     unread_count = UserStaticMethodsService.unread_count(uid)
     data['unread_count'] = unread_count
+
+    # 封装下个人信息
+    data['user'] = {'uid': data['uid'], 'nickname': data['nickname'], 'avatar': data['avatar']}
     return resjson.print_json(0, u'ok', data)
-
-
-
 
 @me.route('/update', methods=["POST"])
 def update():
