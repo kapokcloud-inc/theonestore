@@ -996,3 +996,43 @@ class OrderStaticMethodsService(object):
             ogs_aftersale_status[og.og_id] = 0
 
         return ogs_aftersale_status
+    
+    @staticmethod
+    def order_comments(uid, params, is_pagination=False):
+        """ 订单评价中心 """
+
+        p          = toint(params.get('p', '1'))
+        ps         = toint(params.get('ps', '10'))
+        is_pending = toint(params.get('is_pending', '0'))
+
+        completed = db.session.query(Order.order_id).\
+                    filter(Order.uid == uid).\
+                    filter(Order.is_remove == 0).\
+                    filter(Order.order_status == 2).\
+                    filter(Order.pay_status == 2).\
+                    filter(Order.deliver_status == 2).all()
+        completed = [order.order_id for order in completed]
+
+        q = db.session.query(OrderGoods.og_id, OrderGoods.goods_id, OrderGoods.goods_name, OrderGoods.goods_img,
+                            OrderGoods.goods_desc, OrderGoods.goods_price, OrderGoods.comment_id).\
+                filter(OrderGoods.order_id.in_(completed))
+        
+        pending_count   = get_count(q.filter(OrderGoods.comment_id == 0))
+        unpending_count = get_count(q.filter(OrderGoods.comment_id > 0))
+        
+        if is_pending == 1:
+            q = q.filter(OrderGoods.comment_id == 0)
+        else:
+            q = q.filter(OrderGoods.comment_id > 0)
+        
+        comments = None
+        pagination = None
+        if is_pagination:
+            comments = q.order_by(OrderGoods.og_id.desc()).offset((p-1)*ps).limit(ps).all()
+            pagination = Pagination(None, p, ps, q.count(), None)
+        else:
+            comments = q.order_by(OrderGoods.og_id.desc()).all()
+
+        data = {'is_pending':is_pending, 'pending_count':pending_count, 'unpending_count':unpending_count, 'comments':comments, 'pagination':pagination}
+
+        return data

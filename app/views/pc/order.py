@@ -174,43 +174,12 @@ def create_comment(og_id):
 def comment(is_pagination=True):
     """pc站 - 评价中心"""
 
-    p          = toint(request.args.get('p', '1'))
-    ps         = toint(request.args.get('ps', '10'))
-    is_pending = toint(request.args.get('is_pending', '0'))
-
-
     if not check_login():
         session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login_qrcode'))
     uid = get_uid()
 
-    completed = db.session.query(Order.order_id).\
-                    filter(Order.uid == uid).\
-                    filter(Order.is_remove == 0).\
-                    filter(Order.order_status == 2).\
-                    filter(Order.pay_status == 2).\
-                    filter(Order.deliver_status == 2).all()
-    completed = [order.order_id for order in completed]
-
-    q = db.session.query(OrderGoods.og_id, OrderGoods.goods_id, OrderGoods.goods_name, OrderGoods.goods_img,
-                        OrderGoods.goods_desc, OrderGoods.goods_price, OrderGoods.comment_id).\
-            filter(OrderGoods.order_id.in_(completed))
-    
-    pending_count   = get_count(q.filter(OrderGoods.comment_id == 0))
-    unpending_count = get_count(q.filter(OrderGoods.comment_id > 0))
-    
-    if is_pending == 1:
-        q = q.filter(OrderGoods.comment_id == 0)
-    else:
-        q = q.filter(OrderGoods.comment_id > 0)
-    
-    comments = q.order_by(OrderGoods.og_id.desc()).offset((p-1)*ps).limit(ps).all()
-
-    pagination = None
-    if is_pagination:
-        pagination = Pagination(None, p, ps, q.count(), None)
-
-    data = {'is_pending':is_pending, 'pending_count':pending_count, 'unpending_count':unpending_count, 'comments':comments,'pagination':pagination}
+    data = OrderStaticMethodsService.order_comments(uid, request.args.to_dict(), True)
     
     return render_template('pc/order/comment.html.j2', **data)
 

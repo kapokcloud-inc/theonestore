@@ -366,3 +366,30 @@ def update_address():
     model_update(order_address, data, commit=True)
 
     return resjson.print_json(0, u'ok')
+
+@order.route('/comment')
+def comment():
+    """ 评价中心 """
+    resjson.action_code = 19
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+    
+    params = request.args.to_dict()
+
+    p          = toint(params.get('p', '1'))
+    ps         = toint(params.get('ps', '10'))
+    is_pending = toint(params.get('is_pending', '0'))
+
+    if p <= 0 or ps <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+    
+    if is_pending not in [0, 1]:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    data_temp = OrderStaticMethodsService.order_comments(uid, params, True)
+
+    data = {'is_pending':data_temp['is_pending'], 'pending_count':data_temp['pending_count'], 'unpending_count':data_temp['unpending_count'], 'comments':data_temp['comments']}
+    
+    return resjson.print_json(0, u'ok', data)

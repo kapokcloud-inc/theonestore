@@ -18,23 +18,23 @@
     </div>
   </div>
   <div class="order_list">
-    {% if uncomments: %}
+    {% if comments: %}
       <div class="weui-cells weui-cells_form">
-        {% for uncomment in uncomments %}
-        <div class="weui-cell" onclick="enter({{ uncomment.goods_id }})">
+        {% for comment in comments %}
+        <div class="weui-cell" onclick="enter({{ comment.goods_id }})">
           <div class="weui-cell__hd avatar mar-right">
-            <img src="{{ uncomment.goods_img }}-square.small" alt="">
+            <img src="{{ comment.goods_img }}-square.small" alt="">
           </div>
           <div class="weui-cell__bd">
-            <div class="all_title height25">{{ uncomment.goods_name }}</div>
-            <div class="all_desc height25">{{ uncomment.goods_desc }}</div>
+            <div class="all_title height25">{{ comment.goods_name }}</div>
+            <div class="all_desc height25">{{ comment.goods_desc }}</div>
           </div>
-          {% if uncomment.comment_id == 0 %}
-            <div class="weui-cell__ft review" data-value="{{ uncomment.og_id }}">
+          {% if comment.comment_id == 0 %}
+            <div class="weui-cell__ft review" data-value="{{ comment.og_id }}">
               <button type="button" class="order_btn order-state_btn">{{_('去评价')}}</button>
             </div>
           {% else %}
-            <div class="weui-cell__ft view" data-value="{{ uncomment.og_id }}">
+            <div class="weui-cell__ft view" data-value="{{ comment.og_id }}">
               <button type="button" class="order_btn">{{_('查看评价')}}</button>
             </div>
           {% endif %}

@@ -37,6 +37,7 @@ from app.services.api.order import (
 )
 
 from app.forms.api.comment import CommentOrderGoodsForm
+from app.services.api.order import OrderStaticMethodsService
 
 from app.models.item import Goods
 from app.models.comment import Comment
@@ -208,31 +209,10 @@ def comment():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    is_pending = toint(request.args.get('is_pending', '0'))
+    data_temp = OrderStaticMethodsService.order_comments(uid, request.args.to_dict(), False)
 
-    completed = db.session.query(Order.order_id).\
-                    filter(Order.uid == uid).\
-                    filter(Order.is_remove == 0).\
-                    filter(Order.order_status == 2).\
-                    filter(Order.pay_status == 2).\
-                    filter(Order.deliver_status == 2).all()
-    completed = [order.order_id for order in completed]
+    data = {'is_pending':data_temp['is_pending'], 'pending_count':data_temp['pending_count'], 'unpending_count':data_temp['unpending_count'], 'comments':data_temp['comments']}
 
-    q = db.session.query(OrderGoods.og_id, OrderGoods.goods_id, OrderGoods.goods_name, OrderGoods.goods_img,
-                        OrderGoods.goods_desc, OrderGoods.comment_id).\
-            filter(OrderGoods.order_id.in_(completed))
-    
-    pending_count   = get_count(q.filter(OrderGoods.comment_id == 0))
-    unpending_count = get_count(q.filter(OrderGoods.comment_id > 0))
-    
-    if is_pending == 1:
-        q = q.filter(OrderGoods.comment_id == 0)
-    else:
-        q = q.filter(OrderGoods.comment_id > 0)
-    
-    uncomments = q.order_by(OrderGoods.og_id.desc()).all()
-
-    data = {'is_pending':is_pending, 'pending_count':pending_count, 'unpending_count':unpending_count, 'uncomments':uncomments}
     return render_template('mobile/order/comment.html.j2', **data)
 
 
