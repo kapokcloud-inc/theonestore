@@ -42,17 +42,31 @@ def index():
 
     params = request.args.to_dict()
     
-    p      = toint(params.get('p', '0'))
+    p      = toint(params.get('p', '1'))
     ps     = toint(params.get('ps', '10'))
     ttype  = toint(params.get('ttype', '0'))
     tid    = toint(params.get('tid', '0'))
     rating = toint(params.get('rating', '0'))
     is_img = toint(params.get('is_img', '0'))
-
-    if p <=0 or ttype < 0 or ps <= 0 or tid <= 0 or rating < 0 or is_img < 0:
-
+    
+    if p <=0 or ps <= 0:
         return resjson.print_json(resjson.PARAM_ERROR)
 
+    if ttype not in [0, 1] or tid <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+    
+    if rating not in [0, 1, 2, 3]:
+        return resjson.print_json(resjson.PARAM_ERROR)
+    
+    if is_img not in [0 ,1]:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    dataIndex = CommentStaticMethodsService.index_page(request.args)
     data = CommentStaticMethodsService.comments(params)
 
-    return resjson.print_json(0, u'ok',  )
+    data['rating_1_count'] = dataIndex['rating_1_count']
+    data['rating_2_count'] = dataIndex['rating_2_count']
+    data['rating_3_count'] = dataIndex['rating_3_count']
+    data['img_count'] = dataIndex['img_count']
+
+    return resjson.print_json(0, u'ok', data)
