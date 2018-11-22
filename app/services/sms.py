@@ -7,6 +7,7 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+from sys import version_info
 import json
 import os
 import uuid
@@ -17,7 +18,8 @@ from datetime import (
 )
 from app.helpers import (
     log_info,
-    log_error
+    log_error,
+    urlencode
 )
 
 from flask import current_app
@@ -30,14 +32,6 @@ from app.exception import ConfigNotExistException
 
 from yunpian_python_sdk.model import constant as YC
 from yunpian_python_sdk.ypclient import YunpianClient
-
-import urllib
-try:
-    import urlparse
-except Exception as e:
-    from urllib.parse import urlparse
-
-
 
 class SmsService(object):
     """ 发送短信实例 """
@@ -189,13 +183,7 @@ class YunpianSmsService(object):
             return False
 
         clnt = YunpianClient(self.api_key)
-        tpl_value = ''
-        try:
-            tpl_value = urllib.urlencode(tpl_params)
-        except Exception as e:
-            tpl_value = urllib.parse.urlencode(tpl_params)
-        
-        param = {YC.MOBILE: mobile, YC.TPL_ID: tpl_id, YC.TPL_VALUE: tpl_value}
+        param = {YC.MOBILE: mobile, YC.TPL_ID: tpl_id, YC.TPL_VALUE: urlencode(tpl_params)}
         r = clnt.sms().tpl_single_send(param)
         return self.get_result(r)
 
