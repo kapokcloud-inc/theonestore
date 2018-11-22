@@ -393,3 +393,26 @@ def comment():
     data = {'is_pending':data_temp['is_pending'], 'pending_count':data_temp['pending_count'], 'unpending_count':data_temp['unpending_count'], 'comments':data_temp['comments']}
     
     return resjson.print_json(0, u'ok', data)
+
+@order.route('/comment/detail')
+def comment_detail():
+    """手机站 - 查看评价"""
+
+    resjson.action_code = 20
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    og_id = toint(request.args.get('og_id', '0'))
+
+    if og_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    order_goods = OrderGoods.query.get(og_id)
+    good        = Goods.query.get(order_goods.goods_id)
+    comment     = Comment.query.filter(Comment.comment_id == order_goods.comment_id).filter(Comment.uid == uid).first()
+    if not comment:
+        return resjson.print_json(10, u'评价不存在')
+    data = {'order_goods':order_goods, 'comment':comment, 'good':good}
+    return resjson.print_json(0, u'ok', data)
