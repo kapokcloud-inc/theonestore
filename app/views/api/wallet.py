@@ -49,7 +49,7 @@ def index():
         return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
-    args = request.atgs
+    args = request.args
     p = toint(args.get('p', '1'))
     ps = toint(args.get('ps', '10'))
 
