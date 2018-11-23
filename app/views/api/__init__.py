@@ -21,4 +21,5 @@ from .category import category
 from .index import index
 from .config import config
 from .sys import sys
-from .comment import comment 
+from .comment import comment
+from .wallet import wallet

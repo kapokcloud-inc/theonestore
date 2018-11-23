@@ -51,13 +51,13 @@ def goods():
     is_recommend = toint(params.get('is_recommend', '0'))
 
     if cat_id < 0 or p <= 0 or ps <= 0:
-        return resjson.print_json(10, u'参数错误')
+        return resjson.print_json(resjson.PARAM_ERROR)
 
     if not is_hot in [0, 1, 2]:
-        return resjson.print_json(10, u'参数错误')
+        return resjson.print_json(resjson.PARAM_ERROR)
 
     if not is_recommend in [0, 1, 2]:
-        return resjson.print_json(10, u'参数错误')
+        return resjson.print_json(resjson.PARAM_ERROR)
 
     params['is_hot'] = is_hot - 1
     params['is_recommend'] = is_recommend - 1
@@ -79,7 +79,7 @@ def detail():
     goods_id  = toint(request.args.to_dict().get('goods_id', '0'))
 
     if goods_id <= 0:
-        return resjson.print_json(10, u'参数错误')
+        return resjson.print_json(resjson.PARAM_ERROR)
 
     uid       = get_uid()
     data      = ItemStaticMethodsService.detail_page(goods_id, uid)
