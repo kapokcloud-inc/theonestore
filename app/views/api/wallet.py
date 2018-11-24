@@ -39,7 +39,7 @@ wallet = Blueprint('api.wallet', __name__)
 resjson = ResponseJson()
 resjson.module_code = 24
 
-@wallet.route('/')
+@wallet.route('/index')
 def index():
     """ 我的钱包 """
 
@@ -60,7 +60,8 @@ def index():
     _data      = FundsStaticMethodsService.details(uid, request.args.to_dict())
 
     data = {'funds':funds, 'details':_data['details']}
-    return resjson.print_json(0, u'ok', data)
+    log_info(data)
+    return resjson.print_json(0, _(u'ok'), data)
 
 @wallet.route('/detail')
 def detail():

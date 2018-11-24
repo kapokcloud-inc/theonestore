@@ -73,16 +73,35 @@ def index():
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
-    uid = 1
+
     data               = OrderStaticMethodsService.orders(uid, request.args.to_dict())
     data['tab_status'] = request.args.get('tab_status', '0')
+
+    return resjson.print_json(0, u'ok', data)
+
+@order.route('/detail')
+def detail():
+    """订单详情"""
+
+    resjson.action_code = 11
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    order_id = toint(request.args.get('order_id', '0'))
+
+    if order_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    data = OrderStaticMethodsService.detail_page(order_id, uid)
 
     return resjson.print_json(0, u'ok', data)
 
 @order.route('/create', methods=['POST'])
 def create():
     """创建订单"""
-    resjson.action_code = 10
+    resjson.action_code = 12
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -111,7 +130,7 @@ def create():
 @order.route('/update', methods=['POST'])
 def update():
     """更新订单"""
-    resjson.action_code = 11
+    resjson.action_code = 13
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -135,7 +154,7 @@ def update():
 @order.route('/cancel')
 def cancel():
     """取消订单"""
-    resjson.action_code = 12
+    resjson.action_code = 14
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -162,7 +181,7 @@ def cancel():
 @order.route('/deliver')
 def deliver():
     """确认收货"""
-    resjson.action_code = 13
+    resjson.action_code = 15
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -186,7 +205,7 @@ def deliver():
 @order.route('/remove')
 def remove():
     """软删除订单"""
-    resjson.action_code = 14
+    resjson.action_code = 16
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -213,7 +232,7 @@ def remove():
 @order.route('/save-comment', methods=["POST"])
 def save_comment():
     """评价订单商品"""
-    resjson.action_code = 15
+    resjson.action_code = 17
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -271,7 +290,7 @@ def save_comment():
 @order.route('/recharge', methods=['POST'])
 def recharge():
     """创建充值订单"""
-    resjson.action_code = 16
+    resjson.action_code = 18
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -315,7 +334,7 @@ def recharge():
 @order.route('/is-paid')
 def is_paid():
     """查询订单是否支付成功"""
-    resjson.action_code = 17
+    resjson.action_code = 19
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -332,7 +351,7 @@ def is_paid():
 @order.route('/update-address', methods=["POST"])
 def update_address():
     """更新订单收货地址"""
-    resjson.action_code = 18
+    resjson.action_code = 20
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -370,7 +389,7 @@ def update_address():
 @order.route('/comment')
 def comment():
     """ 评价中心 """
-    resjson.action_code = 19
+    resjson.action_code = 21
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -398,7 +417,7 @@ def comment():
 def comment_detail():
     """手机站 - 查看评价"""
 
-    resjson.action_code = 20
+    resjson.action_code = 22
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)

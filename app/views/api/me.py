@@ -60,7 +60,7 @@ resjson = ResponseJson()
 resjson.module_code = 13
 
 
-@me.route('/', methods=['GET'])
+@me.route('/index', methods=['GET'])
 def index():
     resjson.action_code = 10
 
@@ -89,7 +89,7 @@ def index():
 @me.route('/update', methods=["POST"])
 def update():
     """更新个人资料"""
-    resjson.action_code = 10
+    resjson.action_code = 11
     
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -116,7 +116,7 @@ def update():
 @me.route('/address-save', methods=["POST"])
 def address_save():
     """保存地址"""
-    resjson.action_code = 11
+    resjson.action_code = 12
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -164,7 +164,7 @@ def address_save():
 @me.route('/address-remove')
 def address_remove():
     """删除地址"""
-    resjson.action_code = 12
+    resjson.action_code = 13
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -184,7 +184,7 @@ def address_remove():
 def address_list():
     """地址管理"""
 
-    resjson.action_code = 13
+    resjson.action_code = 14
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -193,4 +193,18 @@ def address_list():
     address_list = UserAddress.query.filter(UserAddress.uid == 1).order_by(UserAddress.is_default.desc()).all()
     
     data = {'address_list': address_list}
+    return resjson.print_json(0, u'ok', data)
+
+@me.route('/coupon')
+def coupon():
+    """ 我的优惠券 """
+
+    resjson.action_code = 15
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+    
+    data = MeStaticMethodsService.coupons(uid)
+
     return resjson.print_json(0, u'ok', data)
