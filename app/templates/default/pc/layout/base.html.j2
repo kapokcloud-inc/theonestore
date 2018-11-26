@@ -91,7 +91,7 @@
         <div class="one-service">
           <img class="serviceImg" src="//b.appsimg.com/2017/08/31/104/1504179372347.png" alt="">
         </div>
-        <div class="head-cart" id="getOnlodeCart">
+        <div class="head-cart" onmouseenter="getOnlodeCart()">
           <div class="tool">
             <a href="{{ url_for('pc.cart.root') }}">
               {% set cart_total = session.get('cart_total', '')|toint %}
@@ -268,7 +268,7 @@
   /**
    * 鼠标移入加载新数据
    */
-  $("#getOnlodeCart").mouseover(function(){
+  function getOnlodeCart(){
     // 购物车加载
     var cart_total = $('#navs_cart_total').text();
 
@@ -316,8 +316,7 @@
     });
 
     $('#cart-content').addClass('show').removeClass('hide');
-  )};
-  
+  }
 
   /**
    * 点击搜索图标
