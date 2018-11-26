@@ -111,3 +111,32 @@ class MeStaticMethodsService(object):
                 'aftersales_count':aftersales_count, 'funds':funds}
         
         return data
+
+    @staticmethod
+    def coupons(uid):
+        current_time = current_timestamp()
+
+        q = Coupon.query.\
+                filter(Coupon.uid == uid).\
+                filter(Coupon.is_valid == 1).\
+                filter(Coupon.begin_time <= current_time).\
+                filter(Coupon.end_time >= current_time)
+        valid_count   = get_count(q)
+        valid_coupons = q.order_by(Coupon.coupon_id.desc()).all()
+
+        q = Coupon.query.\
+                filter(Coupon.uid == uid).\
+                filter(or_(and_(Coupon.is_valid == 0, Coupon.order_id == 0), Coupon.end_time < current_time))
+        invalid_count   = get_count(q)
+        invalid_coupons = q.order_by(Coupon.coupon_id.desc()).all()
+        
+        q = Coupon.query.\
+                filter(Coupon.uid == uid).\
+                filter(Coupon.order_id > 0)
+        used_count   = get_count(q)
+        used_coupons = q.order_by(Coupon.coupon_id.desc()).all()
+
+        data = {'valid_coupons':valid_coupons, 'invalid_coupons':invalid_coupons, 'used_coupons':used_coupons,
+                'valid_count':valid_count, 'invalid_count':invalid_count, 'used_count':used_count}
+        
+        return data

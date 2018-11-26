@@ -159,31 +159,10 @@ def coupon():
     if not check_login():
         session['weixin_login_url'] = request.url
         return redirect(url_for('api.weixin.login'))
-    uid          = get_uid()
-    current_time = current_timestamp()
-
-    q = Coupon.query.\
-            filter(Coupon.uid == uid).\
-            filter(Coupon.is_valid == 1).\
-            filter(Coupon.begin_time <= current_time).\
-            filter(Coupon.end_time >= current_time)
-    valid_count   = get_count(q)
-    valid_coupons = q.order_by(Coupon.coupon_id.desc()).all()
-
-    q = Coupon.query.\
-            filter(Coupon.uid == uid).\
-            filter(or_(and_(Coupon.is_valid == 0, Coupon.order_id == 0), Coupon.end_time < current_time))
-    invalid_count   = get_count(q)
-    invalid_coupons = q.order_by(Coupon.coupon_id.desc()).all()
+    uid  = get_uid()
     
-    q = Coupon.query.\
-            filter(Coupon.uid == uid).\
-            filter(Coupon.order_id > 0)
-    used_count   = get_count(q)
-    used_coupons = q.order_by(Coupon.coupon_id.desc()).all()
+    data = MeStaticMethodsService.coupons(uid)
 
-    data = {'valid_coupons':valid_coupons, 'invalid_coupons':invalid_coupons, 'used_coupons':used_coupons,
-            'valid_count':valid_count, 'invalid_count':invalid_count, 'used_count':used_count}
     return render_template('mobile/me/coupon.html.j2', **data)
 
 
