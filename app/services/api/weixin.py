@@ -27,8 +27,10 @@ from app.helpers import (
     randomstr
 )
 from app.helpers.date_time import current_timestamp
+from app.helpers.user import get_uid
 
 from app.services.api.bind import BindService
+from app.services.api.cart import CartStaticMethodsService
 
 from app.models.sys import SysSetting
 
@@ -248,5 +250,10 @@ class WeiXinLoginService(object):
         bs = BindService(third_type, openid, unionid, res_text, user_data, self.current_time)
         if not bs.bind():
             return False
+
+        # 登陆后迁移购物车商品项
+        uid        = get_uid()
+        session_id = session.sid
+        CartStaticMethodsService.move(uid, session_id)
 
         return True

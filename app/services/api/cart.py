@@ -13,7 +13,8 @@ from decimal import Decimal
 from flask import (
     redirect,
     request,
-    url_for
+    url_for,
+    session
 )
 from flask_babel import gettext as _
 
@@ -348,3 +349,32 @@ class CartStaticMethodsService(object):
                 'shipping_title':shipping_title, 'coupons':coupons, 'funds':funds.funds,
                 'buy_now':buy_now}
         return (True, u'', data, u'')
+
+    @staticmethod
+    def move(uid, session_id):
+        """登陆后迁移购物车商品项"""
+        current_time = current_timestamp()
+        is_commit    = False
+
+        carts = Cart.query.filter(Cart.checkout_type == 1).filter(Cart.uid == 0).filter(Cart.session_id == session_id).order_by(Cart.cart_id.desc()).all()
+        for _cart in carts:
+            cart = Cart.query.filter(Cart.checkout_type == 1).filter(Cart.uid == uid).filter(Cart.goods_id == _cart.goods_id).first()
+            if not cart:
+                data = {'uid':uid, 'goods_id':_cart.goods_id, 'is_checked':1, 'checkout_type':1, 'add_time':current_time}
+                cart = model_create(Cart, data)
+
+            model_update(cart, {'session_id':session_id, 'quantity':_cart.quantity, 'update_time':current_time})
+
+            if _cart:
+                model_delete(_cart)
+
+            is_commit = True
+
+        if is_commit:
+            db.session.commit()
+
+        cs = CartService(uid, 0)
+        cs.check()
+        session['cart_total'] = cs.cart_total
+
+        return True
