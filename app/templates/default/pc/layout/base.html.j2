@@ -91,7 +91,7 @@
         <div class="one-service">
           <img class="serviceImg" src="//b.appsimg.com/2017/08/31/104/1504179372347.png" alt="">
         </div>
-        <div class="head-cart" mouseenter="getOnlodeCart()">
+        <div class="head-cart" id="getOnlodeCart">
           <div class="tool">
             <a href="{{ url_for('pc.cart.root') }}">
               {% set cart_total = session.get('cart_total', '')|toint %}
@@ -268,7 +268,7 @@
   /**
    * 鼠标移入加载新数据
    */
-  function getOnlodeCart(){
+  $("#getOnlodeCart").mouseover(function(){
     // 购物车加载
     var cart_total = $('#navs_cart_total').text();
 
