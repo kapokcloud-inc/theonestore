@@ -54,6 +54,7 @@ from app.models.user import (
 from app.services.api.user import UserStaticMethodsService
 from app.services.api.me import MeStaticMethodsService
 from app.services.message import MessageStaticMethodsService
+from app.services.api.like import LikeStaticMethodsService
 
 me = Blueprint('api.me', __name__)
 
@@ -232,3 +233,25 @@ def messages():
     UserStaticMethodsService.reset_last_time(uid, 1)
 
     return resjson.print_json(0, u'ok', {'messages':data['messages']})
+
+@me.route('/collect')
+def collect():
+    """ 我的收藏列表 """
+
+    resjson.action_code = 17
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    args = request.args
+    p    = toint(args.get('p', '1'))
+    ps   = toint(args.get('ps', '10'))
+
+    if p <= 0 or ps <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+    
+    params = {'uid':uid, 'p':p, 'ps':ps}
+    data   = LikeStaticMethodsService.likes(params)
+
+    return resjson.print_json(0, u'ok', {'likes':data['likes']})
