@@ -314,21 +314,31 @@ def checkout():
     uid = get_uid()
     
     args = request.args
+    order_id = toint(args.get('order_id', 0))
+    # 已有订单,获取订单数据
+    if order_id > 0:
+        data = CartStaticMethodsService.pay_page(order_id, uid, 'api')
+        if not data[0]:
+            return resjson.print_json(11, data[1])
+            
+        return resjson.print_json(0, u'ok', data[2])
+
     buy_now = toint(args.get('buy_now', 0))
     goods_id = toint(args.get('goods_id', 0))
     carts_id = args.get('carts_id', '')
+
     if buy_now not in [0, 1]:
         return resjson.print_json(resjson.PARAM_ERROR)
-    
+    # 立即购买
     if buy_now == 1 and goods_id <= 0:
         return resjson.print_json(resjson.PARAM_ERROR)
-    
+    # 购物车购买
     if buy_now == 0 and carts_id == '':
         return resjson.print_json(resjson.PARAM_ERROR)
 
     # 结算页面
-    ret, msg, data, url= CartStaticMethodsService.checkout_page(uid, 'api')
-    if not ret:
-        return resjson.print_json(11, msg)
+    data = CartStaticMethodsService.checkout_page(uid, 'api')
+    if not data[0]:
+        return resjson.print_json(11, data[1])
 
-    return resjson.print_json(0, u'ok', data)
+    return resjson.print_json(0, u'ok', data[2])

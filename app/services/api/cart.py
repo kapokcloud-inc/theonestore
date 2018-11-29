@@ -236,9 +236,14 @@ class CartStaticMethodsService(object):
                             (order.shipping_name,
                             toamount(order.shipping_amount),
                             toamount(order.free_limit_amount)))
+        
+        addresses = UserAddress.query.\
+                    filter(UserAddress.uid == uid).\
+                    order_by(UserAddress.is_default.desc()).\
+                    order_by(UserAddress.ua_id.desc()).all()
 
         data = {'order':order, 'order_address':order_address, 'coupon':coupon,
-                'shipping_title':shipping_title, 'funds':funds.funds}
+                'shipping_title':shipping_title, 'funds':funds.funds, 'addresses': addresses}
         return (True, u'', data, u'')
 
     @staticmethod
@@ -342,9 +347,7 @@ class CartStaticMethodsService(object):
         carts_id = ','.join(carts_id)
 
         data = {'carts':cs.carts, 'carts_id':carts_id, 'items_amount':cs.items_amount,
-                'shipping_amount':cs.shipping_amount,
-                'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount,
-                'addresses':addresses, 'default_address':default_address,
+                'shipping_amount':cs.shipping_amount,'discount_amount':cs.discount_amount, 'pay_amount':cs.pay_amount,'addresses':addresses, 'default_address':default_address,
                 'shipping_list':shipping_list, 'default_shipping':default_shipping,
                 'shipping_title':shipping_title, 'coupons':coupons, 'funds':funds.funds,
                 'buy_now':buy_now}
