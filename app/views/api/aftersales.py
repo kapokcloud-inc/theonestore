@@ -138,3 +138,31 @@ def return_goods():
     AfterSalesStaticMethodsService.add_log(aftersales_id, content, 6, current_time, commit=True)
 
     return resjson.print_json(0, u'ok')
+
+@aftersales.route('/index')
+def index():
+    """ 售后服务列表 """
+
+    resjson.action_code = 13
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    args = request.args
+    p = toint(args.get('p', '1'))
+    ps = toint(args.get('ps', '10'))
+
+    if p <= 0 or ps <=0:
+         return resjson.print_json(resjson.PARAM_ERROR)
+    
+    params = {'uid':uid, 'p':p, 'ps':ps}
+    _data  = AfterSalesStaticMethodsService.aftersales(params)
+
+    aftersales_status_text = {}
+    for aftersale in _data['aftersales']:
+        status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersale)
+        aftersales_status_text[aftersale.aftersales_id] = status_text
+
+    data = {'aftersales':_data['aftersales'],'aftersales_status_text':aftersales_status_text}
+    return resjson.print_json(0, u'ok', data)
