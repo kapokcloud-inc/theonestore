@@ -205,7 +205,7 @@ def deliver():
 
 @order.route('/remove')
 def remove():
-    """软删除订单"""
+    """ 删除订单 """
     resjson.action_code = 16
 
     if not check_login():
