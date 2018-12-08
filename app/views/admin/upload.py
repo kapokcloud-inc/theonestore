@@ -14,31 +14,19 @@ import json
 from flask import (
     Blueprint,
     request,
-    session,
     current_app,
     make_response
 )
-from flask_babel import gettext as _
-
-from app.database import db
 
 from app.helpers import (
     log_info,
     toint
 )
-from app.helpers.date_time import current_timestamp
-from app.helpers.user import check_login
 
-from app.forms.api.upload import UploadImageForm
-
-from app.services.response import ResponseJson
 from app.services.uploads import FileUploadService
 
 
 upload = Blueprint('admin.upload', __name__)
-
-resjson = ResponseJson()
-resjson.module_code = 22
 
 @upload.route('/ueditor', methods=["GET", "POST"])
 def ueditor():

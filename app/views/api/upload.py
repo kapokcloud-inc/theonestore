@@ -7,26 +7,13 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
-import os
-import re
-import json
-
-from flask import (
-    Blueprint,
-    request,
-    session,
-    current_app,
-    make_response
-)
+from flask import Blueprint
 from flask_babel import gettext as _
-
-from app.database import db
 
 from app.helpers import (
     log_info,
     toint
 )
-from app.helpers.date_time import current_timestamp
 from app.helpers.user import check_login
 
 from app.forms.api.upload import UploadImageForm
