@@ -22,5 +22,6 @@ ADMIN_ROUTES = (
     (admin.aftersale,   '/admin/aftersale'),
     (admin.user,        '/admin/user'),
     (admin.comment,     '/admin/comment'),
-    (admin.post,        '/admin/post')
+    (admin.post,        '/admin/post'),
+    (admin.upload,      '/admin/upload')
 )

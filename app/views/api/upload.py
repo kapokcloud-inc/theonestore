@@ -61,37 +61,3 @@ def image():
         return resjson.print_json(10, _(u'上传失败，请检查云存储配置'))
 
     return resjson.print_json(0, u'ok', {'image':image})
-
-
-@upload.route('/ueditor', methods=["GET", "POST"])
-def ueditor():
-    """ueditor上传"""
-    res = current_app.response_class(mimetype='application/json')
-    # res = make_response(mimetype='application/json')
-    action = request.args.get('action')
-
-    if action == 'config':
-        # 解析JSON格式的配置文件
-        # 这里使用PHP版本自带的config.json文件
-        config_filename = os.path.join(current_app.static_folder, 'default', 'admin', 'plugins', 'ue', 'php', 'config.json')
-        with open(config_filename, encoding='utf8') as fp:
-            data = fp.read()
-            CONFIG = json.loads(re.sub(r'\/\*.*\*\/', '', data))
-            # log_info('##########:%s' % CONFIG)
-            res.data = json.dumps(CONFIG)
-        
-        log_info('-----------------')
-        return res
-
-    # 获取上传文件
-    upfile = request.files['upfile']
-
-    try:
-        fus   = FileUploadService()
-        image = fus.save_storage(upfile, 'ueditor')
-    except Exception as e:
-        return json.dumps({'state':'FAIL'})
-
-    data = {'state':'SUCCESS', 'source':image, 'url':image, 'title':image, 'original':image}
-    res.data = json.dumps(data)
-    return res

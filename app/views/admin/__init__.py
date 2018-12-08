@@ -20,3 +20,4 @@ from .user import user
 from .comment import comment
 from .post import post
 from .recharge import recharge
+from .upload import upload
