@@ -53,6 +53,8 @@ from app.models.user import (
 )
 from app.services.api.user import UserStaticMethodsService
 from app.services.api.me import MeStaticMethodsService
+from app.services.message import MessageStaticMethodsService
+from app.services.api.like import LikeStaticMethodsService
 
 me = Blueprint('api.me', __name__)
 
@@ -64,7 +66,17 @@ resjson.module_code = 13
 def index():
     resjson.action_code = 10
 
-    from flask import session
+    # from flask import session
+
+    # session['uid']        = 1
+    # session['nickname']   = 'eason'
+    # session['avatar']     = '//static-aliyun.kapokcloud.com/avatar/2018-08-01/968e30714cba4c25990e2258284e171b.jpg'
+    # session['session_id'] = 'edad8468-fb1a-4213-ae98-c45330dec77d'
+    
+    session['uid']        = 1
+    session['nickname']   = 'eason'
+    session['avatar']     = '//static-aliyun.kapokcloud.com/avatar/2018-08-01/968e30714cba4c25990e2258284e171b.jpg'
+    session['session_id'] = 'edad8468-fb1a-4213-ae98-c45330dec77d'
     
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
@@ -203,3 +215,48 @@ def coupon():
     data = MeStaticMethodsService.coupons(uid)
 
     return resjson.print_json(0, u'ok', data)
+
+@me.route('/messages')
+def messages():
+    """ 消息列表 """
+
+    resjson.action_code = 16
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    args = request.args
+    p = toint(args.get('p', '1'))
+    ps = toint(args.get('ps', '10'))
+
+    if p <= 0 or ps <=0:
+         return resjson.print_json(resjson.PARAM_ERROR)
+    
+    params = {'uid':uid, 'p':p, 'ps':ps}
+    data = MessageStaticMethodsService.messages(params)
+    UserStaticMethodsService.reset_last_time(uid, 1)
+
+    return resjson.print_json(0, u'ok', {'messages':data['messages']})
+
+@me.route('/collect')
+def collect():
+    """ 我的收藏列表 """
+
+    resjson.action_code = 17
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    args = request.args
+    p    = toint(args.get('p', '1'))
+    ps   = toint(args.get('ps', '10'))
+
+    if p <= 0 or ps <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+    
+    params = {'uid':uid, 'p':p, 'ps':ps}
+    data   = LikeStaticMethodsService.likes(params)
+
+    return resjson.print_json(0, u'ok', {'likes':data['likes']})

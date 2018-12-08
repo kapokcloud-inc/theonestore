@@ -562,19 +562,10 @@ function cartTo() {
   });
 }
 
-// 立即购买
-function buynow() {
-  var goods_id = parseInt($('#goods_id').val());
-  var quantity = parseInt($("#goods_quantity").val());
-  var href = "{{ url_for('pc.cart.checkout') }}" + '?buy_now='+quantity+'&goods_id='+goods_id;
-  window.location.href = href;
-}
-
 //去购物车
 function toCart() {
   window.location.href = "{{ url_for('pc.cart.checkout') }}";
 }
-
 
 //收藏
 function fav(dom) {

@@ -52,6 +52,7 @@ from app.forms.api.comment import CommentOrderGoodsForm
 
 from app.models.item import Goods
 from app.models.comment import Comment
+from app.models.shipping import Shipping
 from app.models.order import (
     Order,
     OrderAddress,
@@ -204,7 +205,7 @@ def deliver():
 
 @order.route('/remove')
 def remove():
-    """软删除订单"""
+    """ 删除订单 """
     resjson.action_code = 16
 
     if not check_login():
@@ -434,4 +435,35 @@ def comment_detail():
     if not comment:
         return resjson.print_json(10, u'评价不存在')
     data = {'order_goods':order_goods, 'comment':comment, 'good':good}
+    return resjson.print_json(0, u'ok', data)
+
+@order.route('/track')
+def track():
+    """查询物流"""
+    resjson.action_code = 23
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    args     = request.args
+    order_id = toint(args.get('order_id', 0))
+    if order_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
+    if not order:
+        return resjson.print_json(10, u'订单不存在')
+
+    shipping     = None
+    express_msg  = ''
+    express_data = []
+    if order and order.shipping_status == 2:
+        shipping = Shipping.query.get(order.shipping_id)
+
+        express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
+        if express_msg == 'ok':
+            express_data = _express_data
+
+    data = {'express_msg':express_msg, 'express_data':express_data, 'order':order, 'shipping':shipping}
     return resjson.print_json(0, u'ok', data)

@@ -46,11 +46,12 @@ from app.models.cart import Cart
 
 cart = Blueprint('mobile.cart', __name__)
 
+
 @cart.route('/')
 def root():
     """手机站 - 我的购物车"""
 
-    uid        = get_uid()
+    uid = get_uid()
     session_id = session.sid
 
     msg = request.args.get('msg', '').strip()
@@ -58,8 +59,8 @@ def root():
     cs = CartService(uid, session_id)
     cs.check()
 
-    data = {'msg':msg, 'carts':cs.carts, 'items_amount':cs.items_amount, 'items_quantity':cs.items_quantity,
-            'cart_valid_total':cs.cart_valid_total}
+    data = {'msg': msg, 'carts': cs.carts, 'items_amount': cs.items_amount, 'items_quantity': cs.items_quantity,
+            'cart_valid_total': cs.cart_valid_total}
     return render_template('mobile/cart/index.html.j2', **data)
 
 
@@ -67,7 +68,7 @@ def root():
 def edit(cart_id):
     """手机站 - 购物车编辑"""
 
-    uid        = get_uid()
+    uid = get_uid()
     session_id = session.sid
 
     q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
@@ -95,8 +96,8 @@ def checkout():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    args       = request.args
-    order_id   = toint(args.get('order_id', '0'))
+    args = request.args
+    order_id = toint(args.get('order_id', '0'))
     is_pay_now = toint(args.get('is_pay_now', '1'))
 
     # 订单付款页面
@@ -105,15 +106,15 @@ def checkout():
         if not ret:
             return redirect(url)
 
-        data['openid']     = ''
-        opentime           = session.get('jsapi_weixin_opentime', 0)
-        current_time       = current_timestamp()
+        data['openid'] = ''
+        opentime = session.get('jsapi_weixin_opentime', 0)
+        current_time = current_timestamp()
         is_expire_opentime = opentime < (current_time-30*60)
         if not is_expire_opentime:
             data['openid'] = session.get('jsapi_weixin_openid', '')
 
         data['pay_success_url'] = url_for('mobile.pay.success', order_id=order_id)
-        data['is_pay_now']      = is_pay_now
+        data['is_pay_now'] = is_pay_now
         return render_template('mobile/cart/pay.html.j2', **data)
 
     # 结算页面
