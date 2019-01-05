@@ -66,13 +66,8 @@ resjson.module_code = 13
 def index():
     resjson.action_code = 10
 
-    # from flask import session
+    from flask import session
 
-    # session['uid']        = 1
-    # session['nickname']   = 'eason'
-    # session['avatar']     = '//static-aliyun.kapokcloud.com/avatar/2018-08-01/968e30714cba4c25990e2258284e171b.jpg'
-    # session['session_id'] = 'edad8468-fb1a-4213-ae98-c45330dec77d'
-    
     session['uid']        = 1
     session['nickname']   = 'eason'
     session['avatar']     = '//static-aliyun.kapokcloud.com/avatar/2018-08-01/968e30714cba4c25990e2258284e171b.jpg'
