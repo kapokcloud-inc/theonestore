@@ -234,7 +234,7 @@ def comment_detail(og_id):
     return render_template('mobile/order/comment_detail.html.j2', order_goods=order_goods, comment=comment,good=good)
 
 
-@order.route('/address-change/<int:oa_id>')
+@order.route('/address—change/<int:oa_id>')
 def address_change(oa_id):
     """手机站 - 未付款修改地址"""
 
@@ -245,15 +245,15 @@ def address_change(oa_id):
 
     order_address = OrderAddress.query.get(oa_id)
     if not order_address:
-        return redirect(url_for('mobile.index.404'))
+        return redirect(url_for('mobile.index.pagenotfound'))
 
     order = Order.query.\
                     filter(Order.order_id == order_address.order_id).\
                     filter(Order.uid == uid).first()
     if not order:
-        return redirect(url_for('mobile.index.404'))
+        return redirect(url_for('mobile.index.pagenotfound'))
 
     if order.pay_status != 1:
-        return redirect(url_for('mobile.index.404'))
+        return redirect(url_for('mobile.index.servererror'))
 
     return render_template('mobile/order/address-change.html.j2', order_address=order_address)
