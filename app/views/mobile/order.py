@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding:utf-8 -*-
 """
     theonestore
     https://github.com/kapokcloud-inc/theonestore
@@ -234,7 +234,7 @@ def comment_detail(og_id):
     return render_template('mobile/order/comment_detail.html.j2', order_goods=order_goods, comment=comment,good=good)
 
 
-@order.route('/address—change/<int:oa_id>')
+@order.route('/address-change/<int:oa_id>')
 def address_change(oa_id):
     """手机站 - 未付款修改地址"""
 
