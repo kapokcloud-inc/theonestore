@@ -467,3 +467,63 @@ def track():
 
     data = {'express_msg':express_msg, 'express_data':express_data, 'order':order, 'shipping':shipping}
     return resjson.print_json(0, u'ok', data)
+
+@order.route('/save/comment', methods=["POST"])
+def save_comment_xiao():
+    """评价订单商品"""
+    resjson.action_code = 24
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid      = get_uid()
+    nickname = get_nickname()
+    avatar   = get_avatar()
+
+    og_id = toint(request.form.get('og_id', 0))
+    rating = toint(request.form.get('rating', 0))
+    content = toint(request.form.get('content', ''))
+    img_data = toint(request.form.get('img_data', ''))
+    current_time = current_timestamp()
+    
+    if og_id <= 0 or rating <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    if content == '':
+        return resjson.print_json(11, _(u'评价内容不能为空'))
+
+    order_goods = OrderGoods.query.get(og_id)
+    if not order_goods:
+        return resjson.print_json(12, _(u'订单商品不存在'))
+    
+    order = Order.query.filter(Order.order_id == order_goods.order_id).filter(Order.uid == uid).first()
+    if not order:
+        return resjson.print_json(13, _(u'订单商品不存在'))
+
+    data = {'uid':uid, 'nickname':nickname, 'avatar':avatar, 'ttype':1, 
+            'tid':order_goods.goods_id,'rating':rating, 'content':content,
+            'img_data':img_data, 'add_time':current_time}
+    comment = model_create(Comment, data, commit=True)
+
+    item = Goods.query.get(order_goods.goods_id)
+    if item:
+        comment_count     = Comment.query.\
+                                filter(Comment.ttype == 1).\
+                                filter(Comment.tid == order_goods.goods_id).count()
+        good_count        = Comment.query.\
+                                filter(Comment.ttype == 1).\
+                                filter(Comment.tid == order_goods.goods_id).\
+                                filter(Comment.rating == 3).count()
+        comment_good_rate = round((Decimal(good_count)/Decimal(comment_count)) * 100)
+        model_update(item, {'comment_count':comment_count, 'comment_good_rate':comment_good_rate})
+
+    model_update(order_goods, {'comment_id':comment.comment_id}, commit=True)
+
+    # 站内消息
+    content = _(u'您已评价“%s”。' % order_goods.goods_name)
+    mcs = MessageCreateService(1, uid, -1, content, ttype=2, tid=og_id, current_time=current_time)
+    if not mcs.check():
+        log_error('[ErrorViewApiOrderSaveComment][MessageCreateError]  og_id:%s msg:%s' % (og_id, mcs.msg))
+    else:
+        mcs.do()
+
+    return resjson.print_json(0, u'ok')

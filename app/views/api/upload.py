@@ -7,7 +7,10 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
-from flask import Blueprint
+from flask import (
+    Blueprint,
+    request
+)
 from flask_babel import gettext as _
 
 from app.helpers import (
@@ -47,4 +50,33 @@ def image():
     except Exception as e:
         return resjson.print_json(10, _(u'上传失败，请检查云存储配置'))
 
+    return resjson.print_json(0, u'ok', {'image':image})
+
+@upload.route('/image-xiao', methods=["POST"])
+def image_xiao():
+    "小程序上传图片"
+    resjson.action_code = 11
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    
+    #获取post过来的文件名称，从name=file参数中获取
+    imageFile = request.files['file']
+    prefix = request.form['prefix']
+
+    if not prefix:
+        return resjson.print_json(11, _(u'缺少前缀'))
+    #判断文件类型
+    fileName = imageFile.filename
+    if '.' not in fileName or fileName.rsplit('.', 1)[1] not in ['png', 'jpg', 'JPG', 'PNG']:
+        return resjson.print_json(12, _(u'只允许上传图片'))
+
+    #文件上传
+    try:
+        fus   = FileUploadService()
+        image = fus.save_storage(imageFile, prefix)
+    except Exception as e:
+        log_info(e)
+        return resjson.print_json(13, _(u'上传失败，请检查云存储配置'))
+    
     return resjson.print_json(0, u'ok', {'image':image})
