@@ -233,8 +233,7 @@ def track():
     if not aftersales:
         return resjson.print_json(resjson.SYSTEM_PAGE_NOT_FOUND)
 
-    logs = AftersalesLogs.query.\
-                filter(AftersalesLogs.aftersales_id == aftersales.aftersales_id).\
+    logs = AftersalesLogs.query.filter(AftersalesLogs.aftersales_id == aftersales.aftersales_id).\
                 order_by(AftersalesLogs.al_id.desc()).all()
 
     return resjson.print_json(0, u'ok', {'logs': logs})
@@ -254,14 +253,14 @@ def apply_info():
 
     if order_id <= 0 and og_id <= 0:
         return resjson.print_json(resjson.PARAM_ERROR)
-    wtf_form = AfterSalesForm()
+
     if order_id > 0:
         ascs = AfterSalesCreateService(uid, order_id=order_id, og_id=0, quantity=1, aftersales_type=1, deliver_status=1)
         ret  = ascs._check_order()
         if not ret:
             return resjson.print_json(resjson.SYSTEM_PAGE_NOT_FOUND)
 
-        data = {'wtf_form': wtf_form, 'order_id':order_id, 'goods_data':ascs.goods_data, 'refunds_amount':ascs.refunds_amount}
+        data = {'order_id':order_id, 'goods_data':ascs.goods_data, 'refunds_amount':ascs.refunds_amount}
         return resjson.print_json(0, u'ok', data)
     else:
         aftersales_type = 2
@@ -278,6 +277,6 @@ def apply_info():
             if not ret:
                 return resjson.print_json(resjson.SYSTEM_PAGE_NOT_FOUND)
 
-        data = {'wtf_form': wtf_form, 'goods_data':ascs.goods_data,'refunds_amount':ascs.refunds_amount, 'order_address':ascs.order_address, 'aftersales_type':aftersales_type}
+        data = {'goods_data':ascs.goods_data,'refunds_amount':ascs.refunds_amount,      'order_address':ascs.order_address, 'aftersales_type':aftersales_type}
 
         return resjson.print_json(0, u'ok', data)
