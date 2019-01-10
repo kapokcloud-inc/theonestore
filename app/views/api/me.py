@@ -67,10 +67,10 @@ def index():
     resjson.action_code = 10
 
     from flask import session
-
+    user = User.query.filter(User.uid == 1).first()
     session['uid']        = 1
-    session['nickname']   = 'eason'
-    session['avatar']     = '//static-aliyun.kapokcloud.com/avatar/2018-08-01/968e30714cba4c25990e2258284e171b.jpg'
+    session['nickname']   = user.nickname
+    session['avatar']     = user.avatar
     session['session_id'] = 'edad8468-fb1a-4213-ae98-c45330dec77d'
     
     if not check_login():
@@ -255,3 +255,19 @@ def collect():
     data   = LikeStaticMethodsService.likes(params)
 
     return resjson.print_json(0, u'ok', {'likes':data['likes']})
+
+@me.route('/profile')
+def profile():
+    """ 用户信息 """
+    resjson.action_code = 18
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid  = get_uid()
+    
+    user = User.query.get(uid)
+    
+    if not user:
+        return resjson.print_json(11, u'用户不存在')
+    
+    return resjson.print_json(0, u'ok', {'user': user})
