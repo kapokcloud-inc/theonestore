@@ -66,7 +66,7 @@ resjson.module_code = 13
 def index():
     resjson.action_code = 10
 
-    # from flask import session
+    from flask import session
 
     # session['uid']        = 1
     # session['nickname']   = 'eason'
