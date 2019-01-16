@@ -24,7 +24,8 @@ from flask_babel import gettext as _
 
 from app.helpers import (
     log_info,
-    randomstr
+    randomstr,
+    toint
 )
 from app.helpers.date_time import current_timestamp
 from app.helpers.user import get_uid
@@ -151,6 +152,7 @@ class WeiXinLoginService(object):
         jscode   = self.request.args.get('jscode', '')
         nickname = self.request.args.get('nickname', '')
         avatar   = self.request.args.get('avatar', '')
+        gender   = toint(self.request.args.get('gender', 0))
 
         if not jscode:
             self.msg = _(u'缺少jscode')
@@ -160,7 +162,7 @@ class WeiXinLoginService(object):
             self.msg = _(u'缺少用户信息')
             return false
 
-        user_data = {'nickname':nickname, 'avatar':avatar, 'gender':0, 'country':'', 'province':'', 'city':''}
+        user_data = {'nickname':nickname, 'avatar':avatar, 'gender':gender, 'country':'', 'province':'', 'city':''}
 
         uri                  = 'https://api.weixin.qq.com/sns/jscode2session'
         params               = OrderedDict()

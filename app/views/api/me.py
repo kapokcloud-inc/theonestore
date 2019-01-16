@@ -66,16 +66,8 @@ resjson.module_code = 13
 def index():
     resjson.action_code = 10
 
-    from flask import session
-    user = User.query.filter(User.uid == 1).first()
-    session['uid']        = 1
-    session['nickname']   = user.nickname
-    session['avatar']     = user.avatar
-    session['session_id'] = 'edad8468-fb1a-4213-ae98-c45330dec77d'
-    
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
-
     uid = get_uid()
 
     data = MeStaticMethodsService.detail(uid)
