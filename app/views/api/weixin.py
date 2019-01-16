@@ -98,5 +98,5 @@ def login_xiao():
 
     if not wxls.login():
         return resjson.print_json(11, _(u'登陆失败'))
-
+        
     return resjson.print_json(0, u'ok')

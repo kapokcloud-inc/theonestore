@@ -7,6 +7,7 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
+import json
 from flask import (
     Blueprint,
     request,
@@ -28,12 +29,19 @@ from app.helpers.user import (
 )
 
 from app.services.response import ResponseJson
-from app.services.api.aftersales import AfterSalesCreateService, AfterSalesStaticMethodsService
+from app.services.api.aftersales import (
+    AfterSalesCreateService, 
+    AfterSalesStaticMethodsService
+)
 
 from app.forms.api.aftersales import AfterSalesForm
-
 from app.models.order import Order, OrderGoods
-from app.models.aftersales import Aftersales
+from app.models.sys import SysSetting
+from app.models.aftersales import (
+    Aftersales,
+    AftersalesAddress,
+    AftersalesLogs
+)
 
 
 aftersales = Blueprint('api.aftersales', __name__)
@@ -166,3 +174,109 @@ def index():
 
     data = {'aftersales':_data['aftersales'],'aftersales_status_text':aftersales_status_text}
     return resjson.print_json(0, u'ok', data)
+
+@aftersales.route('/detail')
+def detail():
+    """ 售后服务详情 """
+
+    resjson.action_code = 14
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    aftersales_id = toint(request.args.get('aftersales_id', '0'))
+    if aftersales_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    aftersales = Aftersales.query.filter(Aftersales.aftersales_id == aftersales_id).filter(Aftersales.uid == uid).first()
+    if not aftersales:
+        return resjson.print_json(resjson.SYSTEM_PAGE_NOT_FOUND)
+    
+    log = AftersalesLogs.query.\
+            filter(AftersalesLogs.aftersales_id == aftersales.aftersales_id).\
+            order_by(AftersalesLogs.al_id.desc()).first()
+
+    status_text, action_code = AfterSalesStaticMethodsService.aftersale_status_text_and_action_code(aftersales)
+
+    aftersales_service = {}
+    if aftersales.check_status == 2:
+        ss = SysSetting.query.filter(SysSetting.key == 'config_aftersales_service').first()
+        if ss:
+            try:
+                aftersales_service = json.loads(ss.value)
+            except Exception as e:
+                aftersales_service = {}
+
+    address = AftersalesAddress.query.filter(AftersalesAddress.aftersales_id == aftersales_id).first()
+
+    data = {'aftersales':aftersales, 'log':log, 'status_text':status_text,
+            'action_code':action_code, 'aftersales_service':aftersales_service, 'address':address}
+    return resjson.print_json(0, u'ok', data)
+
+@aftersales.route('/track')
+def track():
+    """ 售后服务流水跟踪 """
+
+    resjson.action_code = 15
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    aftersales_id = toint(request.args.get('aftersales_id', '0'))
+    if aftersales_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    aftersales = Aftersales.query.filter(Aftersales.aftersales_id == aftersales_id).\
+                                    filter(Aftersales.uid == uid).first()
+    if not aftersales:
+        return resjson.print_json(resjson.SYSTEM_PAGE_NOT_FOUND)
+
+    logs = AftersalesLogs.query.filter(AftersalesLogs.aftersales_id == aftersales.aftersales_id).\
+                order_by(AftersalesLogs.al_id.desc()).all()
+
+    return resjson.print_json(0, u'ok', {'logs': logs})
+
+@aftersales.route('/apply/info')
+def apply_info():
+    """ 申请售后 """
+
+    resjson.action_code = 16
+
+    if not check_login():
+        return resjson.print_json(resjson.NOT_LOGIN)
+    uid = get_uid()
+
+    order_id = toint(request.args.get('order_id', '0'))
+    og_id    = toint(request.args.get('og_id', '0'))
+
+    if order_id <= 0 and og_id <= 0:
+        return resjson.print_json(resjson.PARAM_ERROR)
+
+    if order_id > 0:
+        ascs = AfterSalesCreateService(uid, order_id=order_id, og_id=0, quantity=1, aftersales_type=1, deliver_status=1)
+        ret  = ascs._check_order()
+        if not ret:
+            return resjson.print_json(resjson.SYSTEM_PAGE_NOT_FOUND)
+
+        data = {'order_id':order_id, 'goods_data':ascs.goods_data, 'refunds_amount':ascs.refunds_amount}
+        return resjson.print_json(0, u'ok', data)
+    else:
+        aftersales_type = 2
+        ascs = AfterSalesCreateService(uid, order_id=0, og_id=og_id, quantity=1, aftersales_type=aftersales_type, deliver_status=1)
+        ret  = ascs._check_order_goods()
+        if not ret:
+            if ascs.msg != u'超过有效退款时间':
+                return resjson.print_json(resjson.SYSTEM_PAGE_NOT_FOUND)
+
+            aftersales_type = 3
+            ascs = AfterSalesCreateService(uid, order_id=0, og_id=og_id, quantity=1,
+                                            aftersales_type=aftersales_type, deliver_status=1)
+            ret  = ascs._check_order_goods()
+            if not ret:
+                return resjson.print_json(resjson.SYSTEM_PAGE_NOT_FOUND)
+
+        data = {'goods_data':ascs.goods_data,'refunds_amount':ascs.refunds_amount,      'order_address':ascs.order_address, 'aftersales_type':aftersales_type}
+
+        return resjson.print_json(0, u'ok', data)

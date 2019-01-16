@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding:utf-8 -*-
 """
     theonestore
     https://github.com/kapokcloud-inc/theonestore
@@ -245,15 +245,15 @@ def address_change(oa_id):
 
     order_address = OrderAddress.query.get(oa_id)
     if not order_address:
-        return redirect(url_for('mobile.index.404'))
+        return redirect(url_for('mobile.index.pagenotfound'))
 
     order = Order.query.\
                     filter(Order.order_id == order_address.order_id).\
                     filter(Order.uid == uid).first()
     if not order:
-        return redirect(url_for('mobile.index.404'))
+        return redirect(url_for('mobile.index.pagenotfound'))
 
     if order.pay_status != 1:
-        return redirect(url_for('mobile.index.404'))
+        return redirect(url_for('mobile.index.servererror'))
 
     return render_template('mobile/order/address-change.html.j2', order_address=order_address)

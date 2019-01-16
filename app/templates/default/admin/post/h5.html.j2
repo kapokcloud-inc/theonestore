@@ -55,7 +55,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   // 初始化ue
-  var ueditor = UE.getEditor('detail_html', {serverUrl: "{{ url_for('api.upload.ueditor') }}"});
+  var ueditor = UE.getEditor('detail_html', {serverUrl: "{{ url_for('admin.upload.ueditor') }}"});
 
   ueditor.ready(function() {
     ueditor.setContent('{{ item.post_detail }}');

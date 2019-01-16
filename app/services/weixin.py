@@ -111,7 +111,7 @@ class WeiXinMpAccessTokenService(object):
         expires_in = data.get('expires_in', 0)
 
         if not self.st:
-            self.st = model_create(SysToken, {'token_type':'weixin_mp', 'add_time':self.current_time})
+            self.st = model_create(SysToken, {'token_type':'weixin_mp_token', 'add_time':self.current_time})
 
         expires_in = self.current_time + expires_in - 60
         model_update(self.st, {'access_token':token, 'expires_in':expires_in}, commit=True)
