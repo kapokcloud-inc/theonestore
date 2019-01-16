@@ -232,7 +232,7 @@ def weixin_sort():
 
     form = WeixinSortForm()
     ss = SysSetting.query.filter(
-        SysSetting.key == 'config_weixin_sort').first()
+        SysSetting.key == 'config_weixin_xiao').first()
 
     data = {}
     try:
@@ -250,7 +250,7 @@ def weixin_sort():
     data = {'appid': form.appid.data, 'secret': form.secret.data}
     if ss is None:
         ss = SysSetting()
-        ss.key = 'config_weixin_sort'
+        ss.key = 'config_weixin_xiao'
         db.session.add(ss)
 
     # 校验文件上传

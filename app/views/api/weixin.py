@@ -94,7 +94,7 @@ def login_xiao():
 
     wxls = WeiXinLoginService('xiao')
     if not wxls.check():
-        return resjson.print_json(10, _(wxls.msg))
+        return resjson.print_json(10, _(u'登陆失败'))
 
     if not wxls.login():
         return resjson.print_json(11, _(u'登陆失败'))
