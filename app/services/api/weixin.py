@@ -210,19 +210,19 @@ class WeiXinLoginService(object):
         config_key = self.config_types.get(self.login_type)
         ss         = SysSetting.query.filter(SysSetting.key == config_key).first()
         if not ss:
-            self.msg = _(u'配置错误')
+            self.msg = _(u'配置错误1')
             return False
 
         try:
             config = json.loads(ss.value)
         except Exception as e:
-            self.msg = _(u'配置错误')
+            self.msg = _(u'配置错误2')
             return False
 
         self.appid  = config.get('appid', '')
         self.secret = config.get('secret', '')
         if (not self.appid) or (not self.secret):
-            self.msg = _(u'配置错误')
+            self.msg = _(u'配置错误3')
             return False
 
         return True
