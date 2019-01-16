@@ -210,7 +210,7 @@ class WeiXinLoginService(object):
         config_key = self.config_types.get(self.login_type)
         ss         = SysSetting.query.filter(SysSetting.key == config_key).first()
         if not ss:
-            self.msg = _(u'配置错误1:')
+            self.msg = _(u'配置错误%s' % config_key)
             return False
 
         try:
