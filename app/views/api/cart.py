@@ -339,6 +339,6 @@ def checkout():
     # 结算页面
     data = CartStaticMethodsService.checkout_page(uid, 'api')
     if not data[0]:
-        return resjson.print_json(11, data[1])
+        return resjson.print_json(12, data[1])
 
     return resjson.print_json(0, u'ok', data[2])
