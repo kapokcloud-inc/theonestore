@@ -71,8 +71,6 @@ configure_uploads(app)
 csrf = CSRFProtect(app)
 csrf.exempt('app.views.admin.upload.ueditor')
 csrf.exempt('app.views.api.pay.notify')
-csrf.exempt('app.views.api.me.update')
-csrf.exempt('app.views.api.me.address_save')
 
 # flask session
 Session(app)
