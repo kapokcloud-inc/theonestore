@@ -153,6 +153,9 @@ class WeiXinLoginService(object):
         nickname = self.request.args.get('nickname', '')
         avatar   = self.request.args.get('avatar', '')
         gender   = toint(self.request.args.get('gender', 0))
+        country  = self.request.args.get('country', '')
+        province = self.request.args.get('province', '')
+        city     = self.request.args.get('city', '')
 
         if not jscode:
             self.msg = _(u'缺少jscode')
@@ -162,7 +165,7 @@ class WeiXinLoginService(object):
             self.msg = _(u'缺少用户信息')
             return false
 
-        user_data = {'nickname':nickname, 'avatar':avatar, 'gender':gender, 'country':'', 'province':'', 'city':''}
+        user_data = {'nickname':nickname, 'avatar':avatar, 'gender':gender, 'country':country, 'province':province, 'city':city}
 
         uri                  = 'https://api.weixin.qq.com/sns/jscode2session'
         params               = OrderedDict()
