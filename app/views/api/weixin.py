@@ -18,12 +18,16 @@ from flask_babel import gettext as _
 from app.database import db
 from app.helpers import (
     log_info,
-    toint
+    toint,
+)
+from app.helpers.user import (
+    get_uid
 )
 from app.helpers.date_time import current_timestamp
 from app.services.response import ResponseJson
 from app.services.api.weixin import WeiXinLoginService
 from app.services.weixin import WeiXinMpAccessTokenService
+from app.services.api.user import UserStaticMethodsService
 
 weixin = Blueprint('api.weixin', __name__)
 
@@ -98,5 +102,9 @@ def login_xiao():
 
     if not wxls.login():
         return resjson.print_json(11, _(u'登陆失败'))
-        
-    return resjson.print_json(0, u'ok')
+    
+    #用户的购物车数和未读消息数
+    cart_total = session.get('cart_total')
+    unread_count = UserStaticMethodsService.unread_count(get_uid())
+
+    return resjson.print_json(0, u'ok', {'cart_total':cart_total, 'unread_count':unread_count})

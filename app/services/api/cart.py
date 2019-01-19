@@ -361,15 +361,15 @@ class CartStaticMethodsService(object):
 
         carts = Cart.query.filter(Cart.checkout_type == 1).filter(Cart.uid == 0).filter(Cart.session_id == session_id).order_by(Cart.cart_id.desc()).all()
         for _cart in carts:
-            cart = Cart.query.filter(Cart.checkout_type == 1).filter(Cart.uid == uid).filter(Cart.goods_id == _cart.goods_id).first()
-            if not cart:
-                data = {'uid':uid, 'goods_id':_cart.goods_id, 'is_checked':1, 'checkout_type':1, 'add_time':current_time}
-                cart = model_create(Cart, data)
+            # cart = Cart.query.filter(Cart.checkout_type == 1).filter(Cart.uid == uid).filter(Cart.goods_id == _cart.goods_id).first()
+            # if not cart:
+            #     data = {'uid':uid, 'goods_id':_cart.goods_id, 'is_checked':1, 'checkout_type':1, 'add_time':current_time}
+            #     cart = model_create(Cart, data)
 
-            model_update(cart, {'session_id':session_id, 'quantity':_cart.quantity, 'update_time':current_time})
+            model_update(_cart, {'uid':uid, 'session_id':session_id, 'quantity':_cart.quantity, 'update_time':current_time})
 
-            if _cart:
-                model_delete(_cart)
+            # if _cart:
+            #     model_delete(_cart)
 
             is_commit = True
 
