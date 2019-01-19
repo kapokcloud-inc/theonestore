@@ -9,7 +9,8 @@
 """
 from flask import (
     Blueprint,
-    request
+    request,
+    session
 )
 from flask_babel import gettext as _
 
@@ -115,7 +116,7 @@ def address_save():
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
-    
+
     wtf_form     = AddressForm()
     current_time = current_timestamp()
 
@@ -263,3 +264,18 @@ def profile():
         return resjson.print_json(11, u'用户不存在')
     
     return resjson.print_json(0, u'ok', {'user': user})
+
+@me.route('/profile/count')
+def profile_count():
+    """ 用户统计信息 """
+
+    resjson.action_code = 19
+
+    uid  = get_uid()
+    cart_total = session.get('cart_total', 0)
+
+    unread_count = 0
+    if uid > 0:
+        unread_count = UserStaticMethodsService.unread_count(get_uid())
+
+    return resjson.print_json(0, u'ok', {'cart_total':cart_total, 'unread_count':unread_count})
