@@ -115,7 +115,7 @@ def address_save():
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
-    log_info('有执行到这里吗？')
+    
     wtf_form     = AddressForm()
     current_time = current_timestamp()
 
