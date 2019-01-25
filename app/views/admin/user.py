@@ -121,7 +121,7 @@ def recharge_save():
 
     recharge_amount  = Decimal(form.recharge_amount.data).quantize(Decimal('0.00'))
     remark_user      = _(u'充值成功')
-    remark_sys       = _(u'充值: 订单ID:%s, 充值方式:%s, 充值金额:%s' %("无", "管理员打款", recharge_amount))
+    remark_sys       = _(u'充值: 订单ID:%s, 充值方式:%s, 充值金额:%s' %(u"无", u"管理员打款", recharge_amount))
     fs               = FundsService(form.uid.data, recharge_amount, 1, 2, 0, remark_user, remark_sys, current_timestamp())
     if not fs.check():
         log_error('[ErrorServiceApiOrderPaidServicePaid][FundsServiceError01]  remark_sys:%s' % remark_sys)
