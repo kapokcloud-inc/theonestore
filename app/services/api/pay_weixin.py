@@ -339,8 +339,6 @@ class JsapiNotifyService():
 
         for k in keys:
             v = params.get(k, '').strip()
-            v = v.encode('utf8')
-            k = k.encode('utf8')
             pairs.append('%s=%s' % (k, v))
 
         _str = '&'.join(pairs)
@@ -353,7 +351,7 @@ class JsapiNotifyService():
         url_str  = self._key_value_to_url_str(params)
         sign_str = '%s&key=%s' % (url_str, self.partner_key)
 
-        return (md5(sign_str).hexdigest()).upper()
+        return (md5(sign_str.encode('utf8')).hexdigest()).upper()
 
     def check(self):
         """检查"""
