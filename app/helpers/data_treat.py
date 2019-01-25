@@ -83,7 +83,7 @@ def format_avatar(soruceImg, avatartype = 1):
     }
 
     # 微信头像
-    if soruceImg.find('//thirdwx.qlogo.cn') == 0:
+    if soruceImg.find('qlogo.cn') != -1:
         return soruceImg
 
     # 阿里云或者七牛图片资源
