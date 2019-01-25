@@ -45,7 +45,7 @@ class UnifiedorderService(object):
     """统一下单Service"""
 
     def __init__(self, nonce_str, body, out_trade_no, total_fee, trade_type,
-                spbill_create_ip='', openid=''):
+                spbill_create_ip='', openid='', pay_type='mp'):
         """
         @param nonce_str:           32位内随机字符串
         @param body:                订单信息
@@ -54,6 +54,7 @@ class UnifiedorderService(object):
         @param trade_type:          交易类型，JSAPI(公众号支付)、NATIVE(扫码支付)、APP(APP支付)
         @param spbill_create_ip:    客户端请求IP地址
         @param openid:              用户标识，trade_type=JSAPI时（即公众号支付），此参数必传，此参数为微信用户在商户对应appid下的唯一标识。
+        @param pay_type:            支付类型，mp:公众号支付, xiao:小程序支付
         """
         self.msg              = u''
         self.nonce_str        = nonce_str
@@ -63,6 +64,7 @@ class UnifiedorderService(object):
         self.trade_type       = trade_type
         self.spbill_create_ip = spbill_create_ip
         self.openid           = openid
+        self.pay_type         = pay_type
         self.current_time     = current_timestamp()
         self.appid            = ''
         self.secret           = ''
@@ -81,8 +83,6 @@ class UnifiedorderService(object):
 
         for k in keys:
             v = params.get(k, '').strip()
-            v = v.encode('utf8')
-            k = k.encode('utf8')
             pairs.append('%s=%s' % (k, v))
 
         _str = '&'.join(pairs)
@@ -94,20 +94,18 @@ class UnifiedorderService(object):
 
         url_str  = self.__key_value_to_url_str(params)
         sign_str = '%s&key=%s' % (url_str, self.partner_key)
-
-        return (md5(sign_str).hexdigest()).upper()
+        sign_code = sign_str.encode('utf8')
+        return (md5(sign_code).hexdigest()).upper()
 
     def __get_prepay_xml(self):
         """拼接XML"""
 
         self.sign_params['sign'] = self.__create_sign(self.sign_params)
 
-        xml = "<xml>"
+        xml = u'<?xml version="1.0" encoding="UTF-8"?><xml>'
         for k, v in self.sign_params.items():
-            v = v.encode('utf8')
-            k = k.encode('utf8')
-            xml += '<' + k + '>' + v + '</' + k + '>'
-        xml += "</xml>"
+            xml += u'<%s>%s</%s>' % (k,v,k)
+        xml += u'</xml>'
 
         return xml
 
@@ -119,8 +117,10 @@ class UnifiedorderService(object):
             return False
 
         # 检查 - 配置
-        cpw_ss = SysSetting.query.filter(SysSetting.key == 'config_paymethod_weixin').first()
-        cwm_ss = SysSetting.query.filter(SysSetting.key == 'config_weixin_mp').first()
+        weixinpay_key = 'config_paymethod_weixin'
+        weixinapp_key = 'config_weixin_xiao' if self.pay_type == 'xiao' else 'config_weixin_mp'
+        cpw_ss = SysSetting.query.filter(SysSetting.key == weixinpay_key).first()
+        cwm_ss = SysSetting.query.filter(SysSetting.key == weixinapp_key).first()
         if not cpw_ss or not cwm_ss:
             self.msg = _(u'配置错误')
             return False
@@ -134,10 +134,10 @@ class UnifiedorderService(object):
             return False
 
         # 检查 - 配置
-        self.appid       = config_weixin_mp.get('appid', '').encode('utf8')
-        self.secret      = config_weixin_mp.get('secret', '').encode('utf8')
-        self.mch_id      = config_paymethod_weixin.get('mch_id', '').encode('utf8')
-        self.partner_key = config_paymethod_weixin.get('partner_key', '').encode('utf8')
+        self.appid       = config_weixin_mp.get('appid', '')
+        self.secret      = config_weixin_mp.get('secret', '')
+        self.mch_id      = config_paymethod_weixin.get('mch_id', '')
+        self.partner_key = config_paymethod_weixin.get('partner_key', '')
         if self.appid == '' or self.secret == '' or self.mch_id == '' or self.partner_key == '':
             self.msg = _(u'配置错误')
             return False
@@ -177,7 +177,9 @@ class UnifiedorderService(object):
         # 请求下单
         url     = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
         xml     = self.__get_prepay_xml()
-        headers = {'Content-Type': 'application/xml'}
+        log_info(xml)
+        xml = xml.encode('utf8')
+        headers = {'Content-Type': 'application/xml; charset=utf-8'}
         respone = requests.post(url, data=xml, headers=headers)
 
         # 下单结果

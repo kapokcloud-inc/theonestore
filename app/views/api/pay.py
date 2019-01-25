@@ -14,7 +14,8 @@ from flask import (
     Blueprint,
     request,
     url_for,
-    redirect
+    redirect,
+    session
 )
 from flask_babel import gettext as _
 
@@ -123,6 +124,9 @@ def weixinjspay_req():
     args          = request.args
     order_id_list = args.get('order_id_list', '[]').strip()
     openid        = args.get('openid', '').strip()
+    pay_type      = args.get('pay_type', 'mp').strip() # 支付类型, mp:公众号 xiao:小程序
+    if not openid:
+        openid = session.get('openid', '')
 
     try:
         order_id_list = json.loads(order_id_list)
@@ -141,12 +145,21 @@ def weixinjspay_req():
 
     tran       = ps.tran
     tran_id    = tran.tran_id
-    subject    = u'交易号：%d' % tran_id
+    # subject    = u'交易号：%d' % tran_id
+    subject    = ps.first_goods_name
     nonce_str  = str(tran_id)
     pay_amount = Decimal(tran.pay_amount).quantize(Decimal('0.00'))*100
 
     # 创建支付参数
-    us = UnifiedorderService(nonce_str, subject, tran_id, pay_amount, 'JSAPI', request.remote_addr, openid)
+    us = UnifiedorderService(
+            nonce_str, 
+            subject, 
+            tran_id, 
+            pay_amount, 
+            'JSAPI', 
+            request.remote_addr, 
+            openid,
+            pay_type)
     if not us.unifiedorder():
         return resjson.print_json(14, us.msg)
 

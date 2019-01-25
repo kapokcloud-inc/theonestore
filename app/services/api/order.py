@@ -477,7 +477,11 @@ class PayService(object):
         self.order_id_json = json.dumps(self.order_id_list)
 
         # 支付订单列表
-        q = db.session.query(Order.order_id, Order.order_sn, Order.pay_amount, Order.order_type, Order.uid).\
+        q = db.session.query(Order.order_id, 
+                        Order.order_sn, 
+                        Order.pay_amount, 
+                        Order.order_type, 
+                        Order.uid).\
                     filter(Order.uid == self.uid).\
                     filter(Order.pay_status == 1).\
                     filter(Order.order_id.in_(self.order_id_list))
@@ -527,6 +531,17 @@ class PayService(object):
         self.tran = model_create(OrderTran, data, commit=True)
 
         return True
+
+    
+    @property
+    def first_goods_name(self):
+        for pay_order in self.pay_order_list:
+            og = OrderGoods.query.filter(OrderGoods.order_id == pay_order.order_id).\
+                    order_by(OrderGoods.og_id.asc()).first()
+            if og is not None:
+                return og.goods_name
+        
+        return u'error'
 
 
 class PaidService(object):

@@ -31,12 +31,14 @@ def check_login():
     return False if uid == 0 else True
 
 
-def set_user_session(user):
+def set_user_session(user, utb=None):
     """设置用户session"""
     
     session['uid']      = user.uid
     session['nickname'] = user.nickname
     session['avatar']   = user.avatar
+    if utb:
+        session['openid'] = utb.third_user_id
 
 
 def get_uid():

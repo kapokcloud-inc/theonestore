@@ -98,6 +98,6 @@ class BindService(object):
 
         model_update(utb, {'update_time':self.current_time}, commit=True)
 
-        set_user_session(user)
+        set_user_session(user, utb)
 
         return True
