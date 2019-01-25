@@ -18,6 +18,7 @@ from wtforms import (
 )
 from wtforms.validators import (
     Required,
+    InputRequired,
     ValidationError
 )
 from app.forms import Form
@@ -43,7 +44,7 @@ class ShippingForm(Form):
                 false_values=(0, '0', ''))
 
     shipping_amount = DecimalField(label=_(u'邮费'),
-                        validators=[Required(message=_(u'必填项')), checkFree()])
+                        validators=[InputRequired(message=_(u'必填项')), checkFree()])
 
     free_limit_amount = DecimalField(label=_(u'满多少包邮'),validators=[checkFree()])
 
