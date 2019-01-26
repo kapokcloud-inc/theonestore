@@ -209,6 +209,14 @@ class StorageAliossForm(Form):
                     false_values=(0, '0', '', 'qiniu'), 
                     default='')
 
+class ShippingServiceForm(Form):
+    customer = StringField(label= _(u'公司编号'),
+                    description = _(u'<p>快递100分配给贵司的公司编号<br>请前往快递100开通服务 “快递接口(API)->接口申请->立即开通</p>'),
+                    validators  = [Required(message=_(u'请填写快递100分配给贵司的公司编号'))])
+    
+    key      = StringField(label= _(u'授权key'),
+                    description = _(u'<p>快递100分配给贵司的授权key<br>请前往快递100开通服务 “快递接口(API)->接口申请->立即开通</p>'),
+                    validators  = [Required(message=_(u'请填写快递100分配给贵司的授权key'))])
 
 class AftersalesServiceForm(Form):
     consignee_name    = StringField(label=_(u'售后收货负责人/部门'),

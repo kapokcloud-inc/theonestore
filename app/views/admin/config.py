@@ -43,7 +43,8 @@ from app.forms.admin.config import (
     StorageAliossForm,
     AftersalesServiceForm,
     InfoBaseForm,
-    WeixinSortForm
+    WeixinSortForm,
+    ShippingServiceForm
 )
 from app.models.shipping import Shipping
 from app.models.sys import SysSetting
@@ -454,18 +455,50 @@ def storage_alioss():
     return redirect(url_for('admin.config.storage_alioss'))
 
     
+@config.route('/shipping_100', methods=["GET", "POST"])
+def shipping_100():
+    """快递100"""
+    g.page_title = _(u'快递100')
 
+    form = ShippingServiceForm()
+    shipping = SysSetting.query.filter(SysSetting.key == 'config_shipping').first()
 
-@config.route('/shipping')
-def shipping():
-    """快递"""
-    g.page_title = _(u'快递')
+    if request.method == "GET":
+        data = {}
+        try:
+            data = json.loads(shipping.value)
+        except Exception as e:
+            data = {}
+    
+        form.fill_form(data=data)
+        return render_template('admin/config/shipping_100.html.j2', form=form, data=data)
+    
+    if not form.validate_on_submit():
+        return render_template('admin/config/shipping_100.html.j2', form=form, data=data)
+
+    data = {'customer': form.customer.data,
+            'key': form.key.data}
+
+    if shipping is None:
+        shipping = SysSetting()
+        shipping.key = 'config_shipping'
+        db.session.add(shipping)
+
+    shipping.value = json.dumps(data)
+    db.session.commit()
+
+    return redirect(url_for('admin.config.shipping_100'))
+
+@config.route('/shipping_open')
+def shipping_open():
+    """快递开通"""
+    g.page_title = _(u'快递开通')
 
     shipping_list = Shipping.query.\
         order_by(Shipping.is_default.desc(), Shipping.is_enable.desc(),
                  Shipping.sorting.desc()).all()
 
-    return render_template('admin/config/shipping.html.j2', shipping_list=shipping_list)
+    return render_template('admin/config/shipping_open.html.j2', shipping_list=shipping_list)
 
 
 @config.route('/shipping/detail/<int:shipping_id>')
@@ -511,7 +544,7 @@ def shipping_save():
 
         db.session.commit()
 
-        return redirect(url_for('admin.config.shipping'))
+        return redirect(url_for('admin.config.shipping_open'))
 
     wtf_form.shipping_name.data = shipping.shipping_name
     shipping = wtf_form.data
