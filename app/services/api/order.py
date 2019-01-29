@@ -41,6 +41,7 @@ from app.helpers.date_time import (
 )
 
 from app.services.weixin import WeixinMessageStaticMethodsService
+from app.services.track import Shipping100TrackService
 from app.services.message import MessageCreateService
 from app.services.api.cart import (
     CheckoutService,
@@ -905,26 +906,6 @@ class OrderStaticMethodsService(object):
         return (status_text, action_code)
 
     @staticmethod
-    def track(com, code):
-        """查询物流"""
-
-        # 查询
-        data = {'type':com, 'postid':code, 'id':1, 'valicode':'', 'temp':'0.49738534969422676'}
-        url  = 'https://m.kuaidi100.com/query'
-        res  = requests.post(url, data=data)
-        res.encoding = 'utf8'
-
-        # 检查 - 获取验证信息
-        if res.status_code != 200:
-            return (_(u'查询失败'), [])
-
-        data = res.json()
-        if data['message'] != 'ok':
-            return (_(u'查询失败'), [])
-
-        return ('ok', data['data'])
-
-    @staticmethod
     def detail_page(order_id, uid):
         """详情页面"""
 
@@ -940,7 +921,8 @@ class OrderStaticMethodsService(object):
         express_data  = None
         express_datas = []
         if order.shipping_status == 2:
-            _express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
+            shippingService = Shipping100TrackService(order.shipping_code, order.shipping_sn)
+            _express_msg, _express_data = shippingService.track()
             if _express_msg == 'ok':
                 express_data  = _express_data[0] if len(_express_data) > 0 else {}
                 express_datas = _express_data

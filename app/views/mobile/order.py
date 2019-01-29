@@ -37,6 +37,7 @@ from app.services.api.order import (
 )
 
 from app.forms.api.comment import CommentOrderGoodsForm
+from app.services.track import Shipping100TrackService
 from app.services.api.order import OrderStaticMethodsService
 
 from app.models.item import Goods
@@ -169,10 +170,10 @@ def track():
     express_data = []
     if order and order.shipping_status == 2:
         shipping = Shipping.query.get(order.shipping_id)
-
-        express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
+        shippingService = Shipping100TrackService(order.shipping_code, order.shipping_sn)
+        express_msg, express_datas = shippingService.track()
         if express_msg == 'ok':
-            express_data = _express_data
+            express_data = express_datas
 
     data = {'express_msg':express_msg, 'express_data':express_data, 'order':order, 'shipping':shipping}
     return render_template('mobile/order/track.html.j2', **data)

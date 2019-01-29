@@ -36,6 +36,7 @@ from app.helpers.user import (
 from app.forms.api.order import OrderAddressForm
 
 from app.services.response import ResponseJson
+from app.services.track import Shipping100TrackService
 from app.services.message import MessageCreateService
 from app.services.api.pay_weixin import NativeService
 from app.services.api.order import (
@@ -460,10 +461,11 @@ def track():
     express_data = []
     if order and order.shipping_status == 2:
         shipping = Shipping.query.get(order.shipping_id)
+        shippingService = Shipping100TrackService(order.shipping_code, order.shipping_sn)
+        express_msg, express_datas = shippingService.track()
 
-        express_msg, _express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
         if express_msg == 'ok':
-            express_data = _express_data
+            express_data = express_datas
 
     data = {'express_msg':express_msg, 'express_data':express_data, 'order':order, 'shipping':shipping}
     return resjson.print_json(0, u'ok', data)

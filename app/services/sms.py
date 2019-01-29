@@ -28,7 +28,7 @@ from flask_uploads import extension
 
 from app.helpers import log_error, log_debug
 from app.models.sys import SysSetting
-from app.exception import ConfigNotExistException
+from app.exception import ConfigNotFoundException
 
 from yunpian_python_sdk.model import constant as YC
 from yunpian_python_sdk.ypclient import YunpianClient
@@ -52,40 +52,40 @@ class SmsService(object):
         ss = None
         try:
             ss = self.get_config(self.sms_vendor_key)
-        except ConfigNotExistException as e:
+        except ConfigNotFoundException as e:
             raise e
 
         if ss.value not in ('sms_yunpian', 'sms_alisms'):
-            raise ConfigNotExistException(_(u'短信选项只能是云片或者阿里云SMS'))
+            raise ConfigNotFoundException(_(u'短信选项只能是云片或者阿里云SMS'))
         self.sms_vendor = ss.value
 
         if self.sms_vendor == 'sms_yunpian':
             try:
                 yunpian_config = self.get_config('config_sms_yunpian')
                 self.yunpian = json.loads(yunpian_config.value)
-            except (ConfigNotExistException, ValueError) as e:
+            except (ConfigNotFoundException, ValueError) as e:
                 raise e
         elif self.sms_vendor == 'sms_alisms':
             try:
                 alisms_config = self.get_config('config_sms_alisms')
                 self.alisms = json.loads(alisms_config.value)
-            except (ConfigNotExistException, ValueError) as e:
+            except (ConfigNotFoundException, ValueError) as e:
                 raise e
     
     def get_config(self, key):
         """获取配置选项"""
         ss = SysSetting.query.filter(SysSetting.key == key).first()
         if ss is None:
-            raise ConfigNotExistException(_(u'配置选项不存在'))
+            raise ConfigNotFoundException(_(u'配置选项不存在'))
 
         if not ss.value:
-            raise ConfigNotExistException(_(u'配置选项值为空'))
+            raise ConfigNotFoundException(_(u'配置选项值为空'))
         return ss
     
     def get_service(self):
         try:
             self.load_config()
-        except (ConfigNotExistException, ValueError) as e:
+        except (ConfigNotFoundException, ValueError) as e:
             raise e
         
         service = None

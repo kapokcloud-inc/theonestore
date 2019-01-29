@@ -22,7 +22,7 @@ from flask_uploads import extension
 
 from app.helpers import log_error, log_debug
 from app.models.sys import SysSetting
-from app.exception import ConfigNotExistException
+from app.exception import ConfigNotFoundException
 
 import qiniu
 import oss2
@@ -56,24 +56,24 @@ class FileUploadService(object):
         ss = None
         try:
             ss = self._get_config(self.storage_vendor_key)
-        except ConfigNotExistException as e:
+        except ConfigNotFoundException as e:
             raise e
 
         if ss.value not in ('qiniu', 'aliyunoss'):
-            raise ConfigNotExistException(_(u'存储选项只能是七牛云或者阿里云OSS'))
+            raise ConfigNotFoundException(_(u'存储选项只能是七牛云或者阿里云OSS'))
 
         self.storage_vendor = ss.value
         if self.storage_vendor == 'qiniu':
             try:
                 qiniu_config = self._get_config('config_storage_qiniu')
                 self.qiniu = json.loads(qiniu_config.value)
-            except (ConfigNotExistException, ValueError) as e:
+            except (ConfigNotFoundException, ValueError) as e:
                 raise e
         elif self.storage_vendor == 'aliyunoss':
             try:
                 alioss_config = self._get_config('config_storage_alioss')
                 self.alioss = json.loads(alioss_config.value)
-            except (ConfigNotExistException, ValueError) as e:
+            except (ConfigNotFoundException, ValueError) as e:
                 raise e
 
 
@@ -82,10 +82,10 @@ class FileUploadService(object):
         ss = SysSetting.query.filter(SysSetting.key == key).first()
         log_debug(ss)
         if ss is None:
-            raise ConfigNotExistException(_(u'配置选项不存在'))
+            raise ConfigNotFoundException(_(u'配置选项不存在'))
 
         if not ss.value:
-            raise ConfigNotExistException(_(u'配置选项值为空'))
+            raise ConfigNotFoundException(_(u'配置选项值为空'))
 
         return ss
 
@@ -134,7 +134,7 @@ class FileUploadService(object):
         """上传至云存储"""
         try:
             self._load_config()
-        except (ConfigNotExistException, ValueError) as e:
+        except (ConfigNotFoundException, ValueError) as e:
             raise e
 
         if self.storage_vendor == 'qiniu':

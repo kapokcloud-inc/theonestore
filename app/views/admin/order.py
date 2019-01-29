@@ -38,6 +38,7 @@ from app.services.response import ResponseJson
 from app.services.message import MessageCreateService
 from app.services.weixin import WeixinMessageStaticMethodsService
 from app.services.admin.order import OrderStaticMethodsService
+from app.services.track import Shipping100TrackService
 from app.services.admin.export import ExportService
 
 from app.models.user import User
@@ -206,7 +207,10 @@ def detail(order_id):
     express_msg  = ''
     express_data = []
     if order.shipping_status == 2:
-        express_msg, express_data = OrderStaticMethodsService.track(order.shipping_code, order.shipping_sn)
+        shippingService = Shipping100TrackService(order.shipping_code, order.shipping_sn)
+        express_msg, express_datas = shippingService.track()
+        if express_msg == 'ok':
+            express_data = express_datas
 
     data = {'order':order, 'user':user, 'order_address':order_address,
             'order_goods':order_goods, 'status_text':status_text, 'action_code':action_code,
