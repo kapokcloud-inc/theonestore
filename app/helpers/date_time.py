@@ -65,6 +65,22 @@ def date_range(_range, format_style='YYYY-MM-DD'):
     end    = some_day_timestamp(end, 1)
     return (start, end)
 
+def date_cover_day(start_day_stamp=0, end_day_stamp=0):
+    """ 跨天数 日期列表 """
+    if start_day_stamp == 0 or end_day_stamp == 0 or start_day_stamp > end_day_stamp:
+        return (-1, [])
+        
+    if start_day_stamp == end_day_stamp:
+        return (0, [])
+    
+    day = (end_day_stamp - start_day_stamp) / (60 * 60 * 24)
+    dates = []
+    while start_day_stamp < end_day_stamp:
+        dates.append(timestamp2str(start_day_stamp, 'YYYY-MM-DD'))
+        start_day_stamp += 24 * 60 * 60
+    return (day, dates)
+    
+
 
 
 

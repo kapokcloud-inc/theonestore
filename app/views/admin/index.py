@@ -107,15 +107,16 @@ def dashboard():
     day_aftersales     = get_count(q)
 
     #会员充值(连表查，3条数据)
-    funds_orders       = db.session.query(Order.order_id, Order.order_amount, Order.add_time,
-                                        User.nickname, User.avatar).\
-                                    filter(Order.uid == User.uid).\
-                                    filter(Order.order_type == 2).\
-                                    filter(Order.pay_status == 2).\
-                                    order_by(Order.order_id.desc()).limit(4).all()
+    funds_orders       = []
+    # funds_orders       = db.session.query(Order.order_id, Order.order_amount, Order.add_time,
+    #                                     User.nickname, User.avatar).\
+    #                                 filter(Order.uid == User.uid).\
+    #                                 filter(Order.order_type == 2).\
+    #                                 filter(Order.pay_status == 2).\
+    #                                 order_by(Order.order_id.desc()).limit(4).all()
     fund_orders_amount = 0
-    for funds_order in funds_orders:
-        fund_orders_amount += funds_order.order_amount
+    # for funds_order in funds_orders:
+    #     fund_orders_amount += funds_order.order_amount
 
     #最近订单
     goods_orders       = db.session.query(Order.order_id, Order.order_sn, Order.order_amount, 

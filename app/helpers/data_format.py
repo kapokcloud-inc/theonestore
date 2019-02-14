@@ -7,9 +7,17 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
-
-from app.helpers import log_error
-from app.helpers import toamount
+from decimal import Decimal
+from app.helpers import (
+    log_error,
+    log_info
+)
+from app.helpers import (
+    toamount,
+    toint
+)
+from app.exception import TheonestoreException
+from sqlalchemy.util._collections import AbstractKeyedTuple
 
 def format_amount(sourcePrice=0, format_type=0):
     ''' 处理商品价格显示 
@@ -88,3 +96,23 @@ def format_avatar(soruceImg, avatartype = 1):
 
     # 阿里云或者七牛图片资源
     return soruceImg + imgtypes[avatartype]
+
+def format_array_data_to_dict(datas=None, key_name=''):
+    """ 转化元组数组为特定的字典数组(指定数据作为键名) """
+    try:
+        if not datas or not key_name:
+            raise TheonestoreException(u'缺少数据')
+        new_datas = {}
+        for day_data in datas:
+            if key_name not in day_data.keys():
+                raise TheonestoreException(u'键名不存在')
+            elif not isinstance(day_data, AbstractKeyedTuple):
+                raise TheonestoreException(u'数据类型错误')
+            else:
+                dict_day_data = dict(zip(day_data.keys(), day_data))
+                new_datas[dict_day_data[key_name]] = dict_day_data
+    except TheonestoreException as e:
+        log_error(e.msg)
+    finally:
+        return new_datas
+    

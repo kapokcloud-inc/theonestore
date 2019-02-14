@@ -34,7 +34,7 @@ from app.helpers.date_time import (
     before_after_timestamp
 )
 
-from app.helpers.data_treat import(
+from app.helpers.data_format import(
     format_amount,
     format_avatar
 )

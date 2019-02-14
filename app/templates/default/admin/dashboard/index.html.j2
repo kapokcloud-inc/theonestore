@@ -2,6 +2,8 @@
 {% import '/default/admin/libs/const.html.j2' as const %}
 
 {% block head %}
+<!-- toast CSS -->
+  <link href="/static/default/admin/plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
   <!-- chartist CSS -->
   <link href="/static/default/admin/plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
   <link href="/static/default/admin/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
@@ -163,24 +165,28 @@
     </div>
     <!-- 年销售图表与最近会员充值 -->
     <div class="row">
-      <div class="col-md-12 col-lg-8 col-sm-12 col-xs-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="white-box">
-          <h3 class="box-title">{{_('年销售图表')}}</h3>
-          <ul class="list-inline text-right">
-            <li>
-              <h5>
-                <i class="fa fa-circle m-r-5 text-info"></i>订单</h5>
+          <h3 class="box-title">{{_('销售统计')}}</h3>
+          <ul class="list-inline">
+            <li class="col-lg-10" style="padding-left:25px !important">
+              <label class="box-title" style="display:inline-block !important;margin-right:10px;">查询日期</label>
+              <input class="form-control input-daterange-datepicker" style="display:inline-block !important;max-width:200px !important;" type="text" name="startDateRang" value="" />
+              <button style="display:inline-block !important;margin:-3px 0 0px 10px;" id="search_form_submit" name="submit" value="search" type="submit" class="btn btn-info">
+                {{ _('查询') }} 
+              </button>
             </li>
-            <li>
-              <h5>
-                <i class="fa fa-circle m-r-5 text-inverse"></i>金额</h5>
+            <li class="text-right">
+              <h5><i class="fa fa-circle m-r-5 text-info"></i>订单</h5>
+            </li>
+            <li class="text-right"><h5><i class="fa fa-circle m-r-5 text-inverse"></i>金额</h5>
             </li>
           </ul>
           <div id="ct-visits" style="height: 405px;">
           </div>
         </div>
       </div>
-      <div class="col-md-12 col-lg-4 col-sm-12 col-xs-12">
+      <div class="col-md-12 col-lg-4 col-sm-12 col-xs-12 hide">
         <div class="panel">
           <div class="p-20">
             <div class="row">
@@ -316,4 +322,89 @@
 <!-- End Page Content -->
 {% endblock %}
 {% block footer %}
+<!-- chartist chart -->
+<script src="/static/default/admin/plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
+<script src="/static/default/admin/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  getChartlistData()
+});
+/**
+ * 获取图表数据
+ */
+function getChartlistData() {
+  $.get('/api/index/chartlist', function(res) {
+    const ret = res.ret
+    const msg = res.msg
+    if (ret != 0) {
+      alert(msg)
+      return
+    }
+    console.log('获取图表数据', res.data)
+    const chartlist_data = res.data.data || {}
+    const date_norms = res.data.date_norms || []
+
+    createChartList(chartlist_data, date_norms, 'amount')
+  })
+}
+
+/**
+ * 建表
+ * @param data 数据
+ * @param type order=订单数(默认) amount=金额
+ */
+function createChartList(chartlist_data, chartlist_norm, type) {
+  const chartlist_data1 = arguments[0] ? arguments[0] : {}
+  const chartlist_norm1 = arguments[1] ? arguments[1] : []
+  const type1 = arguments[2] ? arguments[2] : 'order'
+  
+  if (Object.keys(chartlist_data1).length <= 0 || chartlist_data1.length <= 0) {
+    console.log('缺少必要的图表数据');
+    return 
+  }
+  
+  let order_num_list = []
+  let pay_amount_list = []
+
+  chartlist_norm1.forEach(date => {
+    const day_data = chartlist_data1[date] || null
+    if (day_data != null) {
+      order_num_list.push(day_data.order_num)
+      pay_amount_list.push((day_data.pay_amount / 1000).toFixed(5))
+    } else {
+      order_num_list.push(0)
+      pay_amount_list.push(0)
+    }
+  })
+
+  new Chartist.Line('#ct-visits', {
+    labels: chartlist_norm1,
+    series: [pay_amount_list, order_num_list]
+    }, {
+      fullWidth: false, // 为true时，不绘制最后一条网格线，可能导致最后横坐标文本显示不全
+      chartPadding: {
+        right: 30
+      },
+      low: 1,
+      stretch: true,
+      showPoint: true,
+      plugins: [Chartist.plugins.tooltip()],
+      lineSmooth: false, // 线条是否平滑
+      axisX: { // 横轴属性设置
+        offset: 50, // 文本与表之间的间距
+        labelOffset: { // 文本偏移位置
+          x: -30,
+          y: 10
+        }
+      },
+      axisY: {
+        onlyInteger: true,
+        labelInterpolationFnc: value => {
+          return type1 === 'order' ? value : (value + 'k')
+        }
+      }
+    }
+  );
+ }
+</script>
 {% endblock %}
