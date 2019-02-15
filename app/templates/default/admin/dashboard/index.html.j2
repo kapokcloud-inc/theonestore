@@ -389,7 +389,7 @@ function getChartlistData() {
     // 处理数据
     let order_num_list = []
     let pay_amount_list = []
-    date_norms.forEach(date => {
+    date_norms.forEach(function (date) {
       const day_data = chartlist_data[date] || null
       if (day_data != null) {
         order_num_list.push(day_data.order_num)
