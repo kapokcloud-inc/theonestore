@@ -2,11 +2,13 @@
 {% import '/default/admin/libs/const.html.j2' as const %}
 
 {% block head %}
-<!-- toast CSS -->
+  <!-- toast CSS -->
   <link href="/static/default/admin/plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
   <!-- chartist CSS -->
   <link href="/static/default/admin/plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
   <link href="/static/default/admin/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
+  <!-- Daterange picker plugins css -->
+  <link href="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 {% endblock %}
 {% block body %}
 <!-- Page Content -->
@@ -171,15 +173,16 @@
           <ul class="list-inline">
             <li class="col-lg-10" style="padding-left:25px !important">
               <label class="box-title" style="display:inline-block !important;margin-right:10px;">查询日期</label>
-              <input class="form-control input-daterange-datepicker" style="display:inline-block !important;max-width:200px !important;" type="text" name="startDateRang" value="" />
-              <button style="display:inline-block !important;margin:-3px 0 0px 10px;" id="search_form_submit" name="submit" value="search" type="submit" class="btn btn-info">
+              <input class="form-control input-daterange-datepicker" style="display:inline-block !important;max-width:200px !important;" type="text" name="search_time_daterange" value="" />
+              <button style="display:inline-block !important;margin:-3px 0 0px 10px;"  type="submit" class="btn btn-info" id="search_type" value="order" onclick="getChartlistData()">
                 {{ _('查询') }} 
               </button>
             </li>
-            <li class="text-right">
+            <li class="text-right" onclick="switchChartlistData('order')">
               <h5><i class="fa fa-circle m-r-5 text-info"></i>订单</h5>
             </li>
-            <li class="text-right"><h5><i class="fa fa-circle m-r-5 text-inverse"></i>金额</h5>
+            <li class="text-right" onclick="switchChartlistData('amount')">
+              <h5><i class="fa fa-circle m-r-5 text-inverse"></i>金额</h5>
             </li>
           </ul>
           <div id="ct-visits" style="height: 405px;">
@@ -320,66 +323,100 @@
   </div>
 </div>
 <!-- End Page Content -->
+<input id="order_num_list" name="order_num_list" type="hidden" value=""/>
+<input id="pay_amount_list" name="pay_amount_list" type="hidden" value=""/>
+<input id="date_norm_list" name="date_norm_list" type="hidden" value=""/>
+
 {% endblock %}
 {% block footer %}
 <!-- chartist chart -->
 <script src="/static/default/admin/plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
 <script src="/static/default/admin/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
+<!-- Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/moment/moment.js"></script>
+<!-- Date range Plugin JavaScript -->
+<script src="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+  // Daterange picker
+  $('.input-daterange-datepicker').daterangepicker({
+    maxDate: moment(),
+    startDate: moment().subtract(6, 'days'),
+    endDate: moment(),
+    buttonClasses: ['btn', 'btn-sm'],
+    format: 'YYYY-MM-DD',
+    applyClass: 'btn-success',
+    cancelClass: 'btn-info',
+    clearClass: 'btn-inverse',
+    dateLimit: {
+      days: 30
+    },
+    locale : { 
+      applyLabel : '确定', 
+      cancelLabel : '取消',
+      clearLabel: '清空', 
+      fromLabel : '起始时间', 
+      toLabel : '结束时间', 
+      customRangeLabel : '自定义', 
+      daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ], 
+      monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ]
+    }
+  });
+  
   getChartlistData()
 });
+
 /**
  * 获取图表数据
  */
 function getChartlistData() {
-  $.get('/api/index/chartlist', function(res) {
-    const ret = res.ret
-    const msg = res.msg
-    if (ret != 0) {
-      alert(msg)
+  // 查询日期,默认7天内
+  let date_range = $("input[name='search_time_daterange']").val()
+  if (date_range === '') {
+    date_range = moment().subtract(6, 'days').format('YYYY-MM-DD') + ' - ' + moment().format('YYYY-MM-DD')
+  }
+  $.get('/api/index/chartlist', {'search_time_daterange': date_range}, function(res) {
+    if (res.ret != 0) {
+      alert(res.msg)
       return
     }
-    console.log('获取图表数据', res.data)
     const chartlist_data = res.data.data || {}
     const date_norms = res.data.date_norms || []
-
-    createChartList(chartlist_data, date_norms, 'amount')
+    
+    if (date_norms.length <= 0) {
+      return
+    }
+    // 处理数据
+    let order_num_list = []
+    let pay_amount_list = []
+    date_norms.forEach(date => {
+      const day_data = chartlist_data[date] || null
+      if (day_data != null) {
+        order_num_list.push(day_data.order_num)
+        pay_amount_list.push(parseFloat((day_data.pay_amount / 1000).toFixed(5)))
+      } else {
+        order_num_list.push(0)
+        pay_amount_list.push(0)
+      }
+    })
+    // 页面保存数据
+    $("#order_num_list").val(JSON.stringify(order_num_list))
+    $("#pay_amount_list").val(JSON.stringify(pay_amount_list))
+    $("#date_norm_list").val(JSON.stringify(date_norms))
+    switchChartlistData($("#search_type").val())
   })
 }
 
 /**
- * 建表
+ * 创建线性图表
  * @param data 数据
  * @param type order=订单数(默认) amount=金额
  */
-function createChartList(chartlist_data, chartlist_norm, type) {
-  const chartlist_data1 = arguments[0] ? arguments[0] : {}
-  const chartlist_norm1 = arguments[1] ? arguments[1] : []
-  const type1 = arguments[2] ? arguments[2] : 'order'
-  
-  if (Object.keys(chartlist_data1).length <= 0 || chartlist_data1.length <= 0) {
-    console.log('缺少必要的图表数据');
-    return 
-  }
-  
-  let order_num_list = []
-  let pay_amount_list = []
-
-  chartlist_norm1.forEach(date => {
-    const day_data = chartlist_data1[date] || null
-    if (day_data != null) {
-      order_num_list.push(day_data.order_num)
-      pay_amount_list.push((day_data.pay_amount / 1000).toFixed(5))
-    } else {
-      order_num_list.push(0)
-      pay_amount_list.push(0)
-    }
-  })
+function createChartlist(chartlist_data, chartlist_norm, type) {
 
   new Chartist.Line('#ct-visits', {
-    labels: chartlist_norm1,
-    series: [pay_amount_list, order_num_list]
+    labels: chartlist_norm,
+    series: chartlist_data
     }, {
       fullWidth: false, // 为true时，不绘制最后一条网格线，可能导致最后横坐标文本显示不全
       chartPadding: {
@@ -400,11 +437,33 @@ function createChartList(chartlist_data, chartlist_norm, type) {
       axisY: {
         onlyInteger: true,
         labelInterpolationFnc: value => {
-          return type1 === 'order' ? value : (value + 'k')
+          return type === 'order' ? value : (value + 'k')
         }
       }
     }
   );
  }
+
+/**
+ * 切换表数据
+ * @param data 数据
+ * @param type order=订单数(默认) amount=金额
+ */
+function switchChartlistData(type) {
+  const norms = $("#date_norm_list").val()
+  let chartist_data = []
+  switch (type) {
+    case 'order':
+      chartist_data.push([])
+      chartist_data.push(JSON.parse($("#order_num_list").val()))
+      break
+    case 'amount':
+      chartist_data.push(JSON.parse($("#pay_amount_list").val()))
+      chartist_data.push([])
+      break
+  }
+  $("#search_type").val(type)
+  createChartlist(chartist_data, JSON.parse(norms), type)
+}
 </script>
 {% endblock %}

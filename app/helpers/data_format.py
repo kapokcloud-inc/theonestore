@@ -99,10 +99,10 @@ def format_avatar(soruceImg, avatartype = 1):
 
 def format_array_data_to_dict(datas=None, key_name=''):
     """ 转化元组数组为特定的字典数组(指定数据作为键名) """
+    new_datas = {}
     try:
         if not datas or not key_name:
             raise TheonestoreException(u'缺少数据')
-        new_datas = {}
         for day_data in datas:
             if key_name not in day_data.keys():
                 raise TheonestoreException(u'键名不存在')
