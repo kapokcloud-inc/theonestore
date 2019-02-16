@@ -364,3 +364,12 @@ def request_args_to_query_string(params, p, ps):
     params['ps'] = ps
 
     return urlencode(params)
+
+
+def is_mobile_device(agent):
+    """是否移动设备"""
+    mobile_device_list = ('Android', 'iPhone', 'iPod', 'iPad')
+    for device in mobile_device_list:
+        if agent.find(device) != -1:
+            return True
+    return False

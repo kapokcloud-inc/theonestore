@@ -25,7 +25,8 @@ from app.services.response import ResponseJson
 from app.helpers import (
     get_uuid, 
     render_template,
-    log_info
+    log_info,
+    is_mobile_device
 )
 
 
@@ -42,6 +43,15 @@ def configure_before(app):
             admin_uid = session.get('admin_uid', 0)
             if admin_uid <= 0:
                 return abort(403)
+
+        # 移动设备 Android|iPhone|iPod|iPad
+        is_mobile = is_mobile_device(request.headers.get('User-Agent', ''))
+        if is_mobile and endpoint.find('pc.') == 0:
+            return redirect(u'/mobile' + request.full_path)
+        elif not is_mobile and endpoint.find('mobile.') == 0:
+            full_path = request.full_path
+            full_path = full_path.replace('/mobile', '')
+            return redirect(full_path)
 
         # pc
         if endpoint.find('pc.') == 0:
