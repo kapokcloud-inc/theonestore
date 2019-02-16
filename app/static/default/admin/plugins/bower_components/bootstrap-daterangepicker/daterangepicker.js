@@ -86,14 +86,16 @@
         this.locale = {
             format: 'YYYY-MM-DD',
             separator: ' - ',
-            applyLabel: 'Apply',
-            cancelLabel: 'Cancel',
-            clearLabel: 'Clear',
             weekLabel: 'W',
             customRangeLabel: 'Custom Range',
-            daysOfWeek: moment.weekdaysMin(),
-            monthNames: moment.monthsShort(),
-            firstDay: moment.localeData().firstDayOfWeek()
+            firstDay: moment.localeData().firstDayOfWeek(),
+            applyLabel: '确定', 
+            cancelLabel: '取消',
+            clearLabel: '清空', 
+            fromLabel: '起始时间', 
+            toLabel: '结束时间', 
+            daysOfWeek: [ '日', '一', '二', '三', '四', '五', '六' ], 
+            monthNames: [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ]
         };
 
         this.callback = function() { };
@@ -1142,8 +1144,11 @@
               // and also close when focus changes to outside the picker (eg. tabbing between controls)
               .on('focusin.daterangepicker', this._outsideClickProxy);
 
-            this.oldStartDate = this.startDate.clone();
-            this.oldEndDate = this.endDate.clone();
+            // this.oldStartDate = this.startDate.clone();
+            // this.oldEndDate = this.endDate.clone();
+            this.oldStartDate = this.startDate;
+            this.oldEndDate = this.endDate;
+
 
             this.updateView();
             this.container.show();
@@ -1183,7 +1188,7 @@
         },
 
         // 注释代码 by eason
-        /*outsideClick: function(e) {
+        outsideClick: function(e) {
             var target = $(e.target);
             // if the page is clicked anywhere except within the daterangerpicker/button
             // itself then call this.hide()
@@ -1194,8 +1199,16 @@
                 target.closest(this.container).length ||
                 target.closest('.calendar-table').length
                 ) return;
-            this.hide();
-        },*/
+            // this.hide();
+            if (this.isShowing){
+                $(document).off('.daterangepicker');
+                $(window).off('.daterangepicker');
+                this.container.hide();
+                this.element.trigger('hide.daterangepicker', this);
+                this.isShowing = false;
+            }
+            this.element.trigger('outsideClick.daterangepicker', this);
+        },
 
         showCalendars: function() {
             this.container.addClass('show-calendar');
@@ -1387,9 +1400,18 @@
         },
 
         clickCancel: function(e) {
+            let is_not_value = true
+            console.log(this.element.val())
+            if (this.element.val() !== '') {
+                is_not_value = false
+            }
             this.startDate = this.oldStartDate;
             this.endDate = this.oldEndDate;
             this.hide();
+            console.log(is_not_value)
+            if (is_not_value) {
+                this.element.val('');
+            }
             this.element.trigger('cancel.daterangepicker', this);
         },
 
