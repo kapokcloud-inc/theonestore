@@ -112,17 +112,8 @@ def configure_before(app):
         elif (path.find('/admin/') == 0 or path.find('/static/') == 0):
             return render_template('admin/404.html.j2')
 
-        # 微信公众号校验文件
-        elif (path.find('/MP_verify_') == 0 and path[-4:] == '.txt'):
-            filename = path[1:]
-            uploads_path = current_app.config['UPLOADED_FILES_DEST']
-            mp_verify_file = os.path.join(uploads_path, filename)
-            if os.path.exists(mp_verify_file):
-                return send_from_directory(uploads_path, filename)
-            return _(u'文件找不到')
-
         # 微信退款证书
-        elif (path.find('/apiclient_cert.pem') or path.find('/apiclient_key.pem')):
+        elif (path.find('/apiclient_cert.pem') != -1 or path.find('/apiclient_key.pem') != -1):
             admin_uid = session.get('admin_uid', None)
             if not admin_uid:
                 return render_template('admin/404.html.j2')
@@ -132,6 +123,15 @@ def configure_before(app):
             if os.path.exists(pemfile):
                 return send_from_directory(dirname, filename)
             return render_template('admin/404.html.j2')
+        
+        # 微信公众号校验文件 || 小程序校验文件 || 其它txt文件
+        elif (path[-4:] == '.txt'):
+            filename = request.path[1:]
+            uploads_path = current_app.config['UPLOADED_FILES_DEST']
+            mp_verify_file = os.path.join(uploads_path, filename)
+            if os.path.exists(mp_verify_file):
+                return send_from_directory(uploads_path, filename)
+            return _(u'文件找不到')
 
         # pc页面
         return render_template('pc/index/404.html.j2')
