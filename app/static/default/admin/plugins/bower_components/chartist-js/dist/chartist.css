@@ -34,7 +34,7 @@
   -ms-flex-pack: flex-start;
   justify-content: flex-start;
   text-align: left;
-  text-anchor: start; }
+  text-anchor: start;}
 
 .ct-label.ct-vertical.ct-start {
   -webkit-box-align: flex-end;
