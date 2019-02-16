@@ -204,6 +204,12 @@ class StorageAliossForm(Form):
                     description=_(u'<p>不需要填写https或者http开头，只需要填写域名</p><p>例如：static.theonestore.cn</p>'),
                     validators=[Required(message=_(u'请填写CDN加速域名'))])
 
+    imagecss = StringField(label=_('图片处理'),
+                    default='imagecss',
+                    description=_(u'<a target="_blank" style="display:block" href="https://static.theonestore.cn/theonestore/admin/oss/aliyun/theonestore-image-aliyun.txt">阿里云图片样式</a><span>下载阿里云图片样式，导入到阿里云oss图片处理，并且确保“访问设置-自定义分割符”为“-”</span>'), 
+                    render_kw={'readonly':'', 'style':'display:none;'},
+                    validators=[Required(message=_(u'图片处理'))])
+
     is_use = BooleanField(_(u'是否启用'),
                     description=_(u'注意：使用阿里云存储，会自动禁用七牛云'),
                     false_values=(0, '0', '', 'qiniu'), 
