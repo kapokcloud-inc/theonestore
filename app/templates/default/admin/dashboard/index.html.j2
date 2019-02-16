@@ -6,7 +6,7 @@
   <link href="/static/default/admin/plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
   <!-- chartist CSS -->
   <link href="/static/default/admin/plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
-  <link href="/static/default/admin/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
+  <link href="/static/default/admin/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
   <!-- Daterange picker plugins css -->
   <link href="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 {% endblock %}
@@ -169,10 +169,10 @@
     <div class="row">
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="white-box">
-          <h3 class="box-title">{{_('销售统计')}}</h3>
+          <h3 class="box-title">{{_('日销售趋势')}}</h3>
           <ul class="list-inline">
             <li class="col-lg-10" style="padding-left:25px !important">
-              <label class="box-title" style="display:inline-block !important;margin-right:10px;">查询日期</label>
+              <label class="box-title" style="display:inline-block !important;margin-right:10px;">{{ _('起止日期') }}</label>
               <input class="form-control input-daterange-datepicker" style="display:inline-block !important;max-width:200px !important;" type="text" name="search_time_daterange" value="" />
               <button style="display:inline-block !important;margin:-3px 0 0px 10px;"  type="submit" class="btn btn-info" id="search_type" value="order" onclick="getChartlistData()">
                 {{ _('查询') }} 
@@ -182,7 +182,7 @@
               <h5><i class="fa fa-circle m-r-5 text-info"></i>订单</h5>
             </li>
             <li class="text-right" onclick="switchChartlistData('amount')">
-              <h5><i class="fa fa-circle m-r-5 text-inverse"></i>金额</h5>
+              <h5><i class="fa fa-circle m-r-5 text-inverse"></i>金额(元)</h5>
             </li>
           </ul>
           <div id="ct-visits" style="height: 405px;">
@@ -350,16 +350,6 @@ $(document).ready(function(){
     clearClass: 'btn-inverse',
     dateLimit: {
       days: 30
-    },
-    locale : { 
-      applyLabel : '确定', 
-      cancelLabel : '取消',
-      clearLabel: '清空', 
-      fromLabel : '起始时间', 
-      toLabel : '结束时间', 
-      customRangeLabel : '自定义', 
-      daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ], 
-      monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ]
     }
   });
   
@@ -393,7 +383,7 @@ function getChartlistData() {
       const day_data = chartlist_data[date] || null
       if (day_data != null) {
         order_num_list.push(day_data.order_num)
-        pay_amount_list.push(parseFloat((day_data.pay_amount / 1000).toFixed(5)))
+        pay_amount_list.push(parseFloat((day_data.pay_amount / 1).toFixed(5)))
       } else {
         order_num_list.push(0)
         pay_amount_list.push(0)
@@ -436,7 +426,7 @@ function createChartlist(chartlist_data, chartlist_norm, type) {
       axisY: {
         onlyInteger: true,
         labelInterpolationFnc: function (value) {
-          return type === 'order' ? value : (value + 'k')
+          return type === 'order' ? value : (value + '')
         }
       }
     }
