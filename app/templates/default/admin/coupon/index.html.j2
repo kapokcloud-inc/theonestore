@@ -20,7 +20,7 @@
         {'label':_('全部'), 'value':0, 'endpoint':'admin.coupon.index'},
         {'label':_('使用中'), 'value':1, 'endpoint':'admin.coupon.index'},
         {'label':_('已过期'), 'value':2, 'endpoint':'admin.coupon.index'},
-      ], 'tab_status') }}
+      ], 'tab_status', btns=[{'label':_('添加优惠券'), 'href':url_for('admin.coupon.create')}]) }}
     <div class="row">
       <div class="col-md-12">
         <div class="white-box">
