@@ -13,17 +13,9 @@ from flask import (
     Blueprint,
     json
 )
-from flask_babel import gettext as _
-
-from app.database import db
-
-from app.helpers import (
-    log_info,
-)
 
 from app.services.response import ResponseJson
-
-from app.services.api.item import ItemStaticMethodsService
+from app.services.api.item import CategoryService
 
 
 category = Blueprint('api.category', __name__)
@@ -35,7 +27,5 @@ resjson.module_code = 18
 def root():
     """ 分类列表 """
     resjson.action_code = 10
-
-    categories = ItemStaticMethodsService.categories()
-    
+    categories = CategoryService().categories()
     return resjson.print_json(0, u'ok', {'category':categories})

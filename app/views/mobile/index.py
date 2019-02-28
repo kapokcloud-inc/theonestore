@@ -15,30 +15,30 @@ from flask import (
     redirect,
     url_for
 )
-from flask_babel import gettext as _
-
-from app.database import db
 
 from app.helpers import render_template
-
-from app.services.api.item import ItemStaticMethodsService
+from app.services.api.item import ItemListService
 from app.services.api.adv import AdvStaticMethodsService
-
-from app.models.adv import Adv
-
 
 index = Blueprint('mobile.index', __name__)
 
 @index.route('/')
 def root():
     """手机站 - 首页"""
+    advs = AdvStaticMethodsService.advs({'ac_id':1}, platform_type=1)
 
-    advs           = AdvStaticMethodsService.advs({'ac_id':1}, platform_type=1)
-    data_hot       = ItemStaticMethodsService.items({'is_hot':1, 'p':1, 'ps':12})
-    data_recommend = ItemStaticMethodsService.items({'is_recommend':1, 'p':1, 'ps':12})
+    # 热门商品列表
+    hot_service = ItemListService(1, 12, is_hot=1)
+    hot_items = hot_service.items()
+    
+    # 推荐商品列表
+    recommend_service = ItemListService(1, 12, is_recommend=1)
+    recommend_items = recommend_service.items()
 
-    data = {'advs':advs, 'hot_items':data_hot['items'], 'recommend_items':data_recommend['items']}
-    return render_template('mobile/index/index.html.j2', **data)
+    return render_template('mobile/index/index.html.j2', 
+                advs = advs,
+                hot_items = hot_items,
+                recommend_items = recommend_items)
 
 
 @index.route('/404')

@@ -15,22 +15,13 @@ from flask import (
     redirect,
     url_for
 )
-from flask_babel import gettext as _
-
-from app.database import db
 
 from app.helpers import (
     render_template,
     log_info
 )
 
-from app.services.api.item import ItemStaticMethodsService
-
-from app.models.item import (
-    Goods,
-    GoodsCategories,
-    GoodsGalleries
-)
+from app.services.api.item import CategoryService
 
 
 category = Blueprint('mobile.category', __name__)
@@ -38,7 +29,5 @@ category = Blueprint('mobile.category', __name__)
 @category.route('/')
 def root():
     """分类页"""
-
-    categories = ItemStaticMethodsService.categories()
-
+    categories = CategoryService().categories()
     return render_template('mobile/category/index.html.j2', categories=categories)

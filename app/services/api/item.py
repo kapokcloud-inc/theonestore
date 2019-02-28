@@ -15,10 +15,9 @@ from app.database import db
 from app.helpers import (
     log_info,
     toint,
+    get_count,
     model_update
 )
-
-from app.services.api.comment import CommentStaticMethodsService
 
 from app.models.comment import Comment
 from app.models.like import Like
@@ -27,102 +26,154 @@ from app.models.item import (
     GoodsCategories,
     GoodsGalleries
 )
+from app.services.api.comment import CommentService
 
 
-class ItemStaticMethodsService(object):
-    """商品静态方法Service"""
+class CategoryService(object):
+    """分类service"""
 
-    @staticmethod
-    def items(params, is_pagination=False):
-        """获取商品列表"""
+    def categories(self, is_recommend=False):
+        """获取所有分类列表"""
+        q = db.session.query(
+                GoodsCategories.cat_id,
+                GoodsCategories.cat_name,
+                GoodsCategories.cat_img
+            ).filter(GoodsCategories.is_show == 1)
+        if is_recommend is True:
+            q = q.filter(GoodsCategories.is_recommend == 1)
 
-        p            = toint(params.get('p', '1'))
-        ps           = toint(params.get('ps', '10'))
-        cat_id       = toint(params.get('cat_id', '0'))
-        is_hot       = toint(params.get('is_hot', '-1'))
-        is_recommend = toint(params.get('is_recommend', '-1'))
-        search_key   = params.get('search_key', '')
+        return q.order_by(GoodsCategories.sorting.desc()).\
+                    order_by(GoodsCategories.cat_id.desc()).all()
 
-        q = db.session.query(Goods.goods_id, Goods.goods_name, Goods.goods_img, Goods.goods_desc,
-                                Goods.goods_price, Goods.market_price).\
-            filter(Goods.is_delete == 0).\
-            filter(Goods.is_sale == 1).\
-            filter(Goods.stock_quantity > 0)
+    
+    def get_category(self, cat_id):
+        """获取分类信息"""
+        return GoodsCategories.query.get_or_404(cat_id)
 
-        category = None
-        if cat_id > 0:
-            q        = q.filter(Goods.cat_id == cat_id)
-            category = GoodsCategories.query.get(cat_id)
+
+class ItemService(object):
+    """商品service"""
+
+    def __init__(self, goods_id, uid=0):
+        self.goods_id = goods_id
+        self.uid = uid
+        self.cs = CommentService(self.goods_id)
+    
+    @property
+    def item(self):
+        """商品信息"""
+        return Goods.query.get_or_404(self.goods_id)
+
+    @property
+    def galleries(self):
+        """相册"""
+        return db.session.query(GoodsGalleries.img).\
+                    filter(GoodsGalleries.goods_id == self.goods_id).all()
+
+
+    @property
+    def is_fav(self):
+        """收藏"""
+        if self.uid == 0:
+            return 0
         
-        if is_hot in [0,1]:
-            q = q.filter(Goods.is_hot == is_hot)
+        fav = db.session.query(Like.like_id).\
+                    filter(Like.like_type == 2).\
+                    filter(Like.ttype == 1).\
+                    filter(Like.tid == self.goods_id).\
+                    filter(Like.uid == self.uid).first()
+        return 1 if fav is not None else 0
 
-        if is_recommend in [0,1]:
-            q = q.filter(Goods.is_recommend == is_recommend)
 
-        if search_key != "":
-            q = q.filter(Goods.goods_name.like('%%'+search_key+'%%'))
+    def comments(self, page, page_size):
+        """评论列表"""
+        return self.cs.comments(page, page_size)
 
-        items = q.order_by(Goods.goods_id.desc()).offset((p-1)*ps).limit(ps).all()
 
-        pagination = None
-        if is_pagination:
-            pagination = Pagination(None, p, ps, q.count(), None)
+    def comment_pagination(self, page, page_size):
+        """评论分页对象"""
+        return self.cs.get_pagination(page, page_size)
 
-        return {'items':items, 'category':category, 'pagination':pagination}
 
-    @staticmethod
-    def categories():
-        """获取商品分类列表"""
+    def get_rating_count(self, rating):
+        """获取评价总数
+        :param int rating 1:差评 2:中评 3:好评
+        """
+        if rating in (1,2,3):
+            q = self.cs.query.filter(Comment.rating == rating)
+            return get_count(q)
+        return 0
 
-        categories = db.session.query(GoodsCategories.cat_id,
-                                        GoodsCategories.cat_name,
-                                        GoodsCategories.cat_img).\
-                            filter(GoodsCategories.is_show == 1).\
-                            order_by(GoodsCategories.sorting.desc()).\
-                            order_by(GoodsCategories.cat_id.desc()).all()
-       
-        return categories
 
-    @staticmethod
-    def detail_page(goods_id, uid):
-        """商品详情页"""
+    def get_image_rating_count(self):
+        """获取有图评价总数"""
+        q = self.cs.query.filter(Comment.img_data != '[]')
+        return get_count(q)
 
-        item      = Goods.query.get_or_404(goods_id)
-        galleries = db.session.query(GoodsGalleries.img).\
-                        filter(GoodsGalleries.goods_id == goods_id).all()
 
-        is_fav = None
-        if uid:
-            is_fav = db.session.query(Like.like_id).\
-                        filter(Like.like_type == 2).\
-                        filter(Like.ttype == 1).\
-                        filter(Like.tid == goods_id).\
-                        filter(Like.uid == uid).first()
-        is_fav = 1 if is_fav else 0
+class ItemListService(object):
+    """商品列表service"""
 
-        comments = []
-        pagination = None
-        if item.comment_count > 0:
-            params     = {'p':1, 'ps':12, 'ttype':1, 'tid':goods_id}
-            data       = CommentStaticMethodsService.comments(params, is_pagination=True)
-            comments   = data['comments']
-            pagination = data['pagination']
+    def __init__(self, page, page_size=10, cat_id=0, is_hot=0, is_recommend=0, search_key=''):
+        # 页码
+        self.page = page
 
-        model_update(item, {'view_count':item.view_count+1}, commit=True)
+        # 每页记录数
+        self.page_size = page_size
 
-        q = db.session.query(Comment.comment_id).\
-                filter(Comment.ttype == 1).\
-                filter(Comment.tid == goods_id).\
-                filter(Comment.is_show == 1)
+        # 分类id
+        self.cat_id = cat_id
 
-        rating_1_count = q.filter(Comment.rating == 1).count()
-        rating_2_count = q.filter(Comment.rating == 2).count()
-        rating_3_count = q.filter(Comment.rating == 3).count()
-        img_count      = q.filter(Comment.img_data != '[]').count()
+        # 是否热门
+        self.is_hot = is_hot
 
-        data = {'item':item, 'galleries':galleries, 'is_fav':is_fav,
-                'comments':comments, 'rating_1_count':rating_1_count,
-                'rating_2_count':rating_2_count, 'rating_3_count':rating_3_count,
-                'img_count':img_count, 'pagination':pagination}
-        return data
+        # 是否推荐
+        self.is_recommend = is_recommend
+
+        # 搜索关键词
+        self.search_key = search_key
+
+        # 查询sqlalchemy对象
+        self.query = None
+
+    
+    def _query(self):
+        """获取query对象"""
+        if self.query is not None:
+            return self.query
+
+        q = db.session.query(
+                    Goods.goods_id, 
+                    Goods.goods_name, 
+                    Goods.goods_img, 
+                    Goods.goods_desc,
+                    Goods.goods_price, 
+                    Goods.market_price).\
+                filter(Goods.is_delete == 0).\
+                filter(Goods.is_sale == 1).\
+                filter(Goods.stock_quantity > 0)
+        if self.cat_id > 0:
+            q = q.filter(Goods.cat_id == self.cat_id)
+        if self.is_hot == 1:
+            q = q.filter(Goods.is_hot == self.is_hot)
+        if self.is_recommend == 1:
+            q = q.filter(Goods.is_recommend == self.is_recommend)
+        if self.search_key:
+            q = q.filter(Goods.goods_name.like(u'%%'+self.search_key+u'%%'))
+
+        self.query = q
+        return self.query
+
+    
+    def items(self):
+        """获取商品列表"""
+        q = self._query()
+        return q.order_by(Goods.goods_id.desc()).\
+                    offset((self.page-1)*self.page_size).limit(self.page_size).all()
+
+
+    @property
+    def pagination(self):
+        """分页对象"""
+        q = self._query()
+        return Pagination(None, self.page, self.page_size, get_count(q), None)

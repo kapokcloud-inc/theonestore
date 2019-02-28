@@ -15,30 +15,21 @@ from flask import (
     redirect,
     url_for
 )
-from flask_babel import gettext as _
-
-from app.database import db
 
 from app.helpers import (
     render_template,
     log_info
 )
 
-from app.services.api.item import ItemStaticMethodsService
-
-from app.models.item import (
-    Goods,
-    GoodsCategories,
-    GoodsGalleries
-)
+from app.services.api.item import CategoryService
 
 
 category = Blueprint('pc.category', __name__)
 
 @category.route('/')
-def root():
+@category.route('/<int:cat_id>')
+@category.route('/<int:cat_id>/')
+def root(cat_id = 0):
     """分类页"""
-
-    categories = ItemStaticMethodsService.categories()
-
+    categories = CategoryService().categories()
     return render_template('pc/category/index.html.j2', categories=categories)
