@@ -51,11 +51,13 @@ def index():
     cat_id = toint(args.get('cat_id', '0'))
     is_hot = toint(args.get('is_hot', '0'))
     is_recommend = toint(args.get('is_recommend', '0'))
+    search_key = args.get('search_key').strip()
 
     service = ItemListService(p, ps, 
                 cat_id = cat_id, 
                 is_hot = is_hot, 
-                is_recommend = is_recommend)
+                is_recommend = is_recommend,
+                search_key = search_key)
     items = service.items()
 
     cs = CategoryService()

@@ -48,7 +48,7 @@ class CategoryService(object):
     
     def get_category(self, cat_id):
         """获取分类信息"""
-        return GoodsCategories.query.get_or_404(cat_id)
+        return GoodsCategories.query.get(cat_id)
 
 
 class ItemService(object):
