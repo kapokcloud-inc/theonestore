@@ -11,7 +11,8 @@
 from flask import (
     request,
     Blueprint,
-    url_for
+    url_for,
+    abort
 )
 
 from app.helpers import (
@@ -40,6 +41,9 @@ def root(cat_id=0):
     ps = 10
     p = toint(request.args.get('p', '1'))
     cat = CategoryService().get_category(cat_id)
+    if cat is None:
+        return abort(404)
+
     service = ItemListService(p, ps, cat_id)
     return render_template('mobile/item/index.html.j2', 
                 items = service.items(),

@@ -11,7 +11,8 @@
 from flask import (
     request,
     Blueprint,
-    url_for
+    url_for,
+    abort
 )
 
 from app.helpers import (
@@ -42,6 +43,8 @@ def root(cat_id = 0):
 
     cat_service = CategoryService()
     cat = cat_service.get_category(cat_id)
+    if cat is None:
+        return abort(404)
 
     service = ItemListService(p, 20, cat_id)
     items = service.items()
