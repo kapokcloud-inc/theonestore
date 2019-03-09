@@ -35,20 +35,20 @@ from app.helpers.user import (
 
 from app.forms.api.order import OrderAddressForm
 
+from app.exception import TheonestoreException
 from app.services.response import ResponseJson
 from app.services.track import Shipping100TrackService
 from app.services.message import MessageCreateService
 from app.services.api.pay_weixin import NativeService
 from app.services.api.order import (
     OrderStaticMethodsService,
-    OrderCreateService,
+    OrderService,
     OrderUpdateService,
     OrderCancelService,
     OrderDeliverService,
     RechargeOrderCreateService,
     PayService
 )
-
 from app.forms.api.comment import CommentOrderGoodsForm
 
 from app.models.item import Goods
@@ -100,6 +100,7 @@ def detail():
 
     return resjson.print_json(0, u'ok', data)
 
+
 @order.route('/create', methods=['POST'])
 def create():
     """创建订单"""
@@ -109,24 +110,29 @@ def create():
         return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
 
-    form        = request.form
-    carts_id    = form.get('carts_id', '[]').strip()
-    ua_id       = toint(form.get('ua_id', '0'))
+    form = request.form
+    carts_id = form.get('carts_id', '[]').strip()
+    ua_id = toint(form.get('ua_id', '0'))
     shipping_id = toint(form.get('shipping_id', '0'))
-    coupon_id   = toint(form.get('coupon_id', '0'))
+    coupon_id = toint(form.get('coupon_id', '0'))
 
     try:
         carts_id = json.loads(carts_id)
     except Exception as e:
         return resjson.print_json(resjson.PARAM_ERROR)
 
-    ocs = OrderCreateService(uid, carts_id, ua_id, shipping_id, coupon_id)
-    if not ocs.check():
-        return resjson.print_json(11, ocs.msg)
-
-    ocs.create()
-
-    return resjson.print_json(0, u'ok', {'order_id':ocs.order.order_id})
+    try:
+        order_service = OrderService(
+            uid,
+            1,
+            user_address_id=ua_id,
+            cart_id_list=carts_id,
+            coupon_id=coupon_id,
+            shipping_id=shipping_id)
+        orderinfo = order_service.create()
+    except TheonestoreException as e:
+        resjson.print_json(30, e.msg)
+    return resjson.print_json(0, u'ok', {'order_id': orderinfo.order_id})
 
 
 @order.route('/update', methods=['POST'])

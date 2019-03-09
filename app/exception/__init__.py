@@ -60,3 +60,8 @@ class CouponException(TheonestoreException):
 class GoodsException(TheonestoreException):
     def __init__(self, msg=_(u'商品不存在')):
         TheonestoreException.__init__(self, msg)
+
+
+class ShippingException(TheonestoreException):
+    def __init__(self, msg=_(u'快递配置不存在')):
+        TheonestoreException.__init__(self, msg)
