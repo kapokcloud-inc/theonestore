@@ -178,8 +178,6 @@ class OrderService(object):
             cart_goods_list = db.session.query(Cart, Goods).\
                 filter(Goods.goods_id == Cart.goods_id).\
                 filter(Cart.cart_id.in_(self.cart_id_list)).\
-                filter(Cart.is_checked == 1).\
-                filter(Cart.checkout_type == self.checkout_type).\
                 filter(Goods.is_delete == 0).\
                 order_by(Cart.update_time.desc()).all()
         return cart_goods_list
@@ -393,13 +391,15 @@ class OrderService(object):
         self._message_push()
 
         # 更新session中的cart_total
-        cart_total = 0
-        cart = db.session.query(func.sum(Cart.quantity).label('cart_total')).\
-            filter(Cart.uid == self.uid).\
-            filter(Cart.checkout_type == self.checkout_type).first()
-        if cart and cart.cart_total > 0:
-            cart_total = cart.cart_total
-        session['cart_total'] = cart_total
+        if self.checkout_type == 1:
+            cart_total = 0
+            cart = db.session.query(func.sum(
+                    Cart.quantity).label('cart_total')).\
+                filter(Cart.uid == self.uid).\
+                filter(Cart.checkout_type == self.checkout_type).first()
+            if cart and cart.cart_total and cart.cart_total > 0:
+                cart_total = cart.cart_total
+            session['cart_total'] = cart_total
 
 
 class OrderUpdateService(object):
