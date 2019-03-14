@@ -24,7 +24,7 @@ $(document).ready(function(){
       var cartInfo = carts[index];
       var cart = cartInfo['cart'];
       var item = cartInfo['item'];
-      var list_html = '<a class="one-cell" href="/pc/item/' + item.goods_id + '">' +
+      var list_html = '<a class="one-cell" href="/item/' + item.goods_id + '">' +
         '<div class="one-cell_hd avatar">' +
         '<img src="' + item.goods_img + '-square.small" alt="">' +
         '</div>' +

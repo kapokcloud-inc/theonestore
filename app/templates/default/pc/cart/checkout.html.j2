@@ -478,7 +478,7 @@ function submit() {
   $.post("{{ url_for('api.order.create') }}", params, function(json) {
     if (json.ret == 0) {
       var order_id = json.data.order_id;
-      window.location.href = "/pc/cart/pay/" + order_id;
+      window.location.href = "/cart/pay/" + order_id;
     } else {
       // 优化alert ??
       alert(json.msg);
