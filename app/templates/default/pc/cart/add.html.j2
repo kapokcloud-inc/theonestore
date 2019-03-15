@@ -1,0 +1,418 @@
+{% extends '/default/pc/layout/base.html.j2' %}
+
+{% block head %}
+<title>{{_('成功加入购物车 - 一店')}}</title>
+<link rel="stylesheet" href="/static/default/pc/css/cart.css">
+<link rel="stylesheet" href="/static/default/pc/css/index.css">
+{% endblock %}
+
+{% block body %}
+<div class="user-main">
+  <div class="head-inner">
+    <div class="buy-succ-box clearfix">
+      <div class="box_left">
+        <div class="box_left_img">
+          <img src="https://c1.mifile.cn/f/i/17/static/success.png" alt="">
+        </div>
+        <div class="box_left_info">
+          <h3>已成功加入购物车！</h3>
+          <span>90分防皱免烫衬衫男款 蓝色 XXL</span>
+        </div>
+      </div>
+      <div class="box_right">
+        <a href="window.history.go(-1)" class="box_right_btn">{{_('返回上一级')}}</a>
+        <a href="{{ url_for('pc.cart.root') }}" class="box_right_btn btn-primary">{{_('去购物车结算')}}</a>
+      </div>
+    </div>
+    <div class="recommend-wrap">
+      <h2 class="recommend_title">
+        <span>买购物车中商品的人还买了</span>
+      </h2>
+      <div class="recommend_content">
+        <ul class="recommend_list clearfix">
+          <li class="recommend_list-item">
+            <div class="buy_succ">
+              <ul class="succ_list">
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1536571975.28359503!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">90分轻薄无缝一体织鹅绒羽绒服</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥99</span>
+                    <span class="price-del">￥119</span>
+                  </div>
+                  <div class="review_num">
+                    2.5万人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="recommend_list-item">
+            <div class="buy_succ">
+              <ul class="succ_list">
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+                <li class="succ_list-item">
+                  <div class="succ_item-img">
+                    <a href="">
+                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
+                    </a>
+                  </div>
+                  <div class="all-title">
+                    <a href="">FREETIE云弹减震运动鞋 男款</a>
+                  </div>
+                  <div class="all-price mar-top">
+                    <span>￥249</span>
+                    <span class="price-del">￥299</span>
+                  </div>
+                  <div class="review_num">
+                    1447人好评
+                    <a href="" class="tipsBtn">加入购物车</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="yuandian">
+        <ul>
+          <li class="dot_active"></li>
+          <li class="dot"></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %} {% endblock%}

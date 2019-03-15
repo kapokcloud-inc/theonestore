@@ -63,6 +63,12 @@ def root():
     return render_template('pc/cart/index.html.j2', **data)
 
 
+@cart.route('/add')
+def add():
+    """成功加入购物车"""
+    return render_template('pc/cart/add.html.j2')
+
+
 @cart.route('/checkout')
 def checkout():
     """确认订单"""

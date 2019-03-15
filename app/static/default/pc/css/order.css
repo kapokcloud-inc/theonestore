@@ -449,7 +449,7 @@
   visibility: hidden;
   opacity: 0;
   font-size: 0;
-  transition: opacity .4s;
+  transition: opacity 0.4s;
   text-align: center;
 }
 .all-list .review-btn_link {
@@ -461,7 +461,7 @@
   line-height: 28px;
   border: 1px solid #b0b0b0;
   font-size: 12px;
-  transition: all .4s;
+  transition: all 0.4s;
 }
 .list-item:hover .review-btn_wrap {
   visibility: visible;
