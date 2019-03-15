@@ -77,7 +77,7 @@ def add():
     goods_list = db.session.query(
         Goods.goods_id, Goods.goods_name, Goods.goods_img,
         Goods.goods_desc, Goods.goods_price, Goods.sale_count,
-        Goods.fav_count, Goods.comment_count).\
+        Goods.market_price).\
         filter(Goods.cat_id == goods.cat_id).\
         filter(Goods.is_delete == 0).\
         filter(Goods.is_sale == 1).\
