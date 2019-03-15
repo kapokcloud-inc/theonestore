@@ -115,6 +115,7 @@ def create():
     ua_id = toint(form.get('ua_id', '0'))
     shipping_id = toint(form.get('shipping_id', '0'))
     coupon_id = toint(form.get('coupon_id', '0'))
+    log_info(form)
 
     try:
         carts_id = json.loads(carts_id)
