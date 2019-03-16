@@ -20,90 +20,103 @@
         </div>
       </div>
       <div class="box_right">
-        <a href="javascript:" onclick="self.location=document.referrer;" class="box_right_btn">{{_('返回上一级')}}</a>
+        <a href="{{ url_for('pc.item.detail', goods_id=goods.goods_id) }}" class="box_right_btn">{{_('返回上一级')}}</a>
         <a href="{{ url_for('pc.cart.root') }}" class="box_right_btn btn-primary">{{_('去购物车结算')}}</a>
       </div>
     </div>
 
     <!-- 推荐商品begin -->
-    <div class="recommend-wrap">
-      <h2 class="recommend_title">
-        <span>买购物车中商品的人还买了</span>
-      </h2>
-      <div class="recommend_content">
-        <ul class="recommend_list clearfix">
-          <li class="recommend_list-item">
-            <div class="buy_succ">
-              <ul class="succ_list">
-                {% for item in goods_list %}
-                  {% if loop.index <= 10 %}
-                    <li class="succ_list-item">
-                      <div class="succ_item-img">
-                        <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">
-                          <img src="{{ item.goods_img }}-square.300" alt="">
-                        </a>
-                      </div>
-                      <div class="all-title">
-                        <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">{{item.goods_name}}</a>
-                      </div>
-                      <div class="all-price mar-top">
-                        <span>￥{{ item.goods_price|format_amount }}</span>
-                        {% if item.market_price > 0 %}
-                          <span class="price-del">￥{{ item.market_price|format_amount }}</span>
-                        {% endif %}
-                      </div>
-                      <div class="review_num">
-                        {% if item.sale_count > 0 %}
-                          已售 {{ item.sale_count }} 件
-                        {% endif %}
-                        <a href="javascript:void(0);" onclick="cartTo({{ item.goods_id }})" class="tipsBtn">加入购物车</a>
-                      </div>
-                      <div class="succ_item-notice" id="notice_{{item.goods_id}}">
-                        <div class="notice_text">成功加入购物车</div>
-                      </div>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-            </div>
-          </li>
-          <li class="recommend_list-item">
-            <div class="buy_succ">
-              <ul class="succ_list">
-              {% for item in goods_list %}
-                {% if loop.index > 10 %}
-                <li class="succ_list-item">
-                  <div class="succ_item-img">
-                    <a href="">
-                      <img src="https://i1.mifile.cn/a1/pms_1537839576.29563635!140x140.jpg" alt="">
-                    </a>
-                  </div>
-                  <div class="all-title">
-                    <a href="">FREETIE云弹减震运动鞋 男款</a>
-                  </div>
-                  <div class="all-price mar-top">
-                    <span>￥249</span>
-                    <span class="price-del">￥299</span>
-                  </div>
-                  <div class="review_num">
-                    1447人好评
-                    <a href="" class="tipsBtn">加入购物车</a>
-                  </div>
-                </li>
-                {% endif %}
-              {% endfor %}
-              </ul>
-            </div>
-          </li>
-        </ul>
+    {% if goods_list|length > 0 %}
+      <div class="recommend-wrap">
+        <h2 class="recommend_title">
+          <span>买购物车中商品的人还买了</span>
+        </h2>
+        <div class="recommend_content">
+          <ul class="recommend_list clearfix" id="listItem">
+            <li class="recommend_list-item">
+              <div class="buy_succ">
+                <ul class="succ_list">
+                  {% for item in goods_list %}
+                    {% if loop.index <= 10 %}
+                      <li class="succ_list-item">
+                        <div class="succ_item-img">
+                          <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">
+                            <img src="{{ item.goods_img }}-square.300" alt="">
+                          </a>
+                        </div>
+                        <div class="all-title">
+                          <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">{{item.goods_name}}</a>
+                        </div>
+                        <div class="all-price mar-top">
+                          <span>￥{{ item.goods_price|format_amount }}</span>
+                          {% if item.market_price > 0 %}
+                            <span class="price-del">￥{{ item.market_price|format_amount }}</span>
+                          {% endif %}
+                        </div>
+                        <div class="review_num">
+                          {% if item.sale_count > 0 %}
+                            已售 {{ item.sale_count }} 件
+                          {% endif %}
+                          <a href="javascript:void(0);" onclick="cartTo({{ item.goods_id }})" class="tipsBtn">加入购物车</a>
+                        </div>
+                        <div class="succ_item-notice" id="notice_{{item.goods_id}}">
+                          <div class="notice_text">成功加入购物车</div>
+                        </div>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+            </li>
+            {% if goods_list|length > 10 %}
+              <li class="recommend_list-item">
+                <div class="buy_succ">
+                  <ul class="succ_list">
+                    {% for item in goods_list %}
+                      {% if loop.index > 10 %}
+                        <li class="succ_list-item">
+                          <div class="succ_item-img">
+                            <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">
+                              <img src="{{ item.goods_img }}-square.300" alt="">
+                            </a>
+                          </div>
+                          <div class="all-title">
+                            <a href="{{ url_for('pc.item.detail', goods_id=item.goods_id) }}">{{item.goods_name}}</a>
+                          </div>
+                          <div class="all-price mar-top">
+                            <span>￥{{ item.goods_price|format_amount }}</span>
+                            {% if item.market_price > 0 %}
+                              <span class="price-del">￥{{ item.market_price|format_amount }}</span>
+                            {% endif %}
+                          </div>
+                          <div class="review_num">
+                            {% if item.sale_count > 0 %}
+                              已售 {{ item.sale_count }} 件
+                            {% endif %}
+                            <a href="javascript:void(0);" onclick="cartTo({{ item.goods_id }})" class="tipsBtn">加入购物车</a>
+                          </div>
+                          <div class="succ_item-notice" id="notice_{{item.goods_id}}">
+                            <div class="notice_text">成功加入购物车</div>
+                          </div>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+        <div class="yuandian">
+          <ul>
+            <li class="dot_active" id="page_one" onclick="pageOne()"></li>
+            {% if goods_list|length > 10 %}
+              <li class="dot" id="page_two" onclick="pageTwo()"></li>
+            {% endif %}
+          </ul>
+        </div>
       </div>
-      <div class="yuandian">
-        <ul>
-          <li class="dot_active"></li>
-          <li class="dot"></li>
-        </ul>
-      </div>
-    </div>
+    {% endif %}
     <!-- 推荐商品end -->
 
   </div>
@@ -112,6 +125,10 @@
 
 {% block script %}
 <script type="text/javascript">
+var $pageone = $("#page_one");
+var $pagetwo = $("#page_two");
+var $listItem = $("#listItem");
+
 //加入购物车
 function cartTo(goods_id) {
   $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':1}, function(json) {
@@ -128,8 +145,36 @@ function cartTo(goods_id) {
 
     setTimeout(function(){
       $notice.css({"opacity":"0","transform":"translate3d(0, -30px, 0)"});
-    },800)
+    },1000);
+
+    // 刷新当前页面
+    setTimeout(function(){
+      location.reload();
+    },1500);
+    
   });
+}
+
+// 点击第一个圆点
+function pageOne(){
+  if($pageone.hasClass('dot_active')){
+    return false;
+  }
+  $pageone.removeClass("dot").addClass('dot_active');
+  $pagetwo.removeClass("dot_active").addClass('dot');
+
+  $listItem.animate({marginLeft:'0px'},500);
+}
+
+// 点击第二个圆点
+function pageTwo(){
+  if($pagetwo.hasClass('dot_active')){
+    return false;
+  }
+  $pagetwo.removeClass("dot").addClass('dot_active');
+  $pageone.removeClass("dot_active").addClass('dot');
+
+  $listItem.animate({marginLeft:'-1170px'},500);
 }
 </script>
 {% endblock%}
