@@ -58,18 +58,30 @@
   user-select: none;
   position: relative;
   float: left;
-  width: 90px;
+  width: 82px;
   overflow: hidden;
+  padding-top: 63px;
+  padding-bottom: 63px;
+}
+.picOR{
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+}
+.picSmall{
+  max-height: 470px !important;
 }
 .small-pic{
   &_list{
-    width: 110px;
-    height: @height500;
-    overflow: auto;
+    // width: 100px;
+    width: 82px;
+    height: 374px;
+    // overflow: auto;
+    overflow: hidden;
+    position: relative;
   }
   &_item{
-    width: 78px;
-    height: 78px;
+    width: 70px;
+    height: 70px;
     margin-bottom: 15px;
     padding: 5px;
     border: @border;
@@ -422,4 +434,28 @@
   width: 100%;
   max-width: 100%;
   display: block;
+}
+.small_pic_first{
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: inline-block;
+  width: 82px;
+  height: 63px;
+  font-size: 54px;
+  line-height: 63px;
+  color: #666;
+}
+.small_pic_last{
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: inline-block;
+  width: 82px;
+  height: 63px;
+  font-size: 54px;
+  line-height: 63px;
+  color: #666;
 }
