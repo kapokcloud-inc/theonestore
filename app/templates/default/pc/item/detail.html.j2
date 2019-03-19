@@ -575,6 +575,11 @@ function prevSmall() {
   $prev.addClass('current');
 
   G_picTop += 97;
+
+  //ul的top最大值不能大于0
+  if(G_picTop > 0){
+    G_picTop = 0;
+  }
   $("#picList").css("top", G_picTop + "px");
 
   showBig();
@@ -591,6 +596,14 @@ function nextSmall() {
   $next.addClass('current');
 
   G_picTop -= 97;
+  var num = $('.small-pic_item').length;
+  var numPx = -(num-4)*97;
+  if(G_picTop < numPx){
+    G_picTop = numPx;
+  } else{
+    G_picTop = G_picTop;
+  }
+
   $("#picList").css("top", G_picTop + "px");
 
   showBig();
