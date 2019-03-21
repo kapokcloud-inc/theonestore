@@ -31,11 +31,13 @@
     </ul>
     <ul class="nav navbar-top-links navbar-right pull-right">
       <li>
-        <form role="search" class="app-search hidden-sm hidden-xs m-r-10">
-          <input type="text" placeholder="{{ _('搜索订单号') }}" class="form-control">
-          <a href="">
-            <i class="fa fa-search"></i>
-          </a>
+        <form role="search" class="app-search hidden-sm hidden-xs m-r-10" action="{{ url_for('admin.order.index') }}" id="top_search_order_form">
+          <input type="text" placeholder="{{ _('搜索订单号') }}" class="form-control" name="order_sn" required>
+          <button type="submit" style="border:none;">
+            <a class="active" href="">
+              <i class="fa fa-search"></i>
+            </a>
+          </button>
         </form>
       </li>
       <li class="dropdown">

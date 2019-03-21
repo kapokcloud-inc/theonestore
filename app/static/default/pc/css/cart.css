@@ -89,7 +89,7 @@
   color: #666;
   margin-top: 28px;
   font-size: 16px;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 .del:hover {
   background-color: #f33155;
@@ -550,7 +550,7 @@
   text-align: center;
   border-radius: 15px;
   color: #666;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 .add-del:hover {
   background-color: #f33155;
@@ -701,7 +701,7 @@
   float: left;
   width: 249px;
   height: 96px;
-  margin-right: 14px;
+  margin-right: 15px;
   margin-bottom: 15px;
   border: 1px solid #f33155;
   border-radius: 0px 0px 5px 5px;
@@ -929,4 +929,193 @@ input[type=number]::-webkit-outer-spin-button {
   line-height: 1.6;
   color: #8d9ea7;
   margin: 30px 0;
+}
+.buy-succ-box {
+  margin-bottom: 26px;
+  padding: 0 0 28px 0;
+  height: 68px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.box_left {
+  float: left;
+}
+.box_left_img {
+  float: left;
+  width: 64px;
+  height: 64px;
+}
+.box_left_img img {
+  width: 100%;
+  height: 100%;
+}
+.box_left_info {
+  float: left;
+  margin-left: 20px;
+}
+.box_left_info h3 {
+  color: #333;
+  font-size: 24px;
+  font-weight: normal;
+  margin-top: 3px;
+}
+.box_left_info span {
+  margin-right: 15px;
+  font-size: 14px;
+  color: #666;
+}
+.box_right {
+  float: right;
+}
+.box_right_btn {
+  display: inline-block;
+  width: 180px;
+  height: 38px;
+  line-height: 38px;
+  margin-left: 12px;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #b0b0b0;
+  background: none;
+}
+.recommend_title {
+  position: relative;
+  height: auto;
+  font-size: 30px;
+  font-weight: 400;
+  color: #666;
+  -webkit-font-smoothing: antialiased;
+}
+.recommend_title span {
+  position: static;
+  margin-bottom: 20px;
+  width: 100%;
+  height: auto;
+  top: -20px;
+  left: 372px;
+  line-height: 40px;
+  text-align: center;
+  display: block;
+  background-color: #f3f4f5;
+}
+.recommend_content {
+  height: 627px;
+  overflow: hidden;
+}
+.recommend_list {
+  width: 2340px;
+  margin-left: 0;
+  transition: margin-left 0.5s ease 0s;
+}
+.recommend_list-item {
+  float: left;
+  width: 1170px;
+  height: 644px;
+}
+.buy_succ {
+  margin-bottom: 26px;
+}
+.succ_list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: hidden;
+  margin-left: -15px;
+  margin-bottom: 1em;
+}
+.succ_list-item {
+  position: relative;
+  flex: 0 1 calc(20% - 15px);
+  height: 300px;
+  padding: 10px 20px;
+  margin-bottom: 15px;
+  margin-left: 15px;
+  background-color: #fff;
+  overflow: hidden;
+  box-sizing: border-box;
+  text-align: center;
+}
+.succ_item-img {
+  padding: 20px 0 15px;
+  height: 145px;
+}
+.succ_item-img img {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto;
+}
+.review_num {
+  position: relative;
+  margin-top: 10px;
+  color: #666;
+  font-size: 14px;
+}
+.tipsBtn {
+  position: absolute;
+  display: none;
+  top: 0;
+  left: 30px;
+  width: 120px;
+  height: 28px;
+  line-height: 28px;
+  font-size: 12px;
+  color: #f33155;
+  border: 1px solid #f33155;
+  background-color: #fff;
+  text-align: center;
+  cursor: pointer;
+}
+.succ_list-item:hover .tipsBtn {
+  display: block;
+}
+.tipsBtn:hover {
+  color: #fff !important;
+  background-color: #f33155 !important;
+}
+.yuandian {
+  text-align: center;
+}
+.dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin: 10px;
+  background-color: #b0b0b0;
+  cursor: pointer;
+  border: 2px solid #b0b0b0;
+  border-radius: 50%;
+}
+.dot:hover {
+  background-color: #f33155 !important;
+  border-color: #f33155 !important;
+}
+.dot_active {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 10px;
+  background-color: #f3f4f5;
+  border: 2px solid #f33155;
+  border-radius: 50%;
+}
+.succ_item-notice {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 100%;
+  opacity: 0;
+  transform: translate3d(0, -30px, 0);
+  transition: all 0.2s linear;
+}
+.notice_text {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  background-color: #83c44e;
 }

@@ -713,7 +713,7 @@
     float: left;
     width: 249px;
     height: 96px;
-    margin-right: 14px;
+    margin-right: 15px;
     margin-bottom: 15px;
     border: 1px solid @main-color;
     border-radius: 0px 0px 5px 5px;
@@ -895,7 +895,7 @@
   font-size: @font-size14;
   color: @grey-color6;
   text-align: center;
-  background-color: #fff;
+  background-color: @white-color;
 }
 input[type=number] {  
     -moz-appearance:textfield;  
@@ -945,4 +945,195 @@ input[type=number]::-webkit-outer-spin-button {
   line-height: 1.6;
   color: #8d9ea7;
   margin: 30px 0;
+}
+.buy-succ-box{
+  margin-bottom: 26px;
+  padding: 0 0 28px 0;
+  height: 68px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.box_left{
+  float: left;
+  &_img{
+    float: left;
+    width: 64px;
+    height: 64px;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &_info{
+    float: left;
+    margin-left: 20px;
+    h3{
+      color: #333;
+      font-size: 24px;
+      font-weight: normal;
+      margin-top: 3px;
+    }
+    span{
+      margin-right: 15px;
+      font-size: @font-size14;
+      color: @grey-color6;
+    }
+  }
+}
+.box_right{
+  float: right;
+  &_btn{
+    display: inline-block;
+    width: 180px;
+    height: 38px;
+    line-height: 38px;
+    margin-left: 12px;
+    margin-top: 5px;
+    font-size: @font-size14;
+    color: @grey-color6;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #b0b0b0;
+    background: none;
+  }
+}
+.recommend{
+  &_title{
+    position: relative;
+    height: auto;
+    font-size: 30px;
+    font-weight: 400;
+    color: @grey-color6;
+    -webkit-font-smoothing: antialiased;
+    span{
+      position: static;
+      margin-bottom: 20px;
+      width: 100%;
+      height: auto;
+      top: -20px;
+      left: 372px;
+      line-height: 40px;
+      text-align: center;
+      display: block;
+      background-color: #f3f4f5;
+    }
+  }
+  &_content{
+    height: 627px;
+    overflow: hidden;
+  }
+  &_list{
+    width: 2340px;
+    margin-left: 0;
+    transition: margin-left 0.5s ease 0s;
+  }
+  &_list-item{
+    float: left;
+    width: 1170px;
+    height: 644px;
+  }
+}
+.buy_succ{
+  margin-bottom: 26px;
+}
+.succ_list{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: hidden;
+  margin-left: -15px;
+  margin-bottom: 1em;
+  &-item{
+    position: relative;
+    flex: 0 1 calc(20% - 15px);
+    height: 300px;
+    padding: 10px 20px;
+    margin-bottom: 15px;
+    margin-left: 15px;
+    background-color: @white-color;
+    overflow: hidden;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}
+.succ_item-img{
+  padding: 20px 0 15px;
+  height: 145px;
+  img{
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+  }
+}
+.review_num{
+  position: relative;
+  margin-top: 10px;
+  color: @grey-color6;
+  font-size: @font-size14;
+}
+.tipsBtn{
+  position: absolute;
+  display: none;
+  top: 0;
+  left: 30px;
+  width: 120px;
+  height: 28px;
+  line-height: 28px;
+  font-size: @font-size12;
+  color: @main-color;
+  border: 1px solid @main-color;
+  background-color: @white-color;
+  text-align: center;
+  cursor: pointer;
+}
+.succ_list-item:hover .tipsBtn{
+  display: block;
+}
+.tipsBtn:hover{
+  color: @white-color !important;
+  background-color: @main-color !important;
+}
+.yuandian{
+  text-align: center;
+}
+.dot{
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin: 10px;
+  background-color: #b0b0b0;
+  cursor: pointer;
+  border: 2px solid #b0b0b0;
+  border-radius: 50%; 
+}
+.dot:hover{
+  background-color: @main-color !important;
+  border-color: @main-color !important;
+}
+.dot_active{
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 10px;
+  background-color: #f3f4f5;
+  border: 2px solid @main-color;
+  border-radius: 50%; 
+}
+.succ_item-notice{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  width: 100%;
+  opacity: 0;
+  transform: translate3d(0, -30px, 0);
+  transition: all .2s linear;
+}
+.notice_text{
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  font-size: @font-size12;
+  color: @white-color;
+  text-align: center;
+  background-color: #83c44e;
 }

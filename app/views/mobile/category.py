@@ -10,35 +10,43 @@
 
 from flask import (
     request,
-    session,
     Blueprint,
-    redirect,
-    url_for
+    url_for,
+    abort
 )
-from flask_babel import gettext as _
-
-from app.database import db
 
 from app.helpers import (
     render_template,
-    log_info
+    log_info,
+    toint
 )
 
-from app.services.api.item import ItemStaticMethodsService
-
-from app.models.item import (
-    Goods,
-    GoodsCategories,
-    GoodsGalleries
+from app.services.api.item import (
+    CategoryService,
+    ItemListService
 )
 
 
 category = Blueprint('mobile.category', __name__)
 
 @category.route('/')
-def root():
+@category.route('/<int:cat_id>')
+@category.route('/<int:cat_id>/')
+def root(cat_id=0):
     """分类页"""
+    if cat_id == 0:
+        categories = CategoryService().categories()
+        return render_template('mobile/category/index.html.j2', categories=categories)
+    
+    ps = 10
+    p = toint(request.args.get('p', '1'))
+    cat = CategoryService().get_category(cat_id)
+    if cat is None:
+        return abort(404)
 
-    categories = ItemStaticMethodsService.categories()
-
-    return render_template('mobile/category/index.html.j2', categories=categories)
+    service = ItemListService(p, ps, cat_id)
+    return render_template('mobile/item/index.html.j2', 
+                items = service.items(),
+                pagination = service.pagination,
+                category = cat,
+                paging_url = url_for('mobile.item.paging', cat_id=cat_id))

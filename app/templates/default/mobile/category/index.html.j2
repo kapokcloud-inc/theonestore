@@ -2,7 +2,7 @@
 {% import '/default/mobile/libs/libs.html.j2' as libs %}
 
 {% block head %}
-<title>{{_('分类页 - 一店')}}</title>
+<title>{{_('全部分类 - 一店')}}</title>
 <link rel="stylesheet" href="/static/default/mobile/css/category.css"> 
 {% endblock %}
 
@@ -11,7 +11,7 @@
   <ul class="category">
     {% for category in categories %}
       <li class="category_item">
-        <a href="{{ url_for('mobile.item.index', cat_id=category.cat_id) }}">
+        <a href="{{ url_for('mobile.category.root', cat_id=category.cat_id) }}">
           <div class="category_phone">
             <img src="{{ category.cat_img }}-square.middle" alt="">
           </div>

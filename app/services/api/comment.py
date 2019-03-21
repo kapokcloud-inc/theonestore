@@ -22,6 +22,75 @@ from app.helpers.date_time import current_timestamp
 from app.models.comment import Comment
 
 
+class CommentService(object):
+    """评论Service"""
+
+    def __init__(self, tid, ttype=0, rating=0, is_img=False):
+        """
+        :param int tid 第三方id，如：商品id
+        :param int ttype 评论类型，默认为0
+        :param int rating 1:差评 2:中评 3:好评
+        :param boolean is_img 是否有图
+        """
+        self.tid = tid
+        self.ttype = ttype
+        self.rating = rating
+        self.is_img = is_img
+        self.queryobj = None
+
+
+    @property
+    def query(self):
+        """获取查询对象
+        :param int page 页码
+        :param int page_size 每页数据量
+        :param int rating 1:差评 2:中评 3:好评
+        :param boolean is_img 是否有图
+        """
+        if self.queryobj is not None:
+            return self.queryobj
+
+        q = db.session.query(
+                    Comment.comment_id, 
+                    Comment.uid, 
+                    Comment.nickname, 
+                    Comment.avatar,
+                    Comment.rating, 
+                    Comment.content, 
+                    Comment.img_data, 
+                    Comment.add_time).\
+                filter(Comment.ttype == self.ttype).\
+                filter(Comment.tid == self.tid).\
+                filter(Comment.is_show == 1)
+        if self.rating in (1,2,3):
+            q = q.filter(Comment.rating == self.rating)
+        if self.is_img is True:
+            q = q.filter(Comment.img_data != '[]')
+        
+        self.queryobj = q
+        return self.queryobj
+
+
+    def comments(self, page, page_size):
+        """获取评论列表
+        :param int page 页码
+        :param int page_size 每页数据量
+        """
+        comments = self.query.order_by(Comment.comment_id.desc()).\
+                        offset((page-1)*page_size).\
+                        limit(page_size).all()
+        return comments
+
+    
+    def get_pagination(self, page, page_size):
+        """获取分页对象
+        :param int page 页码
+        :param int page_size 每页数据量
+        """
+        pagination = Pagination(None, page, page_size, self.query.count(), None)
+        return pagination
+
+
 class CommentStaticMethodsService(object):
     """评论静态方法Service"""
 

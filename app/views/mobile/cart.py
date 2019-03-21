@@ -49,7 +49,7 @@ cart = Blueprint('mobile.cart', __name__)
 
 @cart.route('/')
 def root():
-    """手机站 - 我的购物车"""
+    """我的购物车"""
 
     uid = get_uid()
     session_id = session.sid
@@ -66,7 +66,7 @@ def root():
 
 @cart.route('/edit/<int:cart_id>')
 def edit(cart_id):
-    """手机站 - 购物车编辑"""
+    """购物车编辑"""
 
     uid = get_uid()
     session_id = session.sid

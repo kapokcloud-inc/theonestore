@@ -48,7 +48,7 @@
 {% macro pagination_href(page, page_size) %}
   {% set page_size = page_size if page_size else request.view_args.get('page_size', 20) %}
   {% set query_string = request.args.to_dict()|request_args_to_query_string(page, page_size) %}
-  {{ url_for(request.endpoint) }}?{{ query_string }}
+  {{ url_for(request.endpoint, **request.view_args) }}?{{ query_string }}
 {% endmacro %}
 
 {# 分页 - js分页html #}

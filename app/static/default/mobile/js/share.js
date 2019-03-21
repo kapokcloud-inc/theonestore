@@ -4,7 +4,7 @@
 $(document).ready(function () {
     $.get("/api/weixin/ticket", function(res){
         if (res.ret != 0) {
-            $.toast(res.msg, "text");
+            console.log(res.msg);
             return;
         }
 
@@ -104,7 +104,7 @@ function wxJssdk(appid, timestamp, noncestr, signature, share_url){
     });
 
     wx.error(function(res){
-        $.toast('调用微信接口失败', 'text');
+        console.log('调用微信接口失败:' + res);
     });
 }
 

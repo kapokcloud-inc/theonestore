@@ -153,11 +153,11 @@
             <li class="top-main_item {{ item_on }}">
               <a class="top-main_atag" href="{{ url_for('pc.index.root') }}">{{_('首页')}}</a>
             </li>
+            {% set cat_id = request.view_args.get('cat_id','0')|toint %}
             {% for category in g.pc_nav_categories %}
-              {% set cat_id = request.args.get('cat_id','0')|toint %}
-              {% set item_on = 'item_on' if (request.endpoint == 'pc.item.index') and (cat_id == category.cat_id) else '' %}
+              {% set item_on = 'item_on' if (request.endpoint == 'pc.category.root') and (cat_id == category.cat_id) else '' %}
               <li class="top-main_item {{ item_on }}">
-                <a class="top-main_atag" href="{{ url_for('pc.item.index', cat_id=category.cat_id) }}">{{ category.cat_name }}</a>
+                <a class="top-main_atag" href="{{ url_for('pc.category.root', cat_id=category.cat_id) }}">{{ category.cat_name }}</a>
               </li>
             {% endfor %}
           </div>
@@ -295,7 +295,7 @@
         var cartInfo = carts[index];
         var cart = cartInfo['cart'];
         var item = cartInfo['item'];
-        var list_html = '<a class="one-cell" href="/pc/item/' + item.goods_id + '">' +
+        var list_html = '<a class="one-cell" href="/item/' + item.goods_id + '">' +
           '<div class="one-cell_hd avatar">' +
           '<img src="' + item.goods_img + '-square.small" alt="">' +
           '</div>' +

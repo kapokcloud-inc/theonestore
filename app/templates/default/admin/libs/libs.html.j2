@@ -85,7 +85,7 @@
           <div class="form-group">
             <label>{{ label }}</label>
             {% if type == 'input' %}
-              <input type="text" class="form-control" id="{{ name }}" name="{{ name }}" placeholder="{{ placeholder }}">
+              <input type="text" class="form-control" id="{{ name }}" name="{{ name }}" placeholder="{{ placeholder }}" value="{{ value }}">
             {% elif type == 'textarea' %}
               <textarea class="form-control" id="{{ name }}" name="{{ name }}" >{{ value }}</textarea>
             {% elif type == 'select' %}

@@ -31,16 +31,38 @@
                       {% set current_big_pic = (galleries|first).img if galleries and galleries|first else '' %}
                       <img id="bigpic" src="{{ current_big_pic }}-square.500" alt="">
                     </div>
-                    <div class="goods-small_pic clearfix">
-                      <ul class="small-pic_list">
-                        {% for pic_item in galleries %}
-                          {% set selectclass = 'current' if current_big_pic == pic_item.img %}
-                          <li class="small-pic_item {{ selectclass }}">
-                            <img src="{{ pic_item.img }}-square.small" alt="" img-index="{{ loop.index }}">
-                          </li>
-                        {% endfor %}
-                      </ul>
-                    </div>
+                    {% if galleries|length > 5 %}
+                      <div class="goods-small_pic clearfix">
+                        <a class="small_pic_first" id="prev_small" href="javascript:void(0);" style="display:none">
+                          <i class="icon-xiaoyu" style="display:inline-block;transform: rotateZ(90deg);"></i>
+                        </a>
+                        <a class="small_pic_last" id="next_small" href="javascript:void(0);">
+                          <i class="icon-dayu" style="display:inline-block;transform: rotateZ(90deg);"></i>
+                        </a>
+                        <div class="small-pic_list">
+                          {% set height=galleries|length*97-15 %}
+                          <ul id="picList" style="height:{{ height }}px;position: absolute;top:0;left:0;">
+                            {% for pic_item in galleries %}
+                              {% set selectclass = 'current' if current_big_pic == pic_item.img %}
+                              <li class="small-pic_item {{ selectclass }}">
+                                <img src="{{ pic_item.img }}-square.small" alt="" img-index="{{ loop.index }}">
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                    {% else %}
+                      <div class="goods-small_pic picOR clearfix">
+                        <ul class="small-pic_list picSmall">
+                          {% for pic_item in galleries %}
+                            {% set selectclass = 'current' if current_big_pic == pic_item.img %}
+                            <li class="small-pic_item {{ selectclass }}">
+                              <img src="{{ pic_item.img }}-square.small" alt="" img-index="{{ loop.index }}">
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="detail-info_right">
@@ -265,13 +287,13 @@
             <img id="giant" src="" alt="">
           </div>
         </div>
-        <a class="image-num_first" id="giant-prev" href="javascript:;">
+        <a class="image-num_first" id="giant-prev" href="javascript:void(0);">
           <i class="icon-xiaoyu"></i>
         </a>
-        <a class="image-num_last" id="giant-next" href="javascript:;">
+        <a class="image-num_last" id="giant-next" href="javascript:void(0);">
           <i class="icon-dayu"></i>
         </a>
-        <a class="bigimage" id="giant-close" href="javascript:;">
+        <a class="bigimage" id="giant-close" href="javascript:void(0);">
           <i class="icon-cancel"></i>
         </a>
       </div>
@@ -284,13 +306,13 @@
             <img id="giantCom" src="" alt="">
           </div>
         </div>
-        <a class="image-num_first" id="comment-prev" href="javascript:;">
+        <a class="image-num_first" id="comment-prev" href="javascript:void(0);">
           <i class="icon-xiaoyu"></i>
         </a>
-        <a class="image-num_last" id="comment-next" href="javascript:;">
+        <a class="image-num_last" id="comment-next" href="javascript:void(0);">
           <i class="icon-dayu"></i>
         </a>
-        <a class="bigimage" id="comment-close" href="javascript:;">
+        <a class="bigimage" id="comment-close" href="javascript:void(0);">
           <i class="icon-cancel"></i>
         </a>
       </div>
@@ -332,6 +354,12 @@ $(document).ready(function(){
 
   // 商品相册点击下一张按钮事件
   $('#giant-next').bind('click', nextGiant);
+
+  // 商品小图点击箭头上一张按钮事件
+  $('#prev_small').bind('click', prevSmall);
+
+  // 商品小图点击箭头下一张按钮事件
+  $('#next_small').bind('click', nextSmall);
 
   // 点击关闭商品相册事件
   $('#giant-close').click(function(){
@@ -508,6 +536,79 @@ function change_comment_tabs(dom, tab) {
 
 }
 
+/**
+ * 点击箭头上下图片显示
+ */
+function showBig(){
+  var $current = $('.small-pic_item.current');
+  var $prev = $current.prev();
+  var $next = $current.next();
+  var img_url = $current.find('img').attr('src');
+  var img_url_500 = img_url.replace('-square.small', '-square.500');
+  $('#bigpic').attr("src", img_url_500);
+
+  // 判断上一张
+  if ($prev.length <= 0) {
+    $('#prev_small').hide();
+  } else {
+    $('#prev_small').show();
+  }
+
+  // 判断下一张
+  if ($next.length <= 0) {
+    $('#next_small').hide();
+  } else {
+    $('#next_small').show();
+  }
+}
+
+var G_picTop = 0;
+
+/**
+ * 商品小图显示上一张
+ */
+function prevSmall() {
+  var $current = $('.small-pic_item.current');
+  $current.removeClass('current');
+
+  var $prev = $current.prev();
+  $prev.addClass('current');
+
+  G_picTop += 97;
+
+  //ul的top最大值不能大于0
+  if(G_picTop > 0){
+    G_picTop = 0;
+  }
+  $("#picList").css("top", G_picTop + "px");
+
+  showBig();
+}
+
+/**
+ * 商品小图显示下一张
+ */
+function nextSmall() {
+  var $current = $('.small-pic_item.current');
+  $current.removeClass('current');
+
+  var $next = $current.next();
+  $next.addClass('current');
+
+  G_picTop -= 97;
+  var num = $('.small-pic_item').length;
+  var numPx = -(num-4)*97;
+  if(G_picTop < numPx){
+    G_picTop = numPx;
+  } else{
+    G_picTop = G_picTop;
+  }
+
+  $("#picList").css("top", G_picTop + "px");
+
+  showBig();
+}
+
 //点击切换图片
 $('.small-pic_item').on("click","img", function(){
   var $img = $(this);
@@ -521,6 +622,27 @@ $('.small-pic_item').on("click","img", function(){
   $('.goods-big_pic').fadeIn(100);
 
   $(this).parent().addClass('current').siblings().removeClass('current');
+});
+
+//判断是否显示上下箭头
+$('.small-pic_item').click(function() {
+  var $current = $(this);
+  var $prev = $current.prev();
+  var $next = $current.next();
+
+  // 判断上一张
+  if ($prev.length <= 0) {
+    $('#prev_small').hide();
+  } else {
+    $('#prev_small').show();
+  }
+
+  // 判断下一张
+  if ($next.length <= 0) {
+    $('#next_small').hide();
+  } else {
+    $('#next_small').show();
+  }
 });
 
 //购买数量计数器
@@ -554,11 +676,13 @@ function cartTo() {
   $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
     if (json.ret != 0) {
       // 优化alert ??
-      alert(res.msg);
+      alert(json.msg);
       return false;
     }
 
     $("#navs_cart_total").text(json.data.cart_total).show();
+
+    window.location.href = "/cart/add?goods_id=" + goods_id + "&quantity=" + quantity;
   });
 }
 
