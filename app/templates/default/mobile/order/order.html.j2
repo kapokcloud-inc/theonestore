@@ -16,7 +16,7 @@
         <div class="all_desc height25">{{ item['goods_desc'] }}</div>
       </div>
       <div class="weui-cell__ft mar-left">
-        <p class="all_price">￥{{ item['goods_price'] }}</p>
+        <p class="all_price">￥{{ item['goods_price']|toamount }}</p>
         <p>x {{ item['quantity'] }}</p>
       </div>
     </div>
@@ -25,7 +25,7 @@
     <div class="weui-cell__bd"></div>
     <div class="weui-cell__ft amount">
       <span class="mar-right">{{_('共%s件商品' % order.goods_quantity)}}</span>
-      <span>{{_('合计：￥%s(含运费￥%s)' % (order.order_amount, order.shipping_amount))}}</span>
+      <span>{{_('合计：￥%s(含运费￥%s)' % (order.order_amount|toamount, order.shipping_amount|toamount))}}</span>
     </div>
   </div>
 </a>

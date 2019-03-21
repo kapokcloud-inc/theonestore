@@ -16,7 +16,7 @@
         <p class="all_title">{{ item.goods_name }}</p>
       </div>
       <div class="weui-cell__ft mar-left">
-        <span class="all_price">￥{{ item.goods_price }}</span>
+        <span class="all_price">￥{{ item.goods_price|toamount }}</span>
       </div>
       <input type="hidden" name="" id="stock_quantity_num" value="{{ item.stock_quantity }}">
     </div>

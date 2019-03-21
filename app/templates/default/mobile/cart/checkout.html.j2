@@ -15,14 +15,12 @@
       </div>
       <div class="weui-cell__bd">
         <div class="blackGap">
-          <span>{{_('收件人')}}：</span>
           {% set name = default_address.name if default_address else '' %}
           <span id="current_address_name">{{ name }}</span>
           {% set mobile = default_address.mobile if default_address else '' %}
           <span id="current_address_mobile" class="mar-left">{{ mobile }}</span>
         </div>
         <div class="address" style="color:#666 !important">
-          <span>{{_('收货地址')}}：</span>
           {% set province = default_address.province if default_address else '' %}
           {% set city = default_address.city if default_address else '' %}
           {% set district = default_address.district if default_address else '' %}
@@ -204,15 +202,15 @@
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('商品总价')}}</label>
-          <span id="items_amount" class="weui-form-preview__value">￥{{ items_amount }}</span>
+          <span id="items_amount" class="weui-form-preview__value">￥{{ items_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('运费')}}</label>
-          <span id="shipping_amount" class="weui-form-preview__value">+￥{{ shipping_amount }}</span>
+          <span id="shipping_amount" class="weui-form-preview__value">+￥{{ shipping_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('优惠金额')}}</label>
-          <span id="discount_amount" class="weui-form-preview__value">-￥{{ discount_amount }}</span>
+          <span id="discount_amount" class="weui-form-preview__value">-￥{{ discount_amount|toamount }}</span>
         </div>
       </div>
     </div>
@@ -223,7 +221,7 @@
       <div class="total">
         <div class="total-price">
           <span>{{_('支付金额')}}：</span>
-          <span id="pay_amount" class="all_price" style="font-size:18px" data-value="{{ pay_amount }}">￥{{ pay_amount }}</span>
+          <span id="pay_amount" class="all_price" style="font-size:18px" data-value="{{ pay_amount }}">￥{{ pay_amount|toamount }}</span>
         </div>
         <input id="carts_id" type="hidden" value="{{ carts_id }}" />
         <input id="order_id" type="hidden" value="0" />
