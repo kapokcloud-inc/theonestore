@@ -196,6 +196,12 @@ class CheckoutService(object):
 class CartStaticMethodsService(object):
     """购物车静态方法Service"""
 
+    def __init__(self, uid):
+        """初始化函数"""
+
+        # 用户uid
+        self.uid = uid
+
     @staticmethod
     def check_item_statue(item, cart):
         """检查商品状态"""
