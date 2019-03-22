@@ -73,6 +73,10 @@ function save() {
   });
 }
 
+function remove(){
+  window.location.href = "{{ url_for('mobile.cart.checkout', order_id=order_address.order_id, is_pay_now=0) }}";
+}
+
 $(document).ready(function(){
   $("#edit_address_pcd").cityPicker({
     title: "请选择所在地"

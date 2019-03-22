@@ -33,7 +33,7 @@
       <div class="weui-cell__ft mar-left"></div>
     </a>
     {% if not default_address %}
-      <a class="weui-cell weui-cell_access bg-white" href="javascript:;" onclick="newAddress()">
+      <a class="weui-cell weui-cell_access bg-white" id="add_newaddress" href="javascript:;" onclick="newAddress()">
         <div class="weui-cell__hd mar-right">
           <img src="/static/default/mobile/img/add.png" alt="" style="width:20px">
         </div>
@@ -47,7 +47,7 @@
         <div class="weui-actionsheet__menu">
           <input type="hidden" name="" id="" value="">
           <div class="weui-actionsheet__cell not-product_text">
-            <span>{{_('新建收货地址')}}</span>
+            <span>{{_('选择地址')}}</span>
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" id="choiceCancel">
           </div>
           {% for address in addresses %}
@@ -90,7 +90,7 @@
         <div class="weui-actionsheet__menu">
           <input type="hidden" name="" id="" value="">
           <div class="weui-actionsheet__cell not-product_text">
-            <span>{{_('新建收货地址')}}</span>
+            <span>{{_('编辑地址')}}</span>
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="cancel()">
           </div>
           <div class="weui-cell">
@@ -105,7 +105,7 @@
           </div>
           <div class="weui-cell weui-cell_select weui-cell_select-after">
             <div class="weui-cell__bd">
-              <input id="edit_address_pcd" class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="">
+              <input id="edit_address_pcd" class="weui-input greykGap" data-toggle="city-picker" readonly type="text" placeholder="{{_('请选择收件地区')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
@@ -281,6 +281,7 @@ var $addressList = $('#addressList');
 var $newAdd = $('#newAdd');
 var $couponList = $('#couponList');
 var $payList = $('#payList');
+var $addNewaddress = $('#add_newaddress');
 
 var csrftoken = "{{ csrf_token() }}";
 $.ajaxSetup({
@@ -374,7 +375,7 @@ function newAddress() {
     address = $("#"+ua_id+"_address_address").val();
   }
 
-  var pcd = (province != '') ? (province+' '+city+' '+district) : '';
+  var pcd = (province != '') ? (province + ' ' + city + ' ' + district) : '';
   
   //显示新建地址弹窗
   if ($newAdd.hasClass('hide')) {
@@ -385,10 +386,14 @@ function newAddress() {
     $("#edit_address_address").val(address);
 
     $("#edit_address_pcd").cityPicker({
-      title: "请选择所在地"
+      title: "请选择所在地",
     });
 
     $newAdd.removeClass('hide').addClass('show');
+    $addressList.removeClass('show');
+    if (!$addressList.hasClass('hide')) {
+      $addressList.addClass('hide');
+    }
 
     //隐藏新建地址弹窗
   } else {
@@ -476,6 +481,10 @@ function save() {
       return false;
     }
   });
+  
+  if (!$addNewaddress.hasClass('hide')) {
+    $addNewaddress.addClass('hide');
+  }
 }
 
 //选择优惠券

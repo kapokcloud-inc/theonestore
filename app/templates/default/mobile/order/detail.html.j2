@@ -153,7 +153,7 @@
           {% if _code == 6 %}
             <button type="button" class="order_btn" onclick="del({{ order.order_id }})">{{_('删除订单')}}</button>
           {% endif %}
-          {% if _code == 8 %}
+          {% if _code == 8 and not aftersale %}
             <a href="{{ url_for('mobile.aftersales.apply', order_id=order.order_id) }}">
               <button type="button" class="order_btn order-state_btn">{{_('申请退款')}}</button>
             </a>
