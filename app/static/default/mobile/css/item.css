@@ -55,11 +55,9 @@
 .tagImg {
   width: 15px;
   vertical-align: middle;
-  margin-right: 5px;
-  margin-top: -1px;
 }
 .tagText {
-  font-size: 12px;
+  font-size: 10px;
 }
 .review-type_btn {
   flex: 1;
@@ -115,7 +113,7 @@
   -webkit-box-orient: vertical;
 }
 .detail_serve_item {
-  padding: 0px 12px 0px 0;
+  padding-right: 8px;
   display: inline-block;
   line-height: 1;
 }
