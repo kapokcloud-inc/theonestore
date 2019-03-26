@@ -410,6 +410,9 @@ function cancel() {
       if (!$newAdd.hasClass('hide')) {
         $newAdd.addClass('hide');
       }
+
+      //销毁city-picker的值
+      $("#edit_address_pcd").picker("destroy");
     },
     onCancel: function () {}
   });
@@ -476,15 +479,17 @@ function save() {
                         '</div>';
         $("#add_address").before(html_text);
       }
+
+      //添加地址成功，隐藏新建地址cell
+      $addNewaddress.css("display","none");
+
+      //销毁city-picker的值
+      $("#edit_address_pcd").picker("destroy");
     } else {
       $.toast(json.msg, "text");
       return false;
     }
   });
-  
-  if (!$addNewaddress.hasClass('hide')) {
-    $addNewaddress.addClass('hide');
-  }
 }
 
 //选择优惠券
