@@ -423,9 +423,8 @@
 }
 .list-item2 {
   position: relative;
-  height: 380px;
+  height: 405px;
   flex: 0 1 calc(34% - 26px);
-  padding-top: 40px;
   padding-bottom: 0;
   margin-bottom: 0;
   margin-right: 30px;
@@ -438,8 +437,8 @@
   margin-right: 0;
 }
 .all-list .item-product {
-  width: 200px;
-  height: 200px;
+  width: 100% !important;
+  height: 265px !important;
 }
 .all-list .item-detail {
   width: 200px;
