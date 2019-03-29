@@ -53,13 +53,12 @@
   background: #c8c8c8;
 }
 .tagImg {
-  width: 15px;
+  width: 11pt;
   vertical-align: middle;
-  margin-right: 5px;
-  margin-top: -1px;
+  margin-top: -1pt;
 }
 .tagText {
-  font-size: 12px;
+  font-size: 9pt;
 }
 .review-type_btn {
   flex: 1;
@@ -110,12 +109,9 @@
 .detail_serve {
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
 }
 .detail_serve_item {
-  padding: 0px 12px 0px 0;
   display: inline-block;
   line-height: 1;
 }

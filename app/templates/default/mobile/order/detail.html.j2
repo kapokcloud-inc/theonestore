@@ -27,12 +27,10 @@
       </div>
       <div class="weui-cell__bd">
         <div class="blackGap">
-          <!-- <span>{{_('收件人：')}}</span> -->
           <span>{{ order_address.name }}</span>
           <span class="mar-left">{{ order_address.mobile }}</span>
         </div>
         <div class="address">
-          <!-- <span>{{_('收货地址：')}}</span> -->
           <span>{{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address
             }}</span>
         </div>
@@ -155,7 +153,7 @@
           {% if _code == 6 %}
             <button type="button" class="order_btn" onclick="del({{ order.order_id }})">{{_('删除订单')}}</button>
           {% endif %}
-          {% if _code == 8 %}
+          {% if _code == 8 and not aftersale %}
             <a href="{{ url_for('mobile.aftersales.apply', order_id=order.order_id) }}">
               <button type="button" class="order_btn order-state_btn">{{_('申请退款')}}</button>
             </a>
@@ -250,7 +248,7 @@ function cancelOrder(order_id) {
     title: "{{_('取消订单')}}",
     text: "{{_('确定取消该订单？')}}",
     onOK: function () {
-      $.get("{{ url_for('api.order.cancel') }}", {'order_id':order_id}, function(res) {
+      $.get("{{ url_for('api.order.cancel') }}", {'order_id':order_id}, function(json) {
         if (json.ret != 0) {
           $.toast(json.msg, "text");
           return false;

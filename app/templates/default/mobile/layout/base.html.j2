@@ -25,6 +25,17 @@
   <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
   <script src="/static/default/mobile/js/sha1.js" type="text/javascript" charset="utf-8"></script>
   <script src="/static/default/mobile/js/share.js" type="text/javascript" charset="utf-8"></script>
+
+  <script type="text/javascript" >
+  $(document).ready(function(){
+    $("input").blur(function(){
+      setTimeout(function() {
+        var scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
+        window.scrollTo(0, Math.max(scrollHeight - 1, 0));
+      }, 100);
+    });
+  });
+  </script>
 </body>
 
 </html>

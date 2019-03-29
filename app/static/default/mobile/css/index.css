@@ -29,6 +29,7 @@
 .product_phone {
   margin: 0px auto;
   overflow: hidden;
+  width: 100% !important;
 }
 .product_phone img {
   width: 100%;
@@ -59,8 +60,7 @@
 }
 @media screen and (min-width: 320px) {
   .product_phone {
-    width: 135px !important;
-    height: 135px !important;
+    height: 155px !important;
   }
   .product_detail {
     width: 135px !important;
@@ -71,8 +71,7 @@
 }
 @media screen and (min-width: 375px) {
   .product_phone {
-    width: 163px !important;
-    height: 163px !important;
+    height: 182.5px !important;
   }
   .product_detail {
     width: 163px !important;
@@ -83,8 +82,7 @@
 }
 @media screen and (min-width: 414px) {
   .product_phone {
-    width: 182px !important;
-    height: 182px !important;
+    height: 202px !important;
   }
   .product_detail {
     width: 182px !important;
@@ -95,8 +93,8 @@
 }
 @media screen and (min-width: 500px) {
   .product_phone {
-    width: 225px !important;
-    height: 225px !important;
+    width: 245px !important;
+    height: 245px !important;
   }
   .product_detail {
     width: 225px !important;

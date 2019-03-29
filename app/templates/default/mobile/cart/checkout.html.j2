@@ -15,14 +15,12 @@
       </div>
       <div class="weui-cell__bd">
         <div class="blackGap">
-          <span>{{_('收件人')}}：</span>
           {% set name = default_address.name if default_address else '' %}
           <span id="current_address_name">{{ name }}</span>
           {% set mobile = default_address.mobile if default_address else '' %}
           <span id="current_address_mobile" class="mar-left">{{ mobile }}</span>
         </div>
         <div class="address" style="color:#666 !important">
-          <span>{{_('收货地址')}}：</span>
           {% set province = default_address.province if default_address else '' %}
           {% set city = default_address.city if default_address else '' %}
           {% set district = default_address.district if default_address else '' %}
@@ -35,7 +33,7 @@
       <div class="weui-cell__ft mar-left"></div>
     </a>
     {% if not default_address %}
-      <a class="weui-cell weui-cell_access bg-white" href="javascript:;" onclick="newAddress()">
+      <a class="weui-cell weui-cell_access bg-white" id="add_newaddress" href="javascript:;" onclick="newAddress()">
         <div class="weui-cell__hd mar-right">
           <img src="/static/default/mobile/img/add.png" alt="" style="width:20px">
         </div>
@@ -49,7 +47,7 @@
         <div class="weui-actionsheet__menu">
           <input type="hidden" name="" id="" value="">
           <div class="weui-actionsheet__cell not-product_text">
-            <span>{{_('新建收货地址')}}</span>
+            <span>{{_('选择地址')}}</span>
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" id="choiceCancel">
           </div>
           {% for address in addresses %}
@@ -92,7 +90,7 @@
         <div class="weui-actionsheet__menu">
           <input type="hidden" name="" id="" value="">
           <div class="weui-actionsheet__cell not-product_text">
-            <span>{{_('新建收货地址')}}</span>
+            <span>{{_('编辑地址')}}</span>
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="cancel()">
           </div>
           <div class="weui-cell">
@@ -107,7 +105,7 @@
           </div>
           <div class="weui-cell weui-cell_select weui-cell_select-after">
             <div class="weui-cell__bd">
-              <input id="edit_address_pcd" class="weui-input greykGap" type="text" placeholder="{{_('请选择收件地区')}}" value="">
+              <input id="edit_address_pcd" class="weui-input greykGap" data-toggle="city-picker" readonly type="text" placeholder="{{_('请选择收件地区')}}" value="">
             </div>
           </div>
           <div class="weui-cell">
@@ -204,15 +202,15 @@
       <div class="weui-form-preview__bd">
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('商品总价')}}</label>
-          <span id="items_amount" class="weui-form-preview__value">￥{{ items_amount }}</span>
+          <span id="items_amount" class="weui-form-preview__value">￥{{ items_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('运费')}}</label>
-          <span id="shipping_amount" class="weui-form-preview__value">+￥{{ shipping_amount }}</span>
+          <span id="shipping_amount" class="weui-form-preview__value">+￥{{ shipping_amount|toamount }}</span>
         </div>
         <div class="weui-form-preview__item">
           <label class="weui-form-preview__label blackGap">{{_('优惠金额')}}</label>
-          <span id="discount_amount" class="weui-form-preview__value">-￥{{ discount_amount }}</span>
+          <span id="discount_amount" class="weui-form-preview__value">-￥{{ discount_amount|toamount }}</span>
         </div>
       </div>
     </div>
@@ -223,7 +221,7 @@
       <div class="total">
         <div class="total-price">
           <span>{{_('支付金额')}}：</span>
-          <span id="pay_amount" class="all_price" style="font-size:18px" data-value="{{ pay_amount }}">￥{{ pay_amount }}</span>
+          <span id="pay_amount" class="all_price" style="font-size:18px" data-value="{{ pay_amount }}">￥{{ pay_amount|toamount }}</span>
         </div>
         <input id="carts_id" type="hidden" value="{{ carts_id }}" />
         <input id="order_id" type="hidden" value="0" />
@@ -283,6 +281,7 @@ var $addressList = $('#addressList');
 var $newAdd = $('#newAdd');
 var $couponList = $('#couponList');
 var $payList = $('#payList');
+var $addNewaddress = $('#add_newaddress');
 
 var csrftoken = "{{ csrf_token() }}";
 $.ajaxSetup({
@@ -376,7 +375,7 @@ function newAddress() {
     address = $("#"+ua_id+"_address_address").val();
   }
 
-  var pcd = (province != '') ? (province+' '+city+' '+district) : '';
+  var pcd = (province != '') ? (province + ' ' + city + ' ' + district) : '';
   
   //显示新建地址弹窗
   if ($newAdd.hasClass('hide')) {
@@ -387,10 +386,14 @@ function newAddress() {
     $("#edit_address_address").val(address);
 
     $("#edit_address_pcd").cityPicker({
-      title: "请选择所在地"
+      title: "请选择所在地",
     });
 
     $newAdd.removeClass('hide').addClass('show');
+    $addressList.removeClass('show');
+    if (!$addressList.hasClass('hide')) {
+      $addressList.addClass('hide');
+    }
 
     //隐藏新建地址弹窗
   } else {
@@ -407,6 +410,9 @@ function cancel() {
       if (!$newAdd.hasClass('hide')) {
         $newAdd.addClass('hide');
       }
+
+      //销毁city-picker的值
+      $("#edit_address_pcd").picker("destroy");
     },
     onCancel: function () {}
   });
@@ -473,6 +479,12 @@ function save() {
                         '</div>';
         $("#add_address").before(html_text);
       }
+
+      //添加地址成功，隐藏新建地址cell
+      $addNewaddress.css("display","none");
+
+      //销毁city-picker的值
+      $("#edit_address_pcd").picker("destroy");
     } else {
       $.toast(json.msg, "text");
       return false;

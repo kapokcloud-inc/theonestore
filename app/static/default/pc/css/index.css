@@ -66,8 +66,7 @@
 .list-item {
   position: relative;
   flex: 0 1 calc(25% - 12px);
-  height: 380px;
-  padding-top: 20px;
+  height: 400.5px;
   padding-bottom: 20px;
   margin-bottom: 15px;
   margin-right: 15px;
@@ -79,8 +78,8 @@
   margin-right: 0px;
 }
 .item-product {
-  width: 240px;
-  height: 240px;
+  width: 100%;
+  height: 280.5px;
   margin: 0 auto 20px;
 }
 .item-product img {

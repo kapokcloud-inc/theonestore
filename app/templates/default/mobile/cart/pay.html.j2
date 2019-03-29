@@ -14,12 +14,10 @@
       </div>
       <div class="weui-cell__bd">
         <div class="blackGap">
-          <span>{{_('收件人')}}：</span>
           <span>{{ order_address.name }}</span>
           <span class="mar-left">{{ order_address.mobile }}</span>
         </div>
         <div class="address" style="color:#666 !important">
-          <span>{{_('收货地址')}}：</span>
           <span>{{ order_address.province }} {{ order_address.city }} {{ order_address.district }} {{ order_address.address }}</span>
         </div>
       </div>
@@ -55,7 +53,7 @@
     </a>
   </div>
   <div class="weui-cells weui-cells_form">
-    {% set _text = _('%s元优惠券' % coupon.coupon_amount) if coupon else _('无使用优惠券') %}
+    {% set _text = _('%s元优惠券' % coupon.coupon_amount|toamount) if coupon else _('无使用优惠券') %}
     <a class="weui-cell weui-cell_access"  href="javascript:void(0);">
       <div class="weui-cell__bd blackGap">{{_('优惠券码')}}</div>
       <div class="weui-cell__ft">{{ _text }}</div>

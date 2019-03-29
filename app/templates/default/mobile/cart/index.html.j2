@@ -57,7 +57,7 @@
           <div class="total">
             <div class="total-price">
               <span>{{_('合计')}}：</span>
-              <span id="items_amount" class="all_price" style="font-size:18px">￥{{ items_amount }}</span>
+              <span id="items_amount" class="all_price" style="font-size:18px">￥{{ items_amount|toamount }}</span>
             </div>
             <a id="checkout" href="javascript:void(0);" class="btn_primary" onclick="checkout()">{{_('结算(%s)' % items_quantity)}}</a>
           </div>
