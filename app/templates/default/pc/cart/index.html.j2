@@ -204,6 +204,10 @@ function _update_cart(cart_id, quantity) {
 function is_checked(dom) {
   var $this = $(dom);
 
+  if($this.hasClass('icon-notsel')){
+    return false;
+  }
+
   if ($this.hasClass('icon-checkbox_selected')) {
     $this.removeClass('icon-checkbox_selected');
   } else {

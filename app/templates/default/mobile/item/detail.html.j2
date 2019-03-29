@@ -19,7 +19,7 @@ imgUrl=item.goods_img+'-square.small')
 {% block body %}
 {% if item and item.is_delete == 0 %}
   <!-- 商品并未在后台被删除的时候显示 start -->
-  <div class="detail-top">
+  <div class="detail-top hide">
     <div class="detail-top_title">
       <a class="detail-top_item on" href="#nav1" id="nav11">
         <span>{{_('商品')}}</span>
@@ -280,8 +280,14 @@ imgUrl=item.goods_img+'-square.small')
 <script type="text/javascript">
 $(function () {
   $(window).scroll(function () {
-    //为页面添加页面滚动监听事件
-    var wst = $(window).scrollTop()+46 //滚动条距离顶端值
+    var top100 = $(window).scrollTop();  //滚动条距离顶部的距离
+    if(top100 > 100){
+      $(".detail-top").removeClass("hide").addClass("show");  //滚动位置大于100px时，显示“商品|评介|详情”
+    } else{
+      $(".detail-top").removeClass("show").addClass("hide");  //滚动位置<=100px时，隐藏“商品|评介|详情”
+    }
+
+    var wst = $(window).scrollTop()+46; //滚动条距离顶端值
     for (var i = 1; i < 4; i++) {             //加循环
       var top = $('#nav'+i).offset().top;
       if (top <= wst) { //判断滚动条位置
