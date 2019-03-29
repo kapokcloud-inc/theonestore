@@ -700,7 +700,7 @@ function fav(dom) {
   $.get("{{ url_for('api.like.action') }}", params, function(json) {
     if (json.ret != 0) {
       // 优化alert ??
-      alert(res.msg);
+      alert(json.msg);
       return false;
     }
 

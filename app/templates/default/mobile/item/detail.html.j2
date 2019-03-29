@@ -409,7 +409,7 @@ function cartTo(goods_id) {
 
   $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
     if (json.ret != 0) {
-      $.toast(res.msg, "text");
+      $.toast(json.msg, "text");
       return false;
     }
 
