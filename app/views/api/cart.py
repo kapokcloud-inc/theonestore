@@ -52,20 +52,26 @@ cart = Blueprint('api.cart', __name__)
 resjson = ResponseJson()
 resjson.module_code = 12
 
+
 @cart.route('/')
 def index():
     """购物车"""
     resjson.action_code = 10
 
-    uid        = get_uid()
+    uid = get_uid()
     session_id = session.sid
-    is_login   = 1 if uid else 0
+    is_login = 1 if uid else 0
 
     cs = CartService(uid, session_id)
     cs.check()
     log_info(cs)
-    data = {'is_login':is_login, 'carts':cs.carts, 'cart_total':cs.cart_total,
-            'cart_amount':cs.cart_amount, 'items_amount':cs.items_amount, 'items_quantity':cs.items_quantity}
+    data = {
+        'is_login': is_login,
+        'carts': cs.carts,
+        'cart_total': cs.cart_total,
+        'cart_amount': cs.cart_amount,
+        'items_amount': cs.items_amount,
+        'items_quantity': cs.items_quantity}
     return resjson.print_json(0, u'ok', data)
 
 
@@ -74,30 +80,34 @@ def add():
     """加入购物车"""
     resjson.action_code = 11
 
-    uid        = get_uid()
+    uid = get_uid()
     session_id = session.sid
 
-    args         = request.args
-    order_id     = toint(args.get('order_id', '0'))
-    goods_id     = toint(args.get('goods_id', '0'))
-    quantity     = toint(args.get('quantity', '1'))
+    args = request.args
+    order_id = toint(args.get('order_id', '0'))
+    goods_id = toint(args.get('goods_id', '0'))
+    quantity = toint(args.get('quantity', '1'))
     current_time = current_timestamp()
-    items_data   = []
+    items_data = []
 
     if order_id > 0:
-        order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
+        order = Order.query.filter(Order.order_id == order_id).filter(
+            Order.uid == uid).first()
         if not order:
             return resjson.print_json(resjson.PARAM_ERROR)
-        
-        order_goods = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
+
+        order_goods = OrderGoods.query.filter(
+            OrderGoods.order_id == order_id).all()
         for _order_goods in order_goods:
-            items_data.append({'goods_id':_order_goods.goods_id, 'quantity':_order_goods.goods_quantity})
+            items_data.append(
+                {'goods_id': _order_goods.goods_id,
+                'quantity': _order_goods.goods_quantity})
     else:
         # 检查
         if goods_id <= 0 or quantity < 1:
             return resjson.print_json(resjson.PARAM_ERROR)
-        
-        items_data.append({'goods_id':goods_id, 'quantity':quantity})
+
+        items_data.append({'goods_id': goods_id, 'quantity': quantity})
 
     for item_data in items_data:
         goods_id = item_data.get('goods_id')
@@ -109,22 +119,34 @@ def add():
             return resjson.print_json(10, _(u'找不到商品'))
 
         # 获取购物车商品
-        q = Cart.query.filter(Cart.goods_id == goods_id).filter(Cart.checkout_type == 1)
+        q = Cart.query.filter(Cart.goods_id == goods_id).filter(
+            Cart.checkout_type == 1)
         if uid:
             q = q.filter(Cart.uid == uid)
         else:
             q = q.filter(Cart.session_id == session_id)
         cart = q.first()
+        
+        # 计算商品购买数量
+        quantity += cart.quantity if cart else 0
+
+        if order_id <= 0 and quantity > item.stock_quantity:
+            return resjson.print_json(11, u'库存不足')
 
         # 是否创建购物车商品
         if not cart:
-            data = {'uid':uid, 'session_id':session_id, 'goods_id':goods_id, 'quantity':0,
-                    'is_checked':1, 'checkout_type':1, 'add_time':current_time}
+            data = {
+                'uid': uid,
+                'session_id': session_id,
+                'goods_id': goods_id,
+                'quantity': 0,
+                'is_checked': 1,
+                'checkout_type': 1,
+                'add_time': current_time}
             cart = model_create(Cart, data)
-
         # 更新购物车商品
-        quantity += cart.quantity
-        data      = {'quantity':quantity, 'update_time':current_time}
+        
+        data = {'quantity': quantity, 'update_time': current_time}
         cart = model_update(cart, data)
 
     db.session.commit()
@@ -133,7 +155,7 @@ def add():
     cs.check()
     session['cart_total'] = cs.cart_total
 
-    return resjson.print_json(0, u'ok', {'cart_total':cs.cart_total})
+    return resjson.print_json(0, u'ok', {'cart_total': cs.cart_total})
 
 
 @cart.route('/update')
@@ -141,12 +163,12 @@ def update():
     """更新购物车"""
     resjson.action_code = 12
 
-    uid        = get_uid()
+    uid = get_uid()
     session_id = session.sid
 
-    args         = request.args
-    cart_id      = toint(args.get('cart_id', 0))
-    quantity     = toint(args.get('quantity', 0))
+    args = request.args
+    cart_id = toint(args.get('cart_id', 0))
+    quantity = toint(args.get('quantity', 0))
     current_time = current_timestamp()
 
     # 检查
@@ -154,7 +176,8 @@ def update():
         return resjson.print_json(resjson.PARAM_ERROR)
 
     # 获取购物车商品
-    q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
+    q = Cart.query.filter(Cart.cart_id == cart_id).filter(
+        Cart.checkout_type == 1)
     if uid:
         q = q.filter(Cart.uid == uid)
     else:
@@ -164,7 +187,7 @@ def update():
         return resjson.print_json(10, _(u'购物车里找不到商品'))
 
     # 更新购物车商品
-    data = {'quantity':quantity, 'update_time':current_time}
+    data = {'quantity': quantity, 'update_time': current_time}
     model_update(cart, data, commit=True)
 
     cs = CartService(uid, session_id)
@@ -177,11 +200,12 @@ def update():
 
     # 商品状态
     item = Goods.query.get(cart.goods_id)
-    is_valid, valid_status = CartStaticMethodsService.check_item_statue(item, cart)
+    is_valid, valid_status = CartStaticMethodsService.check_item_statue(
+        item, cart)
 
-    data = {'cart_total':cs.cart_total, 'items_quantity':cs.items_quantity,
-            'items_amount':cs.items_amount, '_items_amount':_items_amount,
-            'is_valid':is_valid, 'valid_status':valid_status}
+    data = {'cart_total': cs.cart_total, 'items_quantity': cs.items_quantity,
+            'items_amount': cs.items_amount, '_items_amount': _items_amount,
+            'is_valid': is_valid, 'valid_status': valid_status}
     return resjson.print_json(0, u'ok', data)
 
 
@@ -190,7 +214,7 @@ def remove():
     """删除购物车商品"""
     resjson.action_code = 13
 
-    uid        = get_uid()
+    uid = get_uid()
     session_id = session.sid
 
     carts_id = request.args.get('carts_id', '').strip()
@@ -202,7 +226,8 @@ def remove():
 
     for cart_id in carts_id:
         # 获取购物车商品
-        q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
+        q = Cart.query.filter(Cart.cart_id == cart_id).filter(
+            Cart.checkout_type == 1)
         if uid:
             q = q.filter(Cart.uid == uid)
         else:
@@ -220,8 +245,8 @@ def remove():
     cs.check()
     session['cart_total'] = cs.cart_total
 
-    data = {'cart_total':cs.cart_total, 'items_quantity':cs.items_quantity,
-            'items_amount':cs.items_amount}
+    data = {'cart_total': cs.cart_total, 'items_quantity': cs.items_quantity,
+            'items_amount': cs.items_amount}
     return resjson.print_json(0, u'ok', data)
 
 
@@ -230,10 +255,10 @@ def checked():
     """选中"""
     resjson.action_code = 14
 
-    uid        = get_uid()
+    uid = get_uid()
     session_id = session.sid
 
-    carts        = request.args.get('carts', '[]').strip()
+    carts = request.args.get('carts', '[]').strip()
     current_time = current_timestamp()
 
     try:
@@ -241,15 +266,16 @@ def checked():
     except Exception as e:
         return resjson.print_json(resjson.PARAM_ERROR)
     for cart in carts:
-        cart_id    = toint(cart.get('cart_id', 0))
+        cart_id = toint(cart.get('cart_id', 0))
         is_checked = toint(cart.get('is_checked', -1))
 
         # 检查
-        if cart_id <= 0 or is_checked not in [0,1]:
+        if cart_id <= 0 or is_checked not in [0, 1]:
             return resjson.print_json(resjson.PARAM_ERROR)
 
         # 获取购物车商品
-        q = Cart.query.filter(Cart.cart_id == cart_id).filter(Cart.checkout_type == 1)
+        q = Cart.query.filter(Cart.cart_id == cart_id).filter(
+            Cart.checkout_type == 1)
         if uid:
             q = q.filter(Cart.uid == uid)
         else:
@@ -259,7 +285,7 @@ def checked():
             return resjson.print_json(10, _(u'购物车里找不到商品'))
 
         # 更新购物车商品
-        data = {'is_checked':is_checked, 'update_time':current_time}
+        data = {'is_checked': is_checked, 'update_time': current_time}
         model_update(cart, data)
 
     db.session.commit()
@@ -267,8 +293,8 @@ def checked():
     cs = CartService(uid, session_id)
     cs.check()
 
-    data = {'cart_total':cs.cart_total, 'items_quantity':cs.items_quantity,
-            'items_amount':cs.items_amount}
+    data = {'cart_total': cs.cart_total, 'items_quantity': cs.items_quantity,
+            'items_amount': cs.items_amount}
     return resjson.print_json(0, u'ok', data)
 
 
@@ -282,9 +308,9 @@ def checkout_amounts():
     uid = get_uid()
 
     args = request.args
-    carts_id    = args.get('carts_id', '[]').strip()
+    carts_id = args.get('carts_id', '[]').strip()
     shipping_id = toint(args.get('shipping_id', '0'))
-    coupon_id   = toint(args.get('coupon_id', '0'))
+    coupon_id = toint(args.get('coupon_id', '0'))
 
     try:
         carts_id = json.loads(carts_id)
@@ -296,23 +322,23 @@ def checkout_amounts():
     if not cs.check():
         return resjson.print_json(11, cs.msg)
 
-    data = {'items_amount':cs.items_amount,
-            'shipping_amount':cs.shipping_amount,
-            'discount_amount':cs.discount_amount,
-            'pay_amount':cs.pay_amount}
+    data = {'items_amount': cs.items_amount,
+            'shipping_amount': cs.shipping_amount,
+            'discount_amount': cs.discount_amount,
+            'pay_amount': cs.pay_amount}
     return resjson.print_json(0, u'ok', data)
 
 
 @cart.route('/checkout')
 def checkout():
     """确认订单"""
-    
+
     resjson.action_code = 16
 
     if not check_login():
         return resjson.print_json(resjson.NOT_LOGIN)
     uid = get_uid()
-    
+
     args = request.args
     order_id = toint(args.get('order_id', 0))
     # 已有订单,获取订单数据
@@ -320,7 +346,7 @@ def checkout():
         data = CartStaticMethodsService.pay_page(order_id, uid, 'api')
         if not data[0]:
             return resjson.print_json(11, data[1])
-            
+
         return resjson.print_json(0, u'ok', data[2])
 
     buy_now = toint(args.get('buy_now', 0))
