@@ -74,8 +74,7 @@
 
     $.get("{{ url_for('api.like.action') }}", params, function(json) {
       if (json.ret != 0) {
-        // 优化alert ??
-        alert(json.msg);
+        Toast(json.msg);
         return false;
       }
       location.reload();

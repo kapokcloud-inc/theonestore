@@ -161,8 +161,7 @@ function addCar(goods_id) {
   //var goods_id = parseInt($(".add-cart").attr("data-tid"));
   $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
     if (json.ret != 0) {
-      // 优化alert ??
-      alert(json.msg);
+      Toast(json.msg);
       return false;
     }
     $("#navs_cart_total").text(json.data.cart_total);

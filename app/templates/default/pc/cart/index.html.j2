@@ -72,6 +72,7 @@
                     <i class="icon-cancel"></i>
                   </a>
                 </div>
+                <input type="hidden" name="" id="stock_quantity_num{{ cart.cart.cart_id }}" value="{{ cart.item.stock_quantity }}">
               </li>
             {% endfor %}
           </ul>
@@ -128,8 +129,7 @@ function _get_carts() {
 function _checked(carts) {
   $.get("{{ url_for('api.cart.checked') }}", {'carts':carts}, function(json) {
     if (json.ret != 0) {
-      // 优化alert ??
-      alert(json.msg);
+      Toast(json.msg);
       return false;
     }
 
@@ -187,13 +187,11 @@ function _update_cart(cart_id, quantity) {
 
         ret = true;
       } else {
-        // 优化alert ??
-        alert(json.msg);
+        Toast(json.msg);
       }
     },
     error: function(xhr, type) {
-      // 优化alert ??
-      alert("{{_('网络错误')}}");
+      Toast("{{_('网络错误')}}");
     }
   });
 
@@ -223,8 +221,13 @@ function is_checked(dom) {
 
 function update_cart_quantity(cart_id, is_add) {
   var quantity = parseInt($("#quantity"+cart_id).val());
+  var stock_quantity = parseInt($("#stock_quantity_num"+cart_id).val());
 
   if (is_add) {
+    if (quantity >= stock_quantity) {
+      Toast("{{_('库存不足')}}");
+      return false;
+    }
     quantity += 1;
   } else {
     quantity -= 1;
@@ -251,8 +254,7 @@ function remove(cart_id) {
         $("#items_amount").text(json.data.items_amount);
         $("#li"+cart_id).remove();
       } else {
-        // 优化alert ??
-        alert(json.msg);
+        Toast(json.msg);
       }
     });
   }
@@ -270,8 +272,7 @@ function checkout() {
   });
 
   if (carts_id.length == 0) {
-    // 优化alert ??
-    alert("{{_('请选择结算商品')}}");
+    Toast("{{_('请选择结算商品')}}");
     return false;
   }
 
@@ -294,6 +295,11 @@ $(function(){
   $(".change_cart_quantity").focusout(function(){
     var quantity = parseInt($(this).val());
     var cart_id = parseInt($(this).attr('data-cart-id'));
+    var stock_quantity = parseInt($("#stock_quantity_num"+cart_id).val());
+
+    if (quantity > stock_quantity) {
+      Toast("{{_('库存不足')}}");
+    }
 
     if (isNaN(quantity) || quantity <= 0) {
       $(this).val($(this).attr('data-value'));
@@ -301,7 +307,7 @@ $(function(){
     }
 
     var ret = _update_cart(cart_id, quantity);
-    if (ret) {
+    if (ret) { 
       $(this).attr('data-value', quantity);
       _is_all_selected();
     }

@@ -171,7 +171,7 @@ function dele(address_id){
   if(confirm('是否确认删除该收货地址？')){
     $.get("{{ url_for('api.me.address_remove') }}", {'ua_id':address_id}, function(json){
       if(json.ret != 0){
-        alert(json.msg);
+        Toast(json.msg);
         return false;
       }
 
@@ -238,8 +238,7 @@ function save(ua_id) {
           $("#new_address").after(html_text);
         }
       } else {
-        // 优化alert ??
-        alert(json.msg);
+        Toast(json.msg);
         return false;
       }
     });

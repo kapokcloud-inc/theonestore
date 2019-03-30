@@ -308,7 +308,7 @@ function okey(order_id) {
   if(conf){
     $.get("{{ url_for('api.order.deliver') }}", { 'order_id': order_id }, function (json) {
       if (json.ret != 0) {
-        alert(json.msg,"cal");
+        Toast(json.msg,"cal");
         return false;
       }else{
         $('#confRet').removeClass('hide');
@@ -401,8 +401,7 @@ function save() {
         $("#address_district").val(district);
         $("#address_address").val(address);
       } else {
-        // 优化alert ??
-        alert(json.msg);
+        Toast(json.msg);
         return false;
       }
     });
@@ -440,7 +439,7 @@ function calOrder(order_id) {
   if (cal) {
    $.get("{{ url_for('api.order.cancel') }}", { 'order_id': order_id }, function (json) {
       if (json.ret != 0) {
-        alert(json.msg,"cal");
+        Toast(json.msg,"cal");
         return false;
       }
 
@@ -455,7 +454,7 @@ function del(order_id) {
   if (dele) {
     $.get("{{ url_for('api.order.remove') }}", { 'order_id': order_id }, function (json) {
       if (json.ret != 0) {
-        alert(json.msg, "text");
+        Toast(json.msg, "text");
         return false;
       }
 
