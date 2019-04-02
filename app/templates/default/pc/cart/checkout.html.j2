@@ -261,14 +261,12 @@ function checkout_amounts() {
   var coupon_id = $("#coupon_id").val();
 
   if (carts_id == '') {
-    // 优化alert ??
-    alert("{{_('请先选购商品')}}");
+    Toast("{{_('请先选购商品')}}");
     return false;
   }
 
   if (shipping_id == 0) {
-    // 优化alert ??
-    alert("{{_('请先选择快递')}}");
+    Toast("{{_('请先选择快递')}}");
     return false;
   }
 
@@ -278,8 +276,7 @@ function checkout_amounts() {
   params = {'carts_id':carts_id, 'shipping_id':shipping_id, 'coupon_id':coupon_id};
   $.get("{{ url_for('api.cart.checkout_amounts') }}", params, function(json) {
     if (json.ret != 0) {
-      // 优化alert ??
-      alert(json.msg);
+      Toast(json.msg);
       return false;
     }
 
@@ -433,8 +430,7 @@ function save() {
           $("#current_address_ua_id").val(_ua_id);
         }
       } else {
-        // 优化alert ??
-        alert(json.msg);
+        Toast(json.msg);
         return false;
       }
     });
@@ -454,20 +450,17 @@ function submit() {
   var carts_id = $("#carts_id").val();
   
   if (ua_id == 0) {
-    // 优化alert ??
-    alert("{{_('请先设置收货地址')}}");
+    Toast("{{_('请先设置收货地址')}}");
     return false;
   }
 
   if (shipping_id == 0) {
-    // 优化alert ??
-    alert("{{_('请先选择快递')}}");
+    Toast("{{_('请先选择快递')}}");
     return false;
   }
 
   if (carts_id == '') {
-    // 优化alert ??
-    alert("{{_('请先选购商品')}}");
+    Toast("{{_('请先选购商品')}}");
     return false;
   }
 
@@ -480,8 +473,7 @@ function submit() {
       var order_id = json.data.order_id;
       window.location.href = "/cart/pay/" + order_id;
     } else {
-      // 优化alert ??
-      alert(json.msg);
+      Toast(json.msg);
       return false;
     }
   });

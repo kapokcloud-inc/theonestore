@@ -110,8 +110,7 @@ function funds_pay(order_id) {
   var order_id_list = '[' + order_id + ']';
   $.get("{{ url_for('api.pay.fundspay_req') }}", {'order_id_list':order_id_list}, function(res) {
     if (res.ret != 0) {
-      // 优化alert ??
-      alert(res.msg);
+      Toast(res.msg);
       return false;
     }
 

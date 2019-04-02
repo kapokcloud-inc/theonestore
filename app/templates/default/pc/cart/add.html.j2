@@ -133,7 +133,7 @@ var $listItem = $("#listItem");
 function cartTo(goods_id) {
   $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':1}, function(json) {
     if (json.ret != 0) {
-      alert(json.msg);
+      Toast(json.msg);
       return false;
     }
 

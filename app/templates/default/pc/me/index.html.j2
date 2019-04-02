@@ -164,13 +164,13 @@ function updateProfile(nickname){
   var gender   = $('#gender').attr('value');
   
   if(typeof nickname =='undefiined' || nickname == null || nickname.replace(/(^\s*)|(\s*$)/g,"") == ''){
-    alert('请输入昵称');
+    Toast('请输入昵称');
     return false;
   }
   params = {'nickname':nickname, 'avatar':avatar, 'gender':gender}
   $.post("{{ url_for('api.me.update') }}", params, function(json) {
     if (json.ret != 0) {
-      alert(json.msg);
+      Toast(json.msg);
       return false;
     }
 

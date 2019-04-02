@@ -200,7 +200,7 @@ function calculateRefundsAmount(quantity){
       if (json.ret == 0) {
         $("#refunds_amount").text('￥'+json.data.refunds_amount);
       } else {
-        alert(json.msg);
+        Toast(json.msg);
         return false;
       }
     });
@@ -211,12 +211,11 @@ function calculateRefundsAmount(quantity){
 function apply(params, aftersales_type) {
   $.post("{{ url_for('api.aftersales.apply') }}", params, function(json) {
     if (json.ret == 0) {
-      //优化alert ??
       var aftersales_id = json.data.aftersales_id;
 
       window.location.href = "{{ url_for('pc.aftersales.apply_step2') }}?aftersales_type="+aftersales_type+"&aftersales_id="+aftersales_id;
     } else {
-      alert(json.msg);
+      Toast(json.msg);
     }
   });
 }
@@ -239,7 +238,7 @@ function aftersales_type_2(params) {
   var deliver_status = $("[data-type='deliver']").children('.allActive').attr("data-value");
 
   if ( typeof(deliver_status) == "undefined" ){
-    alert('请选择货物状态');
+    Toast('请选择货物状态');
     return false;
   }
 

@@ -90,8 +90,7 @@ function pay() {
   var recharge_amount = parseFloat($("#recharge_amount").val());
 
     if (recharge_amount <= 0) {
-      //优化alert ??
-      alert("{{_('请填写有效的充值金额')}}");
+      Toast("{{_('请填写有效的充值金额')}}");
       return false;
     }
 
@@ -108,8 +107,7 @@ function pay() {
 
         setInterval(is_paid, 1000);
       } else {
-        //优化alert ??
-        alert(json.msg);
+        Toast(json.msg);
       }
     });
 }

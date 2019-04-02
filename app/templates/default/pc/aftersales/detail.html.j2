@@ -307,7 +307,7 @@ function aftersalesReturnSn(aftersales_id){
   var return_shipping_sn = $('.track-num').val();
 
   if(typeof return_shipping_sn == 'undefiined' || return_shipping_sn == null || return_shipping_sn.replace(/(^\s*)|(\s*$)/g,"") == ''){
-    alert('请输入寄回商品快递单号');
+    Toast('请输入寄回商品快递单号');
     return false;
   }
 
@@ -317,8 +317,7 @@ function aftersalesReturnSn(aftersales_id){
     if (json.ret == 0) {
       location.reload();
     } else {
-      //优化alert ??
-      alert(json.msg);
+      Toast(json.msg);
       return false;
     }
   });

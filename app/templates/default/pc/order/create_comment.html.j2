@@ -143,10 +143,10 @@ function submit() {
   var params = {'og_id':og_id, 'rating':rating, 'content':content, 'img_data':img_data}
   $.post("{{ url_for('api.order.save_comment') }}", params, function(json) {
     if (json.ret == 0) {
-      alert('您已发表评价成功，返回评价中心');
+      Toast('您已发表评价成功，返回评价中心');
       window.location.href = "{{ url_for('pc.order.comment', is_pending=1) }}";
     } else {
-      alert(json.msg, "text");
+      Toast(json.msg, "text");
       return false;
     }
   });
