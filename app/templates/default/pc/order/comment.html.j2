@@ -45,7 +45,7 @@
                   </div>
                   <div class="item-detail">
                     <div class="all-title">{{ comment.goods_name }}</div>
-                    <div class="all-price mar-top">￥{{ comment.goods_price }}</div>
+                    <div class="all-price mar-top">￥{{ comment.goods_price|toamount }}</div>
                   </div>
                 </a>
                 {% if comment.comment_id == 0 %}

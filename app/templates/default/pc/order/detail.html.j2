@@ -135,7 +135,7 @@
                   <div class="one-cell_bd">
                     <p class="blackGap">{{ good.goods_name }}</p>
                     <p class="greyGap mar-top">
-                      <span>￥{{ good.goods_price }}</span>
+                      <span>￥{{ good.goods_price|toamount }}</span>
                       <span>x{{ good.quantity }}</span>
                     </p>
                   </div>
@@ -215,19 +215,19 @@
                 <tbody>
                   <tr>
                     <th>{{_('商品总价：')}}</th>
-                    <td>￥{{ order.goods_amount }}</td>
+                    <td>￥{{ order.goods_amount|toamount }}</td>
                   </tr>
                   <tr>
                     <th>{{_('运费：')}}</th>
-                    <td>￥{{ order.shipping_amount }}</td>
+                    <td>￥{{ order.shipping_amount|toamount }}</td>
                   </tr>
                   <tr>
                     <th>{{_('优惠：')}}</th>
-                    <td>-￥{{ order.discount_amount }}</td>
+                    <td>-￥{{ order.discount_amount|toamount }}</td>
                   </tr>
                   <tr class="total-table_tl">
                     <th>{{_('实际付款：')}}</th>
-                    <td>￥{{ order.pay_amount }}</td>
+                    <td>￥{{ order.pay_amount|toamount }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -304,20 +304,34 @@ $.ajaxSetup({
 
 //确认收货弹窗
 function okey(order_id) {
-  var conf = confirm('确认收到此订单的商品了么？');
-  if(conf){
-    $.get("{{ url_for('api.order.deliver') }}", { 'order_id': order_id }, function (json) {
-      if (json.ret != 0) {
-        Toast(json.msg,"cal");
-        return false;
-      }else{
-        $('#confRet').removeClass('hide');
-        if (!$('#confRet').hasClass('show')) {
-          $('#confRet').addClass('show');
+  $.confirm({
+    title: '',
+    content: '确认收到此订单的商品了么？',
+    buttons: {   
+      ok: {
+        text: "确认",
+        btnClass: 'btn-primary',
+        action: function(){
+          $.get("{{ url_for('api.order.deliver') }}", { 'order_id': order_id }, function (json) {
+            if (json.ret != 0) {
+              Toast(json.msg,"cal");
+              return false;
+            } else{
+              $('#confRet').removeClass('hide');
+              if (!$('#confRet').hasClass('show')) {
+                $('#confRet').addClass('show');
+              }
+            }
+          });
         }
+      },
+      cancel: {
+        text: "取消",
+        btnClass: 'btn-grey',
+        action: function(){}
       }
-    });
-  }
+    }
+  });
 }
 
 //关闭确认收货弹窗
@@ -435,32 +449,60 @@ $('#more').click(function(){
 
 //取消订单弹窗
 function calOrder(order_id) {
-  var cal = confirm('确定取消该订单？');
-  if (cal) {
-   $.get("{{ url_for('api.order.cancel') }}", { 'order_id': order_id }, function (json) {
-      if (json.ret != 0) {
-        Toast(json.msg,"cal");
-        return false;
-      }
+  $.confirm({
+    title: '',
+    content: '确定取消该订单？',
+    buttons: {   
+      ok: {
+        text: "确认",
+        btnClass: 'btn-primary',
+        action: function(){
+          $.get("{{ url_for('api.order.cancel') }}", { 'order_id': order_id }, function (json) {
+            if (json.ret != 0) {
+              Toast(json.msg,"cal");
+              return false;
+            }
 
-      location.reload();
-    });
-  }
+            location.reload();
+          });
+        }
+      },
+      cancel: {
+        text: "取消",
+        btnClass: 'btn-grey',
+        action: function(){}
+      }
+    }
+  });
 }
 
 //删除订单弹窗
 function del(order_id) {
-  var dele = confirm('确定删除该订单？');
-  if (dele) {
-    $.get("{{ url_for('api.order.remove') }}", { 'order_id': order_id }, function (json) {
-      if (json.ret != 0) {
-        Toast(json.msg, "text");
-        return false;
-      }
+  $.confirm({
+    title: '',
+    content: '确定删除该订单？',
+    buttons: {   
+      ok: {
+        text: "确认",
+        btnClass: 'btn-primary',
+        action: function(){
+          $.get("{{ url_for('api.order.remove') }}", { 'order_id': order_id }, function (json) {
+            if (json.ret != 0) {
+              Toast(json.msg, "text");
+              return false;
+            }
 
-      window.location.href = "{{ url_for('pc.order.index') }}";
-    });
-  }
+            window.location.href = "{{ url_for('pc.order.index') }}";
+          });
+        }
+      },
+      cancel: {
+        text: "取消",
+        btnClass: 'btn-grey',
+        action: function(){}
+      }
+    }
+  });
 }
 </script>
 {% endblock%}

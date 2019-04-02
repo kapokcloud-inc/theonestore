@@ -48,7 +48,7 @@
           {% endif %}
           <div class="icom_photo">
             {% set _src = '/static/default/mobile/img/userOn.png' if _view == 'me' else '/static/default/mobile/img/user.png' %}
-            {% set _on = 'on' if _view == 'user' else '' %}
+            {% set _on = 'on' if _view == 'me' else '' %}
             <img src="{{ _src }}" alt="">
           </div>
           <p class="foot_text {{ _on }}">我的</p>

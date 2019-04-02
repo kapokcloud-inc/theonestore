@@ -329,12 +329,14 @@
   {% endif %}
 </div>
 <input type="hidden" name="goods_id" id="goods_id" value="{{ item.goods_id }}">
+<input type="hidden" name="goods_id" id="stock_quantity" value="{{ item.stock_quantity }}">
 {% endblock %}
 
 {% block script %}
 <script type="text/javascript" src="/static/default/pc/js/swiper.min.js" charset="utf-8"></script>
 
 <script type="text/javascript">
+
 $(document).ready(function(){
   // 点击切换商品详情和商品评价
   $(".detail-nav_list li").off("click").on("click", function () {
@@ -656,8 +658,14 @@ $('.num_minus').click(function (e) {
 })
 
 $('.num_add').click(function (e) {
+  var stock_quantity = parseInt($("#stock_quantity").val());
   var $input = $(e.currentTarget).parent().find('#goods_quantity');
   var number = parseInt($input.val() || "0") + 1;
+
+  if (number > stock_quantity) {
+    Toast("{{_('库存不足')}}");
+    return false;
+  }
 
   $input.val(number);
 })
@@ -666,6 +674,7 @@ $('.num_add').click(function (e) {
 function cartTo() {
   var goods_id = parseInt($('#goods_id').val());
   var quantity = parseInt($("#goods_quantity").val());
+  var stock_quantity = parseInt($("#stock_quantity").val());
 
   if (quantity <= 0) {
     Toast("{{_('购买数量不能小于0')}}");
@@ -674,7 +683,24 @@ function cartTo() {
 
   $.get("{{ url_for('api.cart.add') }}", {'goods_id':goods_id, 'quantity':quantity}, function(json) {
     if (json.ret != 0) {
-      Toast(json.msg);
+      $.confirm({
+        title: '购买数量',
+        content: '库存不足，是否调整为最大可购买数量？',
+        buttons: {   
+          ok: {
+            text: "是",
+            btnClass: 'btn-primary',
+            action: function(){
+              $("#goods_quantity").val(stock_quantity);
+            }
+          },
+          cancel: {
+            text: "否",
+            btnClass: 'btn-grey',
+            action: function(){}
+          }
+        }
+      });
       return false;
     }
 

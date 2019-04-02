@@ -168,17 +168,31 @@ function dele(address_id){
     return;
   }
 
-  if(confirm('是否确认删除该收货地址？')){
-    $.get("{{ url_for('api.me.address_remove') }}", {'ua_id':address_id}, function(json){
-      if(json.ret != 0){
-        Toast(json.msg);
-        return false;
+  $.confirm({
+    title: '',
+    content: '是否确认删除该收货地址？',
+    buttons: {   
+      ok: {
+        text: "确认",
+        btnClass: 'btn-primary',
+        action: function(){
+          $.get("{{ url_for('api.me.address_remove') }}", {'ua_id':address_id}, function(json){
+            if(json.ret != 0){
+              Toast(json.msg);
+              return false;
+            }
+
+            $("#"+address_id).remove();
+          });
+        }
+      },
+      cancel: {
+        text: "取消",
+        btnClass: 'btn-grey',
+        action: function(){}
       }
-
-      $("#"+address_id).remove();
-    });
-  }
-
+    }
+  });
 }
 
 //点击cancel()关闭添加新地址弹窗

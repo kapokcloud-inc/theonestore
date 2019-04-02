@@ -31,7 +31,7 @@
             <p class="order-info_total">
               {{_(' 应付总额：')}}
               <span class="allOn">￥</span>
-              <span class="allOn" style="font-size:24px;">{{ order.pay_amount }}</span>
+              <span class="allOn" style="font-size:24px;">{{ order.pay_amount|toamount }}</span>
             </p>
             <div class="order-info_detail" onclick="detail()">{{_('订单详情')}}</div>
           </div>

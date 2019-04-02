@@ -162,21 +162,21 @@
           <ul class="list-right">
             <li>
               <label class="goods-footer_left">{{_('商品总价：')}}</label>
-              <span id="items_amount" class="goods-footer_right">￥{{ items_amount }}</span>
+              <span id="items_amount" class="goods-footer_right">￥{{ items_amount|toamount }}</span>
             </li>
             <li>
               <label class="goods-footer_left">{{_('优惠金额：')}}</label>
-              <span id="discount_amount" class="goods-footer_right">￥{{ discount_amount }}</span>
+              <span id="discount_amount" class="goods-footer_right">￥{{ discount_amount|toamount }}</span>
             </li>
             <li>
               <label class="goods-footer_left">{{_('运费：')}}</label>
-              <span id="shipping_amount" class="goods-footer_right">￥{{ shipping_amount }}</span>
+              <span id="shipping_amount" class="goods-footer_right">￥{{ shipping_amount|toamount }}</span>
             </li>
             <li>
               <label class="goods-footer_left">{{_('应付总额：')}}</label>
               <span class="goods-footer_right" style="color:#f33155">
                 ￥
-                <em id="pay_amount" data-value="{{ pay_amount }}">{{ pay_amount }}</em>
+                <em id="pay_amount" data-value="{{ pay_amount }}">{{ pay_amount|toamount }}</em>
               </span>
             </li>
           </ul>
