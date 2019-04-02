@@ -126,7 +126,7 @@ def add():
         else:
             q = q.filter(Cart.session_id == session_id)
         cart = q.first()
-        
+
         # 计算商品购买数量
         quantity += cart.quantity if cart else 0
 
@@ -145,7 +145,7 @@ def add():
                 'add_time': current_time}
             cart = model_create(Cart, data)
         # 更新购物车商品
-        
+
         data = {'quantity': quantity, 'update_time': current_time}
         cart = model_update(cart, data)
 
@@ -155,7 +155,10 @@ def add():
     cs.check()
     session['cart_total'] = cs.cart_total
 
-    return resjson.print_json(0, u'ok', {'cart_total': cs.cart_total})
+    return resjson.print_json(
+        0,
+        u'ok',
+        {'cart_total': cs.cart_total, 'cart_num': quantity})
 
 
 @cart.route('/update')

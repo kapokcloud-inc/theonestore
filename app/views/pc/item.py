@@ -28,7 +28,7 @@ from app.helpers.user import get_uid
 
 from app.services.api.comment import CommentStaticMethodsService
 from app.services.api.item import (
-    ItemService, 
+    ItemService,
     ItemListService,
     CategoryService
 )
@@ -42,6 +42,7 @@ from app.models.item import (
 
 item = Blueprint('pc.item', __name__)
 
+
 @item.route('/')
 def index():
     """商品列表页"""
@@ -53,36 +54,41 @@ def index():
     is_recommend = toint(args.get('is_recommend', '0'))
     search_key = args.get('search_key').strip()
 
-    service = ItemListService(p, ps, 
-                cat_id = cat_id, 
-                is_hot = is_hot, 
-                is_recommend = is_recommend,
-                search_key = search_key)
+    service = ItemListService(
+        p,
+        ps,
+        cat_id=cat_id,
+        is_hot=is_hot,
+        is_recommend=is_recommend,
+        search_key=search_key)
     items = service.items()
 
     cs = CategoryService()
     cat = cs.get_category(cat_id)
-    return render_template('pc/item/index.html.j2', 
-                items = items,
-                pagination = service.pagination,
-                category = cat)
+    return render_template(
+        'pc/item/index.html.j2',
+        items=items,
+        pagination=service.pagination,
+        category=cat)
 
 
 @item.route('/<int:goods_id>')
 def detail(goods_id):
     """商品详情页"""
-    uid   = get_uid()
+    uid = get_uid()
     service = ItemService(goods_id, uid)
-    return render_template('pc/item/detail.html.j2',
-                item = service.item,
-                galleries = service.galleries,
-                is_fav = service.is_fav,
-                comments = service.comments(1, 12),
-                pagination = service.comment_pagination(1, 12),
-                rating_1_count = service.get_rating_count(1),
-                rating_2_count = service.get_rating_count(2),
-                rating_3_count = service.get_rating_count(3),
-                img_count = service.get_image_rating_count()
+    return render_template(
+        'pc/item/detail.html.j2',
+        item=service.item,
+        galleries=service.galleries,
+        is_fav=service.is_fav,
+        comments=service.comments(1, 12),
+        pagination=service.comment_pagination(1, 12),
+        rating_1_count=service.get_rating_count(1),
+        rating_2_count=service.get_rating_count(2),
+        rating_3_count=service.get_rating_count(3),
+        img_count=service.get_image_rating_count(),
+        cart_num=service.cart_num
     )
 
 
@@ -94,9 +100,10 @@ def recommend():
     ps = toint(args.get('ps', '10'))
     service = ItemListService(p, ps, is_recommend=1)
     items = service.items()
-    return render_template('pc/item/recommend.html.j2', 
-                items = items,
-                pagination = service.pagination)
+    return render_template(
+        'pc/item/recommend.html.j2',
+        items=items,
+        pagination=service.pagination)
 
 
 @item.route('/hot')
@@ -107,9 +114,10 @@ def hot():
     ps = toint(args.get('ps', '10'))
     service = ItemListService(p, ps, is_hot=1)
     items = service.items()
-    return render_template('pc/item/hot.html.j2', 
-                items = items,
-                pagination = service.pagination)
+    return render_template(
+        'pc/item/hot.html.j2',
+        items=items,
+        pagination=service.pagination)
 
 
 @item.route('/comments-paging')
@@ -124,9 +132,12 @@ def comments_paging():
         _list = _str.split('=')
         params[_list[0]] = _list[1]
 
-    _data      = CommentStaticMethodsService.comments(params, True)
-    comments   = _data['comments']
+    _data = CommentStaticMethodsService.comments(params, True)
+    comments = _data['comments']
     pagination = _data['pagination']
 
-    data = {'comments':comments, 'pagination':pagination, 'params':params}
+    data = {
+        'comments': comments,
+        'pagination': pagination,
+        'params': params}
     return render_template('pc/item/comments_paging.html.j2', **data)

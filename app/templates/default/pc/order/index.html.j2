@@ -99,7 +99,7 @@
                               <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step1', order_id=order.order_id,og_id=0) }}">
                                 <button class="order-type_btn" type="button">{{_('申请退款')}}</button>
                               </a>
-                            {% else %}
+                            {% elif 7 in codes[order.order_id] %}
                               <a class="btn-link" href="{{ url_for('pc.aftersales.apply_step0', order_id=order.order_id) }}">
                                 <button class="order-type_btn" type="button">{{_('申请售后')}}</button>
                               </a>
