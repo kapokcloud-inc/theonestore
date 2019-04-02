@@ -244,6 +244,24 @@ function update_cart_quantity(cart_id, is_add) {
 
 
 function remove(cart_id) {
+  $.confirm({
+    title: 'What is up?',
+    content: 'Here goes a little content',
+    type: 'green',
+    buttons: {   
+      ok: {
+          text: "ok!",
+          btnClass: 'btn-primary',
+          keys: ['enter'],
+          action: function(){
+                console.log('the user clicked confirm');
+          }
+      },
+      cancel: function(){
+              console.log('the user clicked cancel');
+      }
+    }
+  });
   // 优化confirm
   var r = confirm("{{_('确认删除？')}}");
   if (r==true) {
