@@ -406,7 +406,8 @@ class OrderUpdateService(object):
     """更新订单Service"""
 
     def __init__(self, uid, order_id, ua_id, shipping_id=0, coupon_id=0):
-        self.msg = ''
+        """初始化更新订单服务"""
+
         self.uid = uid  # 购买人
         self.order_id = order_id  # 订单ID
         self.ua_id = ua_id  # 收货地址ID
@@ -428,45 +429,62 @@ class OrderUpdateService(object):
         # 订单应付金额: order_amount - discount_amount
         self.pay_amount = Decimal('0.00')
 
+        # 是否检查
+        self.__is_check_order = False
+        self.__is_check_shipping_address = False
+        self.__is_check_shipping = False
+        self.__is_check_coupon = False
+        self.__is_check = False
+
     def _check_order(self):
         """检查 - 订单"""
+        if self.__is_check_order:
+            return
+        self.__is_check_order = True
 
-        self.order = Order.query.filter(Order.order_id == self.order_id).\
+        self.order = Order.query.\
+            filter(Order.order_id == self.order_id).\
             filter(Order.uid == self.uid).first()
+
         if not self.order:
-            self.msg = _(u'订单不存在')
-            return False
+            raise OrderException(_(u'订单不存在'))
 
         if self.order.pay_status != 1:
-            self.msg = _(u'不能修改已支付的订单')
-            return False
+            raise OrderException(_(u'不能修改已支付的订单'))
 
         self.items_amount = Decimal(self.order.goods_amount)
 
-        return True
+        return
 
     def _check_shipping_address(self):
         """检查 - 收货地址"""
+        if self.__is_check_shipping_address:
+            return
+        self.__is_check_shipping_address = True
 
-        self.order_address = OrderAddress.query.filter(
-            OrderAddress.order_id == self.order_id).first()
+        self.order_address = OrderAddress.query.\
+            filter(OrderAddress.order_id == self.order_id).first()
 
         self.shipping_address = UserAddress.query.\
             filter(UserAddress.ua_id == self.ua_id).\
             filter(UserAddress.uid == self.uid).first()
-        if not self.shipping_address:
-            self.msg = _(u'收货地址不存在')
-            return False
 
-        return True
+        if not self.shipping_address:
+            raise OrderException(_(u'收货地址不存在'))
+
+        return
 
     def _check_shipping(self):
         """检查 - 快递"""
 
+        if self.__is_check_shipping:
+            return
+        self.__is_check_shipping = True
+
         self.shipping = Shipping.query.get(self.shipping_id)
+
         if not self.shipping:
-            self.msg = _(u'快递不存在')
-            return False
+            raise OrderException(_(u'快递不存在'))
 
         self.shipping_amount = Decimal(self.shipping.shipping_amount)
 
@@ -475,8 +493,13 @@ class OrderUpdateService(object):
     def _check_coupon(self):
         """检查 - 优惠券"""
 
-        self._coupon = Coupon.query.filter(
-            Coupon.order_id == self.order_id).first()
+        if self.__is_check_coupon:
+            return
+        self.__is_check_coupon = True
+
+        self._coupon = Coupon.query.\
+            filter(Coupon.order_id == self.order_id).first()
+
         _coupon_id = self._coupon.coupon_id if self._coupon else None
 
         if self.coupon_id > 0 and self.coupon_id != _coupon_id:
@@ -485,8 +508,7 @@ class OrderUpdateService(object):
                 filter(Coupon.coupon_id == self.coupon_id).\
                 filter(Coupon.uid == self.uid).first()
             if not self.coupon:
-                self.msg = _(u'优惠券不存在')
-                return False
+                raise OrderException(_(u'优惠券不存在'))
 
             # 优惠券金额
             if (self.coupon.is_valid == 1 and
@@ -496,27 +518,30 @@ class OrderUpdateService(object):
                 self.coupon_amount = Decimal(self.coupon.coupon_amount)
                 self.discount_amount = self.coupon_amount
 
-        return True
+        return
 
     def check(self):
         """检查"""
+        if self.__is_check:
+            return
+        self.__is_check = True
+        try:
+            self._check_order()
+            self._check_shipping_address()
+            self._check_shipping()
+            self._check_coupon()
+        except OrderException as e:
+            raise e
 
-        if not self._check_order():
-            return False
-
-        if not self._check_shipping_address():
-            return False
-
-        if not self._check_shipping():
-            return False
-
-        if not self._check_coupon():
-            return False
-
-        return True
+        return
 
     def update(self):
         """更新订单"""
+
+        try:
+            self.check()
+        except OrderException as e:
+            raise e
 
         discount_desc = None
 
@@ -539,15 +564,20 @@ class OrderUpdateService(object):
 
         # 还原已用优惠券
         if self._coupon and self._coupon != self.coupon:
-            data = {'is_valid': 1, 'order_id': 0, 'use_time': 0}
+            data = {
+                'is_valid': 1,
+                'order_id': 0,
+                'use_time': 0}
             model_update(self._coupon, data)
 
             discount_desc = ''
 
         # 使用优惠券
         if self.coupon:
-            data = {'is_valid': 0, 'order_id': self.order_id,
-                    'use_time': self.current_time}
+            data = {
+                'is_valid': 0,
+                'order_id': self.order_id,
+                'use_time': self.current_time}
             model_update(self.coupon, data)
 
             discount_desc = _(u'使用优惠券%s: %s' %
@@ -895,13 +925,16 @@ class OrderCancelService(object):
     """取消订单Service"""
 
     def __init__(self, order_id, uid, cancel_desc=u''):
-        self.msg = ''
-        self.order_id = order_id               # 订单ID
-        self.uid = uid                    # 订单用户ID
+        """初始化服务"""
+
+        self.order_id = order_id                  # 订单ID
+        self.uid = uid                            # 订单用户ID
         self.cancel_desc = cancel_desc            # 取消原因
-        self.order = None                   # 订单
-        self.current_time = current_timestamp()
-        self.cancel_status = 0
+        self.order = None                         # 订单信息
+        self.current_time = current_timestamp()   # 当前时间
+        self.cancel_status = 0                    # 取消状态
+
+        self.__is_chceck_order = False            # 是否检查订单
 
     def commit(self):
         """提交sql事务"""
@@ -911,31 +944,37 @@ class OrderCancelService(object):
     def check(self):
         """检查"""
 
-        self.order = Order.query.filter(Order.order_id == self.order_id).\
+        if self.__is_chceck_order:
+            return
+        self.__is_chceck_order = True
+
+        self.order = Order.query.\
+            filter(Order.order_id == self.order_id).\
             filter(Order.uid == self.uid).first()
 
         if not self.order:
-            self.msg = _(u'订单不存在')
-            return False
+            raise OrderException(_(u'订单不存在'))
 
         if self.order.pay_status == 2:
-            self.msg = _(u'订单已支付，不能取消， 请联系客服。')
-            return False
+            raise OrderException(_(u'订单已支付，不能取消，请联系客服'))
 
         if self.order.order_status == 2:
-            self.msg = _(u'订单已经完成，不能取消。')
-            return False
+            raise OrderException(_(u'订单已经完成，不能取消'))
 
         if self.order.order_status == 3:
-            self.msg = _(u'订单已经取消过了')
-            return False
+            raise OrderException(_(u'订单已经取消过了'))
 
         self.cancel_status = 3
 
-        return True
+        return
 
     def cancel(self):
         """取消"""
+
+        try:
+            self.check()
+        except OrderException as e:
+            raise e
 
         data = {
             'order_status': 3,
@@ -960,6 +999,7 @@ class OrderCancelService(object):
         else:
             mcs.do()
 
+        self.commit()
         return True
 
 
@@ -967,36 +1007,47 @@ class OrderDeliverService(object):
     """确认收货Service"""
 
     def __init__(self, order_id, uid):
-        self.msg = ''
-        self.order_id = order_id            # 订单ID
-        self.uid = uid                 # 用户ID
+        """初始化函数"""
+
+        self.order_id = order_id                 # 订单ID
+        self.uid = uid                           # 用户ID
         self.current_time = current_timestamp()  # 当前时间
-        self.order = None                # 订单实例
+        self.order = None                        # 订单实例
+        self.__is_check_order = False            # 是否检查订单
 
     def check(self):
         """检查"""
 
-        self.order = Order.query.filter(Order.order_id == self.order_id).\
+        if self.__is_check_order:
+            return True
+        self.__is_check_order = True
+
+        self.order = Order.query.\
+            filter(Order.order_id == self.order_id).\
             filter(Order.uid == self.uid).first()
         if self.order is None:
-            self.msg = _(u'找不到订单')
-            return False
+            raise OrderException(_(u'找不到订单'))
 
         if self.order.shipping_status != 2:
-            self.msg = _(u'商品还没有发货，不能确认收货')
-            return False
+            raise OrderException(_(u'商品还没有发货，不能确认收货'))
 
         if self.order.deliver_status == 2:
-            self.msg = _(u'已经确认过发货，请勿重复确认')
-            return True
+            raise OrderException(_(u'已经确认过发货，请勿重复确认'))
 
         return True
 
     def deliver(self):
         """确认收货"""
 
-        data = {'order_status': 2, 'deliver_status': 2,
-                'deliver_time': self.current_time}
+        try:
+            self.check()
+        except OrderException as e:
+            raise e
+
+        data = {
+            'order_status': 2,
+            'deliver_status': 2,
+            'deliver_time': self.current_time}
         model_update(self.order, data)
 
         # 站内消息

@@ -30,7 +30,7 @@ def root():
     # 热门商品列表
     hot_service = ItemListService(1, 12, is_hot=1)
     hot_items = hot_service.items()
-    
+
     # 推荐商品列表
     recommend_service = ItemListService(1, 12, is_recommend=1)
     recommend_items = recommend_service.items()
@@ -51,4 +51,3 @@ def pagenotfound():
 def servererror():
     """服务器内部发生错误"""
     return render_template('mobile/index/500.html.j2')
-    

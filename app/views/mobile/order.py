@@ -13,7 +13,8 @@ from flask import (
     session,
     Blueprint,
     redirect,
-    url_for
+    url_for,
+    abort
 )
 from flask_babel import gettext as _
 
@@ -22,6 +23,7 @@ from app.database import db
 from app.helpers import (
     render_template,
     log_info,
+    log_error,
     toint,
     get_count
 )
@@ -35,7 +37,7 @@ from app.services.api.order import (
     OrderCancelService,
     OrderDeliverService
 )
-
+from app.exception import OrderException
 from app.forms.api.comment import CommentOrderGoodsForm
 from app.services.track import Shipping100TrackService
 from app.services.api.order import OrderStaticMethodsService
@@ -52,6 +54,7 @@ from app.models.order import (
 
 order = Blueprint('mobile.order', __name__)
 
+
 @order.route('/')
 def index():
     """订单列表页"""
@@ -61,7 +64,7 @@ def index():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    data               = OrderStaticMethodsService.orders(uid, request.args.to_dict())
+    data = OrderStaticMethodsService.orders(uid, request.args.to_dict())
     data['paging_url'] = url_for('mobile.order.paging', **request.args)
     data['tab_status'] = request.args.get('tab_status', '0')
 
@@ -105,24 +108,29 @@ def cancel():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    args        = request.args
-    order_id    = toint(args.get('order_id', 0))
+    args = request.args
+    order_id = toint(args.get('order_id', 0))
     cancel_desc = args.get('cancel_desc', '').strip()
 
     if order_id <= 0:
         return ''
 
     ocs = OrderCancelService(order_id, uid, cancel_desc)
-
-    if not ocs.check():
+    try:
+        ocs.cancel()
+    except OrderException as e:
+        msg = u'%s' % e.msg
+        log_error(msg)
         return ''
 
-    ocs.cancel()
-    ocs.commit()
+    text, code = OrderStaticMethodsService.order_status_text_and_action_code(
+        ocs.order)
 
-    text, code = OrderStaticMethodsService.order_status_text_and_action_code(ocs.order)
-
-    return render_template('mobile/order/order.html.j2', order=ocs.order, text=text, code=code)
+    return render_template(
+        'mobile/order/order.html.j2',
+        order=ocs.order,
+        text=text,
+        code=code)
 
 
 @order.route('/deliver')
@@ -134,21 +142,28 @@ def deliver():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    args     = request.args
+    args = request.args
     order_id = toint(args.get('order_id', 0))
 
     if order_id <= 0:
         return ''
-    
+
     ods = OrderDeliverService(order_id, uid)
-    if not ods.check():
+    try:
+        ods.deliver()
+    except OrderException as e:
+        msg = u'%s' % e.msg
+        log_error(msg)
         return ''
 
-    ods.deliver()
+    text, code = OrderStaticMethodsService.order_status_text_and_action_code(
+        ods.order)
 
-    text, code = OrderStaticMethodsService.order_status_text_and_action_code(ods.order)
-
-    return render_template('mobile/order/order.html.j2', order=ods.order, text=text, code=code)
+    return render_template(
+        'mobile/order/order.html.j2',
+        order=ods.order,
+        text=text,
+        code=code)
 
 
 @order.route('/track')
@@ -160,22 +175,25 @@ def track():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    args     = request.args
+    args = request.args
     order_id = toint(args.get('order_id', 0))
 
-    order = Order.query.filter(Order.order_id == order_id).filter(Order.uid == uid).first()
+    order = Order.query.filter(Order.order_id == order_id).filter(
+        Order.uid == uid).first()
 
-    shipping     = None
-    express_msg  = ''
+    shipping = None
+    express_msg = ''
     express_data = []
     if order and order.shipping_status == 2:
         shipping = Shipping.query.get(order.shipping_id)
-        shippingService = Shipping100TrackService(order.shipping_code, order.shipping_sn)
+        shippingService = Shipping100TrackService(
+            order.shipping_code, order.shipping_sn)
         express_msg, express_datas = shippingService.track()
         if express_msg == 'ok':
             express_data = express_datas
 
-    data = {'express_msg':express_msg, 'express_data':express_data, 'order':order, 'shipping':shipping}
+    data = {'express_msg': express_msg, 'express_data': express_data,
+            'order': order, 'shipping': shipping}
     return render_template('mobile/order/track.html.j2', **data)
 
 
@@ -189,13 +207,14 @@ def create_comment(og_id):
     uid = get_uid()
 
     order_goods = OrderGoods.query.get(og_id)
-    order       = Order.query.filter(Order.order_id == order_goods.order_id).filter(Order.uid == uid).first()
+    order = Order.query.filter(Order.order_id == order_goods.order_id).filter(
+        Order.uid == uid).first()
     if not order:
         return redirect(url_for('mobile.index.pagenotfound'))
-    
+
     if order_goods.comment_id > 0:
         return redirect(url_for('mobile.index.servererror'))
-    
+
     wtf_form = CommentOrderGoodsForm()
 
     return render_template('mobile/order/create_comment.html.j2', order_goods=order_goods, wtf_form=wtf_form)
@@ -210,9 +229,11 @@ def comment():
         return redirect(url_for('api.weixin.login'))
     uid = get_uid()
 
-    data_temp = OrderStaticMethodsService.order_comments(uid, request.args.to_dict(), False)
+    data_temp = OrderStaticMethodsService.order_comments(
+        uid, request.args.to_dict(), False)
 
-    data = {'is_pending':data_temp['is_pending'], 'pending_count':data_temp['pending_count'], 'unpending_count':data_temp['unpending_count'], 'comments':data_temp['comments']}
+    data = {'is_pending': data_temp['is_pending'], 'pending_count': data_temp['pending_count'],
+            'unpending_count': data_temp['unpending_count'], 'comments': data_temp['comments']}
 
     return render_template('mobile/order/comment.html.j2', **data)
 
@@ -227,12 +248,13 @@ def comment_detail(og_id):
     uid = get_uid()
 
     order_goods = OrderGoods.query.get(og_id)
-    good        = Goods.query.get(order_goods.goods_id)
-    comment     = Comment.query.filter(Comment.comment_id == order_goods.comment_id).filter(Comment.uid == uid).first()
+    good = Goods.query.get(order_goods.goods_id)
+    comment = Comment.query.filter(
+        Comment.comment_id == order_goods.comment_id).filter(Comment.uid == uid).first()
     if not comment:
         return redirect(url_for('mobile.index.pagenotfound'))
 
-    return render_template('mobile/order/comment_detail.html.j2', order_goods=order_goods, comment=comment,good=good)
+    return render_template('mobile/order/comment_detail.html.j2', order_goods=order_goods, comment=comment, good=good)
 
 
 @order.route('/address-change/<int:oa_id>')
@@ -249,8 +271,8 @@ def address_change(oa_id):
         return redirect(url_for('mobile.index.pagenotfound'))
 
     order = Order.query.\
-                    filter(Order.order_id == order_address.order_id).\
-                    filter(Order.uid == uid).first()
+        filter(Order.order_id == order_address.order_id).\
+        filter(Order.uid == uid).first()
     if not order:
         return redirect(url_for('mobile.index.pagenotfound'))
 
