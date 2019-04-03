@@ -33,6 +33,8 @@ imgUrl=item.goods_img+'-square.small')
     </div>
   </div>
   <div class="index_wrap">
+    <input type="hidden" name="stock_quantity" id="stock_quantity" value="{{ item.stock_quantity }}">
+    <input type="hidden" name="cart_num" id="cart_num" value="{{ cart_num }}">
     <div id="nav1">
       <div class="category_wrap">
         <div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
@@ -71,7 +73,6 @@ imgUrl=item.goods_img+'-square.small')
           <div class="hide-mask"></div>
           <div class="weui-actionsheet weui-actionsheet_toggle">
             <div class="weui-actionsheet__menu bg-white">
-              <input type="hidden" name="" id="" value="">
               <div class="weui-actionsheet__cell not-product_text">
                 <span>{{_('选择购买数量')}}</span>
               </div>
@@ -126,7 +127,6 @@ imgUrl=item.goods_img+'-square.small')
             <div class="hide-mask"></div>
             <div class="weui-actionsheet weui-actionsheet_toggle">
               <div class="weui-actionsheet__menu bg-white">
-                <input type="hidden" name="" id="" value="">
                 <div class="weui-actionsheet__cell not-product_text">
                   <span>{{_('服务说明')}}</span>
                 </div>
@@ -233,9 +233,10 @@ imgUrl=item.goods_img+'-square.small')
       </div>
       <div class="icon_wrap" onclick="toCart()">
         {% set cart_total = session.get('cart_total', 0) %}
-        {% set cart_total = cart_total if cart_total else '' %}
-        {% set cart_total = cart_total if cart_total <=99 else '99+' %}
-        <span id="cart_total" class="weui-badge msg_badge" style="top:5px;">{{ cart_total }}</span>
+        {% set cart_total = cart_total if cart_total <= 99 else '99+' %}
+        {% if cart_total > 0 %}
+          <span id="cart_total" class="weui-badge msg_badge" style="top:5px;">{{ cart_total }}</span>
+        {% endif %}
         <img src="/static/default/mobile/img/cart.png" alt="">
       </div>
 
@@ -243,8 +244,8 @@ imgUrl=item.goods_img+'-square.small')
         <div style="flex:6">
           <button type="button" class="downOut">{{_('商品已下架')}}</button>
         </div>
-      {% elif item.stock_quantity <= 0 %}
-        <div style="flex:3">
+      {% elif (item.stock_quantity- cart_num) <= 0 %}
+        <div style="flex:6">
           <button type="button" class="buyTo">{{_('缺货')}}</button>
         </div>
       {% else %}
@@ -279,6 +280,9 @@ imgUrl=item.goods_img+'-square.small')
 {% block script %}
 <script type="text/javascript" src="/static/default/mobile/js/swiper.min.js" charset="utf-8"></script>
 <script type="text/javascript">
+var $stock_quantity = $("#stock_quantity");
+var $cart_num = $("#cart_num");
+
 $(function () {
   $(window).scroll(function () {
     var top100 = $(window).scrollTop();  //滚动条距离顶部的距离
@@ -355,8 +359,15 @@ $('.num_minus').click(function (e) {
 })
 
 $('.num_add').click(function (e) {
+  var stock_quantity = parseInt($stock_quantity.val());
+  var cart_num = parseInt($cart_num.val());
   var $input = $(e.currentTarget).parent().find('#goods_quantity');
   var number = parseInt($input.val() || "0") + 1;
+
+  if (number > (stock_quantity-cart_num)) {
+    $.toast("{{_('库存不足')}}", "text");
+    return false;
+  }
 
   $input.val(number);
 })
@@ -390,10 +401,21 @@ function choice() {
 
 //选择商品规格弹窗
 function determine() {
+  var stock_quantity = parseInt($stock_quantity.val());
+  var cart_num = parseInt($cart_num.val());
   var number = parseInt($("#goods_quantity").val());
 
   if (number <= 0) {
     $.toast("{{_('购买数量不能小于0')}}", "text");
+    return false;
+  }
+
+  if (number > (stock_quantity-cart_num)) {
+    $.confirm("{{_('库存不足，是否调整为最大可购买数量？')}}", function() {
+      $("#goods_quantity").val(stock_quantity-cart_num);
+    }, function() {
+      //点击取消后的回调函数
+    });
     return false;
   }
 
@@ -421,6 +443,7 @@ function cartTo(goods_id) {
     }
 
     $("#cart_total").text(json.data.cart_total);
+    $cart_num.val(json.data.cart_num);
     $.toast("{{_('添加购物车成功')}}", "text");
   });
 }

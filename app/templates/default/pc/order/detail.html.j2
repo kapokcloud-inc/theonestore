@@ -52,7 +52,7 @@
               <!-- 含有申请退款指令，有申请退款按钮 -->
               {% if 8 in code %}
                 <a class="order-type_btn mar-right" href="{{ url_for('pc.aftersales.apply_step1',order_id=order.order_id,og_id=0) }}">{{_('申请退款')}}</a>
-              {% else %}
+              {% elif 7 in code %}
                 <a class="order-type_btn mar-right" href="{{ url_for('pc.aftersales.apply_step0',order_id=order.order_id) }}">{{_('申请售后')}}</a>
               {% endif %}
             </div>
