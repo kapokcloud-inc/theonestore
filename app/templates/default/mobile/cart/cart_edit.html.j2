@@ -79,7 +79,11 @@
       return false;
     }
     if (quantity > stock_quantity) {
-      $.toast("{{_('库存不足')}}", "text");
+      $.confirm("{{_('库存不足，是否调整为最大可购买数量？')}}", function() {
+        $("#quantity").val(stock_quantity);
+      }, function() {
+        //点击取消后的回调函数
+      });
       return false;
     }
 
