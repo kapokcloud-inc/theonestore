@@ -81,19 +81,20 @@ def detail():
     """
     resjson.action_code = 11
 
-    goods_id  = toint(request.args.get('goods_id', '0'))
+    goods_id = toint(request.args.get('goods_id', '0'))
     if goods_id <= 0:
         return resjson.print_json(resjson.PARAM_ERROR)
 
     uid = get_uid()
     service = ItemService(goods_id, uid)
     return resjson.print_json(0, 'ok', {
-            'item':service.item,
-            'galleries':service.galleries,
-            'is_fav':service.is_fav,
-            'comments':service.comments(1, 12),
-            'rating_1_count':service.get_rating_count(1),
-            'rating_2_count':service.get_rating_count(2),
-            'rating_3_count':service.get_rating_count(3),
-            'img_count':service.get_image_rating_count(),
+            'item': service.item,
+            'galleries': service.galleries,
+            'is_fav': service.is_fav,
+            'comments': service.comments(1, 12),
+            'rating_1_count': service.get_rating_count(1),
+            'rating_2_count': service.get_rating_count(2),
+            'rating_3_count': service.get_rating_count(3),
+            'img_count': service.get_image_rating_count(),
+            'cart_num': service.cart_num()
     })

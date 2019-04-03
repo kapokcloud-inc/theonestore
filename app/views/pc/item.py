@@ -88,7 +88,7 @@ def detail(goods_id):
         rating_2_count=service.get_rating_count(2),
         rating_3_count=service.get_rating_count(3),
         img_count=service.get_image_rating_count(),
-        cart_num=service.cart_num
+        cart_num=service.cart_num()
     )
 
 
