@@ -52,7 +52,7 @@
                 </div>
                 <div class="item-detail">
                   <div class="all-title"> {{ order_goods.goods_name }}</div>
-                  <div class="all-price mar-top">￥{{ order_goods.goods_price }}</div>
+                  <div class="all-price mar-top">￥{{ order_goods.goods_price|toamount }}</div>
                 </div>
               </a>
               <div class="add-cart" onclick="addCar({{ order_goods.goods_id }})" data-tid="{{ order_goods.goods_id }}">

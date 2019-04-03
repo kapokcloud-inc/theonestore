@@ -63,7 +63,7 @@
                             <div class="order-fl">{{_('微信支付')}}</div>
                             <div class="order-price">
                               ￥{{_('订单金额：')}}
-                              <span class="price-num">{{ order.order_amount }}</span>
+                              <span class="price-num">{{ order.order_amount|toamount }}</span>
                             </div>
                           </div>
                         </div>
@@ -78,7 +78,7 @@
                                 <div class="one-cell_bd">
                                   <p class="blackGap">{{ good.goods_name }}</p>
                                   <p class="greyGap mar-top">
-                                    <span>￥{{ good.goods_price }}</span>
+                                    <span>￥{{ good.goods_price|toamount }}</span>
                                     <span>x{{ good.quantity }}</span>
                                   </p>
                                 </div>
