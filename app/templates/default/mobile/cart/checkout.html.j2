@@ -386,7 +386,8 @@ function newAddress() {
     $("#edit_address_address").val(address);
 
     $("#edit_address_pcd").cityPicker({
-      title: "请选择所在地",
+      toolbarCloseText: "完成",
+      title: "请选择所在地"
     });
 
     $newAdd.removeClass('hide').addClass('show');
