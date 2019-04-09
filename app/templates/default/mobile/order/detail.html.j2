@@ -61,23 +61,23 @@
         {% set og_aftersale_status = ogs_aftersale_status.get(item.og_id, 0) %}
         {% if og_aftersale_status['status_code'] == 1 %}
           <div class="weui-cell__ft applySale" data-value="{{ item.og_id }}">
-            <button type="button" class="order_btn">{{_('申请售后')}}</button>
+            <button type="button" class="order_btn">{{_('申请售后')}}</button>
           </div>
         {% elif og_aftersale_status['status_code'] == 2 %}
           <div class="weui-cell__ft">
-            <button type="button" class="order_btn">{{_('受理中')}}</button>
+            <button type="button" class="order_btn">{{_('受理中')}}</button>
           </div>
         {% elif og_aftersale_status['status_code'] == 3 %}
           <div class="weui-cell__ft">
-            <button type="button" class="order_btn">{{_('已退款')}}</button>
+            <button type="button" class="order_btn">{{_('已退款')}}</button>
           </div>
         {% elif og_aftersale_status['status_code'] == 4 %}
           <div class="weui-cell__ft">
-            <button type="button" class="order_btn">{{_('已换货')}}</button>
+            <button type="button" class="order_btn">{{_('已换货')}}</button>
           </div>
         {% elif og_aftersale_status['status_code'] == 5 %}
           <div class="weui-cell__ft">
-            <button type="button" class="order_btn">{{_('已退款，已换货')}}</button>
+            <button type="button" class="order_btn">{{_('已退款，已换货')}}</button>
           </div>
         {% endif %}
       </div>
@@ -264,8 +264,8 @@ function cancelOrder(order_id) {
 //删除订单弹窗
 function del(order_id) {
   $.confirm({
-    title: '删除订单',
-    text: '确定删除该订单？',
+    title: "{{_('删除订单')}}",
+    text: "{{_('确定删除该订单？')}}",
     onOK: function () {
       $.get("{{ url_for('api.order.remove') }}", {'order_id':order_id}, function(json) {
         if (json.ret != 0) {

@@ -209,8 +209,8 @@ function cancelOrder(order_id) {
 //删除订单弹窗
 function del(order_id) {
   $.confirm({
-    title: '删除订单',
-    text: '确定删除该订单？',
+    title: "{{_('删除订单')}}",
+    text: "{{_('确定删除该订单？')}}",
     onOK: function () {
       $.get("{{ url_for('api.order.remove') }}", {'order_id':order_id}, function(json) {
         if (json.ret != 0) {
