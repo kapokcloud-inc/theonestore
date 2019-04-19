@@ -49,9 +49,10 @@ from app.helpers.date_time import (
     timestamp2str,
     before_after_timestamp
 )
+from app.exception import ShippingException
 
 from app.services.weixin import WeixinMessageStaticMethodsService
-from app.services.track import Shipping100TrackService
+from app.services.track import TrackServiceFactory
 from app.services.message import MessageCreateService
 from app.services.api.cart import (
     CheckoutService,
@@ -1235,25 +1236,30 @@ class OrderStaticMethodsService(object):
             return abort(404)
 
         items = OrderGoods.query.filter(OrderGoods.order_id == order_id).all()
-        ogs_aftersale_status = OrderStaticMethodsService.order_goods_aftersale_status(
-            items, order)
+        ogs_aftersale_status = OrderStaticMethodsService.\
+            order_goods_aftersale_status(items, order)
         order_address = OrderAddress.query.filter(
             OrderAddress.order_id == order_id).first()
-        text, code = OrderStaticMethodsService.order_status_text_and_action_code(
-            order)
+        text, code = OrderStaticMethodsService.\
+            order_status_text_and_action_code(order)
 
         express_data = None
         express_datas = []
         if order.shipping_status == 2:
-            shippingService = Shipping100TrackService(
-                order.shipping_code, order.shipping_sn)
-            _express_msg, _express_data = shippingService.track()
-            if _express_msg == 'ok':
-                express_data = _express_data[0] if len(
-                    _express_data) > 0 else {}
+            try:
+                trackservice = TrackServiceFactory.get_trackservice()
+                _express_data = trackservice.track(
+                    order.shipping_code,
+                    order.shipping_sn,
+                    order_address.mobile)
+                _express_msg = 'ok'
+                express_data = _express_data[0] if len(_express_data) > 0 else {}
                 express_datas = _express_data
+            except ShippingException as e:
+                _express_msg = e.msg
 
-        aftersale = Aftersales.query.filter(Aftersales.order_id == order_id).\
+        aftersale = Aftersales.query.\
+            filter(Aftersales.order_id == order_id).\
             filter(Aftersales.status.in_([1, 2, 3])).first()
 
         data = {

@@ -33,7 +33,13 @@
                   {{ libs.form_control_static(_('支付流水'), order.pay_tran_id) }}
                   {{ libs.form_control_static(_('支付时间'), order.paid_time|timestamp2str) }}
                 {% endif %}
-                <!--{{ libs.form_control_static(_('支付状态'), const.PAY_STATUS.get(order.pay_status, _('错误状态'))) }}-->
+                {% if order.shipping_status == 2 %}
+                  {{ libs.form_control_static(_('快递公司'), order.shipping_name) }}
+                  {{ libs.form_control_static(_('快递编号'), order.shipping_sn) }}
+                {% endif %}
+                {% if order.order_status == 3 %}
+                  {{ libs.form_control_static(_('取消原因'), order.cancel_desc) }}
+                {% endif %}
               </div>
             </div>
           </div>
@@ -153,25 +159,6 @@
           <div class="panel panel-default">
             <div class="panel-heading">{{_('操作')}}</div>
             <div class="panel-body">
-              <!--
-              <div class="form-group">
-                <label class="col-sm-2 control-label">{{_('可执行操作')}}</label>
-                <div class="col-sm-10">
-                  <div class="row">
-                    {% if 1 in action_code %}
-                      <div class="col-lg-2 col-sm-4 col-xs-12">
-                        <button class="btn btn-block btn-info">发货</button>
-                      </div>
-                    {% endif %}
-                    {% if 2 in action_code %}
-                      <div class="col-lg-2 col-sm-4 col-xs-12">
-                        <button class="btn btn-block btn-primary">取消订单</button>
-                      </div>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-              -->
               <div class="text-left">
                 <span>可执行操作：</span>
                 {% if 1 in action_code %}
@@ -198,12 +185,16 @@
       <div class="modal-body">
         <form>
           <div class="form-group">
-            <label for="recipient-name" class="control-label">{{_('快递单号')}}：</label>
-            <input type="text" class="form-control" id="shipping_sn">
+              <label for="message-text" class="control-label">{{_('物流公司')}}：</label>
+              <select name="shipping_id" id="shipping_id" class="form-control">
+                {% for shipping in shipping_list %}
+                  <option value="{{shipping.shipping_id}}">{{shipping.shipping_name}}</option>
+                {% endfor %}
+              </select>
           </div>
           <div class="form-group">
-            <label for="message-text" class="control-label">{{_('操作备注')}}：</label>
-            <textarea class="form-control" id="shipping_operation_note"></textarea>
+            <label for="recipient-name" class="control-label">{{_('快递单号')}}：</label>
+            <input type="text" class="form-control" id="shipping_sn">
           </div>
         </form>
       </div>
@@ -231,10 +222,10 @@
             <label for="recipient-name" class="control-label">{{_('取消原因')}}：</label>
             <input type="text" class="form-control" id="cancel_desc">
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="message-text" class="control-label">{{_('操作备注')}}：</label>
             <textarea class="form-control" id="cancel_operation_note"></textarea>
-          </div>
+          </div> -->
         </form>
       </div>
       <div class="modal-footer">
@@ -257,8 +248,13 @@ var order_id = "{{ order.order_id }}";
 
 function shipping() {
   var shipping_sn = $("#shipping_sn").val();
+  var shipping_id = $("#shipping_id").val();
   var operation_note = $("#shipping_operation_note").val();
-  var params = {'csrf_token':csrf_token, 'order_id':order_id, 'shipping_sn':shipping_sn, 'operation_note':operation_note};
+  var params = {
+    'csrf_token':csrf_token,
+    'order_id':order_id,
+    'shipping_sn':shipping_sn,
+    'shipping_id': shipping_id};
 
   $.post("{{ url_for('admin.order.shipping') }}", params, function(json) {
     if (json.ret == 0) {
@@ -294,8 +290,11 @@ function shipping() {
 
 function cancel() {
   var cancel_desc = $("#cancel_desc").val();
-  var operation_note = $("#cancel_operation_note").val();
-  var params = {'csrf_token':csrf_token, 'order_id':order_id, 'cancel_desc':cancel_desc, 'operation_note':operation_note};
+  // var operation_note = $("#cancel_operation_note").val();
+  var params = {
+    'csrf_token':csrf_token,
+    'order_id':order_id,
+    'cancel_desc':cancel_desc};
 
   $.post("{{ url_for('admin.order.cancel') }}", params, function(json) {
     if (json.ret == 0) {

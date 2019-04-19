@@ -37,10 +37,11 @@ from app.forms.api.order import OrderAddressForm
 
 from app.exception import (
     TheonestoreException,
-    OrderException
+    OrderException,
+    ShippingException
 )
 from app.services.response import ResponseJson
-from app.services.track import Shipping100TrackService
+from app.services.track import TrackServiceFactory
 from app.services.message import MessageCreateService
 from app.services.api.pay_weixin import NativeService
 from app.services.api.order import (
@@ -483,18 +484,28 @@ def track():
     if not order:
         return resjson.print_json(10, u'订单不存在')
 
+    order_address = OrderAddress.query.\
+        filter(OrderAddress.order_id == order_id).first()
+
     shipping = None
     express_msg = ''
     express_data = []
     if order and order.shipping_status == 2:
-        shipping = Shipping.query.get(order.shipping_id)
-        shippingService = Shipping100TrackService(
-            order.shipping_code, order.shipping_sn)
-        express_msg, express_datas = shippingService.track()
+        try:
+            trackservice = TrackServiceFactory.get_trackservice()
+            _express_data = trackservice.track(
+                order.shipping_id,
+                order.shipping_sn,
+                order_address.mobile)
+            express_data = _express_data
+            shipping = trackservice.shipping
+            express_msg = 'ok'
+        except ShippingException as e:
+            express_msg = e.msg
 
-        if express_msg == 'ok':
-            express_data = express_datas
-
-    data = {'express_msg': express_msg, 'express_data': express_data,
-            'order': order, 'shipping': shipping}
+    data = {
+        'express_msg': express_msg,
+        'express_data': express_data,
+        'order': order,
+        'shipping': shipping}
     return resjson.print_json(0, u'ok', data)

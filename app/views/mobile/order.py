@@ -37,9 +37,12 @@ from app.services.api.order import (
     OrderCancelService,
     OrderDeliverService
 )
-from app.exception import OrderException
+from app.exception import (
+    OrderException,
+    ShippingException
+)
 from app.forms.api.comment import CommentOrderGoodsForm
-from app.services.track import Shipping100TrackService
+from app.services.track import TrackServiceFactory
 from app.services.api.order import OrderStaticMethodsService
 
 from app.models.item import Goods
@@ -178,19 +181,28 @@ def track():
     args = request.args
     order_id = toint(args.get('order_id', 0))
 
-    order = Order.query.filter(Order.order_id == order_id).filter(
-        Order.uid == uid).first()
+    order = Order.query.\
+        filter(Order.order_id == order_id).\
+        filter(Order.uid == uid).first()
+
+    order_address = OrderAddress.query.\
+        filter(OrderAddress.order_id == order_id).first()
 
     shipping = None
     express_msg = ''
     express_data = []
     if order and order.shipping_status == 2:
-        shipping = Shipping.query.get(order.shipping_id)
-        shippingService = Shipping100TrackService(
-            order.shipping_code, order.shipping_sn)
-        express_msg, express_datas = shippingService.track()
-        if express_msg == 'ok':
-            express_data = express_datas
+        try:
+            trackservice = TrackServiceFactory.get_trackservice()
+            _express_data = trackservice.track(
+                order.shipping_id,
+                order.shipping_sn,
+                order_address.mobile)
+            express_data = _express_data
+            shipping = trackservice.shipping
+            express_msg = 'ok'
+        except ShippingException as e:
+            express_msg = e.msg
 
     data = {'express_msg': express_msg, 'express_data': express_data,
             'order': order, 'shipping': shipping}
