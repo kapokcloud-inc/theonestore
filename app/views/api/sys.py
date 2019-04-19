@@ -25,6 +25,8 @@ from app.helpers import (
 )
 from app.models.sys import SysSetting
 from app.services.response import ResponseJson
+from app.services.sms import SmsServiceFactory
+from app.exception import SmsException
 
 sys = Blueprint('api.sys', __name__)
 
@@ -35,7 +37,7 @@ resjson.module_code = 22
 def csrf_token():
     """获取csrf_token"""
     resjson.action_code = 10
-    
+
     csrf_token = generate_csrf()
 
-    return resjson.print_json(0, u'ok', {'csrf_token':csrf_token})
+    return resjson.print_json(0, u'ok', {'csrf_token': csrf_token})

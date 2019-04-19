@@ -29,7 +29,7 @@ from app.exception import SmsException
 from yunpian_python_sdk.model import constant as YC
 from yunpian_python_sdk.ypclient import YunpianClient
 
-from pip.client import AcsClient
+from aliyunsdkcore.client import AcsClient
 from aliyunsdkcore.request import CommonRequest
 
 
@@ -63,10 +63,10 @@ class SmsBaseService(object):
         # 短信前缀（默认一店）
         self.sms_prefix = ""
 
-        # 目标电话集[]
+        # 目标电话集[],例子['xxxxxx', 'xxxxxx']
         self.mobiles = None
 
-        # 目标内容参数集[]
+        # 目标内容参数集[{'code':1234}, {'code':1345}]
         self.params = None
 
         # 短信模版id
@@ -139,6 +139,7 @@ class SmsBaseService(object):
 
     def _get_send_params(self):
         """装填请求参数，子类实现"""
+
         try:
             self._init()
             self._check_params()
@@ -186,14 +187,14 @@ class YunPianSmsService(SmsBaseService):
 
         super(YunPianSmsService, self)._init()
         self.api_key = self.sms_config['ak']
+        if not self.api_key:
+            raise SmsException(_(u'接口验证序号不存在'))
         self.client = YunpianClient(self.api_key)
 
     def _check_params(self):
         """扩展父类参数检查"""
 
         super(YunPianSmsService, self)._check_params()
-        if not self.api_key:
-            raise SmsException(_(u'接口验证序号不存在'))
         if not self.client:
             raise SmsException(_(u'服务执行对象不存在'))
         if self.send_type == self.type_list[2]:
@@ -259,7 +260,8 @@ class YunPianSmsService(SmsBaseService):
         if res is None:
             raise SmsException(_(u'发送失败'))
         if res.code() != 0:
-            log_info('[YunPianSmsService]send_type:%s，code:%s，msg:%s，data:%s，prefix:%s' % (self.send_type, str(res.code()), res.msg(), (res.data() if res.data() else u'[]'), self.sms_prefix))
+            log_info('[YunPianSmsService]send_type:%s，code:%s，msg:%s，data:%s，prefix:%s' % (
+                self.send_type, str(res.code()), res.msg(), (res.data() if res.data() else u'[]'), self.sms_prefix))
             raise SmsException(_(u'发送失败'))
 
     def _get_tpl_content(self):
@@ -354,17 +356,152 @@ class AliSmsService(SmsBaseService):
     def _init(self):
         """扩展父类配置加载"""
 
+        super(AliSmsService, self)._init()
         self.access_key_id = self.sms_config['access_key_id']
         self.access_key_secret = self.sms_config['access_key_secret']
+        if self.access_key_id is None:
+            raise SmsException(_(u'应用公钥不存在'))
+        if self.access_key_secret is None:
+            raise SmsException(_(u'应用私钥不存在'))
+        self.client = AcsClient(
+            self.access_key_id,
+            self.access_key_secret,
+            'default')
 
     def _check_params(self):
         """扩展父类参数检查"""
 
-        if self.access_key_id is None:
-            raise SmsException(_(u'应用公钥不存在'))
+        super(AliSmsService, self)._check_params()
+        if not self.sms_prefix:
+            raise SmsException(_(u'短信签名不存在1'))
 
-        if self.access_key_secret is None:
-            raise SmsException(_(u'应用私钥不存在'))
+    def _get_send_params(self):
+        """装载请求参数"""
 
-        if self.sms_prefix:
-            raise SmsException(_(u'短信签名不存在'))
+        super(AliSmsService, self)._get_send_params()
+        params = {}
+        if self.send_type != self.type_list[2]:
+            try:
+                single_template_param = json.dumps(self.params[0])
+            except Exception as e:
+                raise SmsException(_(u'参数转化失败'))
+            params['PhoneNumbers'] = ','.join(self.mobiles)
+            params['SignName'] = self.sms_prefix
+            params['TemplateParam'] = single_template_param
+        else:
+            sign_names = [self.sms_prefix for _ in range(len(self.mobiles))]
+            try:
+                mobiles_json = json.dumps(self.mobiles)
+                sign_names_json = json.dumps(self.sign_names)
+                template_params_json = json.dumps(self.params)
+            except Exception as e:
+                raise SmsException(_(u'参数转化失败'))
+            params['PhoneNumberJson'] = mobiles_json
+            params['SignNameJson'] = sign_names_json
+            params['TemplateParamJson'] = template_params_json
+        return params
+
+    def _do_sms_service(self):
+        """发送短信"""
+
+        request_params = self._get_send_params()
+        request = CommonRequest()
+        request.set_accept_format('json')
+        request.set_domain('dysmsapi.aliyuncs.com')
+        request.set_method('POST')
+        request.set_protocol_type('https')  # https | http
+        request.set_version('2017-05-25')
+        request.add_query_param('TemplateCode', self.template_id)
+        if self.send_type != self.type_list[2]:
+            request.set_action_name('SendSms')
+            request.add_query_param(
+                'PhoneNumbers', request_params['PhoneNumbers'])
+            request.add_query_param(
+                'SignName', request_params['SignName'])
+            request.add_query_param(
+                'TemplateParam', request_params['TemplateParam'])
+        else:
+            request.set_action_name('SendBatchSms')
+            request.add_query_param(
+                'PhoneNumberJson', request_params['PhoneNumberJson'])
+            request.add_query_param(
+                'SignNameJson', request_params['SignNameJson'])
+            request.add_query_param(
+                'TemplateParamJson', request_params['TemplateParamJson'])
+
+        res = self.client.do_action(request)
+        try:
+            data = json.loads(res)
+        except Exception as e:
+            raise SmsException(_(u"发送失败"))
+
+        if not data or data['Code'] != 'OK':
+            log_info('[AliSmsService]send_type:%s，code:%s，msg:%s，data:%s，prefix:%s' % (
+                self.send_type, data['Code'], data['Message'], data, self.sms_prefix))
+            raise SmsException(_(u"发送失败"))
+
+    def send_single_sms(self, mobiles, template_id, params):
+        """短信单发"""
+
+        self.mobiles = mobiles
+        self.template_id = template_id
+        self.params = params
+        self.send_type = self.type_list[0]
+        try:
+            self._do_sms_service()
+        except SmsException as e:
+            raise e
+        return True
+
+    def send_mutil_single_sms(self, mobiles, template_id, params):
+        """短信群发(内容一致)"""
+
+        self.mobiles = mobiles
+        self.template_id = template_id
+        self.params = params
+        self.send_type = self.type_list[1]
+        try:
+            self._do_sms_service()
+        except SmsException as e:
+            raise e
+        return True
+
+    def send_mutil_sms(self, mobiles, template_id, params):
+        """短信群发(内容不一致)"""
+
+        self.mobiles = mobiles
+        self.template_id = template_id
+        self.params = params
+        self.send_type = self.type_list[2]
+        try:
+            self._do_sms_service()
+        except SmsException as e:
+            raise e
+        return True
+
+    def send_sms_code(self, mobile, code):
+        """发送短信验证码"""
+
+        self._init_tpl()
+        if not mobile and not code:
+            raise SmsException(_(u'缺少电话或验证码'))
+        try:
+            self.send_single_sms(
+                [mobile],
+                self.tpl_config['code_tpl'],
+                [{'code': code}])
+        except SmsException as e:
+            raise e
+        return True
+
+    def send_sms_order_shipping(self, mobiles, params):
+        """发送发货订单信息"""
+        self._init_tpl()
+        try:
+            self.send_mutil_sms(
+                mobiles,
+                self.tpl_config['order_shipping_tpl'],
+                params)
+        except SmsException as e:
+            raise e
+        return True

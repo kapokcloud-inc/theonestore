@@ -285,7 +285,7 @@ def sms_yunpian():
         log_info("[view.admin.config][sms_yunpian]: %s " % e.__str__())
     if request.method == "GET":
         if vendor is not None:
-            data['is_use'] = 1 if vendor.value == 'sms_yunpian' else 0
+            data['is_use'] = 1 if vendor.value == 'YunPianSmsService' else 0
 
         form.fill_form(data=data)
         return render_template(
@@ -313,8 +313,8 @@ def sms_yunpian():
         db.session.add(vendor)
 
     if form.is_use.data:
-        vendor.value = 'sms_yunpian'
-    elif vendor.value == 'sms_yunpian':
+        vendor.value = 'YunPianSmsService'
+    elif vendor.value == 'YunPianSmsService':
         vendor.value = ""
 
     db.session.commit()
@@ -327,18 +327,20 @@ def sms_alisms():
     g.page_title = _(u'阿里短信')
 
     form = SmsAlismsForm()
-    alisms = SysSetting.query.filter(
-        SysSetting.key == 'config_sms_alisms').first()
-    vendor = SysSetting.query.filter(SysSetting.key == 'sms_vendor').first()
+    alisms = SysSetting.query.\
+        filter(SysSetting.key == 'config_sms_alisms').first()
+    vendor = SysSetting.query.\
+        filter(SysSetting.key == 'sms_vendor').first()
 
     data = {}
     try:
         data = json.loads(alisms.value)
     except Exception as e:
         log_info("[view.admin.config][sms_alisms]: %s " % e.__str__())
+
     if request.method == "GET":
         if vendor is not None:
-            data['is_use'] = 1 if vendor.value == 'sms_alisms' else 0
+            data['is_use'] = 1 if vendor.value == 'AliSmsService' else 0
 
         form.fill_form(data=data)
         return render_template(
@@ -367,8 +369,8 @@ def sms_alisms():
         db.session.add(vendor)
 
     if form.is_use.data:
-        vendor.value = 'sms_alisms'
-    elif vendor.value == 'sms_alisms':
+        vendor.value = 'AliSmsService'
+    elif vendor.value == 'AliSmsService':
         vendor.value = ""
 
     db.session.commit()
