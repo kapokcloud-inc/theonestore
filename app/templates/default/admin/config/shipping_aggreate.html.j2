@@ -6,13 +6,16 @@
 <div id="page-wrapper">
   <div class="container-fluid">
     {{ libs.setting_page_tabs() }}
+
     <!-- .row -->
     <div class="row">
       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="white-box">
-          <h3 class="box-title m-b-0">{{ shipping.shipping_name }}</h3>
-          <p class="text-muted m-b-30 font-13">{{ shipping.shipping_desc }}</p>
-          
+          <h3 class="box-title"><a href="https://www.juhe.cn/" target="_blank">{{ _('聚合数据') }}</a></h3>
+          <p class="text-muted m-b-30">
+            {{ _('一站式数据服务平台，支持大多数快递公司快递查询') }}
+          </p>
+
           {{ libs.build_tabs(tabs=[
             {'label':_('快递100'), 'endpoint':'admin.config.shipping_100'},
             {'label':_('聚合数据'), 'endpoint':'admin.config.shipping_aggreate'},
@@ -20,8 +23,7 @@
       'endpoint_list':('admin.config.shipping_open', 'admin.config.shipping_detail')}
           ], border_bottom='line') }}
 
-          {{ libs.render_form(form, action=url_for('admin.config.shipping_save')) }}
-
+          {{ libs.render_form(form, action=url_for('admin.config.shipping_aggreate')) }}
         </div>
       </div>
     </div>
@@ -29,19 +31,3 @@
   </div>
 </div>
 {% endblock %}
-
-{% block footer %}
-<script type="text/javascript">
-$(document).ready(function(){
-  $("#is_free").change(function(){
-    var val = $(this).val();
-
-    $("#free_limit_amount").val('0.0');
-    $("#shipping_amount").val('0.0');
-
-    val == 1 ? $("#shipping_free").hide() : $("#shipping_free").show();
-  });
-});
-</script>
-{% endblock %}
-

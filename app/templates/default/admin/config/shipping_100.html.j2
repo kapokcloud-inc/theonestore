@@ -18,6 +18,7 @@
 
           {{ libs.build_tabs(tabs=[
             {'label':_('快递100'), 'endpoint':'admin.config.shipping_100'},
+            {'label':_('聚合数据'), 'endpoint':'admin.config.shipping_aggreate'},
             {'label':_('快递开通'), 'endpoint':'admin.config.shipping_open',
       'endpoint_list':('admin.config.shipping_open', 'admin.config.shipping_detail')}
           ], border_bottom='line') }}

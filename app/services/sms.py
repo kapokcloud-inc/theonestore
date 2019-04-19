@@ -7,14 +7,11 @@
     :copyright: © 2018 by the Kapokcloud Inc.
     :license: BSD, see LICENSE for more details.
 """
-from sys import version_info
+import importlib
 import json
-import os
-import uuid
 from datetime import (
-    date, 
-    datetime, 
-    timedelta
+    date,
+    datetime
 )
 from app.helpers import (
     log_info,
@@ -22,207 +19,352 @@ from app.helpers import (
     urlencode
 )
 
-from flask import current_app
 from flask_babel import gettext as _
-from flask_uploads import extension
-
-from app.helpers import log_error, log_debug
 from app.models.sys import SysSetting
-from app.exception import ConfigNotFoundException
+from app.exception import SmsException
+
+from app.models.sys import SysSetting
+from app.exception import SmsException
 
 from yunpian_python_sdk.model import constant as YC
 from yunpian_python_sdk.ypclient import YunpianClient
 
-class SmsService(object):
-    """ 发送短信实例 """
+from pip.client import AcsClient
+from aliyunsdkcore.request import CommonRequest
+
+
+class SmsServiceFactory(object):
+    """短信服务工厂类"""
+
+    @staticmethod
+    def get_smsservice():
+        """获取短信服务对象"""
+
+        # 加载短信服务支持配置
+        vendor = SysSetting.query.\
+            filter(SysSetting.key == 'sms_vendor').first()
+
+        if vendor is None:
+            raise SmsException(_(u'短信服务配置不存在'))
+        mod = importlib.import_module(__name__)
+        return getattr(mod, vendor.value)()
+
+
+class SmsBaseService(object):
+    """短信服务基类"""
 
     def __init__(self):
-        """ 初始化 """
-        self.today = date.today().isoformat()
-        self.sms_vendor_key = 'sms_vendor'
-        self.sms_vendor = ''
-        self.yunpian = {}
-        self.alisms = {}
+        # 服务类型key
+        self.config_key = ''
 
-    def load_config(self):
-        """ 加载配置 """
-        if self.sms_vendor:
-            return
-        
-        ss = None
+        # 短信服务配置
+        self.sms_config = None
+
+        # 短信前缀（默认一店）
+        self.sms_prefix = ""
+
+        # 目标电话集[]
+        self.mobiles = None
+
+        # 目标内容参数集[]
+        self.params = None
+
+        # 短信模版id
+        self.template_id = ""
+
+        # 模版内容
+        self.template_content = ''
+
+        # 服务客户端
+        self.client = None
+
+        # 发送类型 single=单发  mutil=群发(不同内容) mutil_single=群发(内容一致)
+        self.send_type = ''
+
+        # 默认短信类型
+        self.type_list = ['single', 'mutil_single', 'mutil']
+
+        # 模版配置信息
+        self.tpl_config = None
+
+    def _init(self):
+        """加载短信服务配置信息"""
+
+        config = SysSetting.query.\
+            filter(SysSetting.key == self.config_key).first()
+        if not config:
+            raise SmsException(_(u'短信配置不存在'))
         try:
-            ss = self.get_config(self.sms_vendor_key)
-        except ConfigNotFoundException as e:
-            raise e
+            self.sms_config = json.loads(config.value)
+        except Exception as e:
+            raise SmsException(e)
+        self.sms_prefix = self.sms_config['app_name']
 
-        if ss.value not in ('sms_yunpian', 'sms_alisms'):
-            raise ConfigNotFoundException(_(u'短信选项只能是云片或者阿里云SMS'))
-        self.sms_vendor = ss.value
+    def _init_tpl(self):
+        """加载本地模版配置"""
 
-        if self.sms_vendor == 'sms_yunpian':
-            try:
-                yunpian_config = self.get_config('config_sms_yunpian')
-                self.yunpian = json.loads(yunpian_config.value)
-            except (ConfigNotFoundException, ValueError) as e:
-                raise e
-        elif self.sms_vendor == 'sms_alisms':
-            try:
-                alisms_config = self.get_config('config_sms_alisms')
-                self.alisms = json.loads(alisms_config.value)
-            except (ConfigNotFoundException, ValueError) as e:
-                raise e
-    
-    def get_config(self, key):
-        """获取配置选项"""
-        ss = SysSetting.query.filter(SysSetting.key == key).first()
-        if ss is None:
-            raise ConfigNotFoundException(_(u'配置选项不存在'))
-
-        if not ss.value:
-            raise ConfigNotFoundException(_(u'配置选项值为空'))
-        return ss
-    
-    def get_service(self):
+        config_tpl = SysSetting.query.\
+            filter(SysSetting.key == 'config_sms_template').first()
+        if config_tpl is None:
+            raise SmsException(_(u'短信模版配置不存在'))
         try:
-            self.load_config()
-        except (ConfigNotFoundException, ValueError) as e:
+            self.tpl_config = json.loads(config_tpl.value)
+        except Exception as e:
+            raise SmsException(e)
+
+    def _check_params(self):
+        """检查公共参数, 之类扩展各自参数"""
+
+        if not self.template_id:
+            raise SmsException(_(u'模版ID不存在'))
+
+        if not self.mobiles:
+            raise SmsException(_(u'短信接收电话不存在'))
+
+        if not self.params:
+            raise SmsException(_(u'短信内容不存在'))
+
+        if len(self.mobiles) > 1000:
+            raise SmsException(_(u'最多同时发送1000个'))
+
+        if not isinstance(self.mobiles, list):
+            raise SmsException(_(u'电话参数格式不正确'))
+
+        if not isinstance(self.params, list):
+            raise SmsException(_(u'内容参数格式不正确'))
+
+    def _get_tpl_content(self):
+        """获取短信模版"""
+        pass
+
+    def _get_send_params(self):
+        """装填请求参数，子类实现"""
+        try:
+            self._init()
+            self._check_params()
+        except SmsException as e:
             raise e
-        
-        service = None
-        if self.sms_vendor == 'sms_yunpian' and self.yunpian:
-            service = YunpianSmsService(self.yunpian)
-        if self.sms_vendor == 'sms_alisms' and self.alisms:
-            service = AliyunSmsService(self.alisms)
-        return service
+        pass
+
+    def _do_sms_service(self):
+        """执行短信服务"""
+        pass
+
+    def send_single_sms(self, mobiles, template_id, template_param):
+        """发送单条短信"""
+        pass
+
+    def send_mutil_sms(self, mobiles, template_id, template_params):
+        """发送多条短信"""
+        pass
+
+    def send_mutil_single_sms(self, mobiles, template_id, template_params):
+        """发送多条短信"""
+        pass
 
     def send_sms_code(self, mobile, code):
-        """ 发送短息验证码
-            @parmas mobile 电话号码
-            @params code 验证码
-        """
-        current_service = self.get_service()
+        """发送验证码"""
+        pass
 
-        if current_service == None:
-            return False
+    def send_sms_order_shipping(self, mobiles, params):
+        """订单发货信息"""
+        pass
 
-        return current_service.send_sms_code(mobile, code)
-    
-    def send_tpl_sms(self, mobile, tpl_id, tpl_params):
-        """ 发送模版短信 
-            @parmas mobile 电话号码
-            @params tpl_id 模版id
-            @params params 模版内容
-        """
-        current_service = self.get_service()
 
-        if current_service == None:
-            return False
-        
-        return current_service.send_tpl_sms(mobile, tpl_id, tpl_params)
+class YunPianSmsService(SmsBaseService):
+    """云片短息服务"""
 
-    def send_mutil_sms(self, params):
-        """ 批量发短信
-            params必须包含  mobile 、text  两个key
-        """
-        current_service = self.get_service()
+    def __init__(self):
+        """初始化"""
 
-        if current_service == None:
-            return False
-        
-        return current_service.send_mutil_sms(params)
+        SmsBaseService.__init__(self)
+        self.config_key = "config_sms_yunpian"
+        self.api_key = ""
 
-class YunpianSmsService(object):
-    """ 云片短信服务 """
-    def __init__(self, params):
-        self.api_key = params['ak']
-        self.sms_prefix = params['app_name']
-    
-    def check_before(self):
-        """ 发送前检测 """
+    def _init(self):
+        """扩展父类配置加载"""
+
+        super(YunPianSmsService, self)._init()
+        self.api_key = self.sms_config['ak']
+        self.client = YunpianClient(self.api_key)
+
+    def _check_params(self):
+        """扩展父类参数检查"""
+
+        super(YunPianSmsService, self)._check_params()
         if not self.api_key:
-            self.api_key = ''
-            log_error(_(u'云片服务api_key为空'))
-            return False
-    
-    def get_result(self, result=None):
-        """ 发送反馈 """
-        if not result:
-            return False
-            
-        result_info = u'code:%s，msg:%s，data:%s，prefix:%s' % (str(result.code()), result.msg(), (result.data() if result.data() else u'[]'), self.sms_prefix)
+            raise SmsException(_(u'接口验证序号不存在'))
+        if not self.client:
+            raise SmsException(_(u'服务执行对象不存在'))
+        if self.send_type == self.type_list[2]:
+            if len(self.mobiles) != len(self.params):
+                raise SmsException(_(u'电话数与内容数不一致'))
 
-        if result.code() != 0 :
-            log_error(result_info)
-            return False
-        log_info(result_info)
+    def _get_send_params(self):
+        """转载请求参数"""
+
+        super(YunPianSmsService, self)._get_send_params()
+        # 参数处理，键需要是#key#的形式
+        if self.send_type == self.type_list[2]:
+            self._get_tpl_content()
+
+        new_params = []
+        if self.send_type != self.type_list[2]:
+            for _param in self.params:
+                temp = {}
+                for key_name in _param.keys():
+                    temp['#%s#' % key_name] = _param[key_name]
+                new_params.append(urlencode(temp))
+        else:
+            for _param in self.params:
+                tpl_content = self.template_content
+                for key_name in _param.keys():
+                    tpl_content = tpl_content.replace(
+                        "#code#",
+                        _param[key_name])
+                new_params.append(tpl_content)
+        self.params = new_params
+
+        if self.send_type == self.type_list[0]:
+            return {
+                YC.MOBILE: self.mobiles[0],
+                YC.TPL_ID: self.template_id,
+                YC.TPL_VALUE: self.params[0]}
+        if self.send_type == self.type_list[1]:
+            return {
+                YC.MOBILE: ','.join(self.mobiles),
+                YC.TPL_ID: self.template_id,
+                YC.TPL_VALUE: self.params[0]}
+        if self.send_type == self.type_list[2]:
+            return {
+                YC.MOBILE: ','.join(self.mobiles),
+                YC.TEXT: ','.join(self.params)}
+
+        raise SmsException(_(u'短息类型不存在'))
+
+    def _do_sms_service(self):
+        """发送短信"""
+
+        reqest_param = self._get_send_params()
+        log_info(reqest_param)
+        if self.send_type == self.type_list[0]:
+            res = self.client.sms().tpl_single_send(reqest_param)
+
+        if self.send_type == self.type_list[1]:
+            res = self.client.sms().tpl_batch_send(reqest_param)
+
+        if self.send_type == self.type_list[2]:
+            res = self.client.sms().multi_send(reqest_param)
+
+        if res is None:
+            raise SmsException(_(u'发送失败'))
+        if res.code() != 0:
+            log_info('[YunPianSmsService]send_type:%s，code:%s，msg:%s，data:%s，prefix:%s' % (self.send_type, str(res.code()), res.msg(), (res.data() if res.data() else u'[]'), self.sms_prefix))
+            raise SmsException(_(u'发送失败'))
+
+    def _get_tpl_content(self):
+        """获取短信模版内容"""
+
+        tpl_res = self.client.tpl().get({
+            'apikey': self.api_key,
+            'tpl_id': self.template_id})
+        if tpl_res.code() != 0 and tpl_res.data() is None:
+            raise SmsException(_(u'模版获取失败'))
+        self.template_content = tpl_res.data()['tpl_content']
+        if not self.template_content:
+            raise SmsException(_(u'模版获取失败'))
+
+    def send_single_sms(self, mobiles, template_id, params):
+        """短信单发"""
+
+        self.mobiles = mobiles
+        self.template_id = template_id
+        self.params = params
+        self.send_type = self.type_list[0]
+        try:
+            self._do_sms_service()
+        except SmsException as e:
+            raise e
         return True
 
-    def send_sms_code(self, mobile='', code=''):
-        """ 发送验证码 """
-        if not self.check_before:
-            return False
-        
-        if not mobile or not code:
-            log_error(_(u'参数错误'))
-            return False
+    def send_mutil_single_sms(self, mobiles, template_id, params):
+        """短信群发(内容一致)"""
 
-        clnt = YunpianClient(self.api_key)
-        param = {YC.MOBILE: mobile, YC.TEXT: u'%s您的验证码是%s' % ((u'' if self.sms_prefix == u'' else u'【' + self.sms_prefix + u'】'), code)}
-        
-        r = clnt.sms().single_send(param)
-        return self.get_result(r)
-        
-    
-    def send_tpl_sms(self, mobile='', tpl_id=0, tpl_params=None):
-        """ 指定模版，单发短信 """
-        if not self.check_before:
-            return False
+        self.mobiles = mobiles
+        self.template_id = template_id
+        self.params = params
+        self.send_type = self.type_list[1]
+        try:
+            self._do_sms_service()
+        except SmsException as e:
+            raise e
+        return True
 
-        if not mobile or not tpl_id or not tpl_params:
-            log_error(_(u'参数错误'))
-            return False
+    def send_mutil_sms(self, mobiles, template_id, params):
+        """短信群发(内容不一致)"""
 
-        clnt = YunpianClient(self.api_key)
-        param = {YC.MOBILE: mobile, YC.TPL_ID: tpl_id, YC.TPL_VALUE: urlencode(tpl_params)}
-        r = clnt.sms().tpl_single_send(param)
-        return self.get_result(r)
+        self.mobiles = mobiles
+        self.template_id = template_id
+        self.params = params
+        self.send_type = self.type_list[2]
+        try:
+            self._do_sms_service()
+        except SmsException as e:
+            raise e
+        return True
 
-    def send_mutil_sms(self, params):
-        """ 群发短信 """
-        if not self.check_before:
-            return False
+    def send_sms_code(self, mobile, code):
+        """发送短信验证码"""
 
-        mobile = params.get('mobile', '')
-        text = params.get('text', '')
-        if not mobile or not text:
-            log_error(_(u'参数错误'))
-            return False
-        
-        if len(mobile.split(',')) > 1000 or len(text.split(',')) > 1000:
-            log_error(_(u'单次最多批量发送1000条'))
-            return False
+        self._init_tpl()
+        if not mobile and not code:
+            raise SmsException(_(u'缺少电话或验证码'))
+        try:
+            self.send_single_sms(
+                [mobile],
+                self.tpl_config['code_tpl'],
+                [{'code': code}])
+        except SmsException as e:
+            raise e
+        return True
 
-        if len(mobile.split(',')) !=  len(text.split(',')):
-            log_error(_(u'手机号数与内容条数不相等'))
-            return False
-        
-        param = {YC.MOBILE: mobile, YC.TEXT: text}
-
-        clnt = YunpianClient(self.api_key)
-        r = clnt.sms().multi_send(param)
-        return self.get_result(r)
+    def send_sms_order_shipping(self, mobiles, params):
+        """发送发货订单信息"""
+        self._init_tpl()
+        try:
+            self.send_mutil_sms(
+                mobiles,
+                self.tpl_config['order_shipping_tpl'],
+                params)
+        except SmsException as e:
+            raise e
+        return True
 
 
-class AliyunSmsService(object):
-    """ 阿里云短信服务 """
+class AliSmsService(SmsBaseService):
+    """阿里云短息服务"""
 
-    def __init__(self, params):
-        log_info(params)
-        self.access_key_id= params['access_key_id']
-        self.access_secret= params['access_key_secret']
-        self.app_name = params['app_name']
+    def __init__(self):
+        """初始化"""
+        SmsBaseService.__init__(self)
+        self.config_key = "config_sms_alisms"
+        self.access_key_id = ""
+        self.access_key_secret = ""
 
-    def send_sms_code(self):
-        log_info('执行发阿里云短信了')
-        log_info('尚未支持')
-        return False
+    def _init(self):
+        """扩展父类配置加载"""
+
+        self.access_key_id = self.sms_config['access_key_id']
+        self.access_key_secret = self.sms_config['access_key_secret']
+
+    def _check_params(self):
+        """扩展父类参数检查"""
+
+        if self.access_key_id is None:
+            raise SmsException(_(u'应用公钥不存在'))
+
+        if self.access_key_secret is None:
+            raise SmsException(_(u'应用私钥不存在'))
+
+        if self.sms_prefix:
+            raise SmsException(_(u'短信签名不存在'))

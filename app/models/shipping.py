@@ -10,6 +10,7 @@
 from app.database import db
 from app.models import BaseModel
 
+
 class Shipping(BaseModel, db.Model):
     __bind_key__ = 'theonestore'
     __tablename__ = 'shipping'
@@ -20,6 +21,7 @@ class Shipping(BaseModel, db.Model):
     shipping_desc = db.Column(db.String(255), default='')
     free_limit_amount = db.Column(db.Float, default=0.00)
     shipping_code = db.Column(db.String(20), default='')
+    aggreate_code = db.Column(db.String(20), default='')
     is_enable = db.Column(db.Integer, default=0)
     is_default = db.Column(db.Integer, default=0)
     sorting = db.Column(db.Integer, default=0)

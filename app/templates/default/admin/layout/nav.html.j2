@@ -148,7 +148,8 @@
             {'title':_('短信'),
             'href':url_for('admin.config.sms_yunpian'),
             'endpoints':['admin.config.sms_yunpian',
-                          'admin.config.sms_alisms']
+                          'admin.config.sms_alisms',
+                          'admin.config.sms_template']
             },
             {'title':_('存储'),
             'href':url_for('admin.config.storage_qiniu'),
@@ -158,6 +159,7 @@
             {'title':_('快递'),
             'href':url_for('admin.config.shipping_100'),
             'endpoints':['admin.config.shipping_100',
+                          'admin.config.shipping_aggreate',
                           'admin.config.shipping_open',
                           'admin.config.shipping_detail']
             },

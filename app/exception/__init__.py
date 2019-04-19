@@ -63,5 +63,10 @@ class GoodsException(TheonestoreException):
 
 
 class ShippingException(TheonestoreException):
-    def __init__(self, msg=_(u'快递配置不存在')):
+    def __init__(self, msg=_(u'快递服务异常')):
+        TheonestoreException.__init__(self, msg)
+
+
+class SmsException(TheonestoreException):
+    def __init__(self, msg=_(u'短信服务异常')):
         TheonestoreException.__init__(self, msg)
