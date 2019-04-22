@@ -71,7 +71,7 @@
             </div>
           </div>
         </form>
-        <form class="form-horizontal" id="recoverform" action="index.html">
+        <form class="form-horizontal" id="recoverform" onsubmit="">
           <div class="form-group ">
             <div class="col-xs-12">
               <h3>{{ _('找回密码') }}</h3>
@@ -80,12 +80,42 @@
           </div>
           <div class="form-group ">
             <div class="col-xs-12">
-              <input class="form-control" type="text" required="" placeholder="{{ _('请输入你的手机号码') }}">
+              <input class="form-control" name="rest_mobile" id="rest_mobile" type="text" required="" placeholder="{{ _('请输入你的手机号码') }}">
             </div>
           </div>
           <div class="form-group text-center m-t-20">
             <div class="col-xs-12">
-              <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">{{ _('重置') }}</button>
+              <button type="button" class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" onclick="getCode()">{{ _('重置') }}</button>
+            </div>
+          </div>
+        </form>
+        <form class="form-horizontal" id="resetform" style="display:none">
+          <div class="form-group ">
+            <div class="col-xs-12">
+              <h3>{{ _('重置密码') }}</h3>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12">
+              <label>{{ _('新密码') }}</label>
+              <input name="new_password" id="new_password" class="form-control" type="password" required="" placeholder="{{ _('请输入新密码') }}" minlength="6" maxlength="20" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12">
+              <label>{{ _('确认密码') }}</label>
+              <input name="again_password" id="again_password" class="form-control" type="password" required="" placeholder="{{ _('请再次输入新密码') }}" minlength="6" maxlength="20" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-12">
+            <label>{{ _('验证码') }}</label>
+              <input name="code" id="code" class="form-control" required="" placeholder ="{{ _('请输入验证码') }}" minlength= "4" maxlength="4" value="">
+            </div>
+          </div>
+          <div class="form-group text-center m-t-20">
+            <div class="col-xs-12">
+              <button class="btn btn-info btn-lg btn-block btn-rounded text-uppercase waves-effect waves-light" type="button" onclick="resetPassword()">{{ _('确认重置') }}</button>
             </div>
           </div>
         </form>
@@ -109,5 +139,63 @@
   <!--Style Switcher -->
   <script src="/static/default/admin//plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
 </body>
+<script type = "text/javascript">
+  var csrf_token = "{{ csrf_token() }}";
 
+  /*
+   * 获取验证码
+   */
+  function getCode(mobile){
+    const rest_mobile = $('#rest_mobile').val()
+    if (rest_mobile == null || rest_mobile == ""){
+      return
+    }
+    console.log(rest_mobile)
+    // 调用获取验证码接口
+    $.post("{{ url_for('api.sys.sms_code') }}", {'mobile':rest_mobile, 'csrf_token':csrf_token}, function(json) {
+      if (json.ret != 0) {
+        alert(json.msg)
+        return false;
+      }else{
+        // 隐藏验证获取，显示新密设置
+        $('#recoverform').css('display','None')
+        $('#resetform').css('display','')
+      }
+    });
+  }
+
+  function resetPassword(){
+    const new_password = $('#new_password').val()
+    const again_password = $('#again_password').val()
+    const code = $('#code').val()
+
+    if (new_password == ""){
+     alert($('#new_password').attr('placeholder'))
+      return
+    }
+    if (again_password == ""){
+      alert($('#again_password').attr('placeholder'))
+     return
+    }
+    if (code == ""){
+      alert($('#code').attr('placeholder'))
+      return
+    }
+   
+    params = {
+      'csrf_token':csrf_token,
+      'new_password': new_password,
+      'again_password': again_password,
+      'code': code
+    }
+    $.post("{{ url_for('api.sys.reset_password') }}", params, function(json) {
+      if (json.ret != 0) {
+        alert(json.msg)
+        return false;
+      }else{
+        window.location.reload()
+      }
+    });
+  }
+</script>
 </html>

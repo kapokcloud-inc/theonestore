@@ -39,8 +39,13 @@ from app.forms.admin.auth import (
 from app.models.auth import AdminUsers
 from app.services.admin.auth import AuthLoginService
 from app.services.uploads import FileUploadService
+from app.services.response import ResponseJson
 
 auth = Blueprint('admin.auth', __name__)
+
+resjson = ResponseJson()
+resjson.module_code = 25
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -60,7 +65,10 @@ def login():
     als = AuthLoginService()
     ret = als.login(account, password)
     if not ret:
-        return render_template('admin/auth/login.html.j2', f=form, errmsg=als.errmsg)
+        return render_template(
+            'admin/auth/login.html.j2',
+            f=form,
+            errmsg=als.errmsg)
 
     # 登录成功
     als.write_session(session)
@@ -153,7 +161,7 @@ def save():
 def password():
     """修改密码"""
     g.page_title = _(u'修改密码')
-    
+
     if request.method == 'GET':
         form = AdminUsersPasswordForm()
         return render_template('admin/auth/password.html.j2', form=form)
@@ -176,4 +184,3 @@ def password():
                     back_url=url_for('admin.auth.password')
                 )
             )
-
