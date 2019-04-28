@@ -99,17 +99,17 @@ configure_before(app)
 if __name__ == '__main__':
     app.config.from_pyfile('config/config.dev.cfg')
     babel.init_app(app)
-    
+
     # 上传文件存储
     configure_uploads(app)
 
     app.jinja_env.auto_reload = True
     app.jinja_env.cache_size = 0
-    app.run(host='0.0.0.0', debug=True, port=5000)
-    # app.run(
-    #     host='0.0.0.0',
-    #     debug=True,
-    #     port=443, 
-    #     ssl_context=(
-    #         'C:\workspace\ssl\kapokcloud.com.pem',
-    #         'C:\workspace\ssl\kapokcloud.com.key'))
+    # app.run(host='0.0.0.0', debug=True, port=5000)
+    app.run(
+        host='0.0.0.0',
+        debug=True,
+        port=443,
+        ssl_context=(
+            'C:\workspace\ssl\kapokcloud.com.pem',
+            'C:\workspace\ssl\kapokcloud.com.key'))
