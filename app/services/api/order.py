@@ -1230,8 +1230,10 @@ class OrderStaticMethodsService(object):
     def detail_page(order_id, uid):
         """详情页面"""
 
-        order = Order.query.filter(Order.order_id == order_id).filter(
-            Order.uid == uid).first()
+        order = Order.query.\
+            filter(Order.order_id == order_id).\
+            filter(Order.uid == uid).\
+            filter(Order.is_remove == 0).first()
         if not order:
             return abort(404)
 
