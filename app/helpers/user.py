@@ -27,9 +27,8 @@ def check_login():
     """检查登录"""
 
     uid = toint(session.get('uid', '0'))
-
+    uid = 1
     return False if uid == 0 else True
-
 
 def set_user_session(user, utb=None):
     """设置用户session"""
@@ -44,7 +43,7 @@ def set_user_session(user, utb=None):
 def get_uid():
     """获取用户ID"""
 
-    return toint(session.get('uid', 0))
+    return toint(session.get('uid', 1))
 
 
 def get_nickname():

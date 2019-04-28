@@ -90,7 +90,7 @@
         <div class="weui-actionsheet__menu">
           <input type="hidden" name="" id="" value="">
           <div class="weui-actionsheet__cell not-product_text">
-            <span>{{_('编辑地址')}}</span>
+            <span id="editAddr"></span>
             <img src="/static/default/mobile/img/cancel.png" alt="" class="cancal_image" onclick="cancel()">
           </div>
           <div class="weui-cell">
@@ -115,7 +115,7 @@
           </div>
           <div class="weui-cell">
             <input id="edit_address_ua_id" type="hidden" value="0" />
-            <button type="button" class="weui-btn weui-btn_red" onClick="save()">{{_('保存')}}</button>
+            <button type="button" id="saveBtn" class="weui-btn weui-btn_red" onClick="save()">{{_('保存')}}</button>
           </div>
         </div>
       </div>
@@ -366,6 +366,10 @@ function newAddress() {
   var district = '';
   var address = '';
 
+  if($("#saveBtn").hasClass("weui-btn_c")){
+    $("#saveBtn").removeAttr("disabled");
+    $("#saveBtn").addClass("weui-btn_red").removeClass("weui-btn_c");
+  }
   if (ua_id > 0) {
     name = $("#"+ua_id+"_address_name").text();
     mobile = $("#"+ua_id+"_address_mobile").text();
@@ -373,6 +377,12 @@ function newAddress() {
     city = $("#"+ua_id+"_address_city").val();
     district = $("#"+ua_id+"_address_district").val();
     address = $("#"+ua_id+"_address_address").val();
+  }
+
+  if(ua_id > 0){
+    $("#editAddr").text("{{_('编辑地址')}}");
+  } else {
+    $("#editAddr").text("{{_('添加地址')}}");
   }
 
   var pcd = (province != '') ? (province + ' ' + city + ' ' + district) : '';
@@ -432,6 +442,11 @@ function save() {
   var district = pcd_arr[2];
   var full = pcd + ' ' + address;
 
+  if(mobile != '' && !(/^1(3|4|5|7|8)\d{9}$/.test(mobile))){
+    $.toast("{{_('手机号码错误，请重新填写')}}", "text");
+    return false;
+  }
+
   var params = {'ua_id':ua_id, 'name':name, 'mobile':mobile, 'province':province, 'city':city, 'district':district, 'address':address}
   $.post("{{ url_for('api.me.address_save') }}", params, function(json) {
     if (json.ret == 0) {
@@ -450,6 +465,9 @@ function save() {
       $("#"+_ua_id+"_address_district").val(district);
       $("#"+_ua_id+"_address_address").val(address);
       $("#"+_ua_id+"_address_full").text(full);
+
+      $("#saveBtn").attr("disabled","disabled");
+      $("#saveBtn").addClass("weui-btn_c").removeClass("weui-btn_red");
 
       $newAdd.removeClass('show');
       if (!$newAdd.hasClass('hide')) {

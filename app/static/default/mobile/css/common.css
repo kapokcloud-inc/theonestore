@@ -8,6 +8,9 @@
 body {
   background: #f3f4f5;
 }
+body::-webkit-scrollbar {
+  display: none;
+}
 a {
   text-decoration: none;
 }
@@ -664,4 +667,11 @@ ul li {
   left: 50%;
   transform: translate(-50%, -50%);
   max-width: 100%;
+}
+.weui-actionsheet {
+  max-height: 70%;
+  overflow: auto;
+}
+.weui-actionsheet::-webkit-scrollbar {
+  display: none;
 }
