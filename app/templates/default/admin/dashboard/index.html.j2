@@ -445,15 +445,13 @@ function createChartlist(chartlist_data, chartlist_norm, type) {
  */
 function switchChartlistData(type) {
   const norms = $("#date_norm_list").val()
-  let chartist_data = []
+  let chartist_data = null
   switch (type) {
     case 'order':
-      chartist_data.push([])
-      chartist_data.push(JSON.parse($("#order_num_list").val()))
+      chartist_data = JSON.parse($("#order_num_list").val())
       break
     case 'amount':
-      chartist_data.push(JSON.parse($("#pay_amount_list").val()))
-      chartist_data.push([])
+      chartist_data = JSON.parse($("#pay_amount_list").val())
       break
   }
   $("#search_type").val(type)
