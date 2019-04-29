@@ -330,13 +330,15 @@
 {% endblock %}
 {% block footer %}
 <!-- chartist chart -->
-<script src="/static/default/admin/plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
-<script src="/static/default/admin/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
+<script src="/static/default/admin/js/echarts.common.min.js"></script>
 <!-- Plugin JavaScript -->
 <script src="/static/default/admin/plugins/bower_components/moment/moment.js"></script>
 <!-- Date range Plugin JavaScript -->
 <script src="/static/default/admin/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
 <script type="text/javascript">
+// 基于准备好的dom，初始化echarts实例
+var myChart = echarts.init(document.getElementById('chart'));
+
 $(document).ready(function(){
   // Daterange picker
   $('.input-daterange-datepicker').daterangepicker({
@@ -403,34 +405,40 @@ function getChartlistData() {
  * @param type order=订单数(默认) amount=金额
  */
 function createChartlist(chartlist_data, chartlist_norm, type) {
-
-  new Chartist.Line('#ct-visits', {
-    labels: chartlist_norm,
-    series: chartlist_data
-    }, {
-      fullWidth: false, // 为true时，不绘制最后一条网格线，可能导致最后横坐标文本显示不全
-      chartPadding: {
-        right: 30
+  const colors = {
+    'order': '#41b3f9',
+    'amount': '#4c5667',
+  }
+  // 指定图表的配置项和数据
+  var option = {
+      title: {
+          text: ''
       },
-      low: 1,
-      stretch: true,
-      showPoint: true,
-      plugins: [Chartist.plugins.tooltip()],
-      lineSmooth: false, // 线条是否平滑
-      axisX: { // 横轴属性设置
-        offset: 50, // 文本与表之间的间距
-        labelOffset: { // 文本偏移位置
-          y: 10
-        }
+      grid: {},
+      tooltip: {},
+      legend: {},
+      xAxis: {
+          data: chartlist_norm,
+          axisTick:{
+            interval: 0
+          }
       },
-      axisY: {
-        onlyInteger: true,
-        labelInterpolationFnc: function (value) {
-          return type === 'order' ? value : (value + '')
-        }
-      }
-    }
-  );
+      grid: {
+        left: '2%',
+        right: '2%',
+        bottom: '3%',
+        containLabel: true
+      },
+      yAxis: {},
+      series: [{
+        type: 'line',
+        data: chartlist_data,
+        color: colors[type],
+        symbolSize: 10
+      }]
+  };
+  // 使用刚指定的配置项和数据显示图表。
+  myChart.setOption(option);
  }
 
 /**
