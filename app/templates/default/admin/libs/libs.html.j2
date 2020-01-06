@@ -62,7 +62,7 @@
 {# 分页 - 分页URL #}
 {% macro pagination_href(page, page_size=None) %}
   {% set page_size = page_size if page_size else request.view_args.get('page_size', None) %}
-  {{ url_for(request.endpoint, page=page, page_size=page_size) }}{% if request.query_string %}{{ '?'|string + request.query_string|string }}{% endif %}
+  {{ url_for(request.endpoint, page=page, page_size=page_size) }}{% if request.query_string.decode('utf-8') %}{{ '?'|string + request.query_string.decode('utf-8')|string }}{% endif %}
 {% endmacro %}
 
 
