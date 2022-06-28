@@ -5,7 +5,7 @@ Flask-SQLAlchemy==2.3.2
 Requests==2.20.0
 Flask-Babel==0.11.2
 Flask-WTF==0.14.2
-arrow==0.12.1
+arrow==0.15.1
 Flask-Uploads==0.2.1
 uuid==1.30
 qiniu==7.2.2
