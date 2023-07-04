@@ -3,8 +3,8 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')}, {'title':_('管理员'), 'href':""}] %}
-  {% set button = {'title':_('添加管理员'), 'href':url_for('admin.auth.create')} %}
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin_index.dashboard')}, {'title':_('管理员'), 'href':""}] %}
+  {% set button = {'title':_('添加管理员'), 'href':url_for('admin_auth.create')} %}
   {{ libs.breadcrumbs(breadcrumbs, button) }}
   <div class="container-fluid">
     <div class="row el-element-overlay m-b-40">
@@ -17,7 +17,7 @@
               <div class="el-overlay">
                 <ul class="el-info">
                   <li>
-                    <a class="bg-info" href="{{ url_for('admin.auth.edit', admin_uid=au.admin_uid) }}">
+                    <a class="bg-info" href="{{ url_for('admin_auth.edit', admin_uid=au.admin_uid) }}">
                       <i class="ti-marker-alt"></i>
                     </a>
                   </li>

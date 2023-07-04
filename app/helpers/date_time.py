@@ -18,7 +18,7 @@ def timestamp2str(timestamp, format_style='YYYY-MM-DD HH:mm:ss', timezone='UTC+8
     """时间戳转换为指定格式时间"""
     if (timestamp == 0):
         return ''
-        
+    # log_info(timestamp)
     utc = arrow.get(timestamp)
     loc = utc.to(timezone)
     return loc.format(format_style)

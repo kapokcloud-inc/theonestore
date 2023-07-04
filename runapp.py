@@ -57,9 +57,9 @@ babel.init_app(app)
 
 # 注册路由
 register_blueprint(app, ADMIN_ROUTES)
-register_blueprint(app, MOBILE_ROUTES)
-register_blueprint(app, API_ROUTES)
-register_blueprint(app, PC_ROUTES)
+# register_blueprint(app, MOBILE_ROUTES)
+# register_blueprint(app, API_ROUTES)
+# register_blueprint(app, PC_ROUTES)
 
 # 数据库初始化
 db.init_app(app)

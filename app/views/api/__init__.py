@@ -8,18 +8,18 @@
     :license: BSD, see LICENSE for more details.
 """
 
-from .like import like
-from .weixin import weixin
-from .cart import cart
-from .me import me
-from .order import order
-from .pay import pay
-from .aftersales import aftersales
-from .upload import upload
-from .item import item
-from .category import category
-from .index import index
-from .config import config
-from .sys import sys
-from .comment import comment
-from .wallet import wallet
+# from .like import like
+# from .weixin import weixin
+# from .cart import cart
+# from .me import me
+# from .order import order
+# from .pay import pay
+# from .aftersales import aftersales
+# from .upload import upload
+# from .item import item
+# from .category import category
+# from .index import index
+# from .config import config
+# from .sys import sys
+# from .comment import comment
+# from .wallet import wallet

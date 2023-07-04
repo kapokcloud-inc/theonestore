@@ -33,7 +33,7 @@ from app.models.item import Goods
 from app.models.comment import Comment
 
 
-comment = Blueprint('admin.comment', __name__)
+comment = Blueprint('admin_comment', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 19

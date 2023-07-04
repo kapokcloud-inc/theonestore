@@ -23,7 +23,7 @@ msgid "Hello World!"
 msgstr "你好世界"
 
 #: templates/default/admin/auth/login.html.j2:2
-msgid "admin.auth.login.username"
+msgid "admin_auth.login.username"
 msgstr "用户名"
 
 #: templates/default/admin/auth/login.html.j2:3

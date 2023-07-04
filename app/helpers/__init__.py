@@ -32,8 +32,7 @@ from flask import (
 )
 from flask_uploads import (
     UploadSet, 
-    configure_uploads as flask_configure_uploads, 
-    patch_request_class,
+    configure_uploads as flask_configure_uploads,
     DOCUMENTS,
     IMAGES,
     TEXT
@@ -89,7 +88,7 @@ def configure_uploads(app):
     flask_configure_uploads(app, (documents, images, text, pem))
     
     # 最大上传文件大小64M，MAX_CONTENT_LENGTH=64*1024*1024
-    patch_request_class(app)
+    # patch_request_class(app)
 
 
 def log_info(logtext):
@@ -323,7 +322,8 @@ def model_delete(record, commit=False):
 
 
 def get_count(q):
-    count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+    # count_q = q.statement.with_only_columns([func.count()]).order_by(None)
+    count_q = q.statement.with_only_columns(func.count()).order_by(None)
     count   = q.session.execute(count_q).scalar()
 
     return count

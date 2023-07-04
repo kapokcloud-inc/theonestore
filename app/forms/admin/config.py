@@ -28,7 +28,7 @@ from wtforms import (
     BooleanField
 )
 from wtforms.validators import (
-    Required,
+    DataRequired as Required,
     Length,
     EqualTo,
     NumberRange,

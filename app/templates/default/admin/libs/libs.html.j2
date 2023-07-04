@@ -334,19 +334,19 @@
 {# 其它 - form-control-static #}
 {% macro setting_page_tabs() %}
 {{ build_tabs(tabs=[
-  {'label':_('基本信息'), 'endpoint':'admin.config.info_base', 
-      'endpoint_list':('admin.config.info_base')},
-  {'label':_('微信'), 'endpoint':'admin.config.mp', 
-      'endpoint_list':('admin.config.mp', 'admin.config.weixinpay', 'admin.config.weixinopen', 'admin.config.weixin_sort')},
-  {'label':_('短信'), 'endpoint':'admin.config.sms_yunpian',
-      'endpoint_list':('admin.config.sms_yunpian', 'admin.config.sms_alisms', 'admin.config.sms_template')},
-  {'label':_('存储'), 'endpoint':'admin.config.storage_qiniu',
-      'endpoint_list':('admin.config.storage_qiniu', 'admin.config.storage_alioss')},
-  {'label':_('快递'), 'endpoint':'admin.config.shipping_100',
-      'endpoint_list':('admin.config.shipping_100', 'admin.config.shipping_open',
-      'admin.config.shipping_detail','admin.config.shipping_aggreate')},
-  {'label':_('售后'), 'endpoint':'admin.config.aftersales_service',
-      'endpoint_list':('admin.config.aftersales_service',)}
+  {'label':_('基本信息'), 'endpoint':'admin_config.info_base', 
+      'endpoint_list':('admin_config.info_base')},
+  {'label':_('微信'), 'endpoint':'admin_config.mp', 
+      'endpoint_list':('admin_config.mp', 'admin_config.weixinpay', 'admin_config.weixinopen', 'admin_config.weixin_sort')},
+  {'label':_('短信'), 'endpoint':'admin_config.sms_yunpian',
+      'endpoint_list':('admin_config.sms_yunpian', 'admin_config.sms_alisms', 'admin_config.sms_template')},
+  {'label':_('存储'), 'endpoint':'admin_config.storage_qiniu',
+      'endpoint_list':('admin_config.storage_qiniu', 'admin_config.storage_alioss')},
+  {'label':_('快递'), 'endpoint':'admin_config.shipping_100',
+      'endpoint_list':('admin_config.shipping_100', 'admin_config.shipping_open',
+      'admin_config.shipping_detail','admin_config.shipping_aggreate')},
+  {'label':_('售后'), 'endpoint':'admin_config.aftersales_service',
+      'endpoint_list':('admin_config.aftersales_service',)}
 ]) }}
 {% endmacro %}
 

@@ -17,10 +17,10 @@
           </p> -->
 
           {{ libs.build_tabs(tabs=[
-            {'label':_('快递100'), 'endpoint':'admin.config.shipping_100'},
-            {'label':_('聚合数据'), 'endpoint':'admin.config.shipping_aggreate'},
-            {'label':_('快递开通'), 'endpoint':'admin.config.shipping_open',
-      'endpoint_list':('admin.config.shipping_open', 'admin.config.shipping_detail')}
+            {'label':_('快递100'), 'endpoint':'admin_config.shipping_100'},
+            {'label':_('聚合数据'), 'endpoint':'admin_config.shipping_aggreate'},
+            {'label':_('快递开通'), 'endpoint':'admin_config.shipping_open',
+      'endpoint_list':('admin_config.shipping_open', 'admin_config.shipping_detail')}
           ], border_bottom='line') }}
 
           <table class="table table-hover product-overview footable" id="myTable">
@@ -63,7 +63,7 @@
                     </td>
                     <td>{{ shipping.sorting }}</td>
                     <td>
-                        <a href="{{ url_for('admin.config.shipping_detail', shipping_id=shipping.shipping_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
+                        <a href="{{ url_for('admin_config.shipping_detail', shipping_id=shipping.shipping_id) }}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('编辑')}}">
                           <i class="ti-marker-alt"></i>
                         </a>
                         </a>

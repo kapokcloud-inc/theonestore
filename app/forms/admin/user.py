@@ -30,7 +30,7 @@ from wtforms import (
     SelectMultipleField
 )
 from wtforms.validators import (
-    Required,
+    DataRequired as Required,
     InputRequired,
     Length,
     EqualTo,

@@ -26,14 +26,14 @@
               <!-- <div id="sparklinedash"></div> -->
               <h3 class="box-title">{{_('总用户数')}}</h3>
               <i class="text-success"></i>
-              <a href="{{ url_for('admin.user.index') }}">
+              <a href="{{ url_for('admin_user.index') }}">
                 <span class="counter text-success">{{ sum_user }}</span>
               </a>
             </li>
             <li class="text-right">
               <h3 class="box-title">{{_('今日用户数')}}</h3>
               <i class="text-success"></i>
-              <a href="{{ url_for('admin.user.index', add_time_daterange=today_date_rang) }}">
+              <a href="{{ url_for('admin_user.index', add_time_daterange=today_date_rang) }}">
                 <span class="counter text-success" >{{ day_user }}</span>
               </a>
             </li>
@@ -47,14 +47,14 @@
               <!-- <div id="sparklinedash2"></div> -->
               <h3 class="box-title">{{_('总订单数')}}</h3>
               <i class="text-purple"></i>
-              <a href="{{ url_for('admin.order.index') }}">
+              <a href="">
                 <span class="counter text-success">{{ sum_order }}</span>
               </a>
             </li>
             <li class="text-right">
               <h3 class="box-title">{{_('今日订单数')}}</h3>
               <i class="text-purple"></i>
-              <a href="{{ url_for('admin.order.index', add_time_daterange=today_date_rang) }}">
+              <a href="">
                 <span class="counter text-success" >{{ day_order }}</span>
               </a>
             </li>
@@ -68,14 +68,14 @@
               <!-- <div id="sparklinedash3"></div> -->
               <h3 class="box-title">{{_('总交易额')}}</h3>
               <i class="text-info"></i>
-              <a href="{{ url_for('admin.order.index') }}">
+              <a href="">
                 <span class="counter text-info">￥{{ sum_order_amount|format_amount(1) }}</span>              
               </a>
             </li>
             <li class="text-right">
               <h3 class="box-title">{{_('今日交易额')}}</h3>
               <i class="text-info"></i>
-              <a href="{{ url_for('admin.order.index', add_time_daterange=today_date_rang) }}">
+              <a href="">
                 <span class="counter text-info">￥{{ day_order_amount|format_amount(1) }}</span>
               </a>
             </li>
@@ -89,14 +89,14 @@
               <!-- <div id="sparklinedash4"></div> -->
               <h3 class="box-title">{{_('总售后数')}}</h3>
               <i class="text-danger"></i>
-              <a href="{{ url_for('admin.aftersale.index') }}">
+              <a href="">
                 <span class="text-danger">{{ sum_aftersales }}</span>
               </a>
             </li>
             <li class="text-right">
               <h3 class="box-title">{{_('今日售后数')}}</h3>
               <i class="text-danger"></i>
-              <a href="{{ url_for('admin.aftersale.index', add_time_daterange=today_date_rang) }}">
+              <a href="">
                 <span class="text-danger">{{ day_aftersales }}</span>
               </a>
             </li>
@@ -192,7 +192,7 @@
             <div class="row">
               <div class="col-xs-8">
                 <h4 class="m-b-0">{{_('最近会员充值')}}</h4>
-                <a href="{{ url_for('admin.recharge.index') }}"> 
+                <a href=""> 
                   <h2 class="m-t-0 font-medium">￥{{ fund_orders_amount|format_amount(1) }}</h2>
                 </a>
               </div>
@@ -238,7 +238,7 @@
               <p>{{_('订单列表')}}</p>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-6 ">
-              <a href="{{ url_for('admin.order.index') }}">
+              <a href="">
                 <h1 class="text-right text-info m-t-20">￥{{ orders_amount|format_amount(1) }}</h1>
               </a>
             </div>

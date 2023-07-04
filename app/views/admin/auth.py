@@ -20,7 +20,7 @@ from flask import (
     g
 )
 from flask_babel import gettext as _
-from wtforms.compat import with_metaclass, iteritems, itervalues
+# from wtforms.compat import with_metaclass, iteritems, itervalues
 
 from app.helpers import (
     render_template, 
@@ -41,7 +41,7 @@ from app.services.admin.auth import AuthLoginService
 from app.services.uploads import FileUploadService
 from app.services.response import ResponseJson
 
-auth = Blueprint('admin.auth', __name__)
+auth = Blueprint('admin_auth', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 25
@@ -110,7 +110,7 @@ def delete(admin_uid):
     au = AdminUsers.query.get_or_404(admin_uid)
     db.session.delete(au)
     db.session.commit()
-    return redirect(url_for('admin.auth.index'))
+    return redirect(url_for('admin_auth.index'))
 
 
 @auth.route('/save', methods=['POST'])
@@ -154,7 +154,7 @@ def save():
     au.avatar = avatar if avatar else au.avatar
     db.session.commit()
 
-    return redirect(url_for('admin.auth.index'))
+    return redirect(url_for('admin_auth.index'))
 
 
 @auth.route('/password', methods=['GET', 'POST'])
@@ -179,8 +179,8 @@ def password():
 
     return redirect(
                 url_for(
-                    'admin.index.success', 
+                    'admin_index.success', 
                     title=_(u'修改密码成功'), 
-                    back_url=url_for('admin.auth.password')
+                    back_url=url_for('admin_auth.password')
                 )
             )

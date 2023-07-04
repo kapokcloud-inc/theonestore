@@ -56,7 +56,7 @@ from app.models.aftersales import (
 )
 
 
-aftersale = Blueprint('admin.aftersale', __name__)
+aftersale = Blueprint('admin_aftersale', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 17

@@ -38,7 +38,7 @@ from app.services.uploads import FileUploadService
 from app.models.adv import Adv
 
 
-adv = Blueprint('admin.adv', __name__)
+adv = Blueprint('admin_adv', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 16

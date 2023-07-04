@@ -46,7 +46,7 @@ from app.forms.admin.user import (
 from app.services.api.funds import FundsService
 
 
-user = Blueprint('admin.user', __name__)
+user = Blueprint('admin_user', __name__)
 
 @user.route('/index')
 @user.route('/index/<int:page>')
@@ -111,7 +111,7 @@ def recharge_save():
     admin_uid        = session.get('admin_uid', None)
     if not admin_uid: 
         return_url   = request.args.get('return_url', '/admin/dashboard')
-        return redirect(url_for('admin.auth.login', return_url=return_url))
+        return redirect(url_for('admin_auth.login', return_url=return_url))
         
     form             = RechargeForm(request.form)
     form.avatar.data = request.args.get('avatar')
@@ -125,12 +125,12 @@ def recharge_save():
     fs               = FundsService(form.uid.data, recharge_amount, 1, 2, 0, remark_user, remark_sys, current_timestamp())
     if not fs.check():
         log_error('[ErrorServiceApiOrderPaidServicePaid][FundsServiceError01]  remark_sys:%s' % remark_sys)
-        return redirect(url_for('admin.user.recharge', form=form))
+        return redirect(url_for('admin_user.recharge', form=form))
     # 更新余额 - 充值
     fs.update()
     fs.commit()
 
-    return redirect(url_for('admin.user.detail', uid=form.uid.data))
+    return redirect(url_for('admin_user.detail', uid=form.uid.data))
 
 
 @user.route('/coupon/<int:uid>')
@@ -152,7 +152,7 @@ def coupon_save():
     admin_uid        = session.get('admin_uid', None)
     if not admin_uid: 
         return_url   = request.args.get('return_url', '/admin/dashboard')
-        return redirect(url_for('admin.auth.login', return_url=return_url))
+        return redirect(url_for('admin_auth.login', return_url=return_url))
         
     form             = CouponForm(request.form)
     form.avatar.data = request.args.get('avatar')
@@ -180,4 +180,4 @@ def coupon_save():
     
     model_update(coupon, data, True)
 
-    return redirect(url_for('admin.user.detail', uid=form.uid.data))
+    return redirect(url_for('admin_user.detail', uid=form.uid.data))

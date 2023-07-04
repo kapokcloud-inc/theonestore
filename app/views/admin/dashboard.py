@@ -21,7 +21,7 @@ from flask import (
 from app.helpers import render_template
 
 
-dashboard = Blueprint('admin.dashboard', __name__)
+dashboard = Blueprint('admin_dashboard', __name__)
 
 
 @dashboard.route('/', methods=['GET', 'POST'])
