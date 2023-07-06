@@ -39,7 +39,7 @@ def configure_before(app):
 
         # 管理后台权限判断
         if (endpoint.find('admin.') == 0 and 
-                (endpoint not in ('admin_index.root', 'admin_auth.login'))):
+                (endpoint not in ('admin.index.root', 'admin.auth.login'))):
             admin_uid = session.get('admin_uid', 0)
             if admin_uid <= 0:
                 return abort(403)

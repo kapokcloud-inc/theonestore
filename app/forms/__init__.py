@@ -10,8 +10,8 @@
 from flask import request
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
-# from wtforms.compat import iteritems
-# from wtforms.fields import Field
+from wtforms.compat import iteritems
+from wtforms.fields import Field
 
 from app.helpers import log_debug
 
@@ -30,7 +30,7 @@ class Form(FlaskForm):
             #     Temporarily, this can simply be merged with kwargs.
             kwargs = dict(data, **kwargs)
 
-        for name, field, in self._fields:
+        for name, field, in iteritems(self._fields):
             if obj is not None and hasattr(obj, name):
                 field.data = getattr(obj, name)
             elif name in kwargs:
@@ -45,14 +45,14 @@ class Form(FlaskForm):
             return ret
 
         # 编辑更新时文件上传是必填项报错问题
-        for name, field, in self._fields:
+        for name, field, in iteritems(self._fields):
             if (isinstance(field, FileField) is True
                     and field.flags.required
                     and not field.data
                     and field.errors):
                 field.errors = ()
         
-        for name, field in self._fields:
+        for name, field in iteritems(self._fields):
             if field.errors:
                 return False
 

@@ -14,63 +14,158 @@
       {% set _view = request.path.split('/')[2] %}
       {%
         set menu_list = [
-        {'title':_('首页'),
-          'href':url_for('admin_index.dashboard'),
-          'view':'index',
-          'icon':'mdi mdi-apps',
+          {'title':_('首页'),
+           'href':url_for('admin.index.dashboard'),
+           'view':'index',
+           'icon':'mdi mdi-apps',
+           'children':None
+          },
+          {'type':'devider'},
+          {'title':_('用户'),
+           'href':url_for('admin.user.index'),
+           'view':'user',
+           'icon':'mdi mdi-account',
+           'children':None
+          },
+          {'title':_('充值'),
+           'href':url_for('admin.recharge.index'),
+           'view':'recharge',
+           'icon':'mdi mdi-wallet',
+           'children':None
+          },
+          {'title':_('评论'),
+           'href':url_for('admin.comment.index'),
+           'view':'comment',
+           'icon':'mdi mdi-comment',
+           'children':None
+          },
+          {'type':'devider'},
+          {'title':_('商品'),
+          'href':'javascript:;',
+          'view':'item',
+          'icon':'mdi mdi-cart-outline',
+          'children':[
+            {'title':_('商品'),
+            'href':url_for('admin.item.index'),
+            'endpoints':['admin.item.index',
+                          'admin.item.create',
+                          'admin.item.detail',
+                          'admin.item.h5',
+                          'admin.item.galleries',
+                          'admin.item.save']
+            },
+            {'title':_('分类'),
+            'href':url_for('admin.item.categories'),
+            'endpoints':['admin.item.categories',
+                          'admin.item.category_create',
+                          'admin.item.category_detail',
+                          'admin.item.category_save']
+            }
+          ]
+        },
+        {'title':_('优惠券'),
+          'href':'javascript:;',
+          'view':'coupon',
+          'icon':'mdi mdi-credit-card',
+          'children':[
+            {'title':_('优惠券'),
+            'href':url_for('admin.coupon.index'),
+            'endpoints':['admin.coupon.index',
+                          'admin.coupon.create',
+                          'admin.coupon.detail',
+                          'admin.coupon.save']
+            },
+            {'title':_('用户优惠券'),
+            'href':url_for('admin.coupon.coupons'),
+            'endpoints':['admin.coupon.coupons']
+            }
+          ]
+        },
+        {'title':_('订单'),
+          'href':url_for('admin.order.index'),
+          'view':'order',
+          'icon':'mdi mdi-truck-delivery',
+          'children':None
+        },
+        {'title':_('售后'),
+          'href':url_for('admin.aftersale.index'),
+          'view':'aftersale',
+          'icon':'mdi mdi-headphones',
           'children':None
         },
         {'type':'devider'},
-        {'title':_('用户'),
-          'href':url_for('admin_user.index'),
-          'view':'user',
-          'icon':'mdi mdi-account',
+        {'title':_('文章'),
+          'href':'javascript:;',
+          'view':'post',
+          'icon':'mdi mdi-clipboard-text',
+          'children':[
+            {'title':_('文章'),
+            'href':url_for('admin.post.index'),
+            'endpoints':['admin.post.index',
+                        'admin.post.detail',
+                        'admin.post.create',
+                        'admin.post.h5',
+                        'admin.post.save']
+            },
+            {'title':_('分类'),
+            'href':url_for('admin.post.categories'),
+            'endpoints':['admin.post.categories',
+                        'admin.post.category_create',
+                        'admin.post.category_detail',
+                        'admin.post.category_save']
+            }
+          ]
+        },
+        {'title':_('广告'),
+          'href':url_for('admin.adv.index'),
+          'view':'adv',
+          'icon':'mdi mdi-monitor-multiple',
           'children':None
         },
         {'type':'devider'},
         {'title':_('管理员'),
-          'href':url_for('admin_auth.index'),
+          'href':url_for('admin.auth.index'),
           'view':'auth',
           'icon':'mdi mdi-account-card-details',
           'children':None
         },
         {'title':_('配置项'),
-          'href':url_for('admin_config.sms_yunpian'),
+          'href':url_for('admin.config.sms_yunpian'),
           'view':'config',
           'icon':'mdi mdi-settings',
           'children':[
            {'title':_('基本信息'),
-            'href':url_for('admin_config.info_base'),
-            'endpoints':['admin_config.info_base']
+            'href':url_for('admin.config.info_base'),
+            'endpoints':['admin.config.info_base']
             },
             {'title':_('微信'),
-            'href':url_for('admin_config.mp'),
-            'endpoints':['admin_config.mp',
-                          'admin_config.weixinpay',
-                          'admin_config.weixinopen',
-                          'admin_config.weixin_sort']
+            'href':url_for('admin.config.mp'),
+            'endpoints':['admin.config.mp',
+                          'admin.config.weixinpay',
+                          'admin.config.weixinopen',
+                          'admin.config.weixin_sort']
             },
             {'title':_('短信'),
-            'href':url_for('admin_config.sms_yunpian'),
-            'endpoints':['admin_config.sms_yunpian',
-                          'admin_config.sms_alisms',
-                          'admin_config.sms_template']
+            'href':url_for('admin.config.sms_yunpian'),
+            'endpoints':['admin.config.sms_yunpian',
+                          'admin.config.sms_alisms',
+                          'admin.config.sms_template']
             },
             {'title':_('存储'),
-            'href':url_for('admin_config.storage_qiniu'),
-            'endpoints':['admin_config.storage_qiniu',
-                          'admin_config.storage_alioss']
+            'href':url_for('admin.config.storage_qiniu'),
+            'endpoints':['admin.config.storage_qiniu',
+                          'admin.config.storage_alioss']
             },
             {'title':_('快递'),
-            'href':url_for('admin_config.shipping_100'),
-            'endpoints':['admin_config.shipping_100',
-                          'admin_config.shipping_aggreate',
-                          'admin_config.shipping_open',
-                          'admin_config.shipping_detail']
+            'href':url_for('admin.config.shipping_100'),
+            'endpoints':['admin.config.shipping_100',
+                          'admin.config.shipping_aggreate',
+                          'admin.config.shipping_open',
+                          'admin.config.shipping_detail']
             },
               {'title':_('售后'),
-            'href':url_for('admin_config.aftersales_service'),
-            'endpoints':['admin_config.aftersales_service']
+            'href':url_for('admin.config.aftersales_service'),
+            'endpoints':['admin.config.aftersales_service']
             },
           ]
         },

@@ -14,12 +14,12 @@
           </p>
 
           {{ libs.build_tabs(tabs=[
-            {'label':_('基本信息'), 'endpoint':'admin_config.info_base'}
+            {'label':_('基本信息'), 'endpoint':'admin.config.info_base'}
           ], border_bottom='line') }}
 
           {# 售后服务 form表单 #}
           {{ libs.render_form(form, 
-              action=url_for('admin_config.info_base'),
+              action=url_for('admin.config.info_base'),
               enctype="multipart/form-data",
               primary_key=form.app_name.data)
           }}

@@ -44,7 +44,7 @@ from app.helpers.date_time import(
     timestamp2str
 )
 
-index = Blueprint('admin_index', __name__)
+index = Blueprint('admin.index', __name__)
 
 
 @index.route('/')
@@ -52,9 +52,9 @@ def root():
     """管理后台首页"""
     admin_uid = session.get('admin_uid', None)
     if admin_uid:
-        return redirect(url_for('admin_index.dashboard'))
+        return redirect(url_for('admin.index.dashboard'))
     return_url = request.args.get('return_url', '/admin/dashboard')
-    return redirect(url_for('admin_auth.login', return_url=return_url))
+    return redirect(url_for('admin.auth.login', return_url=return_url))
 
 
 @index.route('/dashboard')
@@ -65,7 +65,7 @@ def dashboard():
     admin_uid = session.get('admin_uid', None)
     if not admin_uid:
         return_url = request.args.get('return_url', '/admin/dashboard')
-        return redirect(url_for('admin_auth.login', return_url=return_url))
+        return redirect(url_for('admin.auth.login', return_url=return_url))
 
     # 今天0点0时0分时间戳
     today_time_stamp = some_day_timestamp(current_timestamp(), 0)
@@ -103,14 +103,12 @@ def dashboard():
         '0.00')
 
     # 售后数
-    # q = db.session.query(Aftersales.order_id)
-    # sum_aftersales = get_count(q)
-    # q = db.session.query(Aftersales.aftersales_id).\
-    #     filter(Aftersales.add_time >= today_time_stamp)
-    # day_aftersales = get_count(q)
+    q = db.session.query(Aftersales.order_id)
+    sum_aftersales = get_count(q)
 
-    sum_aftersales = 0
-    day_aftersales = 0
+    q = db.session.query(Aftersales.aftersales_id).\
+        filter(Aftersales.add_time >= today_time_stamp)
+    day_aftersales = get_count(q)
 
     # 会员充值(连表查，3条数据)
     funds_orders = []
@@ -148,11 +146,11 @@ def dashboard():
         orders.append(order)
 
     # 最近评论
-    # comments = db.session.query(
-    #     Comment.nickname, Comment.avatar,
-    #     Comment.add_time, Comment.rating,
-    #     Comment.content, Comment.img_data).\
-    #     order_by(Comment.comment_id.desc()).limit(3).all()
+    comments = db.session.query(
+        Comment.nickname, Comment.avatar,
+        Comment.add_time, Comment.rating,
+        Comment.content, Comment.img_data).\
+        order_by(Comment.comment_id.desc()).limit(3).all()
 
     # 今天限制时间
     start = some_day_timestamp(current_timestamp(), 0)
@@ -172,7 +170,7 @@ def dashboard():
             'funds_orders': funds_orders,
             'orders': orders,
             'orders_amount': goods_orders_amount,
-            'comments': [],
+            'comments': comments,
             'today_date_rang': today_date_rang
             }
 

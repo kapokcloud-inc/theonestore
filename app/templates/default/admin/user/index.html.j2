@@ -14,7 +14,7 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin_index.dashboard')}, {'title':_('用户'), 'href':""}] %}
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')}, {'title':_('用户'), 'href':""}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
     <div class="row">
@@ -56,7 +56,7 @@
                       <td>{{ user.country }} {{ user.province }} {{ user.city }}</td>
                       <td>{{ user.add_time|timestamp2str }}</td>
                       <td>
-                        <a href="{{url_for('admin_user.detail', uid=user.uid)}}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">
+                        <a href="{{url_for('admin.user.detail', uid=user.uid)}}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">
                           <i class="ti-pencil-alt"></i>
                         </a>
                       </td>

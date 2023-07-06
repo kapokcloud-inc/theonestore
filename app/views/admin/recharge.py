@@ -49,7 +49,7 @@ from app.models.order import (
 from app.services.response import ResponseJson
 
 
-recharge = Blueprint('admin_recharge', __name__)
+recharge = Blueprint('admin.recharge', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 21

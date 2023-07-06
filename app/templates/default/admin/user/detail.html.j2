@@ -4,10 +4,10 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('用户'), 'href':url_for('admin_user.index')}, 
+  {% set breadcrumbs = [{'title':_('用户'), 'href':url_for('admin.user.index')}, 
                         {'title':g.page_title, 'href':""}] %}
-  {% set buts = [{'title':_('余额充值'), 'href':url_for('admin_user.recharge', uid=user.uid)},
-                {'title':_('发优惠券'), 'href':url_for('admin_user.coupon', uid=user.uid)}] %}
+  {% set buts = [{'title':_('余额充值'), 'href':url_for('admin.user.recharge', uid=user.uid)},
+                {'title':_('发优惠券'), 'href':url_for('admin.user.coupon', uid=user.uid)}] %}
   {{ libs.breadcrumbs(breadcrumbs, {}, buts) }}
   <div class="container-fluid">
     <div class="row">

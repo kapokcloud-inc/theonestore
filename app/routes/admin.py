@@ -14,14 +14,14 @@ ADMIN_ROUTES = (
     (admin.index,       '/admin'),
     (admin.auth,        '/admin/auth'),
     (admin.config,      '/admin/config'),
-    # (admin.item,        '/admin/item'),
-    # (admin.order,       '/admin/order'),
-    # (admin.recharge,    '/admin/recharge'),
-    # (admin.coupon,      '/admin/coupon'),
-    # (admin.adv,         '/admin/adv'),
-    # (admin.aftersale,   '/admin/aftersale'),
+    (admin.item,        '/admin/item'),
+    (admin.order,       '/admin/order'),
+    (admin.recharge,    '/admin/recharge'),
+    (admin.coupon,      '/admin/coupon'),
+    (admin.adv,         '/admin/adv'),
+    (admin.aftersale,   '/admin/aftersale'),
     (admin.user,        '/admin/user'),
-    # (admin.comment,     '/admin/comment'),
-    # (admin.post,        '/admin/post'),
-    # (admin.upload,      '/admin/upload')
+    (admin.comment,     '/admin/comment'),
+    (admin.post,        '/admin/post'),
+    (admin.upload,      '/admin/upload')
 )

@@ -51,7 +51,7 @@ from app.models.shipping import Shipping
 from app.models.sys import SysSetting
 
 
-config = Blueprint('admin_config', __name__)
+config = Blueprint('admin.config', __name__)
 
 
 @config.route('/mp', methods=['GET', 'POST'])
@@ -92,7 +92,7 @@ def mp():
 
     ss.value = json.dumps(data)
     db.session.commit()
-    return redirect(url_for('admin_index.success', title=_(u'设置微信公众号成功')))
+    return redirect(url_for('admin.index.success', title=_(u'设置微信公众号成功')))
 
 
 @config.route('/weixinpay', methods=['GET', 'POST'])
@@ -151,7 +151,7 @@ def weixinpay():
 
     ss.value = json.dumps(data)
     db.session.commit()
-    return redirect(url_for('admin_index.success', title=_(u'设置微信支付成功')))
+    return redirect(url_for('admin.index.success', title=_(u'设置微信支付成功')))
 
 
 @config.route('/weixinopen', methods=['GET', 'POST'])
@@ -177,7 +177,7 @@ def weixinopen():
                 db.session.add(ss)
             ss.value = json.dumps(data)
             db.session.commit()
-            return redirect(url_for('admin_index.success', title=_(u'设置微信开放平台成功')))
+            return redirect(url_for('admin.index.success', title=_(u'设置微信开放平台成功')))
 
     return render_template('admin/config/weixinopen.html.j2', form=form)
 
@@ -221,7 +221,7 @@ def weixin_sort():
 
     ss.value = json.dumps(data)
     db.session.commit()
-    return redirect(url_for('admin_index.success', title=_(u'设置微信小程序成功')))
+    return redirect(url_for('admin.index.success', title=_(u'设置微信小程序成功')))
 
 
 @config.route('/info_base', methods=['GET', 'POST'])
@@ -265,7 +265,7 @@ def info_base():
 
     ss.value = json.dumps(data)
     db.session.commit()
-    return redirect(url_for('admin_index.success', title=_(u'设置基本信息成功')))
+    return redirect(url_for('admin.index.success', title=_(u'设置基本信息成功')))
 
 
 @config.route('/sms/yunpian', methods=["GET", "POST"])
@@ -318,7 +318,7 @@ def sms_yunpian():
         vendor.value = ""
 
     db.session.commit()
-    return redirect(url_for('admin_config.sms_yunpian'))
+    return redirect(url_for('admin.config.sms_yunpian'))
 
 
 @config.route('/sms/alisms', methods=["GET", "POST"])
@@ -374,7 +374,7 @@ def sms_alisms():
         vendor.value = ""
 
     db.session.commit()
-    return redirect(url_for('admin_config.sms_alisms'))
+    return redirect(url_for('admin.config.sms_alisms'))
 
 
 @config.route('/storage/qiniu', methods=["GET", "POST"])
@@ -428,7 +428,7 @@ def storage_qiniu():
     vendor.value = data_vendor
     db.session.commit()
 
-    return redirect(url_for('admin_config.storage_qiniu'))
+    return redirect(url_for('admin.config.storage_qiniu'))
 
 
 @config.route('/storage/alioss', methods=["GET", "POST"])
@@ -483,7 +483,7 @@ def storage_alioss():
     vendor.value = data_vendor
 
     db.session.commit()
-    return redirect(url_for('admin_config.storage_alioss'))
+    return redirect(url_for('admin.config.storage_alioss'))
 
 
 @config.route('/shipping_100', methods=["GET", "POST"])
@@ -539,7 +539,7 @@ def shipping_100():
         vendor.value = ""
 
     db.session.commit()
-    return redirect(url_for('admin_config.shipping_100'))
+    return redirect(url_for('admin.config.shipping_100'))
 
 
 @config.route('/shipping_aggreate', methods=["GET", "POST"])
@@ -592,7 +592,7 @@ def shipping_aggreate():
         vendor.value = ""
 
     db.session.commit()
-    return redirect(url_for('admin_config.shipping_aggreate'))
+    return redirect(url_for('admin.config.shipping_aggreate'))
 
 
 @config.route('/shipping_open')
@@ -656,7 +656,7 @@ def shipping_save():
                 _shipping.is_default = 0
         db.session.commit()
 
-        return redirect(url_for('admin_config.shipping_open'))
+        return redirect(url_for('admin.config.shipping_open'))
 
     wtf_form.shipping_name.data = shipping.shipping_name
     shipping = wtf_form.data
@@ -705,7 +705,7 @@ def aftersales_service():
     ss.value = json.dumps(data)
 
     db.session.commit()
-    return redirect(url_for('admin_index.success', title=_(u'设置售后地址成功')))
+    return redirect(url_for('admin.index.success', title=_(u'设置售后地址成功')))
 
 
 @config.route('/sms_template', methods=['GET', 'POST'])
@@ -741,4 +741,4 @@ def sms_template():
 
     ss.value = json.dumps(data)
     db.session.commit()
-    return redirect(url_for('admin_index.success', title=_(u'设置短信模版配置成功')))
+    return redirect(url_for('admin.index.success', title=_(u'设置短信模版配置成功')))

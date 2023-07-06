@@ -4,8 +4,8 @@
 {% block body %}
 <!-- Page Content -->
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin_index.dashboard')},
-                        {'title':_('管理员'), 'href':url_for('admin_auth.index')}, 
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')},
+                        {'title':_('管理员'), 'href':url_for('admin.auth.index')}, 
                         {'title':_('添加管理员'), 'href':''}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
@@ -16,7 +16,7 @@
           <h3 class="box-title m-b-0">{{_('管理员基本信息填写')}}</h3>
           <p class="text-muted m-b-30 font-13">{{_('输入下面的详细信息')}}</p>
           {{ libs.render_form(form, 
-              action=url_for('admin_auth.save'), 
+              action=url_for('admin.auth.save'), 
               enctype="multipart/form-data", 
               primary_key=form.admin_uid.data) }}
         </div>

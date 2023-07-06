@@ -28,7 +28,7 @@ from wtforms.widgets.core import (
     PasswordInput
 )
 from wtforms.validators import (
-    DataRequired as Required,
+    Required,
     Length,
     EqualTo,
     NumberRange

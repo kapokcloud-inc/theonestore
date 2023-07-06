@@ -9,7 +9,7 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin_index.dashboard')},
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')},
                         {'title':_('售后'), 'href':url_for('admin.aftersale.index')}, 
                         {'title':g.page_title, 'href':""}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}

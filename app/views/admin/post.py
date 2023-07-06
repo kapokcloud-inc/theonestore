@@ -49,7 +49,7 @@ from app.models.post import (
 
 from app.services.response import ResponseJson
 
-post = Blueprint('admin_post', __name__)
+post = Blueprint('admin.post', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 20

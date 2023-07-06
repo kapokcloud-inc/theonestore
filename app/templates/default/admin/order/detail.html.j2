@@ -5,7 +5,7 @@
   
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin_index.dashboard')},
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')},
                         {'title':_('订单'), 'href':url_for('admin.order.index')}, 
                         {'title':g.page_title, 'href':""}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
@@ -23,7 +23,7 @@
                   <div class="form-group">
                     <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label">下单用户：</label>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-                      <a class="form-control-static" href="{{ url_for('admin_user.detail', uid=user.uid) }}" target="_blank">{{ user.nickname }}</a>
+                      <a class="form-control-static" href="{{ url_for('admin.user.detail', uid=user.uid) }}" target="_blank">{{ user.nickname }}</a>
                     </div>
                   </div>
                 </div>

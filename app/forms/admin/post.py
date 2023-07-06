@@ -21,7 +21,7 @@ from wtforms import (
 )
 
 from wtforms.validators import (
-    DataRequired as Required,
+    Required,
     InputRequired,
     Length,
     EqualTo,

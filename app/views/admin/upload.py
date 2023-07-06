@@ -26,7 +26,7 @@ from app.helpers import (
 from app.services.uploads import FileUploadService
 
 
-upload = Blueprint('admin_upload', __name__)
+upload = Blueprint('admin.upload', __name__)
 
 
 @upload.route('/ueditor', methods=["GET", "POST"])

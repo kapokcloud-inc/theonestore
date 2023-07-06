@@ -52,7 +52,7 @@ from app.models.order import (
 )
 
 
-order = Blueprint('admin_order', __name__)
+order = Blueprint('admin.order', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 14

@@ -33,7 +33,7 @@
       <h1 class="text-info">403</h1>
       <h3 class="text-uppercase">{{ _('访问被拒绝') }}</h3>
       <p class="text-muted m-t-30 m-b-30 text-uppercase">{{ _('您没有访问此服务器的权限。') }}</p>
-      <a href="{{ url_for('admin_index.root', return_url=request.url) }}" class="btn btn-info btn-rounded waves-effect waves-light m-b-40">{{ _('返回登录页') }}</a> </div>
+      <a href="{{ url_for('admin.index.root', return_url=request.url) }}" class="btn btn-info btn-rounded waves-effect waves-light m-b-40">{{ _('返回登录页') }}</a> </div>
     <footer class="footer text-center">2018 © {{ _('深圳市木棉花云网络科技有限公司') }}</footer>
   </div>
 </section>

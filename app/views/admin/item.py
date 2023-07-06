@@ -52,7 +52,7 @@ from app.models.item import (
 )
 
 
-item = Blueprint('admin_item', __name__)
+item = Blueprint('admin.item', __name__)
 
 resjson = ResponseJson()
 resjson.module_code = 13

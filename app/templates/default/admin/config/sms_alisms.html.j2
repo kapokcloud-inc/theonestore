@@ -16,13 +16,13 @@
           </p>
 
           {{ libs.build_tabs(tabs=[
-            {'label':_('云片'), 'endpoint':'admin_config.sms_yunpian'},
-            {'label':_('阿里'), 'endpoint':'admin_config.sms_alisms'},
-            {'label':_('模版'), 'endpoint':'admin_config.sms_template'}
+            {'label':_('云片'), 'endpoint':'admin.config.sms_yunpian'},
+            {'label':_('阿里'), 'endpoint':'admin.config.sms_alisms'},
+            {'label':_('模版'), 'endpoint':'admin.config.sms_template'}
           ], border_bottom='line') }}
 
           {# 阿里云短信 form表单 #}
-          {{ libs.render_form(form, action=url_for('admin_config.sms_alisms')) }}
+          {{ libs.render_form(form, action=url_for('admin.config.sms_alisms')) }}
 
         </div>
       </div>

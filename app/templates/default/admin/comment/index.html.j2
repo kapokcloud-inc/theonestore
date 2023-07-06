@@ -16,7 +16,7 @@
 
 {% block body %}
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin_index.dashboard')}, {'title':_('评论'), 'href':""}] %}
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')}, {'title':_('评论'), 'href':""}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
     <div class="row">
@@ -54,7 +54,7 @@
                     <tr id="comment-{{ comment.comment_id }}">
                       <td>{{ comment.comment_id }}</td>
                       <td>
-                        <a href="{{url_for('admin_user.detail', uid=comment.uid)}}" target="_blank">
+                        <a href="{{url_for('admin.user.detail', uid=comment.uid)}}" target="_blank">
                           <img src="{{ comment.avatar|format_avatar }}" width="50" class="img-circle" />
                         </a>
                       </td>

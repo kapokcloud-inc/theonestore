@@ -15,8 +15,7 @@ from decimal import Decimal
 
 from flask import current_app
 from flask_babel import gettext as _
-# from sqlalchemy.util import KeyedTuple
-from sqlalchemy.engine import Row as KeyedTuple
+from sqlalchemy.util import KeyedTuple
 
 from app.database import db
 
@@ -120,7 +119,7 @@ class ResponseJson(object):
     def print_json(self, ret=0, msg='ok', data=None):
         res = current_app.response_class(mimetype='application/json')
 
-        if ret > 99 and msg == 'ok':
+        if ret > 99 and msg is 'ok':
             # 从配置文件中获取错误消息
             msg = self.G_SERVICE_CODE.get(ret)
 

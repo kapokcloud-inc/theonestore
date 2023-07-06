@@ -16,12 +16,12 @@
           </p>
 
           {{ libs.build_tabs(tabs=[
-            {'label':_('七牛云'), 'endpoint':'admin_config.storage_qiniu'},
-            {'label':_('阿里云OSS'), 'endpoint':'admin_config.storage_alioss'},
+            {'label':_('七牛云'), 'endpoint':'admin.config.storage_qiniu'},
+            {'label':_('阿里云OSS'), 'endpoint':'admin.config.storage_alioss'},
           ], border_bottom='line') }}
 
           {# 阿里云OSS form表单 #}
-          {{ libs.render_form(form, action=url_for('admin_config.storage_alioss')) }}
+          {{ libs.render_form(form, action=url_for('admin.config.storage_alioss')) }}
 
         </div>
       </div>

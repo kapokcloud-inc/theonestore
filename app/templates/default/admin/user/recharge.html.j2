@@ -4,9 +4,9 @@
 {% block body %}
 <!-- Page Content -->
 <div id="page-wrapper">
-  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin_index.dashboard')},
-                        {'title':_('用户'), 'href':url_for('admin_user.index')}, 
-                        {'title':_('用户详情'), 'href':url_for('admin_user.detail', uid=form.uid.data)}, 
+  {% set breadcrumbs = [{'title':_('首页'), 'href':url_for('admin.index.dashboard')},
+                        {'title':_('用户'), 'href':url_for('admin.user.index')}, 
+                        {'title':_('用户详情'), 'href':url_for('admin.user.detail', uid=form.uid.data)}, 
                         {'title':_('余额充值'), 'href':''}] %}
   {{ libs.breadcrumbs(breadcrumbs) }}
   <div class="container-fluid">
@@ -17,7 +17,7 @@
           <h3 class="box-title m-b-0">{{_('用户钱包余额充值')}}</h3>
           <p class="text-muted m-b-30 font-13">{{_('请输入下面的充值信息')}}</p>
           {{ libs.render_form(form, 
-              action=url_for('admin_user.recharge_save', uid=form.uid.data, avatar=form.avatar.data), 
+              action=url_for('admin.user.recharge_save', uid=form.uid.data, avatar=form.avatar.data), 
               primary_key=form.uid.data, button_name=_('充值')) }}
         </div>
       </div>

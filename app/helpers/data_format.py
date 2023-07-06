@@ -17,9 +17,7 @@ from app.helpers import (
     toint
 )
 from app.exception import TheonestoreException
-# from sqlalchemy.util._collections import AbstractKeyedTuple
-from sqlalchemy.engine import Row as AbstractKeyedTuple
-
+from sqlalchemy.util._collections import AbstractKeyedTuple
 
 def format_amount(sourcePrice=0, format_type=0):
     ''' 处理商品价格显示 

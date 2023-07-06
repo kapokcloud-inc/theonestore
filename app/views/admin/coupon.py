@@ -44,7 +44,7 @@ from app.models.coupon import (
 )
 
 
-coupon = Blueprint('admin_coupon', __name__)
+coupon = Blueprint('admin.coupon', __name__)
 
 @coupon.route('/index')
 @coupon.route('/index/<int:page>')

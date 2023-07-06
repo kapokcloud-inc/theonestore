@@ -17,13 +17,13 @@
           </p>
 
           {{ libs.build_tabs(tabs=[
-            {'label':_('快递100'), 'endpoint':'admin_config.shipping_100'},
-            {'label':_('聚合数据'), 'endpoint':'admin_config.shipping_aggreate'},
-            {'label':_('快递开通'), 'endpoint':'admin_config.shipping_open',
-      'endpoint_list':('admin_config.shipping_open', 'admin_config.shipping_detail')}
+            {'label':_('快递100'), 'endpoint':'admin.config.shipping_100'},
+            {'label':_('聚合数据'), 'endpoint':'admin.config.shipping_aggreate'},
+            {'label':_('快递开通'), 'endpoint':'admin.config.shipping_open',
+      'endpoint_list':('admin.config.shipping_open', 'admin.config.shipping_detail')}
           ], border_bottom='line') }}
 
-          {{ libs.render_form(form, action=url_for('admin_config.shipping_100')) }}
+          {{ libs.render_form(form, action=url_for('admin.config.shipping_100')) }}
         </div>
       </div>
     </div>
