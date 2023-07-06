@@ -15,7 +15,7 @@ class User(BaseModel, db.Model):
     __tablename__ = 'user'
 
     uid = db.Column(db.Integer, primary_key=True)
-    uuid = db.Column(db.String(50), default='')
+    # uuid = db.Column(db.String(50), default='')
     nickname = db.Column(db.String(32), default='')
     avatar = db.Column(db.String(255), default='')
     gender = db.Column(db.Integer, default=0)
@@ -24,6 +24,8 @@ class User(BaseModel, db.Model):
     city = db.Column(db.String(32), default='')
     add_time = db.Column(db.Integer, default=0)
     update_time = db.Column(db.Integer, default=0)
+    mobile = db.Column(db.String(11), default='')
+    email = db.Column(db.String(50), default='')
 
 
 class UserAddress(BaseModel, db.Model):

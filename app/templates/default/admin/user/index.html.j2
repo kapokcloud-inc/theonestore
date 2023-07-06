@@ -40,8 +40,8 @@
                   <th>{{_('用户ID')}}</th>
                   <th>{{_('头像')}}</th>
                   <th>{{_('昵称')}}</th>
-                  <th>{{_('性别')}}</th>
-                  <th>{{_('城市')}}</th>
+                  <th>{{_('手机号码')}}</th>
+                  <th>{{_('邮箱')}}</th>
                   <th>{{_('注册时间')}}</th>
                   <th>{{_('操作')}}</th>
                 </tr>
@@ -52,8 +52,8 @@
                       <td>{{ user.uid }}</td>
                       <td><img src="{{ user.avatar|format_avatar }}" width="50" class="img-circle" /></td>
                       <td>{{ user.nickname }}</td>
-                      <td>{{ const.GENDER.get(user.gender, _('保密')) }}</td>
-                      <td>{{ user.country }} {{ user.province }} {{ user.city }}</td>
+                      <td>{{ user.mobile }}</td>
+                      <td>{{ user.email }}</td>
                       <td>{{ user.add_time|timestamp2str }}</td>
                       <td>
                         <a href="{{url_for('admin.user.detail', uid=user.uid)}}" class="text-inverse p-r-10" data-toggle="tooltip" title="{{_('查看')}}">

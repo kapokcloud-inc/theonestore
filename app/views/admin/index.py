@@ -103,12 +103,14 @@ def dashboard():
         '0.00')
 
     # 售后数
-    q = db.session.query(Aftersales.order_id)
-    sum_aftersales = get_count(q)
+    # q = db.session.query(Aftersales.order_id)
+    # sum_aftersales = get_count(q)
+    sum_aftersales = 0
 
-    q = db.session.query(Aftersales.aftersales_id).\
-        filter(Aftersales.add_time >= today_time_stamp)
-    day_aftersales = get_count(q)
+    # q = db.session.query(Aftersales.aftersales_id).\
+    #     filter(Aftersales.add_time >= today_time_stamp)
+    # day_aftersales = get_count(q)
+    day_aftersales = 0
 
     # 会员充值(连表查，3条数据)
     funds_orders = []
@@ -146,11 +148,12 @@ def dashboard():
         orders.append(order)
 
     # 最近评论
-    comments = db.session.query(
-        Comment.nickname, Comment.avatar,
-        Comment.add_time, Comment.rating,
-        Comment.content, Comment.img_data).\
-        order_by(Comment.comment_id.desc()).limit(3).all()
+    # comments = db.session.query(
+    #     Comment.nickname, Comment.avatar,
+    #     Comment.add_time, Comment.rating,
+    #     Comment.content, Comment.img_data).\
+    #     order_by(Comment.comment_id.desc()).limit(3).all()
+    comments = []
 
     # 今天限制时间
     start = some_day_timestamp(current_timestamp(), 0)

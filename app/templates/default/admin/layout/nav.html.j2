@@ -14,112 +14,17 @@
       {% set _view = request.path.split('/')[2] %}
       {%
         set menu_list = [
-          {'title':_('首页'),
-           'href':url_for('admin.index.dashboard'),
-           'view':'index',
-           'icon':'mdi mdi-apps',
-           'children':None
-          },
-          {'type':'devider'},
-          {'title':_('用户'),
-           'href':url_for('admin.user.index'),
-           'view':'user',
-           'icon':'mdi mdi-account',
-           'children':None
-          },
-          {'title':_('充值'),
-           'href':url_for('admin.recharge.index'),
-           'view':'recharge',
-           'icon':'mdi mdi-wallet',
-           'children':None
-          },
-          {'title':_('评论'),
-           'href':url_for('admin.comment.index'),
-           'view':'comment',
-           'icon':'mdi mdi-comment',
-           'children':None
-          },
-          {'type':'devider'},
-          {'title':_('商品'),
-          'href':'javascript:;',
-          'view':'item',
-          'icon':'mdi mdi-cart-outline',
-          'children':[
-            {'title':_('商品'),
-            'href':url_for('admin.item.index'),
-            'endpoints':['admin.item.index',
-                          'admin.item.create',
-                          'admin.item.detail',
-                          'admin.item.h5',
-                          'admin.item.galleries',
-                          'admin.item.save']
-            },
-            {'title':_('分类'),
-            'href':url_for('admin.item.categories'),
-            'endpoints':['admin.item.categories',
-                          'admin.item.category_create',
-                          'admin.item.category_detail',
-                          'admin.item.category_save']
-            }
-          ]
-        },
-        {'title':_('优惠券'),
-          'href':'javascript:;',
-          'view':'coupon',
-          'icon':'mdi mdi-credit-card',
-          'children':[
-            {'title':_('优惠券'),
-            'href':url_for('admin.coupon.index'),
-            'endpoints':['admin.coupon.index',
-                          'admin.coupon.create',
-                          'admin.coupon.detail',
-                          'admin.coupon.save']
-            },
-            {'title':_('用户优惠券'),
-            'href':url_for('admin.coupon.coupons'),
-            'endpoints':['admin.coupon.coupons']
-            }
-          ]
-        },
-        {'title':_('订单'),
-          'href':url_for('admin.order.index'),
-          'view':'order',
-          'icon':'mdi mdi-truck-delivery',
-          'children':None
-        },
-        {'title':_('售后'),
-          'href':url_for('admin.aftersale.index'),
-          'view':'aftersale',
-          'icon':'mdi mdi-headphones',
+        {'title':_('首页'),
+          'href':url_for('admin.index.dashboard'),
+          'view':'index',
+          'icon':'mdi mdi-apps',
           'children':None
         },
         {'type':'devider'},
-        {'title':_('文章'),
-          'href':'javascript:;',
-          'view':'post',
-          'icon':'mdi mdi-clipboard-text',
-          'children':[
-            {'title':_('文章'),
-            'href':url_for('admin.post.index'),
-            'endpoints':['admin.post.index',
-                        'admin.post.detail',
-                        'admin.post.create',
-                        'admin.post.h5',
-                        'admin.post.save']
-            },
-            {'title':_('分类'),
-            'href':url_for('admin.post.categories'),
-            'endpoints':['admin.post.categories',
-                        'admin.post.category_create',
-                        'admin.post.category_detail',
-                        'admin.post.category_save']
-            }
-          ]
-        },
-        {'title':_('广告'),
-          'href':url_for('admin.adv.index'),
-          'view':'adv',
-          'icon':'mdi mdi-monitor-multiple',
+        {'title':_('用户'),
+          'href':url_for('admin.user.index'),
+          'view':'user',
+          'icon':'mdi mdi-account',
           'children':None
         },
         {'type':'devider'},

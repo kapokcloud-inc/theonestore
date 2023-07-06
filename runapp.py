@@ -40,9 +40,9 @@ from app.helpers.data_format import(
 )
 
 from app.routes.admin import ADMIN_ROUTES
-from app.routes.mobile import MOBILE_ROUTES
-from app.routes.api import API_ROUTES
-from app.routes.pc import PC_ROUTES
+# from app.routes.mobile import MOBILE_ROUTES
+# from app.routes.api import API_ROUTES
+# from app.routes.pc import PC_ROUTES
 
 
 # 创建App
@@ -57,9 +57,9 @@ babel.init_app(app)
 
 # 注册路由
 register_blueprint(app, ADMIN_ROUTES)
-register_blueprint(app, MOBILE_ROUTES)
-register_blueprint(app, API_ROUTES)
-register_blueprint(app, PC_ROUTES)
+# register_blueprint(app, MOBILE_ROUTES)
+# register_blueprint(app, API_ROUTES)
+# register_blueprint(app, PC_ROUTES)
 
 # 数据库初始化
 db.init_app(app)

@@ -10,14 +10,14 @@
 from app.views import pc
 
 PC_ROUTES = (
-    (pc.index,          ''),
-    (pc.category,       '/category'),
-    (pc.item,           '/item'),
-    (pc.cart,           '/cart'),
-    (pc.order,          '/order'),
-    (pc.aftersales,     '/aftersales'),
-    (pc.pay,            '/pay'),
-    (pc.me,             '/me'),
-    (pc.wallet,         '/wallet'),
-    (pc.post,           '/post'),
+    # (pc.index,          ''),
+    # (pc.category,       '/category'),
+    # (pc.item,           '/item'),
+    # (pc.cart,           '/cart'),
+    # (pc.order,          '/order'),
+    # (pc.aftersales,     '/aftersales'),
+    # (pc.pay,            '/pay'),
+    # (pc.me,             '/me'),
+    # (pc.wallet,         '/wallet'),
+    # (pc.post,           '/post'),
 )
